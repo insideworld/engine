@@ -1,0 +1,6 @@
+deploy:
+  image: insideworld.asuscomm.com/images/maven/maven:latest
+  script:
+    - 'mvn deploy'
+  only:
+    - master

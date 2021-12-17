@@ -1,0 +1,12 @@
+# Idea files ignoring
+*.iml
+**/.idea
+**/target
+
+# Angular files ignoring
+**/node_installation
+**/node_modules
+
+# War compilation
+**/overlays
+
