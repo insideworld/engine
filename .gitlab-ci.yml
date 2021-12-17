@@ -1,6 +1,6 @@
 deploy:
   image: insideworld.asuscomm.com/images/maven/maven:latest
   script:
-    - 'mvn deploy -s ci_settings.xml'
+    - 'mvn deploy'
   only:
     - master
