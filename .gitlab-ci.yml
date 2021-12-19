@@ -1,6 +1,7 @@
 deploy:
   image: insideworld.asuscomm.com/images/maven:latest
   script:
+    - export
     - 'mvn deploy'
   only:
     - master
