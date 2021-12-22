@@ -17,8 +17,9 @@ public abstract class AbstractMapper implements Mapper {
             }
         } catch (final Exception exp) {
             throw new ActionException(
-                String.format("Can't write type %s to %s",
-                    descriptor.getType(), entity.getClass()),
+                String.format("Can't write field %s with type %s from %s",
+                    descriptor.getName(), descriptor.getType(), entity.getClass()
+                ),
                 exp
             );
         }
@@ -33,8 +34,9 @@ public abstract class AbstractMapper implements Mapper {
                 target = method.invoke(entity);
             } catch (final Exception exp) {
                 throw new ActionException(
-                    String.format("Can't read type %s from %s",
-                        descriptor.getType(), entity.getClass()),
+                    String.format("Can't read field %s with type %s from %s",
+                        descriptor.getName(), descriptor.getType(), entity.getClass()
+                    ),
                     exp
                 );
             }
