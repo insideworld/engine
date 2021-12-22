@@ -3,11 +3,9 @@ package insideworld.engine.entities.converter.dto.mapper;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.converter.dto.Descriptor;
+import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
-import java.beans.PropertyDescriptor;
-import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.apache.commons.lang3.Validate;
@@ -30,9 +28,9 @@ public class MapperEntity extends AbstractMapper {
     @Override
     public void toEntity(final Record record, final Entity entity, final Descriptor descriptor)
         throws ActionException {
-        final String tag = this.defineTag(descriptor.getField().getName());
+        final String tag = this.defineTag(descriptor.getName());
         if (record.contains(tag)) {
-            final Class<?> type = descriptor.getField().getType();
+            final Class<?> type = descriptor.getType();
             Validate.isTrue(Entity.class.isAssignableFrom(type));
             final long id = record.get(tag);
             final Entity target;
@@ -54,13 +52,13 @@ public class MapperEntity extends AbstractMapper {
         throws ActionException {
         final Entity target = (Entity) this.read(entity, descriptor);
         if (target != null) {
-            record.put(this.defineTag(descriptor.getField().getName()), target.getId());
+            record.put(this.defineTag(descriptor.getName()), target.getId());
         }
     }
 
     @Override
     public boolean canApply(final Descriptor descriptor) {
-        return Entity.class.isAssignableFrom(descriptor.getField().getType());
+        return Entity.class.isAssignableFrom(descriptor.getType());
     }
 
     private String defineTag(final String origin) {

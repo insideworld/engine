@@ -3,10 +3,9 @@ package insideworld.engine.entities.converter.dto.mapper;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.converter.dto.Descriptor;
+import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public class MapperEntities extends AbstractMapper {
 
     @Override
     public void toEntity(Record record, Entity entity, Descriptor descriptor) throws ActionException {
-        final String tag = this.defineTag(descriptor.getField().getName());
+        final String tag = this.defineTag(descriptor.getName());
         if (record.contains(tag)) {
             final Class<?> type = this.getGeneric(descriptor);
             final Collection<Long> ids = record.get(tag);
@@ -55,7 +54,7 @@ public class MapperEntities extends AbstractMapper {
         final Collection<Entity> entities = (Collection<Entity>) this.read(entity, descriptor);
         if (CollectionUtils.isNotEmpty(entities)) {
             record.put(
-                this.defineTag(descriptor.getField().getName()),
+                this.defineTag(descriptor.getName()),
                 entities.stream().map(Entity::getId).collect(Collectors.toUnmodifiableList())
             );
         }
@@ -63,12 +62,12 @@ public class MapperEntities extends AbstractMapper {
 
     @Override
     public boolean canApply(final Descriptor descriptor) {
-        return Collection.class.isAssignableFrom(descriptor.getField().getType()) &&
+        return Collection.class.isAssignableFrom(descriptor.getType()) &&
             Entity.class.isAssignableFrom(this.getGeneric(descriptor));
     }
 
     private Class<?> getGeneric(final Descriptor descriptor) {
-        return (Class<?>) ((ParameterizedType) descriptor.getField().getGenericType()).getActualTypeArguments()[0];
+        return (Class<?>) ((ParameterizedType) descriptor.getParameterized()).getActualTypeArguments()[0];
     }
 
     private String defineTag(final String origin) {

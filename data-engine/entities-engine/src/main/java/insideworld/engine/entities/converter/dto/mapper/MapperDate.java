@@ -3,8 +3,7 @@ package insideworld.engine.entities.converter.dto.mapper;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.converter.dto.Descriptor;
-import java.beans.PropertyDescriptor;
+import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,7 +17,7 @@ public class MapperDate extends AbstractMapper {
 
     @Override
     public void toEntity(Record record, Entity entity, Descriptor descriptor) throws ActionException {
-        final Object object = record.get(descriptor.getField().getName());
+        final Object object = record.get(descriptor.getName());
         final Date date;
         if (Date.class.equals(object.getClass())) {
             date = (Date) object;
@@ -36,12 +35,12 @@ public class MapperDate extends AbstractMapper {
     public void toRecord(Record record, Entity entity, Descriptor descriptor) throws ActionException {
         final Object target = this.read(entity, descriptor);
         if (target != null) {
-            record.put(descriptor.getField().getName(), target);
+            record.put(descriptor.getName(), target);
         }
     }
 
     @Override
     public boolean canApply(final Descriptor descriptor) {
-        return descriptor.getField().getType().equals(Date.class);
+        return descriptor.getType().equals(Date.class);
     }
 }

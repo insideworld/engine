@@ -3,8 +3,7 @@ package insideworld.engine.entities.converter.dto.mapper;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.converter.dto.Descriptor;
-import java.beans.PropertyDescriptor;
+import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 
 public interface Mapper {
 

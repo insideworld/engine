@@ -1,25 +1,20 @@
 package insideworld.engine.entities.converter.dto;
 
-import com.google.common.collect.Lists;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.keeper.MapRecord;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.EntityConverter;
-import insideworld.engine.entities.converter.dto.mapper.Mapper;
+import insideworld.engine.entities.converter.dto.descriptors.AbstractDescriptors;
+import insideworld.engine.entities.converter.dto.descriptors.ReadDescriptors;
+import insideworld.engine.entities.converter.dto.descriptors.WriteDescriptors;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Simple DTO converter.
@@ -31,15 +26,18 @@ import org.apache.commons.lang3.tuple.Pair;
 @Singleton
 public class DTOConverter implements EntityConverter {
 
-    private final Descriptors descriptors;
+    private final ReadDescriptors reads;
+    private final WriteDescriptors writes;
     private final ObjectFactory factory;
     private final StorageKeeper storages;
 
     @Inject
-    public DTOConverter(final Descriptors descriptors,
+    public DTOConverter(final ReadDescriptors reads,
+                        final WriteDescriptors writes,
                         final ObjectFactory factory,
                         final StorageKeeper storages) {
-        this.descriptors = descriptors;
+        this.reads = reads;
+        this.writes = writes;
         this.factory = factory;
         this.storages = storages;
     }
@@ -47,7 +45,7 @@ public class DTOConverter implements EntityConverter {
     @Override
     public Record convert(final Entity entity) throws ActionException {
         final Record record = this.factory.createObject(Context.class);
-        for (final var descriptor : this.descriptors.getDescriptors(entity.getClass())) {
+        for (final var descriptor : this.reads.getDescriptors(entity.getClass())) {
             descriptor.getLeft().toRecord(record, entity, descriptor.getRight());
         }
         return record;
@@ -62,7 +60,7 @@ public class DTOConverter implements EntityConverter {
         } catch (final StorageException exp) {
             throw new ActionException("Can't read entity", exp);
         }
-        for (final var descriptor : this.descriptors.getDescriptors(type)) {
+        for (final var descriptor : this.writes.getDescriptors(type)) {
             descriptor.getLeft().toEntity(record, entity, descriptor.getRight());
         }
         return entity;
