@@ -5,3 +5,8 @@ deploy:
     - 'mvn deploy'
   only:
     - master
+
+cleanup:
+  image: insideworld.asuscomm.com/images/docker/dind:latest
+  script:
+    - rm -r -f /gitlab/m2/insideworld
