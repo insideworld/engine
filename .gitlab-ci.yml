@@ -10,5 +10,4 @@ cleanup:
   image: insideworld.asuscomm.com/images/docker/dind:latest
   script:
     - rm -r -f /gitlab/m2/insideworld
-  dependencies:
-    - deploy
+  needs: [deploy]
