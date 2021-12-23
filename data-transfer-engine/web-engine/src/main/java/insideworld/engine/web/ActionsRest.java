@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 0.0.5
  */
-@Path("/api")
+@Path("/actions")
 public class ActionsRest implements ActionsEndpoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActionsRest.class);
@@ -52,7 +52,7 @@ public class ActionsRest implements ActionsEndpoint {
     }
 
     @POST
-    @Path("/actions/{action}")
+    @Path("/{action}")
     @Consumes("application/json")
     @Produces("application/json")
     public Output executeAction(
