@@ -1,4 +1,9 @@
+stages:
+  - deploy
+  - cleanup
+
 deploy:
+  stage: deploy
   image: insideworld.asuscomm.com/images/maven:latest
   script:
     - export
@@ -7,7 +12,7 @@ deploy:
     - master
 
 cleanup:
+  stage: cleanup
   image: insideworld.asuscomm.com/images/docker/dind:latest
   script:
     - rm -r -f /gitlab/m2/insideworld
-  needs: [deploy]
