@@ -1,6 +1,6 @@
 stages:
   - deploy
-  - cleanup
+#  - cleanup
 
 deploy:
   stage: deploy
@@ -11,8 +11,8 @@ deploy:
   only:
     - master
 
-cleanup:
-  stage: cleanup
-  image: insideworld.asuscomm.com/images/docker/dind:latest
-  script:
-    - rm -r -f /gitlab/m2/insideworld
+#cleanup:
+#  stage: cleanup
+#  image: insideworld.asuscomm.com/images/docker/dind:latest
+#  script:
+#    - rm -r -f /gitlab/m2/insideworld
