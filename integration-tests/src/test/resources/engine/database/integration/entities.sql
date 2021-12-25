@@ -66,7 +66,7 @@ values (5, 1, 'Test array4');
 create table entities.cglib
 (
     id serial not null
-        constraint arrays_pk
+        constraint cglib_pk
             primary key,
     message varchar
 )
