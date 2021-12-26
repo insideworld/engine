@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>frameworks-engine</artifactId>
+    <artifactId>entities-quarkus-engine</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>quarkus-extension-runtime</artifactId>
+  <artifactId>entities-quarkus-runtime-engine</artifactId>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
@@ -27,21 +27,6 @@
       <artifactId>quarkus-arc</artifactId>
       <version>${quarkus.version}</version>
     </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>entities-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-<!--    <dependency>-->
-<!--      <groupId>insideworld.engine</groupId>-->
-<!--      <artifactId>database-engine</artifactId>-->
-<!--      <version>${project.version}</version>-->
-<!--    </dependency>-->
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>3.2.4</version>
-    </dependency>
   </dependencies>
 
   <build>
@@ -56,7 +41,7 @@
               <goal>extension-descriptor</goal>
             </goals>
             <configuration>
-              <deployment>${project.groupId}:quarkus-extension:${project.version}
+              <deployment>${project.groupId}:entities-quarkus-deployment-engine:${project.version}
               </deployment>
             </configuration>
           </execution>

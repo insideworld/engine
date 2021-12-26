@@ -5,7 +5,7 @@
   <parent>
     <artifactId>engine</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -17,8 +17,6 @@
     <module>web-quarkus-engine</module>
     <module>quarkus-engine</module>
     <module>amqp-quarkus-engine</module>
-    <module>quarkus-extension</module>
-    <module>quarkus-extension-runtime</module>
   </modules>
 
   <properties>

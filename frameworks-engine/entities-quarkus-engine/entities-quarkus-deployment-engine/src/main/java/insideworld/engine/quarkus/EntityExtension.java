@@ -1,30 +1,18 @@
 package insideworld.engine.quarkus;
 
-import static io.quarkus.deployment.annotations.ExecutionTime.STATIC_INIT;
 //import insideworld.engine.database.AbstractEntity;
-import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.quarkus.extension.EntityRecorder;
 import insideworld.engine.quarkus.extension.MyEntity;
 import insideworld.engine.quarkus.extension.MyStorage;
 import io.quarkus.arc.deployment.GeneratedBeanBuildItem;
 import io.quarkus.arc.deployment.GeneratedBeanGizmoAdaptor;
-import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
-import io.quarkus.arc.processor.AsmUtilCopy;
-import io.quarkus.deployment.annotations.BuildProducer;
+    import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.annotations.Record;
-import io.quarkus.gizmo.ClassCreator;
+    import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.gizmo.FieldCreator;
-import io.quarkus.gizmo.FieldDescriptor;
-import io.quarkus.gizmo.MethodCreator;
-import io.quarkus.gizmo.ResultHandle;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collections;
-import java.util.List;
-import javax.enterprise.context.Dependent;
-import javax.inject.Singleton;
+    import io.quarkus.gizmo.MethodCreator;
+    import javax.enterprise.context.Dependent;
 
 public class EntityExtension {
 
@@ -60,15 +48,15 @@ public class EntityExtension {
 //        final ClassCreator creator1
 
 //        final String generatedSubClassSignature = AsmUtilCopy.getGeneratedSubClassSignature(Storage.class.getClassI, MyEntity.class);
-        final ClassCreator creator1 = ClassCreator.builder()
-            .classOutput(output)
-            .className("insideworld.engine.generated.MyStorageImpl")
-//            .superClass(AbstractEntity.class)
-            .interfaces(Storage.class)
-            .signature("Ljava/lang/Object;Linsideworld/engine/entities/storages/Storage<Linsideworld/engine/quarkus/extension/MyEntity;>;")
-            .build();
-        creator1.addAnnotation(Singleton.class);
-        creator1.close();
+//        final ClassCreator creator1 = ClassCreator.builder()
+//            .classOutput(output)
+//            .className("insideworld.engine.generated.MyStorageImpl")
+////            .superClass(AbstractEntity.class)
+//            .interfaces(Storage.class)
+//            .signature("Ljava/lang/Object;Linsideworld/engine/entities/storages/Storage<Linsideworld/engine/quarkus/extension/MyEntity;>;")
+//            .build();
+//        creator1.addAnnotation(Singleton.class);
+//        creator1.close();
 
 //        creator.
 //        final ResultHandle resultHandle = getMessage.readInstanceField(message.getFieldDescriptor(), getMessage.getThis());

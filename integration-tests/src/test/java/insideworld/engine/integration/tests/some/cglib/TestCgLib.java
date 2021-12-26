@@ -1,18 +1,11 @@
 package insideworld.engine.integration.tests.some.cglib;
 
-import insideworld.engine.database.AbstractEntity;
-import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.quarkus.extension.MyEntity;
-import insideworld.engine.security.common.entities.User;
-import io.quarkus.gizmo.ClassCreator;
-import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>engine</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -73,7 +73,7 @@
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>entities-quarkus-engine</artifactId>
+      <artifactId>entities-quarkus-beans-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -140,8 +140,8 @@
 
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-extension-runtime</artifactId>
-      <version>${project.version}</version>
+      <artifactId>entities-quarkus-runtime-engine</artifactId>
+      <version>0.8.0</version>
     </dependency>
 
   </dependencies>

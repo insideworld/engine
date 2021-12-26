@@ -3,17 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>engine</artifactId>
+    <artifactId>entities-quarkus-engine</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>0.8.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>utils-engine</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>crypt-my-data</module>
-  </modules>
+  <artifactId>entities-quarkus-beans-engine</artifactId>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
