@@ -10,12 +10,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>entities-quarkus-engine</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>entities-quarkus-beans-engine</module>
-    <module>entities-quarkus-deployment-engine</module>
-    <module>entities-quarkus-runtime-engine</module>
-  </modules>
 
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
