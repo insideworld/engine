@@ -1,6 +1,7 @@
 package insideworld.engine.integration.tests.entities.generated;
 
 import insideworld.engine.entities.storages.Storage;
+import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.integration.entities.generated.MyEntity;
 import io.quarkus.test.junit.QuarkusTest;
@@ -21,11 +22,13 @@ public class TestGenerated {
 
     @Test
     @Transactional
-    public void test() {
+    public void test() throws StorageException {
         final Storage<MyEntity> storage = factory.createObject(new TypeLiteral<Storage<MyEntity>>() {});
         final MyEntity object = factory.createObject(MyEntity.class);
         object.setMessage("Some shiit");
         System.out.println(object.getMessage());
+        storage.write(object);
+        System.out.println(storage.read(1));
 //        final ClassCreator build = ClassCreator.builder().superClass(AbstractEntity.class).interfaces(Entity.class)
 //            .className("OneMore").classOutput(new ClassOutput() {
 //                @Override

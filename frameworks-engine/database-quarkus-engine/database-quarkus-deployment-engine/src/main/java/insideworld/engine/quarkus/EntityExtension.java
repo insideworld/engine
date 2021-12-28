@@ -1,27 +1,42 @@
 package insideworld.engine.quarkus;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import insideworld.engine.database.AbstractCrudGenericStorage;
 import insideworld.engine.database.AbstractEntity;
 import insideworld.engine.entities.generate.GenerateEntity;
 import insideworld.engine.entities.generate.GenerateStorage;
 import insideworld.engine.entities.storages.Storage;
+import io.quarkus.arc.deployment.BeanArchiveIndexBuildItem;
 import io.quarkus.arc.deployment.GeneratedBeanBuildItem;
 import io.quarkus.arc.deployment.GeneratedBeanGizmoAdaptor;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.gizmo.ClassCreator;
-import io.quarkus.gizmo.ClassOutput;
-import io.quarkus.gizmo.FieldCreator;
-import io.quarkus.gizmo.MethodCreator;
+import io.quarkus.deployment.annotations.Produce;
+import io.quarkus.deployment.builditem.AdditionalIndexedClassesBuildItem;
+import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
+import io.quarkus.deployment.builditem.GeneratedClassBuildItem;
+import io.quarkus.gizmo.*;
+import io.quarkus.hibernate.orm.deployment.AdditionalJpaModelBuildItem;
+import io.quarkus.hibernate.orm.deployment.JpaModelIndexBuildItem;
+import io.quarkus.hibernate.orm.deployment.PersistenceUnitDescriptorBuildItem;
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationTarget;
+import org.jboss.jandex.AnnotationValue;
+import org.jboss.jandex.DotName;
 import org.reflections.Reflections;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Singleton;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.executable.ValidateOnExecution;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static org.reflections.scanners.Scanners.*;
@@ -59,8 +74,18 @@ public class EntityExtension {
                 .toString();
     }
 
+    /**
+     * В общем работает это так
+     * Ты делаешь метода с аннотацией BILDStep
+     * Далее он принимет различные билд айтемы
+     * @param generatedBeans
+     * @param qwe
+     * @throws IntrospectionException
+     */
     @BuildStep
-    void generatedBean(BuildProducer<GeneratedBeanBuildItem> generatedBeans) throws IntrospectionException {
+    void generatedBean(BuildProducer<GeneratedBeanBuildItem> generatedBeans,
+                       BuildProducer<AdditionalIndexedClassesBuildItem> qwe) throws IntrospectionException {
+//qwe.produce(new AdditionalIndexedClassesBuildItem());
         final Collection<Class<?>> entities = this.findEntities();
         final Map<Class<?>, String> created = Maps.newHashMap();
         final ClassOutput output = new GeneratedBeanGizmoAdaptor(generatedBeans);
@@ -72,11 +97,18 @@ public class EntityExtension {
                     .superClass(AbstractEntity.class)
                     .interfaces(entity)
                     .build();
+
             creator.addAnnotation(Dependent.class);
+            creator.addAnnotation(Entity.class);
+            AnnotationCreator annotationCreator = creator.addAnnotation(Table.class);
+            Table annotation = entity.getAnnotation(Table.class);
+            annotationCreator.addValue("name", annotation.name());
+            annotationCreator.addValue("schema", annotation.schema());
 
             final var beans = Introspector.getBeanInfo(entity).getPropertyDescriptors();
             for (final PropertyDescriptor bean : beans) {
                 final FieldCreator message = creator.getFieldCreator(bean.getName(), Object.class);
+                message.addAnnotation(Column.class);
                 final MethodCreator getMessage = creator.getMethodCreator(bean.getReadMethod().getName(), bean.getReadMethod().getReturnType());
                 getMessage.returnValue(getMessage.readInstanceField(message.getFieldDescriptor(), getMessage.getThis()));
                 getMessage.close();
@@ -98,6 +130,7 @@ public class EntityExtension {
             creator1.addAnnotation(Singleton.class);
             creator1.close();
         }
+
 
 
 //
@@ -155,4 +188,12 @@ public class EntityExtension {
 //        setter.writeInstanceField(fieldDesc, setter.getThis(), setter.getMethodParam(0));
 //        setter.returnValue(null);
     }
+
+//    @BuildStep
+//    public void ValidateOnExecution(BuildProducer<AdditionalJpaModelBuildItem> qwe,
+//                                    List<GeneratedClassBuildItem> ewq) {
+//        System.out.println(qwe);
+////        qwe.produce(new AdditionalJpaModelBuildItem("insideworld.engine.entities.generated.jpa.MyEntity"));
+//
+//    }
 }

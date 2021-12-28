@@ -63,7 +63,7 @@ values (4, 1, 'Test array3');
 insert into entities.arrays
 values (5, 1, 'Test array4');
 
-create table entities.cglib
+create table entities.generated
 (
     id serial not null
         constraint cglib_pk
