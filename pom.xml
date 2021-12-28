@@ -18,8 +18,9 @@
     <module>frameworks-engine</module>
     <module>common-engine</module>
     <module>action-engine</module>
-    <module>integration-tests</module>
+    <module>tests</module>
     <module>qulice</module>
+      <module>maven-plugins</module>
   </modules>
 
   <properties>
