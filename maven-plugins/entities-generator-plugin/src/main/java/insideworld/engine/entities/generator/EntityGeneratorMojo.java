@@ -49,6 +49,7 @@ public class EntityGeneratorMojo extends AbstractMojo {
     private MavenProject project;
 
     public void execute() throws MojoExecutionException {
+        final ClassOutput output = new EntityWriter(this.project);
         final ClassLoader loader = this.getClassLoader(this.project);
         final var reflections = new Reflections(
             new ConfigurationBuilder()
@@ -57,45 +58,12 @@ public class EntityGeneratorMojo extends AbstractMojo {
         );
 //            new ConfigurationBuilder().addClassLoaders(this.getClassLoader(this.project))
 //                .forPackage("insideworld"));
-        final Collection<Class<?>> entities = this.findEntities(reflections);
+//        final Collection<Class<?>> entities = this.findEntities(reflections);
         final Collection<Class<?>> storages = this.findStorages(reflections);
         System.out.println("qwe");
         final Map<Class<?>, String> created = Maps.newHashMap();
-        final ClassOutput output = new EntityWriter(this.project);
-        for (final Class<?> entity : entities) {
-            created.put(entity, "insideworld.engine.entities.generated.jpa." + entity.getSimpleName());
-            final ClassCreator creator = ClassCreator.builder()
-                .classOutput(output)
-                .className("insideworld.engine.entities.generated.jpa." + entity.getSimpleName())
-                .superClass(AbstractEntity.class)
-                .interfaces(entity)
-                .build();
-            creator.addAnnotation(Dependent.class);
-            creator.addAnnotation(Entity.class);
-            AnnotationCreator annotationCreator = creator.addAnnotation(Table.class);
-            Table annotation = entity.getAnnotation(Table.class);
-            annotationCreator.addValue("name", annotation.name());
-            annotationCreator.addValue("schema", annotation.schema());
-
-            final PropertyDescriptor[] beans;
-            try {
-                beans = Introspector.getBeanInfo(entity).getPropertyDescriptors();
-            } catch (IntrospectionException e) {
-                throw new RuntimeException(e);
-            }
-            for (final PropertyDescriptor bean : beans) {
-                final FieldCreator message = creator.getFieldCreator(bean.getName(), bean.getReadMethod().getReturnType());
-                message.addAnnotation(Column.class);
-                final MethodCreator getMessage = creator.getMethodCreator(bean.getReadMethod().getName(), bean.getReadMethod().getReturnType());
-                getMessage.returnValue(getMessage.readInstanceField(message.getFieldDescriptor(), getMessage.getThis()));
-                getMessage.close();
-                final MethodCreator setMessage = creator.getMethodCreator(bean.getWriteMethod().getName(), void.class, bean.getWriteMethod().getParameterTypes()[0]);
-                setMessage.writeInstanceField(message.getFieldDescriptor(), setMessage.getThis(), setMessage.getMethodParam(0));
-                setMessage.returnValue(null);
-                setMessage.close();
-            }
-            creator.close();
-        }
+        final EntityGenerator entityGenerator = new EntityGenerator(reflections, output, created);
+        entityGenerator.generate();
 
         for (final Class<?> storage : storages) {
             final ClassCreator creator1 = ClassCreator.builder()

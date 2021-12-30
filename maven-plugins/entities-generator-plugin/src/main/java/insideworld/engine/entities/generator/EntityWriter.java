@@ -14,6 +14,7 @@ public class EntityWriter implements ClassOutput {
 
     private final MavenProject project;
 
+
     public EntityWriter(final MavenProject project) {
         this.project = project;
     }
