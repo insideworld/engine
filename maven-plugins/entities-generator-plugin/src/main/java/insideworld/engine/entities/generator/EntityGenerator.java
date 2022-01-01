@@ -1,117 +1,33 @@
 package insideworld.engine.entities.generator;
 
-import com.google.common.collect.Lists;
-import insideworld.engine.database.AbstractEntity;
-import insideworld.engine.entities.generate.GenerateEntity;
-import io.quarkus.gizmo.AnnotationCreator;
-import io.quarkus.gizmo.ClassCreator;
-import io.quarkus.gizmo.ClassOutput;
-import io.quarkus.gizmo.FieldCreator;
-import io.quarkus.gizmo.MethodCreator;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
+import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.generator.fields.FieldGenerator;
+
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
-import javax.enterprise.context.Dependent;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import org.apache.commons.lang3.tuple.Pair;
-import org.reflections.Reflections;
 
 public class EntityGenerator {
 
-    private final Reflections reflections;
-    private final ClassOutput output;
-    private final Map<Class<?>, String> generated;
+    private final Map<Class<?>, String> exists;
+    private final Collection<FieldGenerator> generators;
 
-    public EntityGenerator(final Reflections reflections,
-                           final ClassOutput output,
-                           final Map<Class<?>, String> generated) {
-        this.reflections = reflections;
-        this.output = output;
-        this.generated = generated;
+    public EntityGenerator(final Map<Class<?>, String> exists,
+                           final Collection<FieldGenerator> generators) {
+        this.exists = exists;
+        this.generators = generators;
     }
 
-    public void generate() {
-        final ArrayList<Class<?>> classes = Lists.newArrayList(this.findEntities());
-        for (final Class<?> entity : classes) {
-            this.generate(entity);
-        }
-    }
-
-    public String generate(Class<?> entity) {
-        final String name;
-        if (this.generated.containsKey(entity)) {
-            name = this.generated.get(entity) ;
+    public String generate(final Class<? extends Entity> clazz) {
+        final String type;
+        if (this.exists.containsKey(clazz)) {
+            type = this.exists.get(clazz);
         } else {
-            name = this.name(entity);
-            this.generated.put(entity, name);
-            final ClassCreator creator = ClassCreator.builder()
-                .classOutput(this.output)
-                .className(name)
-                .superClass(AbstractEntity.class)
-                .interfaces(entity)
-                .build();
-            creator.addAnnotation(Dependent.class);
-            creator.addAnnotation(Entity.class);
-            AnnotationCreator annotationCreator = creator.addAnnotation(Table.class);
-            Table annotation = entity.getAnnotation(Table.class);
-            annotationCreator.addValue("name", annotation.name());
-            annotationCreator.addValue("schema", annotation.schema());
-            final PropertyDescriptor[] beans;
-            try {
-                beans = Introspector.getBeanInfo(entity).getPropertyDescriptors();
-            } catch (IntrospectionException e) {
-                throw new RuntimeException(e);
-            }
-            for (final PropertyDescriptor bean : beans) {
-                final Class<?> returnType = bean.getReadMethod().getReturnType();
-                final String type;
-                if (insideworld.engine.entities.Entity.class.isAssignableFrom(returnType)) {
-                    type = this.generate(returnType);
-                } else {
-                    type = returnType.getName();
-                }
-                this.createField(creator, bean, type, Collections.emptyMap());
-            }
-            creator.close();
+            type = this.name(clazz);
         }
-        return name;
-    }
-
-    private void createField(final ClassCreator creator,
-                             final PropertyDescriptor property,
-                             final String type,
-                             final Map<Class<?>, Collection<Pair<String, String>>> annotations) {
-
-        final FieldCreator field = creator.getFieldCreator(property.getName(), type);
-        for (final var annotation : annotations.entrySet()) {
-            final AnnotationCreator acreator = field.addAnnotation(annotation.getKey());
-            for (final var params : annotation.getValue()) {
-                acreator.addValue(params.getLeft(), params.getRight());
-            }
-        }
-        final MethodCreator get = creator.getMethodCreator(property.getReadMethod().getName(), type);
-        get.returnValue(get.readInstanceField(field.getFieldDescriptor(), get.getThis()));
-        get.close();
-        final MethodCreator set = creator.getMethodCreator(
-            property.getWriteMethod().getName(), void.class, property.getWriteMethod().getParameterTypes()[0]);
-        set.writeInstanceField(field.getFieldDescriptor(), set.getThis(), set.getMethodParam(0));
-        set.returnValue(null);
-        set.close();
-
-    }
-
-    private Collection<Class<?>> findEntities() {
-        return this.reflections.getTypesAnnotatedWith(GenerateEntity.class);
+        return type;
     }
 
     private String name(final Class<?> entity) {
         return "insideworld.engine.entities.generated.jpa." + entity.getSimpleName();
     }
-
 }

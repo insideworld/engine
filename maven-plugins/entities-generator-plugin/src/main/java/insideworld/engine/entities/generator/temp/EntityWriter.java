@@ -1,4 +1,4 @@
-package insideworld.engine.entities.generator;
+package insideworld.engine.entities.generator.temp;
 
 import io.quarkus.deployment.util.ClassOutputUtil;
 import io.quarkus.gizmo.ClassOutput;

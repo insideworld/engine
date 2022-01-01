@@ -1,24 +1,15 @@
-package insideworld.engine.entities.generator;
+package insideworld.engine.entities.generator.temp;
 
 import com.google.common.collect.Maps;
 import insideworld.engine.database.AbstractCrudGenericStorage;
-import insideworld.engine.database.AbstractEntity;
 import insideworld.engine.entities.generate.GenerateEntity;
 import insideworld.engine.entities.generate.GenerateStorage;
-import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
-import io.quarkus.gizmo.FieldCreator;
-import io.quarkus.gizmo.MethodCreator;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+
 import java.util.Map;
-import javax.enterprise.context.Dependent;
 import javax.inject.Singleton;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -27,17 +18,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.reflections.Reflections;
-import org.reflections.Store;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
-import org.reflections.util.QueryFunction;
-
-import static org.reflections.scanners.Scanners.SubTypes;
-import static org.reflections.scanners.Scanners.TypesAnnotated;
 
 @Mojo(name = "sayhi",
     defaultPhase = LifecyclePhase.GENERATE_SOURCES,
