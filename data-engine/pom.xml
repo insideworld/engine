@@ -15,6 +15,7 @@
   <modules>
     <module>database-engine</module>
     <module>entities-engine</module>
+    <module>jpa-generator-engine</module>
   </modules>
 
   <properties>

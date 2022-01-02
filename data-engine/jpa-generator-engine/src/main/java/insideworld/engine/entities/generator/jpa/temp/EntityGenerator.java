@@ -1,13 +1,15 @@
-package insideworld.engine.entities.generator.temp;
+package insideworld.engine.entities.generator.jpa.temp;
 
 import com.google.common.collect.Lists;
 import insideworld.engine.database.AbstractEntity;
 import insideworld.engine.entities.generate.GenerateEntity;
-import io.quarkus.gizmo.AnnotationCreator;
-import io.quarkus.gizmo.ClassCreator;
-import io.quarkus.gizmo.ClassOutput;
-import io.quarkus.gizmo.FieldCreator;
-import io.quarkus.gizmo.MethodCreator;
+import io.quarkus.gizmo.*;
+import org.apache.commons.lang3.tuple.Pair;
+import org.reflections.Reflections;
+
+import javax.enterprise.context.Dependent;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -15,12 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import javax.enterprise.context.Dependent;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import org.apache.commons.lang3.tuple.Pair;
-import org.reflections.Reflections;
 
 public class EntityGenerator {
 

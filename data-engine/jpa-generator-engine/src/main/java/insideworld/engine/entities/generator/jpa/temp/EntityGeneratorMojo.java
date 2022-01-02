@@ -1,4 +1,4 @@
-package insideworld.engine.entities.generator.temp;
+package insideworld.engine.entities.generator.jpa.temp;
 
 import com.google.common.collect.Maps;
 import insideworld.engine.database.AbstractCrudGenericStorage;
@@ -6,10 +6,6 @@ import insideworld.engine.entities.generate.GenerateEntity;
 import insideworld.engine.entities.generate.GenerateStorage;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
-
-import java.util.Map;
-import javax.inject.Singleton;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -20,10 +16,12 @@ import org.apache.maven.project.MavenProject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
+import javax.inject.Singleton;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
+import java.util.Map;
 
 @Mojo(name = "sayhi",
     defaultPhase = LifecyclePhase.GENERATE_SOURCES,

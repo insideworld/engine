@@ -1,14 +1,12 @@
-package insideworld.engine.entities.generator.temp;
+package insideworld.engine.entities.generator.jpa.temp;
 
-import io.quarkus.deployment.util.ClassOutputUtil;
 import io.quarkus.gizmo.ClassOutput;
+import org.apache.maven.project.MavenProject;
+
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
-import org.apache.maven.project.MavenProject;
 
 public class EntityWriter implements ClassOutput {
 

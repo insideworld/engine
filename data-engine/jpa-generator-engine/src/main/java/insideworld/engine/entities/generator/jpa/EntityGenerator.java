@@ -1,7 +1,7 @@
-package insideworld.engine.entities.generator;
+package insideworld.engine.entities.generator.jpa;
 
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.generator.fields.FieldGenerator;
+import insideworld.engine.entities.generator.jpa.fields.FieldGenerator;
 
 import java.util.Collection;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package insideworld.engine.entities.generate;
+package insideworld.engine.entities.generator.jpa.annotations;
 
 import javax.inject.Scope;
 import java.lang.annotation.Documented;
