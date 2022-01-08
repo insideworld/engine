@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>insideworld.engine</groupId>
-            <artifactId>database-engine</artifactId>
+            <artifactId>jpa-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -57,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>insideworld.engine</groupId>
-            <artifactId>security-database-engine</artifactId>
+            <artifactId>security-jpa-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

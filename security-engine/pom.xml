@@ -14,7 +14,7 @@
 
   <modules>
     <module>security-common-engine</module>
-    <module>security-database-engine</module>
+    <module>security-jpa-engine</module>
     <module>security-web-engine</module>
     <module>security-amqp-engine</module>
   </modules>

@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * TODO Rewrite to Entities keeper
+ */
 @Singleton
 public class HashStorageKeeper implements StorageKeeper {
 

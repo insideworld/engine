@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>insideworld.engine</groupId>
-            <artifactId>database-engine</artifactId>
+            <artifactId>jpa-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

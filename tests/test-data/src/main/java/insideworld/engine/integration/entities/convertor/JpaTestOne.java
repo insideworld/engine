@@ -1,6 +1,6 @@
 package insideworld.engine.integration.entities.convertor;
 
-import insideworld.engine.database.AbstractEntity;
+import insideworld.engine.data.jpa.AbstractEntity;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
