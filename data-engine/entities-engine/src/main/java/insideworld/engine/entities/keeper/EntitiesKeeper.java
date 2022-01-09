@@ -1,4 +1,4 @@
-package insideworld.engine.entities.keeper;
-
-public interface EntitiesKeeper {
-}
+//package insideworld.engine.entities.keeper;
+//
+//public interface EntitiesKeeper {
+//}

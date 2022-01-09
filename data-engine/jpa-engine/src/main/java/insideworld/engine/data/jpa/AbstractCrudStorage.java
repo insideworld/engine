@@ -29,7 +29,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
 
     @Override
     public T write(final T entity) {
-       persist(this.crudType().cast(entity));
+       persist(this.forCrud().cast(entity));
        return entity;
     }
 
@@ -51,13 +51,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
         return findByIdOptional(id).isPresent();
     }
 
-    protected abstract Class<C> crudType();
-
-    protected abstract Class<T> originType();
-
-    public Class<? extends T> forEntity() {
-        return this.crudType();
-    }
+    protected abstract Class<C> forCrud();
 
     protected Collection<C> castLower(final Collection<T> collection) {
         final Collection<C> result;
@@ -65,7 +59,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
             result = null;
         } else {
             result = collection.stream()
-                .map(item -> this.crudType().cast(item))
+                .map(item -> this.forCrud().cast(item))
                 .collect(Collectors.toList());
         }
         return result;
@@ -73,7 +67,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
 
     protected Collection<T> castUpper(final Collection<C> collection) {
         return collection.stream()
-            .map(item -> this.originType().cast(item))
+            .map(item -> this.forEntity().cast(item))
             .collect(Collectors.toList());
     }
 }

@@ -17,7 +17,6 @@ public class EntityGenerator {
     private final Map<Class<?>, String> exists;
     private final Collection<ToGenerate> generate;
     private final Collection<FieldGenerator> generators;
-    private final Reflections reflections;
 
     public EntityGenerator(final ClassLoader loader) {
         this.exists = exists;
