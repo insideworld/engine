@@ -1,4 +1,4 @@
 package insideworld.engine.data.jpa.generator.fields;
 
-public class EntitiesFieldGenerator {
+public class EntitiesFieldGenerator implements FieldGenerator {
 }

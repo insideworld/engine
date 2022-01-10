@@ -3,14 +3,15 @@ package insideworld.engine.data.jpa.generator.search;
 import com.google.common.collect.Lists;
 import insideworld.engine.data.jpa.generator.annotations.GenerateJpaEntity;
 import insideworld.engine.data.jpa.generator.annotations.GeneratesJpa;
+import insideworld.engine.reflection.Reflection;
+
 import java.util.Collection;
-import org.reflections.Reflections;
 
 public class SearchMixin implements SearchEntities {
 
-    private final Reflections reflections;
+    private final Reflection reflections;
 
-    public SearchMixin(final Reflections reflections) {
+    public SearchMixin(final Reflection reflections) {
         this.reflections = reflections;
     }
 

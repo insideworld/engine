@@ -1,11 +1,12 @@
 package insideworld.engine.data.jpa.generator.fields;
 
-import insideworld.engine.entities.generator.jpa.EntityGenerator;
+
+import insideworld.engine.data.jpa.generator.EntityGenerator;
 
 /**
  * Generate an entity implementation.
  */
-public class EntityFieldGenerator {
+public class EntityFieldGenerator implements FieldGenerator {
 
     private EntityGenerator generator;
 
