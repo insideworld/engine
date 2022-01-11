@@ -1,17 +1,10 @@
-package insideworld.engine.data.jpa.generator;
+package insideworld.engine.data.generator.jpa.temp;
 
 import com.google.common.collect.Maps;
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
-import insideworld.engine.entities.generate.GenerateEntity;
-import insideworld.engine.entities.generate.GenerateStorage;
+import insideworld.engine.data.generator.jpa.ClassWriter;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Collection;
-import java.util.Map;
-import javax.inject.Singleton;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -21,6 +14,13 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
+
+import javax.inject.Singleton;
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collection;
+import java.util.Map;
 
 @Mojo(name = "sayhi",
     defaultPhase = LifecyclePhase.GENERATE_SOURCES,
@@ -32,7 +32,7 @@ public class EntityGeneratorMojo extends AbstractMojo {
     private MavenProject project;
 
     public void execute() throws MojoExecutionException {
-        final ClassOutput output = new EntityWriter(this.project);
+        final ClassOutput output = new ClassWriter(this.project);
         final ClassLoader loader = this.getClassLoader(this.project);
         final var reflections = new Reflections(
             new ConfigurationBuilder()

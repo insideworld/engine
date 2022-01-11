@@ -1,4 +1,4 @@
-package insideworld.engine.data.jpa.generator.search;//package insideworld.engine.entities.generator.jpa.search;
+package insideworld.engine.data.generator.jpa.entity.search;//package insideworld.engine.entities.generator.jpa.search;
 //
 //import insideworld.engine.entities.Entity;
 //import org.reflections.Reflections;

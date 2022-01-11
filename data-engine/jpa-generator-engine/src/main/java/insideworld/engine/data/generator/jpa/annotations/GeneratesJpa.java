@@ -1,4 +1,4 @@
-package insideworld.engine.data.jpa.generator.annotations;
+package insideworld.engine.data.generator.jpa.annotations;
 
 /**
  * Interface marker for annotatate

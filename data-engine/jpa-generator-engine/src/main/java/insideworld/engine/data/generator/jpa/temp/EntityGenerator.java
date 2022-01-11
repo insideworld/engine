@@ -1,4 +1,4 @@
-package insideworld.engine.data.jpa.generator.temp;
+package insideworld.engine.data.generator.jpa.temp;
 
 import com.google.common.collect.Lists;
 import insideworld.engine.data.jpa.AbstractEntity;
