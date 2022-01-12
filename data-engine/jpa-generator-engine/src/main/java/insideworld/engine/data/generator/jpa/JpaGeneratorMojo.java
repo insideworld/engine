@@ -80,28 +80,7 @@ public class JpaGeneratorMojo extends AbstractMojo {
 
     }
 
-    private Collection<JpaInfo> getInfos(final Reflection reflection) {
-        final Collection<SearchEntities> searchers = ImmutableList.of(
-            new SearchMixin(reflection)
-        );
-        return searchers.stream().map(SearchEntities::search)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
-    }
 
-    private Map<Class<? extends Entity>, String> findExistEntities(final Reflection reflection) {
-        final List<Class<? extends Entity>> interfaces = reflection.getSubTypesOf(Entity.class)
-            .stream().filter(Class::isInterface).collect(Collectors.toList());
-        final Map<Class<? extends Entity>, String> result =
-            Maps.newHashMapWithExpectedSize(interfaces.size());
-        for (final Class<? extends Entity> type : interfaces) {
-            reflection.getSubTypesOf(type).stream().filter(
-//                entity -> !entity.isInterface() && !Modifier.isAbstract(entity.getModifiers())
-                entity -> entity.isAnnotationPresent(javax.persistence.Entity.class)
-            ).findFirst().ifPresent(entity -> result.put(type, entity.getName()));
-        }
-        return result;
-    }
 
 
 
