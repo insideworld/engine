@@ -1,35 +1,37 @@
-package insideworld.engine.data.generator.jpa;
-
-import com.google.common.collect.Maps;
-import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
-import io.quarkus.gizmo.ClassCreator;
-import io.quarkus.gizmo.ClassOutput;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Collection;
-import java.util.Map;
-import javax.inject.Singleton;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
-
-@Mojo(name = "generate_entities",
-    defaultPhase = LifecyclePhase.GENERATE_SOURCES,
-    requiresDependencyResolution = ResolutionScope.COMPILE
-)
-public class EntityGeneratorMojo extends AbstractMojo {
-
-    @Parameter(defaultValue = "${project}")
-    private MavenProject project;
-
-    public void execute() throws MojoExecutionException {
+//package insideworld.engine.data.generator.jpa.temp;
+//
+//import com.google.common.collect.Maps;
+//import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
+//import insideworld.engine.data.generator.jpa.ClassWriter;
+//import io.quarkus.gizmo.ClassCreator;
+//import io.quarkus.gizmo.ClassOutput;
+//import org.apache.maven.plugin.AbstractMojo;
+//import org.apache.maven.plugin.MojoExecutionException;
+//import org.apache.maven.plugins.annotations.LifecyclePhase;
+//import org.apache.maven.plugins.annotations.Mojo;
+//import org.apache.maven.plugins.annotations.Parameter;
+//import org.apache.maven.plugins.annotations.ResolutionScope;
+//import org.apache.maven.project.MavenProject;
+//import org.reflections.Reflections;
+//import org.reflections.util.ConfigurationBuilder;
+//
+//import javax.inject.Singleton;
+//import java.io.File;
+//import java.net.URL;
+//import java.net.URLClassLoader;
+//import java.util.Collection;
+//import java.util.Map;
+//
+//@Mojo(name = "sayhi",
+//    defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+//    requiresDependencyResolution = ResolutionScope.COMPILE
+//)
+//public class EntityGeneratorMojo extends AbstractMojo {
+//
+//    @Parameter(defaultValue = "${project}")
+//    private MavenProject project;
+//
+//    public void execute() throws MojoExecutionException {
 //        final ClassOutput output = new ClassWriter(this.project);
 //        final ClassLoader loader = this.getClassLoader(this.project);
 //        final var reflections = new Reflections(
@@ -56,10 +58,10 @@ public class EntityGeneratorMojo extends AbstractMojo {
 //            creator1.addAnnotation(Singleton.class);
 //            creator1.close();
 //        }
-
-
-    }
-
+//
+//
+//    }
+//
 //    private String prepareStorageSignature(final String entity, final String jpa) {
 //        return new StringBuilder().append("L").append(AbstractCrudGenericStorage.class.getName().replace(".", "/"))
 //                .append("<")
@@ -76,21 +78,21 @@ public class EntityGeneratorMojo extends AbstractMojo {
 //    private Collection<Class<?>> findStorages(final Reflections reflections) {
 //        return reflections.getTypesAnnotatedWith(GenerateStorage.class);
 //    }
-
-    private ClassLoader getClassLoader(MavenProject project) {
-        try {
-            final var classpathElements = project.getCompileClasspathElements();
-            classpathElements.add(project.getBuild().getOutputDirectory());
-            classpathElements.add(project.getBuild().getTestOutputDirectory());
-            final URL[] urls = new URL[classpathElements.size()];
-            for (int i = 0; i < classpathElements.size(); ++i) {
-                urls[i] = new File(classpathElements.get(i)).toURI().toURL();
-            }
-            return new URLClassLoader(urls, this.getClass().getClassLoader());
-        } catch (Exception e) {
-            getLog().debug("Couldn't get the classloader.");
-            return this.getClass().getClassLoader();
-        }
-    }
-
-}
+//
+//    private ClassLoader getClassLoader(MavenProject project) {
+//        try {
+//            final var classpathElements = project.getCompileClasspathElements();
+//            classpathElements.add(project.getBuild().getOutputDirectory());
+//            classpathElements.add(project.getBuild().getTestOutputDirectory());
+//            final URL[] urls = new URL[classpathElements.size()];
+//            for (int i = 0; i < classpathElements.size(); ++i) {
+//                urls[i] = new File(classpathElements.get(i)).toURI().toURL();
+//            }
+//            return new URLClassLoader(urls, this.getClass().getClassLoader());
+//        } catch (Exception e) {
+//            getLog().debug("Couldn't get the classloader.");
+//            return this.getClass().getClassLoader();
+//        }
+//    }
+//
+//}

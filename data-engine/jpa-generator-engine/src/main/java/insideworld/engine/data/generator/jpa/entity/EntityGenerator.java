@@ -31,33 +31,34 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class EntityGenerator {
 
-    private final Map<Class<?>, String> exists;
-    private final Collection<FieldGenerator> generators;
+    private final Map<Class<? extends Entity>, String> exists;
     private final ClassOutput output;
 
-
-    public EntityGenerator(final Map<Class<?>, String> exists,
+    public EntityGenerator(final Map<Class<? extends Entity>, String> exists,
                            final ClassOutput output) {
         this.exists = exists;
         this.output = output;
-        this.generators = this.createGenerators();
     }
 
-    public Map<Class<?>, String> generate(final Collection<SearchEntities> searchers) {
-        final Collection<JpaInfo> infos = searchers.stream()
-            .flatMap(searcher -> searcher.search().stream())
-            .collect(Collectors.toList());
+    public Map<Class<? extends Entity>, String> generate(
+        final Collection<JpaInfo> infos) {
         var creators = infos.stream()
-            .map(info -> Pair.of(info.getEntity(), this.createEntity(info)))
-            .collect(Collectors.toList());
+            .map(info -> Pair.<Class<? extends Entity>, ClassCreator>of(
+                info.getEntity(),
+                this.createEntity(info))
+            ).collect(Collectors.toList());
+        final Map<Class<? extends Entity>, String> created = creators.stream().collect(
+            Collectors.toMap(
+                Pair::getLeft,
+                creator -> creator.getRight().getClassName()
+            )
+        );
+        final var generators = this.createGenerators(created);
         for (final var creator : creators) {
-            this.createFields(creator.getLeft(), creator.getRight());
+            this.createFields(creator.getLeft(), creator.getRight(), generators);
             creator.getRight().close();
         }
-        return creators.stream().collect(Collectors.toMap(
-            Pair::getLeft,
-            creator -> creator.getRight().getClassName()
-        ));
+        return created;
     }
 
     private ClassCreator createEntity(final JpaInfo info) {
@@ -75,7 +76,9 @@ public class EntityGenerator {
         return creator;
     }
 
-    private void createFields(final Class<? extends Entity> entity, final ClassCreator creator) {
+    private void createFields(final Class<? extends Entity> entity,
+                              final ClassCreator creator,
+                              final Collection<FieldGenerator> generators) {
         final PropertyDescriptor[] beans;
         try {
             beans = Introspector.getBeanInfo(entity).getPropertyDescriptors();
@@ -83,7 +86,7 @@ public class EntityGenerator {
             throw new RuntimeException(e);
         }
         for (final PropertyDescriptor bean : beans) {
-            for (final FieldGenerator generator : this.generators) {
+            for (final FieldGenerator generator : generators) {
                 if (generator.can(bean)) {
                     generator.generate(creator, bean);
                     break;
@@ -98,24 +101,19 @@ public class EntityGenerator {
     }
 
 
-    private Collection<FieldGenerator> createGenerators() {
+    private Collection<FieldGenerator> createGenerators(
+        final Map<Class<? extends Entity>, String> created) {
+        final Map<Class<? extends Entity>, String> all = Maps.newHashMapWithExpectedSize(
+            this.exists.size() + created.size()
+        );
+        all.putAll(created);
+        all.putAll(this.exists);
         return ImmutableList.of(
             new PrimitiveFieldGenerator(),
             new EntitiesFieldGenerator(),
-            new EntityFieldGenerator(this)
+            new EntityFieldGenerator(all)
         );
     }
 
-//    private Map<Class<?>, String> findExists() {
-//        final List<Class<? extends Entity>> interfaces = this.reflection.getSubTypesOf(Entity.class)
-//            .stream().filter(Class::isInterface).collect(Collectors.toList());
-//        final Map<Class<?>, String> result = Maps.newHashMapWithExpectedSize(interfaces.size());
-//        for (final Class<? extends Entity> type : interfaces) {
-//            this.reflection.getSubTypesOf(type).stream().filter(
-////                entity -> !entity.isInterface() && !Modifier.isAbstract(entity.getModifiers())
-//                entity -> entity.isAnnotationPresent(javax.persistence.Entity.class)
-//            ).findFirst().ifPresent(entity -> result.put(type, entity.getName()));
-//        }
-//        return result;
-//    }
+
 }

@@ -34,6 +34,6 @@ public class EntityFieldGenerator extends AbstractFieldGenerator {
 
     @Override
     public boolean can(final PropertyDescriptor bean) {
-        return bean.getReadMethod().getReturnType().isAssignableFrom(Entity.class);
+        return Entity.class.isAssignableFrom(bean.getReadMethod().getReturnType());
     }
 }

@@ -1,24 +1,17 @@
 package insideworld.engine.data.generator.jpa.annotations;
 
 import insideworld.engine.entities.Entity;
-
-import java.lang.annotation.Repeatable;
-import javax.inject.Scope;
 import java.lang.annotation.Documented;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import javax.inject.Scope;
 
 @Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(GenerateJpaEntities.class)
-public @interface GenerateJpaEntity {
+public @interface GenerateJpaEntities {
 
-    Class<? extends Entity> entity();
-
-    String schema();
-
-    String table();
-
+    GenerateJpaEntity[] value();
 
 }

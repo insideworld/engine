@@ -63,10 +63,24 @@ values (4, 1, 'Test array3');
 insert into entities.arrays
 values (5, 1, 'Test array4');
 
-create table entities.generated
+CREATE SCHEMA generated;
+
+create table generated.child
 (
     id serial not null
-        constraint cglib_pk
+        constraint child_pk
             primary key,
-    message varchar
-)
+    some varchar
+);
+
+create table generated.top
+(
+    id serial not null
+        constraint top_pk
+            primary key,
+    message varchar,
+    child_id bigint
+        constraint top_main_id_fk
+            references generated.child
+);
+
