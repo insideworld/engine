@@ -2,10 +2,12 @@ package insideworld.engine.data.generator.jpa;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import insideworld.engine.data.generator.jpa.entity.EntityClassGenerator;
 import insideworld.engine.data.generator.jpa.entity.EntityGenerator;
 import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import insideworld.engine.data.generator.jpa.entity.search.SearchEntities;
 import insideworld.engine.data.generator.jpa.entity.search.SearchMixin;
+import insideworld.engine.data.generator.jpa.storage.StorageGenerator;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.reflection.ClassLoaderReflection;
 import insideworld.engine.reflection.Reflection;
@@ -36,28 +38,30 @@ public class JpaGeneratorMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}")
     private MavenProject project;
 
+    @Parameter(property = "scan", required = true)
+    private String[] scan;
+
+    @Parameter(property = "save", required = true)
+    private String save;
+
     public void execute() throws MojoExecutionException {
         try {
             final ClassOutput output = new ClassWriter(this.project.getBuild().getOutputDirectory());
-            final Reflection reflection = new ClassLoaderReflection(this.getClassLoader(this.project), "insideworld");
-            final EntityGenerator generator = new EntityGenerator(
-                this.findExistEntities(reflection), output
+            final Reflection reflection = new ClassLoaderReflection(
+                this.getClassLoader(this.project), this.scan);
+            final EntityGenerator entities = new EntityGenerator(output, reflection, this.save);
+            final Map<Class<? extends Entity>, String> generate = entities.findAndGenerate();
+            final StorageGenerator storages = new StorageGenerator(
+                output, reflection, this.save, generate
             );
-            generator.generate(this.getInfos(reflection));
+            storages.generate();
         } catch (Exception exp) {
             throw new MojoExecutionException(exp);
         }
     }
 
 
-//    private String prepareStorageSignature(final String entity, final String jpa) {
-//        return new StringBuilder().append("L").append(AbstractCrudGenericStorage.class.getName().replace(".", "/"))
-//                .append("<")
-//                .append("L").append(entity.replace(".", "/")).append(";")
-//                .append("L").append(jpa.replace(".", "/")).append(";")
-//                .append(">;")
-//                .toString();
-//    }
+
 
 //    private Collection<Class<?>> findEntities(final Reflections reflections) {
 //        return reflections.getTypesAnnotatedWith(GenerateEntity.class);
@@ -79,30 +83,4 @@ public class JpaGeneratorMojo extends AbstractMojo {
         return new URLClassLoader(urls, this.getClass().getClassLoader());
 
     }
-
-    private Collection<JpaInfo> getInfos(final Reflection reflection) {
-        final Collection<SearchEntities> searchers = ImmutableList.of(
-            new SearchMixin(reflection)
-        );
-        return searchers.stream().map(SearchEntities::search)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
-    }
-
-    private Map<Class<? extends Entity>, String> findExistEntities(final Reflection reflection) {
-        final List<Class<? extends Entity>> interfaces = reflection.getSubTypesOf(Entity.class)
-            .stream().filter(Class::isInterface).collect(Collectors.toList());
-        final Map<Class<? extends Entity>, String> result =
-            Maps.newHashMapWithExpectedSize(interfaces.size());
-        for (final Class<? extends Entity> type : interfaces) {
-            reflection.getSubTypesOf(type).stream().filter(
-//                entity -> !entity.isInterface() && !Modifier.isAbstract(entity.getModifiers())
-                entity -> entity.isAnnotationPresent(javax.persistence.Entity.class)
-            ).findFirst().ifPresent(entity -> result.put(type, entity.getName()));
-        }
-        return result;
-    }
-
-
-
 }

@@ -1,15 +1,15 @@
-package insideworld.engine.data.generator.jpa.annotations;
+package insideworld.engine.data.generator.jpa.storage;
 
-import javax.inject.Scope;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import javax.inject.Scope;
 
 @Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GenerateStorage {
+public @interface GenerateCruds {
 
-    String type();
+    GenerateCrud[] value();
 
 }

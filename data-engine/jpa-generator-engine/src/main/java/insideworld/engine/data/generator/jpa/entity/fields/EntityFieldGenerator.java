@@ -1,9 +1,7 @@
 package insideworld.engine.data.generator.jpa.entity.fields;
 
 
-import insideworld.engine.data.generator.jpa.entity.EntityGenerator;
 import insideworld.engine.entities.Entity;
-import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
 import java.util.Map;

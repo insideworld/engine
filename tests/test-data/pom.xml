@@ -58,6 +58,10 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
+                        <configuration>
+                            <scan>insideworld</scan>
+                            <save>insideworld.engine.test</save>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

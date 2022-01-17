@@ -3,5 +3,5 @@ package insideworld.engine.data.generator.jpa.annotations;
 /**
  * Interface marker for annotatate
  */
-public interface GeneratesJpa {
+public interface JpaGenerator {
 }
