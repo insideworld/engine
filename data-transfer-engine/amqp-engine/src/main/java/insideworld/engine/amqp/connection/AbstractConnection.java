@@ -47,7 +47,4 @@ public abstract class AbstractConnection implements Connection {
         return this.connection;
     }
 
-    public static void some() {
-
-    }
 }
