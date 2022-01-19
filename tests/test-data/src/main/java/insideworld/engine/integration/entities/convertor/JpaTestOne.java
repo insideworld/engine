@@ -18,7 +18,7 @@ public class JpaTestOne extends AbstractEntity {
     private String description;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -26,7 +26,7 @@ public class JpaTestOne extends AbstractEntity {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {

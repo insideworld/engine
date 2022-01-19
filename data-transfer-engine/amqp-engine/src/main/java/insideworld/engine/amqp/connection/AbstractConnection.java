@@ -33,7 +33,7 @@ public abstract class AbstractConnection implements Connection {
                               final int port,
                               final String user,
                               final String password) {
-        AmqpClientOptions options = new AmqpClientOptions()
+        final AmqpClientOptions options = new AmqpClientOptions()
             .setHost(host)
             .setPort(port)
             .setUsername(user)
@@ -45,5 +45,9 @@ public abstract class AbstractConnection implements Connection {
     @Override
     public final AmqpConnection connection() {
         return this.connection;
+    }
+
+    public static void some() {
+
     }
 }

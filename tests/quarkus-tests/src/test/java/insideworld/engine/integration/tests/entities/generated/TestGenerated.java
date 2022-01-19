@@ -3,6 +3,8 @@ package insideworld.engine.integration.tests.entities.generated;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.integration.entities.convertor.JpaTestMain;
+import insideworld.engine.integration.entities.convertor.TestMain;
 import insideworld.engine.integration.entities.generated.GeneratedTopEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.enterprise.util.TypeLiteral;
@@ -23,6 +25,11 @@ public class TestGenerated {
     @Test
     @Transactional
     public void test() throws StorageException {
+
+        final Storage<TestMain> storage1 = factory.createObject(new TypeLiteral<Storage<TestMain>>() {
+        });
+        final TestMain read = storage1.read(1);
+
         final Storage<GeneratedTopEntity> storage = factory.createObject(new TypeLiteral<Storage<GeneratedTopEntity>>() {});
         final GeneratedTopEntity object = factory.createObject(GeneratedTopEntity.class);
         object.setMessage("Some shiit");
@@ -49,5 +56,12 @@ public class TestGenerated {
 
     }
 
+    public static void qwe(String qwe) {
+
+    }
+
+    public void qwe() {
+
+    }
 
 }
