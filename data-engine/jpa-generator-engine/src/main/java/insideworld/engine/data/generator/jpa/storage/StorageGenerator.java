@@ -6,11 +6,13 @@ import insideworld.engine.data.generator.jpa.storage.search.SearchStorages;
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.reflection.Reflection;
+import io.quarkus.arc.DefaultBean;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Singleton;
 
 public class StorageGenerator {
@@ -40,6 +42,7 @@ public class StorageGenerator {
                 .signature(this.prepareStorageSignature(entity.getName(), this.impls.get(entity)))
                 .build();
             creator.addAnnotation(Singleton.class);
+            creator.addAnnotation(DefaultBean.class);
             creator.close();
         }
 

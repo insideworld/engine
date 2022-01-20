@@ -1,7 +1,7 @@
 package insideworld.engine.data.generator.jpa.entity.search;
 
-import insideworld.engine.data.generator.jpa.annotations.GenerateJpaEntity;
-import insideworld.engine.data.generator.jpa.annotations.JpaGenerator;
+import insideworld.engine.data.generator.jpa.GenerateMixin;
+import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
 import insideworld.engine.reflection.Reflection;
 
 import java.util.Arrays;
@@ -18,7 +18,7 @@ public class SearchMixin implements SearchEntities {
 
     @Override
     public Collection<JpaInfo> search() {
-        return this.reflections.getSubTypesOf(JpaGenerator.class).stream()
+        return this.reflections.getSubTypesOf(GenerateMixin.class).stream()
                 .map(mixin -> mixin.getAnnotationsByType(GenerateJpaEntity.class))
                 .flatMap(Arrays::stream)
                 .map(annotation -> new JpaInfo(

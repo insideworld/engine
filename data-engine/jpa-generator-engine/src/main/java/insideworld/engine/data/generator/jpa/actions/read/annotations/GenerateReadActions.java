@@ -1,4 +1,4 @@
-package insideworld.engine.data.generator.jpa.storage;
+package insideworld.engine.data.generator.jpa.actions.read.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -8,8 +8,8 @@ import javax.inject.Scope;
 @Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GenerateCruds {
+public @interface GenerateReadActions {
 
-    GenerateCrud[] value();
+    GenerateReadAction[] value();
 
 }

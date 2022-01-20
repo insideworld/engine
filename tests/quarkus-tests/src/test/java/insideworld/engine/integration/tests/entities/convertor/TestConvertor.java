@@ -9,6 +9,7 @@ import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.integration.entities.convertor.JpaTestMain;
 import insideworld.engine.integration.entities.convertor.MainStorage;
+import insideworld.engine.integration.entities.convertor.TestMain;
 import io.quarkus.test.junit.QuarkusTest;
 
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class TestConvertor {
 
     @Test
     public void test() throws ActionException, StorageException {
-        final JpaTestMain entity = this.storage.read(1);
+        final TestMain entity = this.storage.read(1);
         final Record convert = this.converter.convert(entity);
         LOGGER.trace("Test");
         final Context context = factory.createObject(Context.class);
@@ -44,7 +45,7 @@ public class TestConvertor {
         context.put("name", "entity");
         context.put("description", "desctiption of entity");
         context.put("arraysIds", ImmutableList.of(1L, 3L, 4L, 10L));
-        final JpaTestMain qwe = this.converter.convert(context, JpaTestMain.class);
+        final TestMain qwe = this.converter.convert(context, JpaTestMain.class);
         LOGGER.trace(convert.toString());
     }
 }

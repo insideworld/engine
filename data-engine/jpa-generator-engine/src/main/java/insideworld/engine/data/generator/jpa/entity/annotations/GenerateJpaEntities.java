@@ -1,8 +1,6 @@
-package insideworld.engine.data.generator.jpa.annotations;
+package insideworld.engine.data.generator.jpa.entity.annotations;
 
-import insideworld.engine.entities.Entity;
 import java.lang.annotation.Documented;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import javax.inject.Scope;

@@ -1,4 +1,4 @@
-package insideworld.engine.data.generator.jpa.annotations;
+package insideworld.engine.data.generator.jpa.entity.annotations;
 
 import insideworld.engine.entities.Entity;
 

@@ -5,6 +5,7 @@ import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.integration.entities.convertor.JpaTestMain;
 import insideworld.engine.integration.entities.convertor.TestMain;
+import insideworld.engine.integration.entities.generated.GeneratedChildEntity;
 import insideworld.engine.integration.entities.generated.GeneratedTopEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.enterprise.util.TypeLiteral;
@@ -25,17 +26,20 @@ public class TestGenerated {
     @Test
     @Transactional
     public void test() throws StorageException {
-
-        final Storage<TestMain> storage1 = factory.createObject(new TypeLiteral<Storage<TestMain>>() {
-        });
-        final TestMain read = storage1.read(1);
-
         final Storage<GeneratedTopEntity> storage = factory.createObject(new TypeLiteral<Storage<GeneratedTopEntity>>() {});
-        final GeneratedTopEntity object = factory.createObject(GeneratedTopEntity.class);
-        object.setMessage("Some shiit");
-        System.out.println(object.getMessage());
-        storage.write(object);
-        System.out.println(storage.read(1));
+        final Storage<GeneratedChildEntity> storage1 = factory.createObject(new TypeLiteral<Storage<GeneratedChildEntity>>() {});
+        System.out.println("qwe");
+//        factory.createObject(SomeClass.class);
+//        final Storage<TestMain> storage1 = factory.createObject(new TypeLiteral<Storage<TestMain>>() {
+//        });
+//        final TestMain read = storage1.read(1);
+//
+//
+//        final GeneratedTopEntity object = factory.createObject(GeneratedTopEntity.class);
+//        object.setMessage("Some shiit");
+//        System.out.println(object.getMessage());
+//        storage.write(object);
+//        System.out.println(storage.read(1));
 //        final ClassCreator build = ClassCreator.builder().superClass(AbstractEntity.class).interfaces(Entity.class)
 //            .className("OneMore").classOutput(new ClassOutput() {
 //                @Override
