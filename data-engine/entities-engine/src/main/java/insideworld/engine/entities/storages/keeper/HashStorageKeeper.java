@@ -27,6 +27,7 @@ public class HashStorageKeeper implements StorageKeeper {
         for (final Storage storage : storages) {
             reflection.getSubTypesOf(storage.forEntity())
                 .forEach(type -> this.storages.put((Class<? extends Entity>) type, storage));
+            this.storages.put(storage.forEntity(), storage);
         }
     }
 

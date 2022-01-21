@@ -1,5 +1,6 @@
 package insideworld.engine.integration.tests.entities.generated;
 
+import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
@@ -7,7 +8,10 @@ import insideworld.engine.integration.entities.convertor.JpaTestMain;
 import insideworld.engine.integration.entities.convertor.TestMain;
 import insideworld.engine.integration.entities.generated.GeneratedChildEntity;
 import insideworld.engine.integration.entities.generated.GeneratedTopEntity;
+import insideworld.engine.quarkus.CDIObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -26,6 +30,10 @@ public class TestGenerated {
     @Test
     @Transactional
     public void test() throws StorageException {
+        Instance<Storage<? extends Entity>> select = CDI.current().select(new TypeLiteral<Storage<? extends Entity>>() {
+        });
+        Instance<Storage<GeneratedChildEntity>> select1 = CDI.current().select(new TypeLiteral<Storage<GeneratedChildEntity>>() {
+        });
         final Storage<GeneratedTopEntity> storage = factory.createObject(new TypeLiteral<Storage<GeneratedTopEntity>>() {});
         final Storage<GeneratedChildEntity> storage1 = factory.createObject(new TypeLiteral<Storage<GeneratedChildEntity>>() {});
         System.out.println("qwe");

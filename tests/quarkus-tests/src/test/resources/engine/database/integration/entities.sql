@@ -73,6 +73,10 @@ create table generated.child
     some varchar
 );
 
+insert into generated.child values (1, 'One');
+insert into generated.child values (2, 'Two');
+insert into generated.child values (3, 'Three');
+
 create table generated.top
 (
     id serial not null

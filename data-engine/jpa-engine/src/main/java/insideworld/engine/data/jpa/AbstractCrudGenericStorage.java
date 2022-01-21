@@ -14,8 +14,8 @@ public abstract class AbstractCrudGenericStorage<T extends Entity, C extends T>
         final ParameterizedType generics =
             (ParameterizedType) this.getClass().getGenericSuperclass();
         final Type[] arguments = generics.getActualTypeArguments();
-        this.crud = (Class<C>) arguments[0];
-        this.entity = (Class<T>) arguments[1];
+        this.entity = (Class<T>) arguments[0];
+        this.crud = (Class<C>) arguments[1];
     }
 
     @Override
