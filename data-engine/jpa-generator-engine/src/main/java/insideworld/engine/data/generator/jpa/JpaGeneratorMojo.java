@@ -2,6 +2,7 @@ package insideworld.engine.data.generator.jpa;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import insideworld.engine.data.generator.jpa.actions.read.ReadActionGenerator;
 import insideworld.engine.data.generator.jpa.entity.EntityClassGenerator;
 import insideworld.engine.data.generator.jpa.entity.EntityGenerator;
 import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
@@ -55,6 +56,8 @@ public class JpaGeneratorMojo extends AbstractMojo {
                 output, reflection, this.save, generate
             );
             storages.generate();
+            final ReadActionGenerator read = new ReadActionGenerator(reflection, output, this.save);
+            read.generate();
         } catch (Exception exp) {
             throw new MojoExecutionException(exp);
         }

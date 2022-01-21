@@ -1,6 +1,7 @@
 package insideworld.engine.integration.entities.generated;
 
 import insideworld.engine.data.generator.jpa.GenerateMixin;
+import insideworld.engine.data.generator.jpa.actions.read.annotations.GenerateReadAction;
 import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
 import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
 
@@ -8,5 +9,6 @@ import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
 @GenerateJpaEntity(entity = GeneratedTopEntity.class, schema = "generated", table = "top")
 @GenerateCrud(entity = GeneratedChildEntity.class)
 @GenerateCrud(entity = GeneratedTopEntity.class)
+@GenerateReadAction(entity = GeneratedChildEntity.class, tag = "child", tags = "childs", key = "read.read.read")
 public interface Mixin extends GenerateMixin {
 }
