@@ -27,10 +27,10 @@ create table entities.main
             primary key,
     name        varchar not null,
     description varchar,
-    one         bigint
+    one_id         bigint
         constraint main_one_id_fk
             references entities.one,
-    two         bigint
+    two_id         bigint
         constraint main_two_id_fk
             references entities.two
 );

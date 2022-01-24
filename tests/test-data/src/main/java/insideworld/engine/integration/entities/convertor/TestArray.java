@@ -1,8 +1,8 @@
-package insideworld.engine.integration.entities;
+package insideworld.engine.integration.entities.convertor;
 
 import insideworld.engine.entities.Entity;
 
-public interface JpaArray extends Entity {
+public interface TestArray extends Entity {
     String getMessage();
 
     long getMainId();

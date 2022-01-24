@@ -13,6 +13,4 @@ public interface GeneratedTopEntity extends Entity {
 
     void setChild(GeneratedChildEntity child);
 
-    Collection<GeneratedChildEntity> getChilds();
-
 }

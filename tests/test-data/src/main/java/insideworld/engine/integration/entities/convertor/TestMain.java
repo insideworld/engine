@@ -12,15 +12,15 @@ public interface TestMain extends Entity {
 
     void setDescription(String description);
 
-    JpaTestOne getOne();
+    TestOne getOne();
 
-    void setOne(JpaTestOne one);
+    void setOne(TestOne one);
 
-    JpaTestTwo getTwo();
+    TestTwo getTwo();
 
-    void setTwo(JpaTestTwo two);
+    void setTwo(TestTwo two);
 
-    Collection<JpaArray> getArrays();
+    Collection<TestArray> getArrays();
 
-    void setArrays(Collection<JpaArray> arrays);
+    void setArrays(Collection<TestArray> arrays);
 }

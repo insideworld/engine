@@ -1,18 +1,8 @@
 package insideworld.engine.integration.tests.entities.generated;
 
-import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.integration.entities.convertor.JpaTestMain;
-import insideworld.engine.integration.entities.convertor.TestMain;
-import insideworld.engine.integration.entities.generated.GeneratedChildEntity;
-import insideworld.engine.integration.entities.generated.GeneratedTopEntity;
-import insideworld.engine.quarkus.CDIObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.CDI;
-import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;

@@ -24,6 +24,11 @@ public class EntityFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
+    public boolean can(final PropertyDescriptor bean) {
+        return Entity.class.isAssignableFrom(bean.getReadMethod().getReturnType());
+    }
+
+    @Override
     protected void addAnnotations(
         final FieldCreator field, final PropertyDescriptor descriptor, final JpaInfo info) {
         field.addAnnotation(ManyToOne.class);
@@ -40,12 +45,19 @@ public class EntityFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    protected String signature(final PropertyDescriptor descriptor) {
+    protected String fieldSignature(final PropertyDescriptor descriptor) {
         return null;
     }
 
     @Override
-    public boolean can(final PropertyDescriptor bean) {
-        return Entity.class.isAssignableFrom(bean.getReadMethod().getReturnType());
+    protected String readSignature(PropertyDescriptor descriptor) {
+        return null;
     }
+
+    @Override
+    protected String writeSignature(PropertyDescriptor descriptor) {
+        return null;
+    }
+
+
 }

@@ -1,13 +1,11 @@
 package insideworld.engine.data.generator.jpa.entity.fields;
 
 import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
-import insideworld.engine.entities.Entity;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.SignatureElement;
 import java.beans.PropertyDescriptor;
-import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class AbstractFieldGenerator implements FieldGenerator {
 
@@ -20,7 +18,7 @@ public abstract class AbstractFieldGenerator implements FieldGenerator {
             this.defineType(descriptor)
         );
         if (field instanceof SignatureElement) {
-            ((SignatureElement<?>) field).setSignature(this.signature(descriptor));
+            ((SignatureElement<?>) field).setSignature(this.fieldSignature(descriptor));
         }
         this.addAnnotations(field, descriptor, info);
         if (descriptor.getReadMethod() != null) {
@@ -28,6 +26,7 @@ public abstract class AbstractFieldGenerator implements FieldGenerator {
                 descriptor.getReadMethod().getName(),
                 descriptor.getReadMethod().getReturnType()
             );
+            get.setSignature(this.readSignature(descriptor));
             get.returnValue(get.readInstanceField(field.getFieldDescriptor(), get.getThis()));
             get.close();
         }
@@ -37,6 +36,7 @@ public abstract class AbstractFieldGenerator implements FieldGenerator {
                 void.class,
                 descriptor.getWriteMethod().getParameterTypes()[0]
             );
+            set.setSignature(this.writeSignature(descriptor));
             set.writeInstanceField(field.getFieldDescriptor(), set.getThis(), set.getMethodParam(0));
             set.returnValue(null);
             set.close();
@@ -47,6 +47,10 @@ public abstract class AbstractFieldGenerator implements FieldGenerator {
 
     protected abstract String defineType(PropertyDescriptor descriptor);
 
-    protected abstract String signature(PropertyDescriptor descriptor);
+    protected abstract String fieldSignature(PropertyDescriptor descriptor);
+
+    protected abstract String readSignature(PropertyDescriptor descriptor);
+
+    protected abstract String writeSignature(PropertyDescriptor descriptor);
 
 }

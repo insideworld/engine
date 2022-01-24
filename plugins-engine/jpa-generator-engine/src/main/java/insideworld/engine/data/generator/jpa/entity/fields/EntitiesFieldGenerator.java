@@ -28,6 +28,14 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
+    public boolean can(final PropertyDescriptor bean) {
+        final Class<?> ret = bean.getReadMethod().getReturnType();
+        return Collection.class.isAssignableFrom(ret)
+            && Entity.class.isAssignableFrom(this.getGeneric(bean.getReadMethod()));
+    }
+
+
+    @Override
     protected void addAnnotations(
         final FieldCreator field, final PropertyDescriptor descriptor, final JpaInfo info) {
         final AnnotationCreator annotation = field.addAnnotation(OneToMany.class);
@@ -42,19 +50,29 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    protected String signature(final PropertyDescriptor descriptor) {
+    protected String fieldSignature(final PropertyDescriptor descriptor) {
         final Class<?> generic = this.getGeneric(descriptor.getReadMethod());
         return String.format("Ljava/util/Collection<L%s;>;",
-            this.implementations.get(generic).getImplementation()
+            this.implementations.get(generic).getImplementation().replace(".","/")
         );
     }
 
     @Override
-    public boolean can(final PropertyDescriptor bean) {
-        final Class<?> ret = bean.getReadMethod().getReturnType();
-        return Collection.class.isAssignableFrom(ret)
-            && Entity.class.isAssignableFrom(this.getGeneric(bean.getReadMethod()));
+    protected String readSignature(final PropertyDescriptor descriptor) {
+        return String.format(
+            "()Ljava/util/Collection<L%s;>;",
+            this.getGeneric(descriptor.getReadMethod()).getName().replace(".","/")
+        );
     }
+
+    @Override
+    protected String writeSignature(final PropertyDescriptor descriptor) {
+        return String.format(
+            "(Ljava/util/Collection<L%s;>;)V",
+            this.getGeneric(descriptor.getReadMethod()).getName().replace(".","/")
+        );
+    }
+
 
     private Class<?> getGeneric(final Method method) {
         return (Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];

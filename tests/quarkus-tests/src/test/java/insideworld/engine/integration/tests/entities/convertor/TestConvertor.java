@@ -5,10 +5,9 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.converter.EntityConverter;
+import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.integration.entities.convertor.JpaTestMain;
-import insideworld.engine.integration.entities.convertor.MainStorage;
 import insideworld.engine.integration.entities.convertor.TestMain;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -24,12 +23,12 @@ public class TestConvertor {
 
     private final EntityConverter converter;
     private final ObjectFactory factory;
-    private final MainStorage storage;
+    private final Storage<TestMain> storage;
 
     @Inject
     public TestConvertor(final EntityConverter converter,
                          final ObjectFactory factory,
-                         final MainStorage storage) {
+                         final Storage<TestMain> storage) {
         this.converter = converter;
         this.factory = factory;
         this.storage = storage;
@@ -45,7 +44,7 @@ public class TestConvertor {
         context.put("name", "entity");
         context.put("description", "desctiption of entity");
         context.put("arraysIds", ImmutableList.of(1L, 3L, 4L, 10L));
-        final TestMain qwe = this.converter.convert(context, JpaTestMain.class);
+        final TestMain qwe = this.converter.convert(context, TestMain.class);
         LOGGER.trace(convert.toString());
     }
 }
