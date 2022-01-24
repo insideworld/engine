@@ -27,7 +27,8 @@ public class SearchMixin implements SearchEntities {
                     annotation.entity(),
                     annotation.schema(),
                     annotation.table(),
-                    this.name(annotation.entity())))
+                    this.name(annotation.entity()),
+                    true))
                 .collect(Collectors.toList());
     }
 

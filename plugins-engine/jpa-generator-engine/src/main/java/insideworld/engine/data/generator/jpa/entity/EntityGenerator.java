@@ -32,25 +32,20 @@ public class EntityGenerator {
         this.packages = packages;
     }
 
-
     public Map<Class<? extends Entity>, JpaInfo> findAndGenerate() {
-        final Collection<JpaInfo> infos = this.findInfos();
-        for (JpaInfo info : infos) {
-
+        final Map<Class<? extends Entity>, JpaInfo> infos = this.findInfos().stream()
+            .collect(Collectors.toMap(JpaInfo::getEntity, Function.identity()));
+        final EntityClassGenerator entities = new EntityClassGenerator(this.output);
+        final EntityFieldsGenerator fields = new EntityFieldsGenerator(infos);
+        for (final JpaInfo info : infos.values()) {
+            if (!info.isGenerated()) {
+                continue;
+            }
+            final ClassCreator creator = entities.createEntity(info);
+            fields.createFields(creator, info);
+            creator.close();
         }
-        final EntityClassGenerator entities =
-            new EntityClassGenerator(this.output, this.findInfos());
-        final Collection<Pair<ClassCreator, JpaInfo>> generated = entities.generate();
-        final Map<Class<? extends Entity>, JpaInfo> exists = this.findExists();
-        exists.putAll(
-            generated.stream().collect(Collectors.toMap(
-                entry -> entry.getRight().getEntity(),
-                Pair::getRight
-            )));
-        final EntityFieldsGenerator fields = new EntityFieldsGenerator(exists);
-        fields.createFields(generated);
-        generated.forEach(pair -> pair.getLeft().close());
-        return exists;
+        return infos;
     }
 
     private Collection<JpaInfo> findInfos() {

@@ -12,7 +12,7 @@ public class JpaInfo {
 
     private final String implementation;
 
-    private boolean generated;
+    private final boolean generated;
 
     public JpaInfo(
         final Class<? extends Entity> entity,
@@ -43,7 +43,6 @@ public class JpaInfo {
     public String getImplementation() {
         return this.implementation;
     }
-
 
     public boolean isGenerated() {
         return this.generated;

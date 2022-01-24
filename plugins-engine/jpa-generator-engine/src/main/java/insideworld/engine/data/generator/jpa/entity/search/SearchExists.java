@@ -35,7 +35,7 @@ public class SearchExists implements SearchEntities {
             .findAny();
         final JpaInfo info;
         if (implementation.isPresent()) {
-            final Table table = entity.getAnnotation(Table.class);
+            final Table table = implementation.get().getAnnotation(Table.class);
             info = new JpaInfo(
                 entity,
                 table.schema(),

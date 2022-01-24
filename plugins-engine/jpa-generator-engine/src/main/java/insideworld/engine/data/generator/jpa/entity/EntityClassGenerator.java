@@ -17,12 +17,9 @@ import org.apache.commons.lang3.tuple.Pair;
 public class EntityClassGenerator {
 
     private final ClassOutput output;
-    private final Collection<JpaInfo> infos;
 
-    public EntityClassGenerator(final ClassOutput output,
-                                final Collection<JpaInfo> infos) {
+    public EntityClassGenerator(final ClassOutput output) {
         this.output = output;
-        this.infos = infos;
     }
 
     public ClassCreator createEntity(final JpaInfo info) {
