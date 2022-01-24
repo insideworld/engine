@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import insideworld.engine.data.generator.jpa.entity.search.SearchEntities;
+import insideworld.engine.data.generator.jpa.entity.search.SearchExists;
 import insideworld.engine.data.generator.jpa.entity.search.SearchMixin;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.reflection.Reflection;
@@ -12,7 +13,10 @@ import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.persistence.Table;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class EntityGenerator {
 
@@ -29,42 +33,34 @@ public class EntityGenerator {
     }
 
 
-    public Map<Class<? extends Entity>, String> findAndGenerate() {
+    public Map<Class<? extends Entity>, JpaInfo> findAndGenerate() {
+        final Collection<JpaInfo> infos = this.findInfos();
+        for (JpaInfo info : infos) {
+
+        }
         final EntityClassGenerator entities =
-            new EntityClassGenerator(this.output, this.findInfos(), this.packages);
-        final Map<Class<? extends Entity>, ClassCreator> generated = entities.generate();
-        final Map<Class<? extends Entity>, String> exists = this.findExists();
+            new EntityClassGenerator(this.output, this.findInfos());
+        final Collection<Pair<ClassCreator, JpaInfo>> generated = entities.generate();
+        final Map<Class<? extends Entity>, JpaInfo> exists = this.findExists();
         exists.putAll(
-            generated.entrySet().stream().collect(Collectors.toMap(
-                Map.Entry::getKey,
-                entry -> entry.getValue().getClassName()
-        )));
+            generated.stream().collect(Collectors.toMap(
+                entry -> entry.getRight().getEntity(),
+                Pair::getRight
+            )));
         final EntityFieldsGenerator fields = new EntityFieldsGenerator(exists);
         fields.createFields(generated);
-        generated.values().forEach(ClassCreator::close);
+        generated.forEach(pair -> pair.getLeft().close());
         return exists;
     }
 
     private Collection<JpaInfo> findInfos() {
         final Collection<SearchEntities> searchers = ImmutableList.of(
-            new SearchMixin(this.reflection)
+            new SearchMixin(this.reflection, this.packages),
+            new SearchExists(this.reflection)
         );
         return searchers.stream().map(SearchEntities::search)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
-    }
-
-    private Map<Class<? extends Entity>, String> findExists() {
-        final List<Class<? extends Entity>> interfaces = this.reflection.getSubTypesOf(Entity.class)
-            .stream().filter(Class::isInterface).collect(Collectors.toList());
-        final Map<Class<? extends Entity>, String> result =
-            Maps.newHashMapWithExpectedSize(interfaces.size());
-        for (final Class<? extends Entity> type : interfaces) {
-            this.reflection.getSubTypesOf(type).stream().filter(
-                entity -> entity.isAnnotationPresent(javax.persistence.Entity.class)
-            ).findFirst().ifPresent(entity -> result.put(type, entity.getName()));
-        }
-        return result;
     }
 
 }

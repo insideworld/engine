@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(schema = "entities", name = "arrays")
 @Dependent
-public class JpaArray extends AbstractEntity {
+public class JpaArray extends AbstractEntity implements insideworld.engine.integration.entities.JpaArray {
 
     @Column(name = "main_id")
     private long mainId;
@@ -17,14 +17,17 @@ public class JpaArray extends AbstractEntity {
     @Column
     private String message;
 
+    @Override
     public String getMessage() {
         return message;
     }
 
+    @Override
     public long getMainId() {
         return mainId;
     }
 
+    @Override
     public void setMainId(long mainId) {
         this.mainId = mainId;
     }

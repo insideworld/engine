@@ -1,33 +1,51 @@
-package insideworld.engine.data.generator.jpa.entity.search;//package insideworld.engine.entities.generator.jpa.search;
-//
-//import insideworld.engine.entities.Entity;
-//import org.reflections.Reflections;
-//
-//import java.lang.reflect.Modifier;
-//import java.util.Collection;
-//import java.util.Map;
-//import java.util.stream.Collectors;
-//
-//public class SearchExists implements SearchEntities {
-//
-//    private final Reflections reflection;
-//
-//    public SearchExists(final Reflections reflection) {
-//        this.reflection = reflection;
-//    }
-//
-//    @Override
-//    public void search(final Map<Class<? extends Entity>, String> entities) {
-//        for (final Class<? extends Entity> type : this.findInterfaces()) {
-//            this.reflection.getSubTypesOf(type).stream().filter(
-//                    entity -> !entity.isInterface() && !Modifier.isAbstract(entity.getModifiers())
-//            ).findFirst().ifPresent(entity -> entities.put(type, entity.getName()));
-//        }
-//    }
-//
-//    private Collection<Class<? extends Entity>> findInterfaces() {
-//        return this.reflection.getSubTypesOf(Entity.class).stream()
-//                .filter(Class::isInterface).collect(Collectors.toList());
-//    }
-//
-//}
+package insideworld.engine.data.generator.jpa.entity.search;
+
+import com.google.common.collect.Maps;
+import insideworld.engine.entities.Entity;
+import insideworld.engine.reflection.Reflection;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.persistence.Table;
+
+public class SearchExists implements SearchEntities {
+
+    private Reflection reflection;
+
+    public SearchExists(final Reflection reflection) {
+        this.reflection = reflection;
+    }
+
+    @Override
+    public Collection<JpaInfo> search() {
+        return this.reflection.getSubTypesOf(Entity.class)
+            .stream()
+            .filter(Class::isInterface)
+            .map(this::createInfo)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    }
+
+    private JpaInfo createInfo(final Class<? extends Entity> entity) {
+        var implementation = this.reflection.getSubTypesOf(entity).stream()
+            .filter(impl -> impl.isAnnotationPresent(javax.persistence.Entity.class))
+            .findAny();
+        final JpaInfo info;
+        if (implementation.isPresent()) {
+            final Table table = entity.getAnnotation(Table.class);
+            info = new JpaInfo(
+                entity,
+                table.schema(),
+                table.name(),
+                implementation.get().getName(),
+                false
+            );
+        } else {
+            info = null;
+        }
+        return info;
+    }
+}

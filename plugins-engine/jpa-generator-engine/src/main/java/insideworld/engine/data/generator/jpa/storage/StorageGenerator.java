@@ -1,6 +1,7 @@
 package insideworld.engine.data.generator.jpa.storage;
 
 import com.google.common.collect.ImmutableList;
+import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
 import insideworld.engine.data.generator.jpa.storage.search.SearchMixin;
 import insideworld.engine.data.generator.jpa.storage.search.SearchStorages;
@@ -21,12 +22,12 @@ public class StorageGenerator {
     private final ClassOutput output;
     private final Reflection reflection;
     private final String packages;
-    private final Map<Class<? extends Entity>, String> impls;
+    private final Map<Class<? extends Entity>, JpaInfo> impls;
 
     public StorageGenerator(final ClassOutput output,
                             final Reflection reflection,
                             final String packages,
-                            final Map<Class<? extends Entity>, String> impls) {
+                            final Map<Class<? extends Entity>, JpaInfo> impls) {
         this.output = output;
         this.reflection = reflection;
         this.packages = packages + ".generated.crud.%sStorage";
@@ -41,12 +42,14 @@ public class StorageGenerator {
         for (final GenerateCrud entity : this.findStorages()) {
             final String name = this.generateName(entity.entity());
             final ClassCreator creator = ClassCreator.builder()
-                .classOutput(output)
+                .classOutput(this.output)
                 .className(name)
                 .superClass(AbstractCrudGenericStorage.class)
                 .signature(
-                    this.prepareStorageSignature(entity.entity().getName(),
-                    this.impls.get(entity.entity())))
+                    this.prepareStorageSignature(
+                        entity.entity().getName(),
+                        this.impls.get(entity.entity()).getImplementation()
+                    ))
                 .build();
             creator.addAnnotation(Singleton.class);
             if (entity.override()) {

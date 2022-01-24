@@ -1,4 +1,4 @@
-package insideworld.engine.data.generator.jpa.actions.read.annotations;
+package insideworld.engine.data.generator.jpa.actions.delete.annotations;
 
 import insideworld.engine.entities.Entity;
 import java.lang.annotation.Documented;
@@ -13,8 +13,8 @@ import javax.inject.Scope;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Repeatable(GenerateReadActions.class)
-public @interface GenerateReadAction{
+@Repeatable(GenerateDeleteActions.class)
+public @interface GenerateDeleteAction {
 
 //    Class<? extends ReadActionInfos> infos();
     Class<? extends Entity> entity();

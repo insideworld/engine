@@ -30,13 +30,13 @@ public class TestGenerated {
     @Test
     @Transactional
     public void test() throws StorageException {
-        Instance<Storage<? extends Entity>> select = CDI.current().select(new TypeLiteral<Storage<? extends Entity>>() {
-        });
-        Instance<Storage<GeneratedChildEntity>> select1 = CDI.current().select(new TypeLiteral<Storage<GeneratedChildEntity>>() {
-        });
-        final Storage<GeneratedTopEntity> storage = factory.createObject(new TypeLiteral<Storage<GeneratedTopEntity>>() {});
-        final Storage<GeneratedChildEntity> storage1 = factory.createObject(new TypeLiteral<Storage<GeneratedChildEntity>>() {});
-        System.out.println("qwe");
+//        Instance<Storage<? extends Entity>> select = CDI.current().select(new TypeLiteral<Storage<? extends Entity>>() {
+//        });
+//        Instance<Storage<GeneratedChildEntity>> select1 = CDI.current().select(new TypeLiteral<Storage<GeneratedChildEntity>>() {
+//        });
+//        final Storage<GeneratedTopEntity> storage = factory.createObject(new TypeLiteral<Storage<GeneratedTopEntity>>() {});
+//        final Storage<GeneratedChildEntity> storage1 = factory.createObject(new TypeLiteral<Storage<GeneratedChildEntity>>() {});
+//        System.out.println("qwe");
 //        factory.createObject(SomeClass.class);
 //        final Storage<TestMain> storage1 = factory.createObject(new TypeLiteral<Storage<TestMain>>() {
 //        });

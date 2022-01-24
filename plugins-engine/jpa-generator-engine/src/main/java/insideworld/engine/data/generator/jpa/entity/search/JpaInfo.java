@@ -10,10 +10,22 @@ public class JpaInfo {
 
     private final String table;
 
-    public JpaInfo(final Class<? extends Entity> entity, final String schema, final String table) {
+    private final String implementation;
+
+    private boolean generated;
+
+    public JpaInfo(
+        final Class<? extends Entity> entity,
+        final String schema,
+        final String table,
+        final String implementation,
+        final boolean generated
+    ) {
         this.entity = entity;
         this.schema = schema;
         this.table = table;
+        this.implementation = implementation;
+        this.generated = generated;
     }
 
     public String getSchema() {
@@ -26,5 +38,14 @@ public class JpaInfo {
 
     public Class<? extends Entity> getEntity() {
         return this.entity;
+    }
+
+    public String getImplementation() {
+        return this.implementation;
+    }
+
+
+    public boolean isGenerated() {
+        return this.generated;
     }
 }

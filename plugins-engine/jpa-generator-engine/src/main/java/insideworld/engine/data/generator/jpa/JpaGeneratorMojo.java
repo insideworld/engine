@@ -1,7 +1,10 @@
 package insideworld.engine.data.generator.jpa;
 
+import insideworld.engine.data.generator.jpa.actions.delete.DeleteActionGenerator;
 import insideworld.engine.data.generator.jpa.actions.read.ReadActionGenerator;
+import insideworld.engine.data.generator.jpa.actions.write.WriteActionGenerator;
 import insideworld.engine.data.generator.jpa.entity.EntityGenerator;
+import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import insideworld.engine.data.generator.jpa.storage.StorageGenerator;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.reflection.ClassLoaderReflection;
@@ -22,7 +25,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 @Mojo(name = "generate",
-    defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+    defaultPhase = LifecyclePhase.PROCESS_CLASSES,
     requiresDependencyResolution = ResolutionScope.COMPILE
 )
 public class JpaGeneratorMojo extends AbstractMojo {
@@ -42,13 +45,14 @@ public class JpaGeneratorMojo extends AbstractMojo {
             final Reflection reflection = new ClassLoaderReflection(
                 this.getClassLoader(this.project), this.scan);
             final EntityGenerator entities = new EntityGenerator(output, reflection, this.save);
-            final Map<Class<? extends Entity>, String> generate = entities.findAndGenerate();
+            final Map<Class<? extends Entity>, JpaInfo> generate = entities.findAndGenerate();
             final StorageGenerator storages = new StorageGenerator(
                 output, reflection, this.save, generate
             );
             storages.generate();
-            final ReadActionGenerator read = new ReadActionGenerator(reflection, output, this.save);
-            read.generate();
+            new ReadActionGenerator(reflection, output, this.save).generate();
+            new WriteActionGenerator(reflection, output, this.save).generate();
+            new DeleteActionGenerator(reflection, output, this.save).generate();
         } catch (Exception exp) {
             throw new MojoExecutionException(exp);
         }

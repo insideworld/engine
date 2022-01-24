@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 public class SearchMixin implements SearchEntities {
 
     private final Reflection reflections;
+    private final String packages;
 
-    public SearchMixin(final Reflection reflections) {
+    public SearchMixin(final Reflection reflections, final String packages) {
         this.reflections = reflections;
+        this.packages = packages + ".generated.jpa.%s";
     }
 
     @Override
@@ -22,8 +24,15 @@ public class SearchMixin implements SearchEntities {
                 .map(mixin -> mixin.getAnnotationsByType(GenerateJpaEntity.class))
                 .flatMap(Arrays::stream)
                 .map(annotation -> new JpaInfo(
-                    annotation.entity(), annotation.schema(), annotation.table()))
+                    annotation.entity(),
+                    annotation.schema(),
+                    annotation.table(),
+                    this.name(annotation.entity())))
                 .collect(Collectors.toList());
+    }
+
+    private String name(final Class<?> entity) {
+        return String.format(this.packages, entity.getSimpleName());
     }
 
 
