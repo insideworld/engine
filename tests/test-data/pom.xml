@@ -29,6 +29,11 @@
         </dependency>
         <dependency>
             <groupId>insideworld.engine</groupId>
+            <artifactId>actions-generator-engine</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>insideworld.engine</groupId>
             <artifactId>entities-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -65,7 +70,6 @@
                         </goals>
                         <configuration>
                             <scan>insideworld</scan>
-                            <save>insideworld.engine.test</save>
                         </configuration>
                     </execution>
                 </executions>
@@ -73,7 +77,7 @@
             <plugin>
                 <groupId>insideworld.engine</groupId>
                 <artifactId>entity-action-generator</artifactId>
-                <version>0.8.0</version>
+                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -81,7 +85,21 @@
                         </goals>
                         <configuration>
                             <scan>insideworld</scan>
-                            <save>insideworld.engine.test</save>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>insideworld.engine</groupId>
+                <artifactId>actions-generator-engine</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <scan>insideworld</scan>
                         </configuration>
                     </execution>
                 </executions>
