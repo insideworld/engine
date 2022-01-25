@@ -4,9 +4,9 @@ package insideworld.engine.integration.entities.convertor;
 import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
 import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
 import insideworld.engine.generator.GenerateMixin;
-import insideworld.engine.generator.actions.entities.delete.annotations.GenerateDeleteAction;
-import insideworld.engine.generator.actions.entities.read.annotations.GenerateReadAction;
-import insideworld.engine.generator.actions.entities.write.annotations.GenerateWriteAction;
+import insideworld.engine.generator.entities.actions.delete.annotations.GenerateDeleteAction;
+import insideworld.engine.generator.entities.actions.read.annotations.GenerateReadAction;
+import insideworld.engine.generator.entities.actions.write.annotations.GenerateWriteAction;
 
 @GenerateJpaEntity(entity = TestOne.class, schema = "entities", table = "one")
 @GenerateCrud(entity = TestOne.class)

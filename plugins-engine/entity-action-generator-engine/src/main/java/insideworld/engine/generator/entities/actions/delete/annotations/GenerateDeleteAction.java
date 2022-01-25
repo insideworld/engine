@@ -16,7 +16,6 @@ import javax.inject.Scope;
 @Repeatable(GenerateDeleteActions.class)
 public @interface GenerateDeleteAction {
 
-//    Class<? extends ReadActionInfos> infos();
     Class<? extends Entity> entity();
 
     String tag();
