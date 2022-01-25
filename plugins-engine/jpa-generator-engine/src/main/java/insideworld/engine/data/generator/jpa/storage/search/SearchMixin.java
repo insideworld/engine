@@ -1,28 +1,37 @@
 package insideworld.engine.data.generator.jpa.storage.search;
 
-import insideworld.engine.data.generator.jpa.GenerateMixin;
 import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
-import insideworld.engine.entities.Entity;
+import insideworld.engine.generator.AbstractSearchMixin;
+import insideworld.engine.generator.GenerateMixin;
 import insideworld.engine.reflection.Reflection;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
-public class SearchMixin implements SearchStorages {
-
-    private final Reflection reflections;
+public class SearchMixin
+    extends AbstractSearchMixin<StorageInfo, GenerateCrud>
+    implements SearchStorages {
 
     public SearchMixin(final Reflection reflections) {
-        this.reflections = reflections;
+        super(reflections);
     }
 
     @Override
-    public Collection<GenerateCrud> search() {
-        return this.reflections.getSubTypesOf(GenerateMixin.class).stream()
-            .map(mixin -> mixin.getAnnotationsByType(GenerateCrud.class))
-            .flatMap(Arrays::stream)
-//            .map(GenerateCrud::entity)
-            .collect(Collectors.toList());
+    protected StorageInfo createSearch(
+        final GenerateCrud annotation, final Class<? extends GenerateMixin> mixin) {
+        return new StorageInfo(
+            annotation.entity(),
+            annotation.override(),
+            this.name(annotation.entity(), mixin)
+        );
     }
 
+    @Override
+    protected Class<GenerateCrud> annotation() {
+        return GenerateCrud.class;
+    }
+
+    private String name(final Class<?> entity, final Class<? extends GenerateMixin> mixin) {
+        return String.format(
+            mixin.getPackageName() + ".generated.storage.crud.%sStorage",
+            entity.getSimpleName()
+        );
+    }
 }

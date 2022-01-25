@@ -1,11 +1,12 @@
 package insideworld.engine.integration.entities.generated;
 
-import insideworld.engine.data.generator.jpa.GenerateMixin;
-import insideworld.engine.data.generator.jpa.actions.delete.annotations.GenerateDeleteAction;
-import insideworld.engine.data.generator.jpa.actions.read.annotations.GenerateReadAction;
-import insideworld.engine.data.generator.jpa.actions.write.annotations.GenerateWriteAction;
+
 import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
 import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
+import insideworld.engine.generator.GenerateMixin;
+import insideworld.engine.generator.actions.entities.delete.annotations.GenerateDeleteAction;
+import insideworld.engine.generator.actions.entities.read.annotations.GenerateReadAction;
+import insideworld.engine.generator.actions.entities.write.annotations.GenerateWriteAction;
 
 @GenerateJpaEntity(entity = GeneratedChildEntity.class, schema = "generated", table = "child")
 @GenerateJpaEntity(entity = GeneratedTopEntity.class, schema = "generated", table = "top")

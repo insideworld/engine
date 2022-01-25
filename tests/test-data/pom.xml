@@ -19,6 +19,11 @@
     <dependencies>
         <dependency>
             <groupId>insideworld.engine</groupId>
+            <artifactId>entity-action-generator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>insideworld.engine</groupId>
             <artifactId>jpa-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -53,6 +58,22 @@
                 <groupId>insideworld.engine</groupId>
                 <artifactId>jpa-generator-engine</artifactId>
                 <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <scan>insideworld</scan>
+                            <save>insideworld.engine.test</save>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>insideworld.engine</groupId>
+                <artifactId>entity-action-generator</artifactId>
+                <version>0.8.0</version>
                 <executions>
                     <execution>
                         <goals>

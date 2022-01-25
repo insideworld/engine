@@ -8,10 +8,14 @@ import insideworld.engine.entities.converter.EntityConverter;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.integration.entities.convertor.TestByteCode;
 import insideworld.engine.integration.entities.convertor.TestMain;
+import insideworld.engine.integration.entities.convertor.TestOne;
 import io.quarkus.test.junit.QuarkusTest;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +39,10 @@ public class TestConvertor {
     }
 
     @Test
+    @Transactional
     public void test() throws ActionException, StorageException {
         final TestMain entity = this.storage.read(1);
+        TestOne one = entity.getOne();
         final Record convert = this.converter.convert(entity);
         LOGGER.trace("Test");
         final Context context = factory.createObject(Context.class);

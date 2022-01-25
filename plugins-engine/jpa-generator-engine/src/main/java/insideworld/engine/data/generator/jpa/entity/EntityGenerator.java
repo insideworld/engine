@@ -22,14 +22,11 @@ public class EntityGenerator {
 
     private final ClassOutput output;
     private final Reflection reflection;
-    private final String packages;
 
     public EntityGenerator(final ClassOutput output,
-                           final Reflection reflection,
-                           final String packages) {
+                           final Reflection reflection) {
         this.output = output;
         this.reflection = reflection;
-        this.packages = packages;
     }
 
     public Map<Class<? extends Entity>, JpaInfo> findAndGenerate() {
@@ -50,7 +47,7 @@ public class EntityGenerator {
 
     private Collection<JpaInfo> findInfos() {
         final Collection<SearchEntities> searchers = ImmutableList.of(
-            new SearchMixin(this.reflection, this.packages),
+            new SearchMixin(this.reflection),
             new SearchExists(this.reflection)
         );
         return searchers.stream().map(SearchEntities::search)

@@ -1,40 +1,37 @@
 package insideworld.engine.data.generator.jpa.entity.search;
 
-import insideworld.engine.data.generator.jpa.GenerateMixin;
 import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
+import insideworld.engine.generator.AbstractSearchMixin;
+import insideworld.engine.generator.GenerateMixin;
 import insideworld.engine.reflection.Reflection;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
+public class SearchMixin
+    extends AbstractSearchMixin<JpaInfo,GenerateJpaEntity>
+    implements SearchEntities {
 
-public class SearchMixin implements SearchEntities {
 
-    private final Reflection reflections;
-    private final String packages;
-
-    public SearchMixin(final Reflection reflections, final String packages) {
-        this.reflections = reflections;
-        this.packages = packages + ".generated.jpa.%s";
+    public SearchMixin(final Reflection reflections) {
+        super(reflections);
     }
 
     @Override
-    public Collection<JpaInfo> search() {
-        return this.reflections.getSubTypesOf(GenerateMixin.class).stream()
-                .map(mixin -> mixin.getAnnotationsByType(GenerateJpaEntity.class))
-                .flatMap(Arrays::stream)
-                .map(annotation -> new JpaInfo(
-                    annotation.entity(),
-                    annotation.schema(),
-                    annotation.table(),
-                    this.name(annotation.entity()),
-                    true))
-                .collect(Collectors.toList());
+    protected Class<GenerateJpaEntity> annotation() {
+        return GenerateJpaEntity.class;
     }
 
-    private String name(final Class<?> entity) {
-        return String.format(this.packages, entity.getSimpleName());
+    @Override
+    protected JpaInfo createSearch(
+        final GenerateJpaEntity annotation, final Class<? extends GenerateMixin> mixin) {
+        return new JpaInfo(
+            annotation.entity(),
+            annotation.schema(),
+            annotation.table(),
+            this.name(annotation.entity(), mixin),
+            true
+        );
     }
 
-
+    private String name(final Class<?> entity, final Class<? extends GenerateMixin> mixin) {
+        return String.format(mixin.getPackageName() + ".generated.jpa.%s", entity.getSimpleName());
+    }
 }

@@ -6,6 +6,6 @@ import java.util.Collection;
 
 public interface SearchStorages {
 
-    Collection<GenerateCrud> search();
+    Collection<StorageInfo> search();
 
 }
