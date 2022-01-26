@@ -2,6 +2,7 @@ package insideworld.engine.data.jpa;
 
 
 import insideworld.engine.entities.Entity;
+import javax.management.relation.Role;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,17 @@ public abstract class AbstractEntity implements Entity {
     private long id;
 
     public long getId() {
-        return id;
+        return this.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return this.getClass().equals(obj.getClass()) && this.id == ((Entity) obj).getId();
     }
 
 }

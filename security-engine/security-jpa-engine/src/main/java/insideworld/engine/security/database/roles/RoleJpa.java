@@ -38,19 +38,4 @@ public class RoleJpa extends AbstractEntity implements Role {
         return this.append;
     }
 
-    @Override
-    public int hashCode() {
-        return this.name.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        final boolean result;
-        if (obj instanceof Role) {
-            result = this.name.equals(((Role) obj).getName());
-        } else {
-            result = false;
-        }
-        return result;
-    }
 }
