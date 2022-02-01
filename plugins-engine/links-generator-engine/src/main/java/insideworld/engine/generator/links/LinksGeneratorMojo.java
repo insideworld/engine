@@ -1,4 +1,4 @@
-package insideworld.engine.generator.actions;
+package insideworld.engine.generator.links;
 
 import insideworld.engine.generator.AbstractGeneratorMojo;
 import insideworld.engine.reflection.Reflection;
@@ -11,7 +11,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
     defaultPhase = LifecyclePhase.PROCESS_CLASSES,
     requiresDependencyResolution = ResolutionScope.COMPILE
 )
-public class ActionGeneratorMojo extends AbstractGeneratorMojo {
+public class LinksGeneratorMojo extends AbstractGeneratorMojo {
     @Override
     protected void generate(final Reflection reflection, final ClassOutput output) {
         new LinkInputGenerator(reflection, output).generate();

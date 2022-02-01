@@ -1,4 +1,4 @@
-package insideworld.engine.generator.actions;
+package insideworld.engine.generator.links;
 
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;

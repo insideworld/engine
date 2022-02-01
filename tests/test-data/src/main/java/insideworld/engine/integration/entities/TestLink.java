@@ -2,8 +2,8 @@ package insideworld.engine.integration.entities;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.generator.actions.AbstractTypeLink;
-import insideworld.engine.generator.actions.LinkInput;
+import insideworld.engine.generator.links.AbstractTypeLink;
+import insideworld.engine.generator.links.LinkInput;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import javax.inject.Inject;

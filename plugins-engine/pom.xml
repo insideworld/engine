@@ -17,7 +17,7 @@
     <module>jpa-generator-engine</module>
     <module>generator-engine</module>
     <module>entity-action-generator-engine</module>
-    <module>actions-generator-engine</module>
+    <module>links-generator-engine</module>
   </modules>
 
   <properties>

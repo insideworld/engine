@@ -1,21 +1,16 @@
-package insideworld.engine.generator.actions;
+package insideworld.engine.generator.links;
 
-import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.reflection.Reflection;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
-import io.quarkus.gizmo.FieldCreator;
 import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
-import io.quarkus.gizmo.ResultHandle;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import javax.enterprise.context.Dependent;
-import javax.inject.Singleton;
 
 public class LinkInputGenerator {
 

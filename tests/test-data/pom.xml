@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>insideworld.engine</groupId>
-            <artifactId>actions-generator-engine</artifactId>
+            <artifactId>links-generator-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -91,7 +91,7 @@
             </plugin>
             <plugin>
                 <groupId>insideworld.engine</groupId>
-                <artifactId>actions-generator-engine</artifactId>
+                <artifactId>links-generator-engine</artifactId>
                 <version>${project.version}</version>
                 <executions>
                     <execution>
