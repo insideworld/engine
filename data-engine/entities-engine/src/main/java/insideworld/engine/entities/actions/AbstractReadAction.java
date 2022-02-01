@@ -20,15 +20,16 @@ public abstract class AbstractReadAction<T extends Entity> extends AbstractChain
 
     @Override
     protected Collection<Link> attachLinks(final LinksBuilder builder) {
-        return builder.addLink(
-            new TypeLiteral<ReadEntityLink<T>>() {},
-            link -> link.setType(this.getType())
-                .setTag(StorageTags.ID, this.getTag())
-                .setTags(StorageTags.IDS, this.getTags()))
+        final LinksBuilder export = builder.addLink(
+                new TypeLiteral<ReadEntityLink<T>>() {
+                },
+                link -> link.setType(this.getType())
+                    .setTag(StorageTags.ID, this.getTag())
+                    .setTags(StorageTags.IDS, this.getTags()))
             .addLink(ExportEntityLink.class, link -> link
                 .setTag(this.getTag())
-                .setTag(this.getTags()))
-            .build();
+                .setTag(this.getTags()));
+        return this.afterExport(export).build();
     }
 
     /**
@@ -39,5 +40,9 @@ public abstract class AbstractReadAction<T extends Entity> extends AbstractChain
     protected abstract EntitiesTag<T> getTags();
 
     protected abstract Class<T> getType();
+
+    protected LinksBuilder afterExport(final LinksBuilder builder) {
+        return builder;
+    }
 
 }
