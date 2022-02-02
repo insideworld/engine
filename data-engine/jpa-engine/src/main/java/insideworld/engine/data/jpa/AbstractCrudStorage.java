@@ -53,7 +53,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
 
     protected abstract Class<C> forCrud();
 
-    protected Collection<C> castLower(final Collection<T> collection) {
+    public Collection<C> castLower(final Collection<T> collection) {
         final Collection<C> result;
         if (collection == null) {
             result = null;
@@ -65,7 +65,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
         return result;
     }
 
-    protected Collection<T> castUpper(final Collection<C> collection) {
+    public Collection<T> castUpper(final Collection<C> collection) {
         return collection.stream()
             .map(item -> this.forEntity().cast(item))
             .collect(Collectors.toList());
