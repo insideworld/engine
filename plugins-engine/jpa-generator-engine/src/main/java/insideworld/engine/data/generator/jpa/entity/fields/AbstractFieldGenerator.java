@@ -15,7 +15,7 @@ public abstract class AbstractFieldGenerator implements FieldGenerator {
                          final JpaInfo info) {
         final FieldCreator field = creator.getFieldCreator(
             descriptor.getName(),
-            this.defineType(descriptor)
+            this.defineType(descriptor, info)
         );
         if (field instanceof SignatureElement) {
             ((SignatureElement<?>) field).setSignature(this.fieldSignature(descriptor));
@@ -43,9 +43,23 @@ public abstract class AbstractFieldGenerator implements FieldGenerator {
         }
     }
 
+    protected Class<?> propertyType(final PropertyDescriptor descriptor, final JpaInfo info) {
+        final Class<?> type;
+        if (descriptor.getReadMethod() != null) {
+            type = descriptor.getReadMethod().getReturnType();
+        } else if (descriptor.getWriteMethod() != null) {
+            type = descriptor.getWriteMethod().getParameterTypes()[0];
+        } else {
+            throw new RuntimeException(
+                String.format("Can't define type of field %s for class %s because getter or setter is absent",
+                    descriptor.getName(), info.getEntity().getName()));
+        }
+        return type;
+    }
+
     protected abstract void addAnnotations(FieldCreator field, PropertyDescriptor descriptor, JpaInfo info);
 
-    protected abstract String defineType(PropertyDescriptor descriptor);
+    protected abstract String defineType(PropertyDescriptor descriptor, JpaInfo info);
 
     protected abstract String fieldSignature(PropertyDescriptor descriptor);
 

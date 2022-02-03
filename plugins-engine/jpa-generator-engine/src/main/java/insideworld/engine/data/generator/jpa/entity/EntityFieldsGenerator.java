@@ -11,6 +11,7 @@ import io.quarkus.gizmo.ClassCreator;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,13 +34,28 @@ public class EntityFieldsGenerator {
             throw new RuntimeException(exp);
         }
         for (final PropertyDescriptor bean : beans) {
+            if (!this.fieldAvailable(bean)) {
+                continue;
+            }
             for (final FieldGenerator generator : this.generators) {
-                if (generator.can(bean)) {
+                if (generator.can(bean, info)) {
                     generator.generate(creator, bean, info);
                     break;
                 }
             }
         }
+    }
+
+    private boolean fieldAvailable(final PropertyDescriptor bean) {
+        final boolean available;
+        if (bean.getReadMethod() != null) {
+            available = !bean.getReadMethod().isDefault();
+        } else if (bean.getWriteMethod() != null) {
+            available = !bean.getWriteMethod().isDefault();
+        } else {
+            available = false;
+        }
+        return available;
     }
 
     private static Collection<FieldGenerator> createGenerators(

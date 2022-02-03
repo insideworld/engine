@@ -34,7 +34,7 @@ public class SearchWriteMixin
 
     private String name(final Class<?> entity, final Class<? extends GenerateMixin> mixin) {
         return String.format(
-            mixin.getPackageName() + ".generated.actions.entity.Read%sAction",
+            mixin.getPackageName() + ".generated.actions.entity.Write%sAction",
             entity.getSimpleName().replace("Entity","")
         );
     }

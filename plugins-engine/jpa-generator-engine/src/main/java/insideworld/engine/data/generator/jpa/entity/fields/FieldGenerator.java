@@ -9,5 +9,5 @@ public interface FieldGenerator {
 
     void generate(ClassCreator creator, PropertyDescriptor descriptor, JpaInfo info);
 
-    boolean can(PropertyDescriptor bean);
+    boolean can(PropertyDescriptor bean, JpaInfo info);
 }

@@ -28,10 +28,10 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    public boolean can(final PropertyDescriptor bean) {
-        final Class<?> ret = bean.getReadMethod().getReturnType();
+    public boolean can(final PropertyDescriptor bean, final JpaInfo info) {
+        final Class<?> ret = this.propertyType(bean, info);
         return Collection.class.isAssignableFrom(ret)
-            && Entity.class.isAssignableFrom(this.getGeneric(bean.getReadMethod()));
+            && Entity.class.isAssignableFrom(this.getGeneric(bean));
     }
 
 
@@ -45,13 +45,13 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    protected String defineType(final PropertyDescriptor descriptor) {
+    protected String defineType(final PropertyDescriptor descriptor, final JpaInfo info) {
         return Collection.class.getName();
     }
 
     @Override
     protected String fieldSignature(final PropertyDescriptor descriptor) {
-        final Class<?> generic = this.getGeneric(descriptor.getReadMethod());
+        final Class<?> generic = this.getGeneric(descriptor);
         return String.format("Ljava/util/Collection<L%s;>;",
             this.implementations.get(generic).getImplementation().replace(".","/")
         );
@@ -61,7 +61,7 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator {
     protected String readSignature(final PropertyDescriptor descriptor) {
         return String.format(
             "()Ljava/util/Collection<L%s;>;",
-            this.getGeneric(descriptor.getReadMethod()).getName().replace(".","/")
+            this.getGeneric(descriptor).getName().replace(".","/")
         );
     }
 
@@ -69,12 +69,21 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator {
     protected String writeSignature(final PropertyDescriptor descriptor) {
         return String.format(
             "(Ljava/util/Collection<L%s;>;)V",
-            this.getGeneric(descriptor.getReadMethod()).getName().replace(".","/")
+            this.getGeneric(descriptor).getName().replace(".","/")
         );
     }
 
 
-    private Class<?> getGeneric(final Method method) {
-        return (Class<?>) ((ParameterizedType) method.getGenericReturnType()).getActualTypeArguments()[0];
+    private Class<?> getGeneric(final PropertyDescriptor descriptor) {
+        final Class<?> type;
+        if (descriptor.getReadMethod() != null) {
+            type = (Class<?>) ((ParameterizedType)
+                descriptor.getReadMethod().getGenericReturnType()).getActualTypeArguments()[0];
+        } else {
+            type = (Class<?>) (((ParameterizedType)
+                descriptor
+                    .getWriteMethod().getGenericParameterTypes()[0]).getActualTypeArguments()[0]);
+        }
+        return type;
     }
 }

@@ -1,5 +1,6 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
+import com.google.common.primitives.Primitives;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
@@ -31,6 +32,6 @@ public class MapperPrimitive extends AbstractMapper {
     @Override
     public boolean canApply(final Descriptor descriptor) {
         final Class<?> type = descriptor.getType();
-        return type.isPrimitive() || type.equals(String.class);
+        return type.isPrimitive() || type.equals(String.class) || Primitives.isWrapperType(type);
     }
 }

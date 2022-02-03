@@ -24,8 +24,8 @@ public class EntityFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    public boolean can(final PropertyDescriptor bean) {
-        return Entity.class.isAssignableFrom(bean.getReadMethod().getReturnType());
+    public boolean can(final PropertyDescriptor bean, final JpaInfo info) {
+        return Entity.class.isAssignableFrom(this.propertyType(bean, info));
     }
 
     @Override
@@ -38,9 +38,18 @@ public class EntityFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    protected String defineType(final PropertyDescriptor descriptor) {
+    protected String defineType(final PropertyDescriptor descriptor, final JpaInfo info) {
+        final Class<?> type = this.propertyType(descriptor, info);
+        if (!this.implementations.containsKey(type)) {
+            throw new RuntimeException(
+                String.format("Implementation for %s not found. Field: %s Class: %s ",
+                    type.getName(),
+                    descriptor.getName(),
+                    info.getEntity().getName())
+            );
+        }
         return this.implementations
-            .get(descriptor.getReadMethod().getReturnType())
+            .get(type)
             .getImplementation();
     }
 

@@ -38,9 +38,16 @@ public class EntityGenerator {
             if (!info.isGenerated()) {
                 continue;
             }
-            final ClassCreator creator = entities.createEntity(info);
-            fields.createFields(creator, info);
-            creator.close();
+            try {
+                final ClassCreator creator = entities.createEntity(info);
+                fields.createFields(creator, info);
+                creator.close();
+            } catch (final Exception exp) {
+                throw new RuntimeException(
+                    "Can't create entity for type" + info.getEntity().getName(),
+                    exp
+                );
+            }
         }
         return infos;
     }

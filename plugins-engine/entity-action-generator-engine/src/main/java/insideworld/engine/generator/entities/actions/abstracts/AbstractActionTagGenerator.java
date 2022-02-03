@@ -27,12 +27,15 @@ public abstract class AbstractActionTagGenerator<T extends ActionTagInfo> {
     }
 
     private void generate(final T info) {
-        final ClassCreator creator = ClassCreator.builder()
+        ClassCreator.Builder builder = ClassCreator.builder()
             .classOutput(this.output)
             .className(info.implementation())
             .superClass(this.extended())
-            .signature(this.prepareSignature(info.entity().getName()))
-            .build();
+            .signature(this.prepareSignature(info.entity().getName()));
+        for (final Class<?> inter : info.interfaces()) {
+            builder.interfaces(inter);
+        }
+        final ClassCreator creator = builder.build();
         creator.addAnnotation(Singleton.class);
         this.createConstructor(creator);
         this.createKey(creator, info);

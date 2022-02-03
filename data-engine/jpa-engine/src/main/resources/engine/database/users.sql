@@ -29,6 +29,6 @@ create table users.users
 create unique index authentication_name_uindex
 	on users.users (name);
 
-create unique index authentication_token_uindex
+create index authentication_token_uindex
 	on users.users (token);
 

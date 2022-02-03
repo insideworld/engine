@@ -1,6 +1,7 @@
 package insideworld.engine.data.generator.jpa.entity.fields;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.primitives.Primitives;
 import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
@@ -11,9 +12,9 @@ import javax.persistence.Column;
 public class PrimitiveFieldGenerator extends AbstractFieldGenerator {
 
     @Override
-    public boolean can(final PropertyDescriptor bean) {
-        final Class<?> type = bean.getReadMethod().getReturnType();
-        return type.isPrimitive() || type.equals(String.class) || type.equals(Date.class);
+    public boolean can(final PropertyDescriptor bean, final JpaInfo info) {
+        final Class<?> type = this.propertyType(bean, info);
+        return type.isPrimitive() || type.equals(String.class) || type.equals(Date.class) || Primitives.isWrapperType(type);
     }
 
     @Override
@@ -25,8 +26,8 @@ public class PrimitiveFieldGenerator extends AbstractFieldGenerator {
     }
 
     @Override
-    protected String defineType(final PropertyDescriptor descriptor) {
-        return descriptor.getReadMethod().getReturnType().getName();
+    protected String defineType(final PropertyDescriptor descriptor, final JpaInfo info) {
+        return this.propertyType(descriptor, info).getName();
     }
 
     @Override

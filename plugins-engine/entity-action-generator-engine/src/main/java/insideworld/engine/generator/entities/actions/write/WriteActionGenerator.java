@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class WriteActionGenerator extends AbstractActionTagGenerator<ActionTagInfo> {
 
-    private Reflection reflection;
+    private final Reflection reflection;
 
     public WriteActionGenerator(final Reflection reflection, final ClassOutput output) {
         super(output);
