@@ -34,11 +34,13 @@ public abstract class AbstractDescriptors {
             this.getDescriptorsSync(type);
     }
 
+    //TODO: Make rental lock.
     private synchronized Pair<Mapper, Descriptor>[] getDescriptorsSync(
         final Class<? extends Entity> type) {
-        return this.descriptors.containsKey(type) ?
-            this.descriptors.get(type) :
-            this.createDescriptors(type);
+        if (!this.descriptors.containsKey(type)) {
+            this.descriptors.put(type, this.createDescriptors(type));
+        }
+        return this.descriptors.get(type);
     }
 
     private Pair<Mapper, Descriptor>[] createDescriptors(final Class<? extends Entity> type) {

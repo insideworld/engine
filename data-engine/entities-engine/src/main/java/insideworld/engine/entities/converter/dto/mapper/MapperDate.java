@@ -19,7 +19,9 @@ public class MapperDate extends AbstractMapper {
     public void toEntity(Record record, Entity entity, Descriptor descriptor) throws ActionException {
         final Object object = record.get(descriptor.getName());
         final Date date;
-        if (Date.class.equals(object.getClass())) {
+        if (object == null) {
+            date = null;
+        } else if (Date.class.equals(object.getClass())) {
             date = (Date) object;
         } else {
             try {
