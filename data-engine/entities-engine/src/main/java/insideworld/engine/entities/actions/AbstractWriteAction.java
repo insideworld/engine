@@ -20,12 +20,12 @@ public abstract class AbstractWriteAction<T extends Entity> extends AbstractChai
     @Override
     protected Collection<Link> attachLinks(final LinksBuilder builder) {
         builder.addLink(ImportEntityLink.class, link -> link.setTag(this.getTag(), this.getType()));
-        return this.afterImport(builder)
-            .addLink(
-                new TypeLiteral<WriteEntityLink<T>>() {},
-                link -> link.setTag(this.getTag()))
-            .addLink(ExportEntityLink.class, link -> link.setTag(this.getTag()))
-            .build();
+        this.afterImport(builder);
+        builder.addLink(
+            new TypeLiteral<WriteEntityLink<T>>() {},
+            link -> link.setTag(this.getTag()));
+        builder.addLink(ExportEntityLink.class, link -> link.setTag(this.getTag()));
+        return this.afterExport(builder).build();
     }
 
     protected abstract EntityTag<T> getTag();
@@ -35,5 +35,7 @@ public abstract class AbstractWriteAction<T extends Entity> extends AbstractChai
     protected LinksBuilder afterImport(final LinksBuilder builder) {
         return builder;
     }
+
+    protected LinksBuilder afterExport(final LinksBuilder builder) { return builder; }
 
 }
