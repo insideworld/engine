@@ -5,6 +5,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.facade.impl.ClassActionExecutor;
+import insideworld.engine.actions.facade.impl.KeyActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
@@ -18,19 +19,24 @@ import org.apache.commons.lang3.tuple.Pair;
 @Dependent
 public class ExecuteActionLink implements Link {
 
-    private final ClassActionExecutor executor;
+
+    private final ClassActionExecutor cexecutor;
+    private final KeyActionExecutor kexecutor;
     private final ObjectFactory factory;
 
     private Tag<?>[] tags;
     private Class<? extends Action> action;
+    private String key;
 
     private final Collection<PreExecute> pres = Lists.newLinkedList();
     private final Collection<PostExecute> posts = Lists.newLinkedList();
 
     @Inject
-    public ExecuteActionLink(final ClassActionExecutor executor,
+    public ExecuteActionLink(final ClassActionExecutor cexecutor,
+                             final KeyActionExecutor kexecutor,
                              final ObjectFactory factory) {
-        this.executor = executor;
+        this.cexecutor = cexecutor;
+        this.kexecutor = kexecutor;
         this.factory = factory;
     }
 
@@ -40,7 +46,14 @@ public class ExecuteActionLink implements Link {
         if (this.pres.isEmpty()
             || this.pres.stream().allMatch(pre -> pre.apply(clone)
         )) {
-            final Output results = this.executor.execute(this.action, clone);
+            final Output results;
+            if (this.action != null) {
+                results = this.cexecutor.execute(this.action, clone);
+            } else if (this.key != null) {
+                results = this.kexecutor.execute(this.key, clone);
+            } else {
+                throw new ActionException("Action is not defined");
+            }
             if (this.posts.isEmpty()
                 || this.posts.stream().allMatch(post -> post.apply(clone, results))
             ) {
@@ -56,6 +69,11 @@ public class ExecuteActionLink implements Link {
 
     public ExecuteActionLink setAction(final Class<? extends Action> action) {
         this.action = action;
+        return this;
+    }
+
+    public ExecuteActionLink setAction(final String action) {
+        this.key = action;
         return this;
     }
 
