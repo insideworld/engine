@@ -8,3 +8,8 @@ Update version of maven - mvn versions:set -DnewVersion="0.7.0"
 
 ## To enable action engine
 
+# What's need to redefine
+
+## Common security engine
+
+Need to redefine AbstractLoginAction, AbstractReadRolesAction and AbstractReadUserAction
