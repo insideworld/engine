@@ -10,9 +10,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class HashStorageKeeper implements StorageKeeper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HashStorageKeeper.class);
 
     private final Map<Class<? extends Entity>, Storage<?>> storages;
 
@@ -25,8 +29,12 @@ public class HashStorageKeeper implements StorageKeeper {
                              final Reflection reflection) {
         this.storages = Maps.newHashMapWithExpectedSize(storages.size() * 2);
         for (final Storage storage : storages) {
+            HashStorageKeeper.LOGGER.trace("Init storage " + storage.getClass().getName());
             reflection.getSubTypesOf(storage.forEntity())
-                .forEach(type -> this.storages.put((Class<? extends Entity>) type, storage));
+                .forEach(type -> {
+                    HashStorageKeeper.LOGGER.trace("Found additional type " + type.toString());
+                    this.storages.put((Class<? extends Entity>) type, storage);
+                });
             this.storages.put(storage.forEntity(), storage);
         }
     }
