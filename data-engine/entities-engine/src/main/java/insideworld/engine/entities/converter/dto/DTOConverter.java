@@ -70,7 +70,7 @@ public class DTOConverter implements EntityConverter {
         throws StorageException {
         final Long id = context.get(StorageTags.ID);
         final T entity;
-        if (id == null) {
+        if (id == null || id.equals(0L)) {
             entity = this.factory.createObject(type);
         } else {
             final Storage<T> storage = this.storages.getStorage(type);
