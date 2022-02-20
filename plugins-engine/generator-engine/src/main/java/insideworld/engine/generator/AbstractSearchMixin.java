@@ -1,6 +1,6 @@
 package insideworld.engine.generator;
 
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collection;

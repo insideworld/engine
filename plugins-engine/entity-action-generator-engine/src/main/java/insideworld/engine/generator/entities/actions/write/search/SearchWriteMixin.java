@@ -5,7 +5,7 @@ import insideworld.engine.generator.GenerateMixin;
 import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagInfo;
 import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagInfoImpl;
 import insideworld.engine.generator.entities.actions.write.annotations.GenerateWriteAction;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 
 public class SearchWriteMixin
     extends AbstractSearchMixin<ActionTagInfo, GenerateWriteAction>

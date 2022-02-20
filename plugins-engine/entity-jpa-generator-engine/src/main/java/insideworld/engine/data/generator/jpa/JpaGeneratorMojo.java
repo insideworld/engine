@@ -5,7 +5,7 @@ import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import insideworld.engine.data.generator.jpa.storage.StorageGenerator;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.generator.AbstractGeneratorMojo;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Map;
 import org.apache.maven.plugins.annotations.LifecyclePhase;

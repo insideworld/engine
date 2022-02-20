@@ -1,13 +1,12 @@
 package insideworld.engine.generator;
 
-import insideworld.engine.reflection.ClassLoaderReflection;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.ClassLoaderReflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassOutput;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Map;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

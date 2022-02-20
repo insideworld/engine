@@ -4,7 +4,7 @@ import insideworld.engine.data.generator.StorageInfo;
 import insideworld.engine.data.generator.inmemory.storage.annotations.GenerateInMemoryCrud;
 import insideworld.engine.generator.AbstractSearchMixin;
 import insideworld.engine.generator.GenerateMixin;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 
 public class SearchMixin
     extends AbstractSearchMixin<StorageInfo, GenerateInMemoryCrud>

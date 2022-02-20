@@ -3,7 +3,7 @@ package insideworld.engine.data.generator.jpa.entity.search;
 import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
 import insideworld.engine.generator.AbstractSearchMixin;
 import insideworld.engine.generator.GenerateMixin;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 
 public class SearchMixin
     extends AbstractSearchMixin<JpaInfo,GenerateJpaEntity>

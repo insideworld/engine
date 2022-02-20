@@ -1,4 +1,4 @@
-package insideworld.engine.reflection;
+package insideworld.engine.generator.reflection;
 
 import java.util.Collection;
 

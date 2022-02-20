@@ -7,7 +7,7 @@ import insideworld.engine.data.generator.jpa.storage.search.SearchMixin;
 import insideworld.engine.data.generator.jpa.storage.search.SearchStorages;
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.arc.DefaultBean;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;

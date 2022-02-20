@@ -5,7 +5,7 @@ import insideworld.engine.generator.GenerateMixin;
 import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagsInfo;
 import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagsInfoImpl;
 import insideworld.engine.generator.entities.actions.read.annotations.GenerateReadAction;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 
 public class SearchReadActionMixin extends AbstractSearchMixin<ActionTagsInfo, GenerateReadAction>
     implements SearchReadAction {

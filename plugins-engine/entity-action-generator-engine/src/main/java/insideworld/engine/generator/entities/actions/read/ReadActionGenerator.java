@@ -6,7 +6,7 @@ import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagsIn
 import insideworld.engine.generator.entities.actions.read.search.SearchReadActionMixin;
 import insideworld.engine.generator.entities.actions.read.search.SearchReadAction;
 import insideworld.engine.entities.actions.AbstractReadAction;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
 import java.util.stream.Collectors;

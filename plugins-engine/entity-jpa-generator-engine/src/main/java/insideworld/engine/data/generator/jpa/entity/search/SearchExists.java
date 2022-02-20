@@ -1,13 +1,9 @@
 package insideworld.engine.data.generator.jpa.entity.search;
 
-import com.google.common.collect.Maps;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.Table;
 

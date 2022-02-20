@@ -1,4 +1,4 @@
-package insideworld.engine.reflection;
+package insideworld.engine.generator.reflection;
 
 import insideworld.engine.properties.PropertiesException;
 import insideworld.engine.properties.PropertiesProvider;
@@ -8,19 +8,18 @@ import javax.inject.Singleton;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
-@Singleton
 public class ClassLoaderReflection implements Reflection {
 
     private final Reflections reflections;
 
-    @Inject
-    public ClassLoaderReflection(final PropertiesProvider provider) throws PropertiesException {
-        this(
-            Thread.currentThread().getContextClassLoader(),
-            provider.provide("engine.package", String.class),
-            "insideworld.engine"
-        );
-    }
+//    @Inject
+//    public ClassLoaderReflection(final PropertiesProvider provider) throws PropertiesException {
+//        this(
+//            Thread.currentThread().getContextClassLoader(),
+//            provider.provide("engine.package", String.class),
+//            "insideworld.engine"
+//        );
+//    }
 
     public ClassLoaderReflection(final ClassLoader loader, final String... packages) {
         final ConfigurationBuilder builder = new ConfigurationBuilder().addClassLoaders(loader);

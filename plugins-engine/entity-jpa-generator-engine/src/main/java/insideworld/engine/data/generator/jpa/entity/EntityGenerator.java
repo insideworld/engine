@@ -1,22 +1,18 @@
 package insideworld.engine.data.generator.jpa.entity;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
 import insideworld.engine.data.generator.jpa.entity.search.JpaInfo;
 import insideworld.engine.data.generator.jpa.entity.search.SearchEntities;
 import insideworld.engine.data.generator.jpa.entity.search.SearchExists;
 import insideworld.engine.data.generator.jpa.entity.search.SearchMixin;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.persistence.Table;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class EntityGenerator {
 

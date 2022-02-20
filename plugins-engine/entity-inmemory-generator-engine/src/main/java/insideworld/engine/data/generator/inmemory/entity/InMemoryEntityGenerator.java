@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import insideworld.engine.data.generator.inmemory.entity.search.InMemoryInfo;
 import insideworld.engine.data.generator.inmemory.entity.search.SearchEntities;
 import insideworld.engine.data.generator.inmemory.entity.search.SearchMixin;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;

@@ -4,10 +4,9 @@ import com.google.common.collect.Maps;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
@@ -26,15 +25,10 @@ public class HashStorageKeeper implements StorageKeeper {
      */
     @Inject
     public HashStorageKeeper(final Collection<Storage> storages,
-                             final Reflection reflection) {
+                             final ObjectFactory factory) throws StorageException {
         this.storages = Maps.newHashMapWithExpectedSize(storages.size() * 2);
         for (final Storage storage : storages) {
-            HashStorageKeeper.LOGGER.trace("Init storage " + storage.getClass().getName());
-            reflection.getSubTypesOf(storage.forEntity())
-                .forEach(type -> {
-                    HashStorageKeeper.LOGGER.trace("Found additional type " + type.toString());
-                    this.storages.put((Class<? extends Entity>) type, storage);
-                });
+            this.storages.put(this.findImplementation(storage, factory), storage);
             this.storages.put(storage.forEntity(), storage);
         }
     }
@@ -50,4 +44,19 @@ public class HashStorageKeeper implements StorageKeeper {
         }
         return storage;
     }
+
+    private Class<? extends Entity> findImplementation(
+        final Storage storage, final ObjectFactory factory) throws StorageException {
+        HashStorageKeeper.LOGGER.trace("Init storage " + storage.getClass().getName());
+        final Object object = factory.createObject(storage.forEntity());
+        if (object == null) {
+            throw new StorageException(String.format(
+                "Can't init HashStorage keeper because can't find implementation of %s for storage %s",
+                storage.forEntity().getName(),
+                storage.getClass().getName()
+            ));
+        }
+        return (Class<? extends Entity>) object.getClass();
+    }
+
 }

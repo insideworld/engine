@@ -1,13 +1,12 @@
 package insideworld.engine.data.generator.inmemory.storage;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.data.generator.StorageInfo;
 import insideworld.engine.data.generator.inmemory.storage.abstracts.AbstractMemoryStorage;
 import insideworld.engine.data.generator.inmemory.storage.search.SearchMixin;
 import insideworld.engine.data.generator.inmemory.storage.search.SearchStorages;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.arc.DefaultBean;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;

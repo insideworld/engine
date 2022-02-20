@@ -3,7 +3,7 @@ package insideworld.engine.data.generator.inmemory;
 import insideworld.engine.data.generator.inmemory.entity.InMemoryEntityGenerator;
 import insideworld.engine.data.generator.inmemory.storage.InMemoryStorageGenerator;
 import insideworld.engine.generator.AbstractGeneratorMojo;
-import insideworld.engine.reflection.Reflection;
+import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassOutput;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
