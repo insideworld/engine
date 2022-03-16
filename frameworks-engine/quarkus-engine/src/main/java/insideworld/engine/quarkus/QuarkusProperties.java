@@ -3,6 +3,7 @@ package insideworld.engine.quarkus;
 
 import insideworld.engine.properties.Properties;
 import insideworld.engine.properties.PropertiesException;
+import java.util.Optional;
 import javax.inject.Singleton;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;

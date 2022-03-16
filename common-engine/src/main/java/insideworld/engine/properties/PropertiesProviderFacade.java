@@ -1,6 +1,7 @@
 package insideworld.engine.properties;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Priority;
 import javax.enterprise.inject.Default;
@@ -25,7 +26,7 @@ public class PropertiesProviderFacade implements PropertiesProvider {
     }
     
     @Override
-    public <OUT> OUT provide(final String key, Class<OUT> type) throws PropertiesException {
+    public <OUT> OUT provide(final String key, Class<OUT> type) {
         //TODO: Make cachable.
         for (final Properties provider : this.providers) {
             if (provider.exists(key, type)) {
