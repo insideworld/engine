@@ -17,7 +17,7 @@ public class QuarkusProperties implements Properties {
     }
 
     @Override
-    public <OUT> OUT provide(final String key, final Class<OUT> type) throws PropertiesException {
+    public <OUT> OUT provide(final String key, final Class<OUT> type) {
         return this.config.getValue(key, type);
     }
 
