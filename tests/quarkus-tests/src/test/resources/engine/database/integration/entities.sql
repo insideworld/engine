@@ -1,7 +1,5 @@
 CREATE SCHEMA entities;
 
-
-
 create table entities.one
 (
     id          serial  not null

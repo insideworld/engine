@@ -24,6 +24,6 @@ public class QuarkusProperties implements Properties {
 
     @Override
     public <OUT> boolean exists(final String key, final Class<OUT> type) {
-        return this.config.getValue(key, type) != null;
+        return this.config.getOptionalValue(key, type).isPresent();
     }
 }

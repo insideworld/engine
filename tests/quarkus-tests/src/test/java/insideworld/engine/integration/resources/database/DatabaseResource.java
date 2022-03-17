@@ -24,7 +24,8 @@ public class DatabaseResource extends H2DatabaseTestResource {
                     "RUNSCRIPT FROM 'classpath:engine/database/engine.sql'\\;" +
                     "RUNSCRIPT FROM 'classpath:engine/database/users.sql'\\;" +
                     "RUNSCRIPT FROM 'classpath:engine/database/integration/users.sql'\\;" +
-                    "RUNSCRIPT FROM 'classpath:engine/database/integration/entities.sql'\\;"
+                    "RUNSCRIPT FROM 'classpath:engine/database/integration/entities.sql'\\;" +
+                    "RUNSCRIPT FROM 'classpath:engine/database/integration/engine.sql'\\;"
                     ,"","");
         } catch (SQLException var2) {
             throw new RuntimeException(var2);

@@ -22,4 +22,3 @@ create table engine.sql_queries
 
 create unique index sql_queries_id_uindex
 	on engine.sql_queries (id);
-
