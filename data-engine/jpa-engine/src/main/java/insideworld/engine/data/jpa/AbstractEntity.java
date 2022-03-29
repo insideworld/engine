@@ -28,7 +28,10 @@ public abstract class AbstractEntity implements Entity {
 
     @Override
     public boolean equals(final Object obj) {
-        return this.getClass().equals(obj.getClass()) && this.id == ((Entity) obj).getId();
+        return
+            obj != null &&
+            this.getClass().equals(obj.getClass()) &&
+            this.id == ((Entity) obj).getId();
     }
 
 }
