@@ -42,11 +42,19 @@ public abstract class AbstractParallelActionsLink implements Link {
         }
         for (final Pair<Context, Future<Output>> future : futures) {
             try {
-                output.merge(future.getRight().get());
+                this.handleResults(
+                    Pair.of(context, future.getLeft()),
+                    Pair.of(output, future.getRight().get())
+                    );
             } catch (final InterruptedException | ExecutionException exp) {
                 this.handleException(exp, future.getLeft());
             }
         }
+    }
+
+    protected void handleResults(final Pair<Context, Context> contexts,
+                                 final Pair<Output, Output> outputs) {
+        outputs.getLeft().merge(outputs.getRight());
     }
 
     /**
