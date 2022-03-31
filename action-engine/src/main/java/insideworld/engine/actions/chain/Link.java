@@ -18,4 +18,11 @@ public interface Link {
      */
     void process(Context context, Output output) throws ActionException;
 
+    /**
+     * Can execute this link.
+     * @param context Context.
+     * @return if return true - link will executed, if false - skip this link.
+     */
+    default boolean can(Context context) { return true; }
+
 }

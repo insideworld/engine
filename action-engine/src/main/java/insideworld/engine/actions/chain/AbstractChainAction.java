@@ -24,7 +24,9 @@ public abstract class AbstractChainAction implements Action {
             if (context.contains(ActionsTags.BREAK_CHAIN)) {
                 break;
             }
-            link.process(context, output);
+            if (link.can(context)) {
+                link.process(context, output);
+            }
         }
     }
 

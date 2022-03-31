@@ -27,10 +27,13 @@ public class ImportEntityLink implements Link {
 
     @Override
     public void process(final Context context, final Output output) throws ActionException {
-        if (!context.contains(this.tag)) {
-            final Entity entity = this.converter.convert(context, this.type);
-            context.put(this.tag.getTag(), entity);
-        }
+        final Entity entity = this.converter.convert(context, this.type);
+        context.put(this.tag.getTag(), entity);
+    }
+
+    @Override
+    public boolean can(final Context context) {
+        return !context.contains(this.tag);
     }
 
     public <T extends Entity> void setTag(final EntityTag<T> tag, final Class<T> type) {
