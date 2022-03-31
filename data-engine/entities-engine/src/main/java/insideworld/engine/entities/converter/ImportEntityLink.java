@@ -23,13 +23,14 @@ public class ImportEntityLink implements Link {
     @Inject
     public ImportEntityLink(final EntityConverter converter) {
         this.converter = converter;
-
     }
 
     @Override
     public void process(final Context context, final Output output) throws ActionException {
-        final Entity entity = this.converter.convert(context, this.type);
-        context.put(this.tag.getTag(), entity);
+        if (!context.contains(this.tag)) {
+            final Entity entity = this.converter.convert(context, this.type);
+            context.put(this.tag.getTag(), entity);
+        }
     }
 
     public <T extends Entity> void setTag(final EntityTag<T> tag, final Class<T> type) {
