@@ -2,6 +2,7 @@ package insideworld.engine.actions.chain.execute;
 
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Execute after process a child action.
@@ -16,6 +17,6 @@ public interface PostExecute {
      * @param output Child output.
      * @return In case if true - output will merge with parent output. False - won't merge
      */
-    boolean apply(Context context, Output output);
+    boolean apply(Pair<Context, Context> contexts, Pair<Output, Output> outputs);
 
 }

@@ -3,6 +3,7 @@ package insideworld.engine.actions.chain.execute;
 import com.google.common.collect.Lists;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.facade.impl.ClassActionExecutor;
 import insideworld.engine.actions.facade.impl.KeyActionExecutor;
@@ -16,9 +17,13 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * Execute action.
+ *
+ *
+ */
 @Dependent
 public class ExecuteActionLink implements Link {
-
 
     private final ClassActionExecutor cexecutor;
     private final KeyActionExecutor kexecutor;
@@ -27,6 +32,7 @@ public class ExecuteActionLink implements Link {
     private Tag<?>[] tags;
     private Class<? extends Action> action;
     private String key;
+    private boolean sametx = false;
 
     private final Collection<PreExecute> pres = Lists.newLinkedList();
     private final Collection<PostExecute> posts = Lists.newLinkedList();
@@ -44,9 +50,12 @@ public class ExecuteActionLink implements Link {
     public void process(final Context context, final Output output) throws ActionException {
         final Context clone = this.tags == null ? context.clone() : context.clone(this.tags);
         if (this.pres.isEmpty()
-            || this.pres.stream().allMatch(pre -> pre.apply(clone)
+            || this.pres.stream().allMatch(pre -> pre.apply(Pair.of(context, clone))
         )) {
             final Output results;
+            if (this.sametx) {
+                clone.put(ActionsTags.USE_EXIST_TX, new Object());
+            }
             if (this.action != null) {
                 results = this.cexecutor.execute(this.action, clone);
             } else if (this.key != null) {
@@ -55,7 +64,8 @@ public class ExecuteActionLink implements Link {
                 throw new ActionException("Action is not defined");
             }
             if (this.posts.isEmpty()
-                || this.posts.stream().allMatch(post -> post.apply(clone, results))
+                || this.posts.stream().allMatch(post -> post.apply(
+                    Pair.of(context, clone), Pair.of(output, results)))
             ) {
                 output.merge(results);
             }
@@ -93,6 +103,11 @@ public class ExecuteActionLink implements Link {
 
     public ExecuteActionLink addPostExecute(final Class<? extends PostExecute> execute) {
         return this.addPostExecute(this.factory.createObject(execute));
+    }
+
+    public ExecuteActionLink useSameTx() {
+        this.sametx = true;
+        return this;
     }
 
 }

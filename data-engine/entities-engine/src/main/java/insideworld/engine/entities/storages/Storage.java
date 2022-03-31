@@ -21,4 +21,5 @@ public interface Storage<T extends Entity> {
     boolean exists(long id);
 
     Class<? extends T> forEntity();
+
 }

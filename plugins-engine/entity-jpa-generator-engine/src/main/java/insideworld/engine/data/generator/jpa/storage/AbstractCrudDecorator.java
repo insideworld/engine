@@ -57,4 +57,5 @@ public abstract class AbstractCrudDecorator<T extends Entity> implements Storage
     public Class<? extends T> forEntity() {
         return this.storage.forEntity();
     }
+
 }

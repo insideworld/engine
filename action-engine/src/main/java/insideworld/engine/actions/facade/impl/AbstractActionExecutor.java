@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.transaction.TransactionManager;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -50,25 +51,22 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+
     public Output execute(
         final T parameter, final Context context, final Class<? extends ExecuteProfile> profile)
         throws ActionRuntimeException {
-        final Action action = this.provide(parameter);
-        LOGGER.info("Start action {} with key {}", action.getClass().getSimpleName(), action.key());
-        context.put(ActionsTags.ACTION, action);
-        try {
-            this.profiles.get(profile).preExecute(context);
-            final var output = this.factory.createObject(Output.class);
-            action.execute(context, output);
-            return output;
-        } catch (final ActionException exp) {
-            throw new ActionRuntimeException(exp);
+        final Output output;
+        if (context.contains(ActionsTags.USE_EXIST_TX)) {
+            output = this.executeSameTx(parameter, context, profile);
+        } else {
+            output = this.executeNewTx(parameter, context, profile);
         }
+        return output;
     }
 
     /**
      * Create a context.
+     *
      * @return Context instance.
      */
     public Context createContext() {
@@ -85,6 +83,33 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
     }
 
     protected abstract T defineKey(final Action action);
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Output executeSameTx(
+        final T parameter, final Context context, final Class<? extends ExecuteProfile> profile) {
+        return this.executeInternal(parameter, context, profile);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    public Output executeNewTx(
+        final T parameter, final Context context, final Class<? extends ExecuteProfile> profile) {
+        return this.executeInternal(parameter, context, profile);
+    }
+
+    private Output executeInternal(
+        final T parameter, final Context context, final Class<? extends ExecuteProfile> profile) {
+        final Action action = this.provide(parameter);
+        LOGGER.info("Start action {} with key {}", action.getClass().getSimpleName(), action.key());
+        context.put(ActionsTags.ACTION, action);
+        try {
+            this.profiles.get(profile).preExecute(context);
+            final var output = this.factory.createObject(Output.class);
+            action.execute(context, output);
+            return output;
+        } catch (final ActionException exp) {
+            throw new ActionRuntimeException(exp);
+        }
+    }
 
     private Action provide(final T parameter) {
         final var action = this.actions.get(parameter);

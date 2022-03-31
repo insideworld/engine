@@ -22,4 +22,6 @@ public final class ActionsTags {
 
     public static final SingleTag<String> FROM_ACTION = new SingleTag<>("action.from-action");
 
+    public static final SingleTag<Object> USE_EXIST_TX = new SingleTag<>("action.use-exist-tx");
+
 }
