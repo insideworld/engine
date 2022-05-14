@@ -37,7 +37,8 @@ public abstract class AbstractSender<T> implements Sender<T> {
     public final void send(T data) throws Exception {
         final AmqpMessageBuilder builder = AmqpMessage.create();
         this.build(data, builder);
-        this.sender.send(builder.build());
+        final AmqpSender send = this.sender.send(builder.build());
+        send.endAndForget();
     }
 
     /**
