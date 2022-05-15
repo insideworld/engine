@@ -18,15 +18,24 @@ public class ContextToOutput implements Link {
 
     @Override
     public void process(final Context context, final Output output) throws ActionException {
-        if (tags.isEmpty()) {
-            return;
+        if (this.tags.isEmpty()) {
+            addAll(context, output);
+        } else {
+            addWithTags(context, output);
         }
+    }
+
+    private void addWithTags(final Context context, final Output output) {
         final Record record = output.createRecord();
         for (final String tag : this.tags) {
             if (context.contains(tag)) {
                 record.put(tag, context.get(tag));
             }
         }
+    }
+
+    private void addAll(final Context context, final Output output) {
+        output.add(context.clone());
     }
 
     public ContextToOutput addTag(final Tag<?> tag) {
