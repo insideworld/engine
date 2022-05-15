@@ -24,6 +24,7 @@ public abstract class AbstractSender<T> implements Sender<T> {
      * Vertx sender.
      */
     private final AmqpSender sender;
+    private Channel channel;
 
     /**
      * Default constructor.
@@ -31,14 +32,14 @@ public abstract class AbstractSender<T> implements Sender<T> {
      */
     public AbstractSender(final Channel channel) {
         this.sender = channel.createSender();
+        this.channel = channel;
     }
 
     @Override
     public final void send(T data) throws Exception {
         final AmqpMessageBuilder builder = AmqpMessage.create();
         this.build(data, builder);
-        final AmqpSender send = this.sender.send(builder.build());
-        send.endAndForget();
+        this.sender.writeAndForget(builder.build());
     }
 
     /**
