@@ -43,7 +43,7 @@
    <dependency>
      <groupId>io.quarkus.gizmo</groupId>
      <artifactId>gizmo</artifactId>
-     <version>1.0.10.Final</version>
+     <version>${io.quarkus.gizmo.version}</version>
      <scope>compile</scope>
    </dependency>
    <dependency>
