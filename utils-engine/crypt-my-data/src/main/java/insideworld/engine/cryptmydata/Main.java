@@ -23,21 +23,11 @@ import org.apache.commons.codec.binary.Hex;
 public class Main {
 
     public static void main(String[] args) throws DecoderException, GeneralSecurityException {
-        final String s1 = "qwe";
-        final String qwe1 = (new StringBuilder()).append("qwe").toString();
-        qwe1.intern();
-        final String s2 = "qwe";
-        final String qwe2 = (new StringBuilder()).append("qwe").toString();
-        System.out.println(s1 == s2);
-        System.out.println(qwe1 == qwe2);
-        System.out.println(qwe1);
-        System.out.println(qwe2);
-
-//        System.out.println("Please select:");
-//        System.out.println("1. Prepare HTTP basic header");
-//        System.out.println("2. Just crypt some string");
-//        httpCrypt();
-//        justCrypt();
+        System.out.println("Please select:");
+        System.out.println("1. Prepare HTTP basic header");
+        System.out.println("2. Just crypt some string");
+        httpCrypt();
+        justCrypt();
     }
 
     public static void httpCrypt() throws DecoderException, GeneralSecurityException {
