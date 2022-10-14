@@ -39,8 +39,15 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
 
     @Override
     public T write(final T entity) {
-       persist(this.forCrud().cast(entity));
-       return entity;
+        final C crud = this.forCrud().cast(entity);
+        final C merged;
+        if (isPersistent(crud)) {
+            merged = crud;
+        } else {
+            merged = getEntityManager().merge(crud);
+        }
+        persist(merged);
+        return merged;
     }
 
     @Override
