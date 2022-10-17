@@ -136,19 +136,19 @@
         </executions>
         <version>${maven-source-plugin.version}</version>
       </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <version>${maven-javadoc-plugin.version}</version>
-      </plugin>
+<!--      <plugin>-->
+<!--        <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>attach-javadocs</id>-->
+<!--            <phase>deploy</phase>-->
+<!--            <goals>-->
+<!--              <goal>jar</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--        <version>${maven-javadoc-plugin.version}</version>-->
+<!--      </plugin>-->
       <plugin>
         <!-- explicitly define maven-deploy-plugin after other to force exec order -->
         <artifactId>maven-deploy-plugin</artifactId>
