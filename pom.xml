@@ -64,6 +64,9 @@
     <maven-plugin-annotations.version>3.6.4</maven-plugin-annotations.version>
     <maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
     <reflections.version>0.10.2</reflections.version>
+    <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
+    <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
   </properties>
 
   <dependencies>
@@ -117,5 +120,50 @@
       <url>${env.CI_SERVER_URL}/api/v4/projects/2/packages/maven</url>
     </snapshotRepository>
   </distributionManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+        <version>${maven-source-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <version>${maven-javadoc-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <!-- explicitly define maven-deploy-plugin after other to force exec order -->
+        <artifactId>maven-deploy-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+        <version>${maven-deploy-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
