@@ -53,7 +53,7 @@ public class ListTable implements Table {
     public Record createRecord(String alias) {
         final Record record = this.factory.createObject(this.recordType());
         if (StringUtils.isNotEmpty(alias)) {
-            record.put(ActionsTags.ALIAS, alias);
+            record.put(KeeperTags.ALIAS, alias);
         }
         this.records.add(record);
         return record;

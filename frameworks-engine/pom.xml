@@ -38,6 +38,7 @@
         <module>web-quarkus-engine</module>
         <module>quarkus-engine</module>
         <module>amqp-quarkus-engine</module>
+        <module>quarkus-extension-engine</module>
     </modules>
 
     <properties>

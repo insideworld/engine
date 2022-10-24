@@ -19,23 +19,29 @@
 
 package insideworld.engine.actions;
 
-
 import com.fasterxml.jackson.annotation.JsonGetter;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+
 /**
- *
+ * Action interface.
+ * To execute implemented action see implementation of ActionExecutor.
+ * To register action see ActionChanger.
+ * @see insideworld.engine.actions.executor.ActionExecutor
+ * @see insideworld.engine.actions.executor.ActionChanger
  * @since 0.0.1
  */
 public interface Action {
 
     /**
      * Execute an action.
-     * @param context Input data.
-     * @return Actions.
+     * @param context Context is using for input data.
+     * @param output Output is using for store result of the action.
+     * @throws ActionException Exception during action execution.
+     * @see Context
+     * @see Output
      */
     void execute(Context context, Output output) throws ActionException;
-
 
     /**
      * Key of action in string representation.

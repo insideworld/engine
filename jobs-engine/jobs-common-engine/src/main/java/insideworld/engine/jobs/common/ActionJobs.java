@@ -19,23 +19,13 @@
 
 package insideworld.engine.jobs.common;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.facade.ActionChanger;
-import insideworld.engine.actions.facade.ActionExecutor;
-import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.jobs.common.entity.JobEntity;
 
 import io.quarkus.runtime.Startup;
-import io.quarkus.runtime.StartupEvent;
-import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.quartz.CronScheduleBuilder;
@@ -44,7 +34,6 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
-import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.Scheduler;

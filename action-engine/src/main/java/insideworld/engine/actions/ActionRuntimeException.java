@@ -19,8 +19,17 @@
 
 package insideworld.engine.actions;
 
+/**
+ * Runtime wrapper for ActionException.
+ * @see ActionException
+ * @since 0.1.0
+ */
 public class ActionRuntimeException extends RuntimeException {
 
+    /**
+     * Default constructor with action exception.
+     * @param exp Action exception.
+     */
     public ActionRuntimeException(final ActionException exp) {
         super(exp);
     }

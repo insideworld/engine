@@ -25,7 +25,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Execute after process a child action.
- * @see ExecuteActionLink
+ * @see AbstractExecuteActionLink
  * @since 0.6.0
  */
 public interface PostExecute {

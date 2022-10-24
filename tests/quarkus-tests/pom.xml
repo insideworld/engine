@@ -47,8 +47,8 @@
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
 
+  <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
       <artifactId>common-engine</artifactId>
@@ -165,7 +165,11 @@
       <artifactId>test-data</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-runtime-engine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
 

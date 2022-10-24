@@ -19,28 +19,37 @@
 
 package insideworld.engine.actions;
 
-import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 
+/**
+ * Action tags.
+ *
+ * @since 0.1.0
+ */
 public final class ActionsTags {
 
+    /**
+     * Current action instance.
+     */
+    public static final SingleTag<Action> ACTION =
+        new SingleTag<>("engine.actions.action");
+
+    /**
+     * Looks like need to remove it.
+     */
+    public static final SingleTag<String> FROM_ACTION =
+        new SingleTag<>("engine.action.from-action");
+
+    /**
+     * Use exists transaction when execute a new action.
+     * Default will use the same TX.
+     */
+    public static final SingleTag<Object> USE_EXIST_TX =
+        new SingleTag<>("engine.action.use-exist-tx");
+
+    /**
+     * Private constructor.
+     */
     private ActionsTags() {
     }
-
-    public static final SingleTag<Action> ACTION = new SingleTag<>("action");
-
-    public static final SingleTag<String> ALIAS = new SingleTag<>("alias");
-
-    public static final SingleTag<Void> EMPTY = new SingleTag<>("empty");
-
-    public static final MultipleTag<Void> EMPTIES = new MultipleTag<>("empty");
-
-    public static final SingleTag<Object> BREAK_CHAIN = new SingleTag<>("breakChain");
-
-    public static final SingleTag<String> BULK = new SingleTag<>("bulk");
-
-    public static final SingleTag<String> FROM_ACTION = new SingleTag<>("action.from-action");
-
-    public static final SingleTag<Object> USE_EXIST_TX = new SingleTag<>("action.use-exist-tx");
-
 }

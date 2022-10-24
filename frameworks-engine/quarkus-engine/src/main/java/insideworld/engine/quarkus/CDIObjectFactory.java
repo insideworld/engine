@@ -20,7 +20,6 @@
 package insideworld.engine.quarkus;
 
 import insideworld.engine.injection.ObjectFactory;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Singleton;

@@ -27,12 +27,24 @@ import insideworld.engine.actions.keeper.output.Output;
 import java.util.Collection;
 
 /**
- * Execute chain of links.
+ * Abstract class for provide functionality to work with chain.
+ * All contexts and outputs propagated from link to link.
+ * How to add you links see JavaDoc for attachLinks method.
+ * You may break a chain add to context BREAK_CHAIN tag.
+ *
+ * @since 0.1.0
  */
 public abstract class AbstractChainAction implements Action {
 
+    /**
+     * Collections of links.
+     */
     private final Collection<Link> links;
 
+    /**
+     * Default constructor.
+     * @param builder Links builder instance.
+     */
     public AbstractChainAction(final LinksBuilder builder) {
         this.links = this.attachLinks(builder);
     }
@@ -40,7 +52,7 @@ public abstract class AbstractChainAction implements Action {
     @Override
     public void execute(final Context context, final Output output) throws ActionException {
         for (final Link link : this.links) {
-            if (context.contains(ActionsTags.BREAK_CHAIN)) {
+            if (context.contains(ChainTags.BREAK_CHAIN)) {
                 break;
             }
             if (link.can(context)) {
@@ -50,9 +62,13 @@ public abstract class AbstractChainAction implements Action {
     }
 
     /**
-     * Collection of links.
-     * For build it use LinkBuilder
-     * @return
+     * You need implement method attachLinks in inherited class and add you links use LinkBuilder.
+     * Links will execute successively in order will you add through LinkBuilder.
+     * How to use link builder see JavaDoc for related interface.
+     *
+     * @param builder LinksBuilder instance.
+     * @return Collection of links.
+     * @see LinksBuilder
      */
     protected abstract Collection<Link> attachLinks(LinksBuilder builder);
 

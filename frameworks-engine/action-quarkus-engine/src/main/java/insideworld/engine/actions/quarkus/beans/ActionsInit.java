@@ -21,7 +21,7 @@ package insideworld.engine.actions.quarkus.beans;
 
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.facade.ActionChanger;
+import insideworld.engine.actions.executor.ActionChanger;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.runtime.Startup;
 import java.util.Collection;

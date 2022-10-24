@@ -19,8 +19,8 @@
 
 package insideworld.engine.integration.tests.transactions;
 
-import insideworld.engine.actions.facade.impl.ClassActionExecutor;
-import insideworld.engine.actions.facade.profiles.SystemExecuteProfile;
+import insideworld.engine.actions.executor.impl.ClassActionExecutor;
+import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
@@ -28,10 +28,8 @@ import insideworld.engine.integration.transactions.CrudSomeEntity;
 import insideworld.engine.integration.transactions.SomeEntity;
 import insideworld.engine.integration.transactions.SomeNestedEntity;
 import insideworld.engine.integration.transactions.SomeNestedEntityJPA;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 

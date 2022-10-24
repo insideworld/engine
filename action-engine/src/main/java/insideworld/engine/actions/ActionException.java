@@ -21,18 +21,40 @@ package insideworld.engine.actions;
 
 import insideworld.engine.actions.keeper.context.Context;
 
+/**
+ * Exception during to an action processing.
+ *
+ * @since 0.1.0
+ */
 public class ActionException extends Exception {
 
+    /**
+     * Default exception message.
+     */
     private static final String EXCEPTION_MESSAGE = "Exception during execute action %s";
 
+    /**
+     * Constructor with message parameter.
+     * @param message Exception message.
+     */
     public ActionException(final String message) {
         super(message);
     }
 
+    /**
+     * Constructor to wrap an exists exception.
+     * @param message Exception message.
+     * @param exp Original exception.
+     */
     public ActionException(final String message, final Exception exp) {
         super(message, exp);
     }
 
+    /**
+     * Contructor to wrap an exists exception with default message.
+     * @param input Context with action information.
+     * @param exp Orignal exception.
+     */
     public ActionException(final Context input, final Exception exp) {
         super(String.format(EXCEPTION_MESSAGE, input.get(ActionsTags.ACTION)), exp);
     }

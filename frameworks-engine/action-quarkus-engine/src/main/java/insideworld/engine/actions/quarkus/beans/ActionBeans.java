@@ -19,12 +19,12 @@
 
 package insideworld.engine.actions.quarkus.beans;
 
-import com.google.common.collect.ImmutableList;
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.PreExecutor;
+import insideworld.engine.actions.executor.ActionExecutor;
+import insideworld.engine.actions.executor.PreExecutor;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.facade.ActionChanger;
-import insideworld.engine.actions.facade.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.ActionChanger;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.tags.MandatoryTag;
 import insideworld.engine.quarkus.AbstractBeans;
 import java.util.Collection;
@@ -34,13 +34,15 @@ import javax.enterprise.inject.Produces;
 
 public class ActionBeans extends AbstractBeans {
 
+
+
     @Produces
     public Collection<ExecuteProfile> executeProfiles(final Instance<ExecuteProfile> instance) {
         return this.fromInstance(instance);
     }
 
     @Produces
-    public Collection<PreExecutor> executors(final Instance<PreExecutor> instance) {
+    public Collection<PreExecutor> preExecutors(final Instance<PreExecutor> instance) {
         return this.fromInstance(instance);
     }
 
