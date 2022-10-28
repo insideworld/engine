@@ -21,7 +21,9 @@
  * This package provide a functionality to create a chain actions with different predefined links.
  * To apply it you need to extend you class from AbstractChainActions and add necessary links.
  * How to do it see java docs to related classes.
+ *
  * @see insideworld.engine.actions.chain.AbstractChainAction
+ * @see insideworld.engine.actions.chain.LinksBuilder
  * @see insideworld.engine.actions.chain.Link
  */
 package insideworld.engine.actions.chain;

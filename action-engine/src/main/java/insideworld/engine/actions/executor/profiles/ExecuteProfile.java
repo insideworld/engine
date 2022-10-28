@@ -22,8 +22,18 @@ package insideworld.engine.actions.executor.profiles;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 
+/**
+ * Execute profile.
+ * Using to register some PreExecute action for specific conditions.
+ * @since 0.1.0
+ */
 public interface ExecuteProfile {
 
+    /**
+     * Execute pre executes conditions for profile implentation.
+     * @param context Context.
+     * @throws ActionException Action exception.
+     */
     void preExecute(Context context) throws ActionException;
 
 }

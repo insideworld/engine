@@ -27,11 +27,24 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Default execute profile.
+ * Using by default to execute an action.
+ * @since 0.1.0
+ */
 @Singleton
 public class DefaultExecuteProfile implements ExecuteProfile {
 
+    /**
+     * Collection of PreExecutor.
+     */
     private final Collection<PreExecutor> executors;
 
+    /**
+     * Default constructor.
+     * Will filter PreExecutors which has this class in forProfile().
+     * @param executors All executors in the system.
+     */
     @Inject
     public DefaultExecuteProfile(final Collection<PreExecutor> executors) {
         this.executors = executors.stream()
@@ -40,7 +53,7 @@ public class DefaultExecuteProfile implements ExecuteProfile {
     }
 
     @Override
-    public void preExecute(final Context context) throws ActionException {
+    public final void preExecute(final Context context) throws ActionException {
         for (final PreExecutor executor : this.executors) {
             executor.preExecute(context);
         }

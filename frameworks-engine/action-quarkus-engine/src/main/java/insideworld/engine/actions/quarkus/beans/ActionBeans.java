@@ -28,13 +28,10 @@ import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.tags.MandatoryTag;
 import insideworld.engine.quarkus.AbstractBeans;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 
 public class ActionBeans extends AbstractBeans {
-
-
 
     @Produces
     public Collection<ExecuteProfile> executeProfiles(final Instance<ExecuteProfile> instance) {
@@ -53,6 +50,12 @@ public class ActionBeans extends AbstractBeans {
 
     @Produces
     public Collection<Action> actions(final Instance<Action> instance) {
+        return this.fromInstance(instance);
+    }
+
+    @Produces
+    public Collection<ActionExecutor<?>> actionExecutors(
+        Instance<ActionExecutor<?>> instance) {
         return this.fromInstance(instance);
     }
 

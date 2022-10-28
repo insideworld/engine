@@ -61,6 +61,6 @@ public interface ActionExecutor<T> {
      */
     Context createContext();
 
-    TypeLiteral<T> type();
+//    Class<T> type();
 
 }

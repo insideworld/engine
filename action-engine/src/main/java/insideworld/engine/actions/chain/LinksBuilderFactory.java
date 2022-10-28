@@ -35,23 +35,34 @@ import javax.inject.Inject;
 @Dependent
 public class LinksBuilderFactory implements LinksBuilder {
 
+    /**
+     * Object factor.
+     */
     private final ObjectFactory factory;
+
+    /**
+     * Collections of links.
+     */
     private final ImmutableList.Builder<Link> links = ImmutableList.builder();
 
+    /**
+     * Default constructor.
+     * @param factory Object factory.
+     */
     @Inject
     public LinksBuilderFactory(final ObjectFactory factory) {
         this.factory = factory;
     }
 
     @Override
-    public LinksBuilder addLink(final Class<? extends Link> type) {
+    public final LinksBuilder addLink(final Class<? extends Link> type) {
         final Link link = this.factory.createObject(type);
         this.links.add(link);
         return this;
     }
 
     @Override
-    public <T extends Link> LinksBuilder addLink(final Class<T> type, final Consumer<T> init) {
+    public final  <T extends Link> LinksBuilder addLink(final Class<T> type, final Consumer<T> init) {
         final T link = this.factory.createObject(type);
         init.accept(link);
         this.links.add(link);
@@ -59,14 +70,14 @@ public class LinksBuilderFactory implements LinksBuilder {
     }
 
     @Override
-    public LinksBuilder addLink(final TypeLiteral<? extends Link> type) {
+    public final LinksBuilder addLink(final TypeLiteral<? extends Link> type) {
         final Link link = this.factory.createObject(type);
         this.links.add(link);
         return this;
     }
 
     @Override
-    public <T extends Link> LinksBuilder addLink(
+    public final  <T extends Link> LinksBuilder addLink(
         final TypeLiteral<T> type, final Consumer<T> init) {
         final T link = this.factory.createObject(type);
         init.accept(link);
@@ -74,9 +85,8 @@ public class LinksBuilderFactory implements LinksBuilder {
         return this;
     }
 
-
     @Override
-    public Collection<Link> build() {
+    public final Collection<Link> build() {
         return this.links.build();
     }
 }

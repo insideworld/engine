@@ -28,13 +28,18 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Execute action by string key.
- *
+ * Executor to provide call an action by string key.
+ * Each action should implement method key() for string identification of action.
  * @since 0.0.6
  */
 @Singleton
 public class KeyActionExecutor extends AbstractActionExecutor<String> {
 
+    /**
+     * Default constructor.
+     * @param factory Object factory.
+     * @param profiles Execute profiles.
+     */
     @Inject
     public KeyActionExecutor(final ObjectFactory factory,
                              final Collection<ExecuteProfile> profiles) {
@@ -42,12 +47,7 @@ public class KeyActionExecutor extends AbstractActionExecutor<String> {
     }
 
     @Override
-    protected String defineKey(final Action action) {
+    protected final String defineKey(final Action action) {
         return action.key();
-    }
-
-    @Override
-    public TypeLiteral<String> type() {
-        return new TypeLiteral<>() {};
     }
 }

@@ -42,7 +42,7 @@ public interface LinksBuilder {
     LinksBuilder addLink(Class<? extends Link> type);
 
     /**
-     * Add specific link implementation based on class type and configurate it.
+     * Add specific link implementation based on class type and configure it.
      * Usually using for non singleton links which behavior depended on action.
      * @param type Class type of link.
      * @param init Init predicate which execute once at action init.
@@ -60,7 +60,7 @@ public interface LinksBuilder {
     LinksBuilder addLink(TypeLiteral<? extends Link> type);
 
     /**
-     * Add specific link with generic parameters and configurate it.
+     * Add specific link with generic parameters and configure it.
      * Usually using for non singleton links which behavior depended on generic actions.
      * @param type Type literal. Example: new TypeLiteral<SomeGenericLink<T>>() {}
      * @param init Init predicate which execute once at action init.

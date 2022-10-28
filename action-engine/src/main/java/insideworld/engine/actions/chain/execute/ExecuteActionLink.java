@@ -19,22 +19,68 @@
 
 package insideworld.engine.actions.chain.execute;
 
-import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.keeper.tags.Tag;
 
+/**
+ * Execute action link.
+ * Using to execute specific action with specific key.
+ * @param <T> Key type for execute an action.
+ */
 public interface ExecuteActionLink<T> extends Link {
-    AbstractExecuteActionLink<T> setTags(Tag<?>... tags);
+    /**
+     * Set tags for copy from parent context to child.
+     * If not set all tags will copy to child context exclude system specific.
+     * @param tags Tags array to propagate.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> setTags(Tag<?>... tags);
 
-    AbstractExecuteActionLink<T> setAction(T action);
+    /**
+     * Set action which need to execute.
+     * @param key Action key.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> setKey(T key);
 
-    AbstractExecuteActionLink<T> addPreExecute(PreExecute execute);
+    /**
+     * Add pre execute functions.
+     * This code call before execute an action.
+     * Typically use for prepare some input data for execute action.
+     * If one of PreExecute return false - action won't execute.
+     * @param execute PreExecute instances.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> addPreExecute(PreExecute... execute);
 
-    AbstractExecuteActionLink<T> addPreExecute(Class<? extends PreExecute> execute);
+    /**
+     * The same as addPreExecute but using DI or another mechanism to take object by class.
+     * @param execute Classes of PreExecute instance.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> addPreExecute(Class<? extends PreExecute>... execute);
 
-    AbstractExecuteActionLink<T> addPostExecute(PostExecute execute);
+    /**
+     * Add post execute functions.
+     * The code call after execute an action.
+     * Typically using for copy some data from child to parent output.
+     * In case if no one PostExecute not defined will merge whole parent and child output.
+     * @param execute PostExecute instances.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> addPostExecute(PostExecute... execute);
 
-    AbstractExecuteActionLink<T> addPostExecute(Class<? extends PostExecute> execute);
+    /**
+     * The same as addPreExecute but using DI or another mechanism to take object by class.
+     * @param execute Classes of PostExecute instance.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> addPostExecute(Class<? extends PostExecute>... execute);
 
-    AbstractExecuteActionLink<T> useSameTx();
+    /**
+     * Use the same transaction in child action.
+     * Will execute in separate transaction by default.
+     * @return The same instance.
+     */
+    ExecuteActionLink<T> useSameTx();
 }

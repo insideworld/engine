@@ -24,16 +24,19 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Execute before process child action.
- * @see AbstractExecuteActionLink
+ * @see ExecuteActionLink
  * @since 0.6.0
  */
 public interface PreExecute {
 
     /**
-     * Apply some addtional action before execute action.
-     * @param context
-     * @return Skip if false
+     * Apply some additional function before execute action.
+     * Typically use for prepare some input data for execute action.
+     * @param parent Parent action context.
+     * @param child Child action context.
+     * @return If false - child action won't execute.
+     * @see ExecuteActionLink#addPreExecute(PreExecute...)
      */
-    boolean apply(Pair<Context, Context> contexts);
+    boolean apply(Context parent, Context child);
 
 }

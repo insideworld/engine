@@ -19,6 +19,7 @@
 
 package insideworld.engine.actions.keeper.context;
 
+import static org.slf4j.MDC.remove;
 import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.keeper.MapRecord;
 import insideworld.engine.actions.keeper.Record;
@@ -27,6 +28,7 @@ import insideworld.engine.actions.keeper.tags.Tag;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -83,7 +85,9 @@ public class ContextRecord extends MapRecord implements Context {
     }
 
     private void removeSystem(final Context clone) {
-        clone.values().remove(ActionsTags.ACTION.getTag());
+        final Map<String, ? super Object> values = clone.values();
+        values.remove(ActionsTags.ACTION.getTag());
+        values.remove(ActionsTags.USE_EXIST_TX.getTag());
     }
 
     protected Class<? extends Context> clazz() {

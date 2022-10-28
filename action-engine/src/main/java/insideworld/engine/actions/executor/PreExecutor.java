@@ -24,9 +24,24 @@ import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import java.util.Collection;
 
+/**
+ * Interface to provide some logic before execute an action.
+ * Work on all actions.
+ * @see ExecuteProfile
+ * @since 0.1.0
+ */
 public interface PreExecutor {
 
+    /**
+     * Perform some functionality.
+     * @param context Context.
+     * @throws ActionException Some exception.
+     */
     void preExecute(final Context context) throws ActionException;
 
+    /**
+     * For which profile need to perform the implementation.
+     * @return Collections of profiles.
+     */
     Collection<Class<? extends ExecuteProfile>> forProfile();
 }

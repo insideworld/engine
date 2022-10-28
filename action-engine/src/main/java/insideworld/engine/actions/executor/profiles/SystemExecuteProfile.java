@@ -27,12 +27,30 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * System execute profile.
+ * Use this profile to execute an action inside the same system (usually from jobs).
+ * Also execute PreExecutes from DefaultExecuteProfile.
+ * @see DefaultExecuteProfile
+ * @since 0.1.0
+ */
 @Singleton
 public class SystemExecuteProfile implements ExecuteProfile {
 
+    /**
+     * Default execute profile.
+     */
     private final DefaultExecuteProfile def;
+    /**
+     * PreExecutors for this instance.
+     */
     private final Collection<PreExecutor> executors;
 
+    /**
+     * Default constructor.
+     * @param def Default execute profile.
+     * @param executors Collection of all executors in the system.
+     */
     @Inject
     public SystemExecuteProfile(final DefaultExecuteProfile def,
                                 final Collection<PreExecutor> executors) {
@@ -43,7 +61,7 @@ public class SystemExecuteProfile implements ExecuteProfile {
     }
 
     @Override
-    public void preExecute(final Context context) throws ActionException {
+    public final void preExecute(final Context context) throws ActionException {
         for (final PreExecutor executor : this.executors) {
             executor.preExecute(context);
         }

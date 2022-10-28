@@ -28,30 +28,58 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
 import insideworld.engine.injection.ObjectFactory;
+import java.util.Arrays;
 import java.util.Collection;
-import javax.enterprise.context.Dependent;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * Execute actions links.
- * Using to execute another action in chain action.
- * TODO: Write a test.
+ * Abstract logic for execute action inside chain action.
+ * Need to extend realisation to support different key types.
  *
- * @since 0.1.0
+ * @param <T> Key type for execute an action.
  */
-
 public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActionLink<T> {
 
+    /**
+     * Executor of action.
+     */
     private final ActionExecutor<T> executor;
+    /**
+     * PreExecute instances.
+     */
     private final Collection<PreExecute> pres = Lists.newLinkedList();
+    /**
+     * Post execute instances.
+     */
     private final Collection<PostExecute> posts = Lists.newLinkedList();
+    /**
+     * Object factory.
+     */
     private final ObjectFactory factory;
 
-    private T action;
+    /**
+     * Key of action.
+     */
+    private T key;
+
+    /**
+     * Tags to copy from parent context to child.
+     */
     private Tag<?>[] tags;
+
+    /**
+     * Using the same TX in child action.
+     */
     private boolean sametx = false;
 
+    /**
+     * Default constructor.
+     * @param executor Action executor.
+     * @param factory Object factory.
+     */
     @Inject
     public AbstractExecuteActionLink(final ActionExecutor<T> executor,
                                      final ObjectFactory factory) {
@@ -60,64 +88,68 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
     }
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
-        final Context clone = this.tags == null ? context.clone() : context.clone(this.tags);
-        if (this.pres.isEmpty()
-            || this.pres.stream().allMatch(pre -> pre.apply(Pair.of(context, clone))
-        )) {
+    public final void process(final Context parent, final Output output) throws ActionException {
+        final Context child = this.tags == null ? parent.clone() : parent.clone(this.tags);
+        if (this.pres.isEmpty() || this.pres.stream().allMatch(pre -> pre.apply(parent, child))) {
             final Output results;
             if (this.sametx) {
-                clone.put(ActionsTags.USE_EXIST_TX, new Object());
+                child.put(ActionsTags.USE_EXIST_TX, new Object());
             }
-            if (this.action == null) {
+            if (this.key == null) {
                 throw new ActionException("Action is not set!");
             }
-            results = this.executor.execute(this.action, clone);
-            if (this.posts.isEmpty()
-                || this.posts.stream().allMatch(post -> post.apply(
-                    Pair.of(context, clone), Pair.of(output, results)))
-            ) {
+            results = this.executor.execute(this.key, child);
+            if (this.posts.isEmpty()){
                 output.merge(results);
+            } else {
+                this.posts.forEach(post ->
+                    post.apply(Pair.of(parent, output), Pair.of(child, results)));
             }
         }
     }
 
     @Override
-    public AbstractExecuteActionLink<T> setTags(final Tag<?>... tags) {
+    public final ExecuteActionLink<T> setTags(final Tag<?>... tags) {
         this.tags = tags;
         return this;
     }
 
     @Override
-    public AbstractExecuteActionLink<T> setAction(final T action) {
-        this.action = action;
+    public final ExecuteActionLink<T> setKey(final T key) {
+        this.key = key;
         return this;
     }
 
     @Override
-    public AbstractExecuteActionLink<T> addPreExecute(final PreExecute execute) {
-        this.pres.add(execute);
+    public final ExecuteActionLink<T> addPreExecute(final PreExecute... executes) {
+        this.pres.addAll(Arrays.asList(executes));
         return this;
     }
 
     @Override
-    public AbstractExecuteActionLink<T> addPreExecute(final Class<? extends PreExecute> execute) {
-        return this.addPreExecute(this.factory.createObject(execute));
+    public final ExecuteActionLink<T> addPreExecute(final Class<? extends PreExecute>... executes) {
+        final PreExecute[] array = Arrays.stream(executes)
+            .map(execute -> this.factory.createObject(execute)).toArray(PreExecute[]::new);
+        return this.addPreExecute(array);
     }
 
     @Override
-    public AbstractExecuteActionLink<T> addPostExecute(final PostExecute execute) {
-        this.posts.add(execute);
+    public final ExecuteActionLink<T> addPostExecute(final PostExecute... executes) {
+        this.posts.addAll(Arrays.asList(executes));
         return this;
     }
 
+    @SafeVarargs
     @Override
-    public AbstractExecuteActionLink<T> addPostExecute(final Class<? extends PostExecute> execute) {
-        return this.addPostExecute(this.factory.createObject(execute));
+    public final ExecuteActionLink<T> addPostExecute(
+        final Class<? extends PostExecute>... executes) {
+        final PostExecute[] array = Arrays.stream(executes)
+            .map(execute -> this.factory.createObject(execute)).toArray(PostExecute[]::new);
+        return this.addPostExecute(array);
     }
 
     @Override
-    public AbstractExecuteActionLink<T> useSameTx() {
+    public final ExecuteActionLink<T> useSameTx() {
         this.sametx = true;
         return this;
     }

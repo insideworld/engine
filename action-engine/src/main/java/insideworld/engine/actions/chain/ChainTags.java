@@ -21,7 +21,15 @@ package insideworld.engine.actions.chain;
 
 import insideworld.engine.actions.keeper.tags.SingleTag;
 
-public class ChainTags {
+/**
+ * Tags for chain.
+ * @since 0.1.0
+ */
+public final class ChainTags {
+
+    private ChainTags() {
+        //No need to create an instance.
+    }
 
     /**
      * Use exists transaction when execute a new action.

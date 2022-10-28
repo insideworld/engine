@@ -25,15 +25,17 @@ import insideworld.engine.actions.keeper.output.Output;
 
 
 /**
- * Link of chain. Can be used for attach some code to action.
+ * Link of chain.
+ * Use separate functionality of actions and reuse code.
  *
  * @since 0.0.1
  */
 public interface Link {
 
     /**
-     * Process some logic.
-     * @param data
+     * Execute logic of link.
+     * @param context Context.
+     * @param output Output.
      */
     void process(Context context, Output output) throws ActionException;
 

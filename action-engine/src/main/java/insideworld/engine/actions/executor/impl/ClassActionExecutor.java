@@ -22,14 +22,24 @@ package insideworld.engine.actions.executor.impl;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.injection.ObjectFactory;
+import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Executor to provide call an action by Class type.
+ * @since 0.1.0
+ */
 @Singleton
 public class ClassActionExecutor extends AbstractActionExecutor<Class<? extends Action>> {
 
+    /**
+     * Default constructor.
+     * @param factory Object factory.
+     * @param profiles Execute profiles.
+     */
     @Inject
     public ClassActionExecutor(final ObjectFactory factory,
                                final Collection<ExecuteProfile> profiles) {
@@ -40,10 +50,4 @@ public class ClassActionExecutor extends AbstractActionExecutor<Class<? extends 
     protected final Class<? extends Action> defineKey(final Action action) {
         return action.getClass();
     }
-
-    @Override
-    public TypeLiteral<Class<? extends Action>> type() {
-        return new TypeLiteral<>() {};
-    }
-
 }

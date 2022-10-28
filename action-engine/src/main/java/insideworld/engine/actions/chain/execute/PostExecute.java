@@ -25,17 +25,18 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Execute after process a child action.
- * @see AbstractExecuteActionLink
+ * @see ExecuteActionLink
  * @since 0.6.0
  */
 public interface PostExecute {
 
     /**
-     * Apply some additional actions.
-     * @param context Child context.
-     * @param output Child output.
-     * @return In case if true - output will merge with parent output. False - won't merge
+     * Apply some additional functions.
+     * Typically using for copy some data from child to parent output.
+     * @param parent Parent context and output.
+     * @param child Child context and output.
+     * @see ExecuteActionLink#addPostExecute(PostExecute...)
      */
-    boolean apply(Pair<Context, Context> contexts, Pair<Output, Output> outputs);
+    void apply(Pair<Context, Output> parent, Pair<Context, Output> child);
 
 }

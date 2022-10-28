@@ -22,12 +22,23 @@ package insideworld.engine.actions.chain.execute;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.injection.ObjectFactory;
+import java.util.Collection;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+/**
+ * Link to execute action using Class as key.
+ * @since 0.14.0
+ */
 @Dependent
 public class ClassExecuteActionLink extends AbstractExecuteActionLink<Class<? extends Action>> {
 
+    /**
+     * Default constructor.
+     * @param executor Executor with Class key.
+     * @param factory Object factory.
+     */
     @Inject
     public ClassExecuteActionLink(
         final ActionExecutor<Class<? extends Action>> executor,
