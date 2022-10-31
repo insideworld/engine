@@ -26,7 +26,7 @@ import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.integration.transactions.SomeEntity;
+import insideworld.engine.tests.data.SomeEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import javax.transaction.Transactional;

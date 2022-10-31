@@ -17,17 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.integration.transactions;
+package insideworld.engine.tests.data;
 
-import insideworld.engine.actions.keeper.tags.SingleTag;
-import insideworld.engine.entities.tags.EntityTag;
+import insideworld.engine.entities.Entity;
 
-public class TxTags {
+public interface SomeNestedEntity extends Entity {
 
-    /**
-     * Some string to test propagation child to parent output.
-     */
-    public static final EntityTag<SomeEntity> SOME_ENTITY =
-        new EntityTag<>("engine.integration.transactions.TxTags.Some.Entity");
+    Long getOne();
+
+    void setOne(Long one);
+
+    Long getTwo();
+
+    void setTwo(Long two);
 
 }

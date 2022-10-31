@@ -17,50 +17,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.integration.transactions;
+package insideworld.engine.tests.data;
 
-import insideworld.engine.data.jpa.AbstractEntity;
-import insideworld.engine.integration.transactions.SomeNestedEntity;
-import javax.enterprise.context.Dependent;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
+import insideworld.engine.generator.GenerateMixin;
 
-@Dependent
-@Entity
-@Table(
-    name = "some_nested_entity",
-    schema = "transactions"
-)
-public class SomeNestedEntityJPA extends AbstractEntity implements SomeNestedEntity {
-
-    @Column(
-        name = "one"
-    )
-    private long one;
-
-    @Column(
-        name = "two"
-    )
-    private long two;
-
-    @Override
-    public Long getOne() {
-        return one;
-    }
-
-    @Override
-    public void setOne(Long one) {
-        this.one = one;
-    }
-
-    @Override
-    public Long getTwo() {
-        return two;
-    }
-
-    @Override
-    public void setTwo(Long two) {
-        this.two = two;
-    }
+//
+//@GenerateCrud(entity = SomeEntity.class, override = true)
+@GenerateCrud(entity = SomeNestedEntity.class)
+public interface Mixin  extends GenerateMixin {
 }

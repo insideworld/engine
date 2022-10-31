@@ -17,14 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.integration.transactions;
+package insideworld.engine.tests.data;
 
-import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
-import insideworld.engine.generator.GenerateMixin;
-import insideworld.engine.integration.entities.generated.GeneratedChildEntity;
-import insideworld.engine.integration.entities.generated.GeneratedTopEntity;
-//
-//@GenerateCrud(entity = SomeEntity.class, override = true)
-@GenerateCrud(entity = SomeNestedEntity.class)
-public interface Mixin  extends GenerateMixin {
+import insideworld.engine.entities.Entity;
+
+public interface SomeEntity extends Entity {
+
+    String getValue();
+
+    void setValue(String value);
+
+    SomeNestedEntity getNestedEntity();
+
+    void setNestedEntity(SomeNestedEntity entity);
+
 }

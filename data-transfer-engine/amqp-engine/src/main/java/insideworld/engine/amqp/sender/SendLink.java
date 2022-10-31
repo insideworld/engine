@@ -25,7 +25,6 @@ import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.actions.keeper.output.OutputMapRecord;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Iterator;
 import javax.enterprise.context.Dependent;
@@ -82,7 +81,7 @@ public class SendLink<T extends AbstractActionSender> implements Link {
     }
 
     private void sendBulk(final Output output) throws ActionException {
-        final Record result = this.factory.createObject(OutputMapRecord.class);
+        final Record result = this.factory.createObject(Record.class);
         final Iterator<Record> iterator = output.getRecords().iterator();
         for (int i = 0; i < output.getRecords().size(); i++) {
             result.put(String.valueOf(i), iterator.next());

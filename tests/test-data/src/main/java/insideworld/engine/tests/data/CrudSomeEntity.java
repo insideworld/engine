@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.integration.transactions;
+package insideworld.engine.tests.data;
 
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
 import insideworld.engine.entities.storages.Storage;

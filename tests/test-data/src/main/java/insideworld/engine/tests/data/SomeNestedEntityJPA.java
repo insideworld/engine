@@ -17,52 +17,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.integration.transactions;
+package insideworld.engine.tests.data;
 
 import insideworld.engine.data.jpa.AbstractEntity;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Dependent
 @Entity
 @Table(
-    name = "some_entity",
+    name = "some_nested_entity",
     schema = "transactions"
 )
-public class SomeEntityJPA extends AbstractEntity implements SomeEntity {
+public class SomeNestedEntityJPA extends AbstractEntity implements SomeNestedEntity {
 
     @Column(
-        name = "value"
+        name = "one"
     )
-    private String value;
+    private long one;
 
-    @ManyToOne
-    @JoinColumn(
-        name = "some_nested_entity_id"
+    @Column(
+        name = "two"
     )
-    private SomeNestedEntityJPA entity;
+    private long two;
 
     @Override
-    public String getValue() {
-        return value;
+    public Long getOne() {
+        return one;
     }
 
     @Override
-    public void setValue(String value) {
-        this.value = value;
+    public void setOne(Long one) {
+        this.one = one;
     }
 
     @Override
-    public SomeNestedEntity getNestedEntity() {
-        return this.entity;
+    public Long getTwo() {
+        return two;
     }
 
     @Override
-    public void setNestedEntity(SomeNestedEntity entity) {
-        this.entity = (SomeNestedEntityJPA) entity;
+    public void setTwo(Long two) {
+        this.two = two;
     }
 }

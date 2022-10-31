@@ -30,6 +30,10 @@
 
   <artifactId>action-engine</artifactId>
 
+  <properties>
+    <jacoco.overall.exec>${maven.compiler.target}/target/jacoco_analysis/jacoco.exec</jacoco.overall.exec>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
@@ -53,7 +57,6 @@
       <version>${jakarta.enterprise.cdi-api.version}</version>
       <scope>compile</scope>
     </dependency>
-
   </dependencies>
 
 
@@ -84,7 +87,39 @@
           </dependency>
         </dependencies>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <append>true</append>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.8</version>
+          <configuration>
+            <destFile>${jacoco.overall.exec}</destFile>
+            <dataFile>${jacoco.overall.exec}</dataFile>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>

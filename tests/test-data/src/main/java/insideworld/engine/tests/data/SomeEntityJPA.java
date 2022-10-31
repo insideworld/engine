@@ -17,18 +17,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.integration.transactions;
+package insideworld.engine.tests.data;
 
-import insideworld.engine.entities.Entity;
+import insideworld.engine.data.jpa.AbstractEntity;
+import javax.enterprise.context.Dependent;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public interface SomeNestedEntity extends Entity {
+@Dependent
+@Entity
+@Table(
+    name = "some_entity",
+    schema = "transactions"
+)
+public class SomeEntityJPA extends AbstractEntity implements SomeEntity {
 
-    Long getOne();
+    @Column(
+        name = "value"
+    )
+    private String value;
 
-    void setOne(Long one);
+    @ManyToOne
+    @JoinColumn(
+        name = "some_nested_entity_id"
+    )
+    private SomeNestedEntityJPA entity;
 
-    Long getTwo();
+    @Override
+    public String getValue() {
+        return value;
+    }
 
-    void setTwo(Long two);
+    @Override
+    public void setValue(String value) {
+        this.value = value;
+    }
 
+    @Override
+    public SomeNestedEntity getNestedEntity() {
+        return this.entity;
+    }
+
+    @Override
+    public void setNestedEntity(SomeNestedEntity entity) {
+        this.entity = (SomeNestedEntityJPA) entity;
+    }
 }

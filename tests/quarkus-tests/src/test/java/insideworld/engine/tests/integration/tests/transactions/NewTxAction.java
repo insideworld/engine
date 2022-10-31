@@ -24,11 +24,9 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.integration.transactions.SomeNestedEntity;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import insideworld.engine.tests.data.SomeNestedEntity;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
 
 @Singleton
 public class NewTxAction implements Action {

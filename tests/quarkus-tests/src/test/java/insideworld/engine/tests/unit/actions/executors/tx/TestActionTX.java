@@ -24,8 +24,8 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.integration.transactions.SomeEntity;
-import insideworld.engine.integration.transactions.TxTags;
+import insideworld.engine.tests.data.SomeEntity;
+import insideworld.engine.tests.data.TxTags;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
