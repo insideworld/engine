@@ -17,22 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.tags;
+package insideworld.engine.actions.tags;
+
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.keeper.tags.SingleTag;
 
 /**
- * Single tag.
- * Implementation using to collect in a record single based type as is.
- * @param <T> Type of single tag.
+ * Action tags.
  * @since 0.1.0
  */
-public class SingleTag<T> extends AbstractTag<T> {
+public final class ActionsTags {
 
     /**
-     * Default constructor.
-     * @param tag String key of this tag.
+     * Current action instance.
      */
-    public SingleTag(final String tag) {
-        super(tag);
-    }
+    public static final SingleTag<Action> ACTION =
+        new SingleTag<>("engine.actions.action");
 
+    /**
+     * Looks like need to remove it.
+     */
+    public static final SingleTag<String> FROM_ACTION =
+        new SingleTag<>("engine.action.from-action");
+
+    /**
+     * Use exists transaction when execute a new action.
+     * Default will use the same TX.
+     */
+    public static final SingleTag<Object> USE_EXIST_TX =
+        new SingleTag<>("engine.action.use-exist-tx");
+
+    /**
+     * Private constructor.
+     */
+    private ActionsTags() {
+    }
 }

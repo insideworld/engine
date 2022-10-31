@@ -27,24 +27,25 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import org.apache.commons.lang3.Validate;
 
+/**
+ * Record implementation based on hash map.
+ * @since 0.1.0
+ */
 @Dependent
 public class MapRecord implements Record {
 
     /**
-     * Collection of pair key/value.
+     * Map to store keys and values.
      */
     private final Map<String, ? super Object> map;
 
+    /**
+     * Default constructor.
+     */
     public MapRecord() {
         this.map = Maps.newHashMap();
     }
 
-    /**
-     * Get a value for specific type.
-     * @param key String setKey.
-     * @param <T> Type.
-     * @return Value.
-     */
     @Override
     public final <T> T get(final String key)   {
         return (T) this.map.get(key);
@@ -56,33 +57,7 @@ public class MapRecord implements Record {
     }
 
     @Override
-    public <T> Optional<T> getOptional(Tag<T> tag) {
-        return Optional.ofNullable(this.get(tag));
-    }
-
-    @Override
-    public final boolean contains(final String key) {
-        return key != null && this.map.containsKey(key);
-    }
-
-    @Override
-    public final <T> boolean contains(Tag<T> tag) {
-        return tag != null && this.map.containsKey(tag.getTag());
-    }
-
-
-    /**
-     * Get all values.
-     * @return Map setKey, value.
-     */
-    @JsonAnyGetter
-    @Override
-    public final Map<String, ? super Object> values() {
-        return this.map;
-    }
-
-    @Override
-    public <T> Optional<T> optional(final Tag<T> tag) {
+    public final <T> Optional<T> getOptional(final Tag<T> tag) {
         final Optional<T> result;
         if (tag == null) {
             result = Optional.empty();
@@ -93,35 +68,51 @@ public class MapRecord implements Record {
     }
 
     @Override
-    public <T> void cloneTag(final Tag<T> tag, final Record to) {
-        to.put(tag, this.get(tag));
+    public final boolean contains(final String key) {
+        return key != null && this.map.containsKey(key);
     }
 
-    /**
-     * Put a value inside setKey/value set.
-     * @param key String setKey.
-     * @param value Inserted value.
-     * @param <T> Type of inserted value.
-     */
     @Override
-    public final <T> void put(final String key, final T value) {
+    public final <T> boolean contains(final Tag<T> tag) {
+        return tag != null && this.map.containsKey(tag.getTag());
+    }
+
+    @JsonAnyGetter
+    @Override
+    public final Map<String, ? super Object> values() {
+        return this.map;
+    }
+
+    @Override
+    public final <T> void cloneTag(final Tag<T> tag, final Record record) {
+        record.put(tag, this.get(tag));
+    }
+
+    @Override
+    public final <T> void put(final String key, final T value)
+        throws IllegalArgumentException {
         this.put(key, value, false);
     }
 
     @Override
-    public final <T> void put(final Tag<T> tag, final T value) {
+    public final <T> void put(final Tag<T> tag, final T value)
+        throws IllegalArgumentException {
         this.put(tag.getTag(), value, false);
     }
 
     @Override
-    public <T> void put(Tag<T> tag, T value, boolean replace) {
+    public final <T> void put(final Tag<T> tag, final T value, final boolean replace)
+        throws IllegalArgumentException {
         this.put(tag.getTag(), value, replace);
     }
 
     @Override
-    public <T> void put(final String key, final T value, boolean replace) {
-        Validate.isTrue(replace || !this.map.containsKey(key),
-            "Record already contains this key!");
+    public final <T> void put(final String key, final T value, final boolean replace)
+        throws IllegalArgumentException {
+        Validate.isTrue(
+            replace || !this.map.containsKey(key),
+            "Record already contains this key!"
+        );
         if (value != null) {
             this.map.put(key, value);
         }

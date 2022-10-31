@@ -59,7 +59,7 @@ public class ActionJobExecutor implements Job {
     public void execute(final JobExecutionContext execution) throws JobExecutionException {
         final JobEntity entity = (JobEntity) execution.getJobDetail().getJobDataMap().get("entity");
         LOGGER.trace("Start execute job for alias {}", entity.getAlias());
-        final Context context = getContext(entity).clone();
+        final Context context = getContext(entity).cloneContext();
         try {
             final Output output = this.executor.execute(
                 entity.getKey(),
@@ -70,7 +70,7 @@ public class ActionJobExecutor implements Job {
             throw exp;
         }
         if (entity.isCacheContext()) {
-            this.contexts.put(entity.getAlias(), context.clone());
+            this.contexts.put(entity.getAlias(), context.cloneContext());
         }
         LOGGER.trace("Finish execute job for alias {}", entity.getAlias());
     }

@@ -84,8 +84,8 @@ public class TestPostExecute {
         context.put(TestChainTags.UUID, uuid);
         final Output output = this.executor.execute(action, context);
         assert "ChildAction".equals(context.get(TestChainTags.OUTPUT_ADDITIONAL));
-        assert output.records().size() == 1;
-        assert uuid.equals(output.records().iterator().next().get(TestChainTags.UUID));
+        assert output.getRecords().size() == 1;
+        assert uuid.equals(output.getRecords().iterator().next().get(TestChainTags.UUID));
     }
 
 }

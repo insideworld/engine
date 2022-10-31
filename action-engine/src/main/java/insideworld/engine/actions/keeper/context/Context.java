@@ -19,14 +19,12 @@
 
 package insideworld.engine.actions.keeper.context;
 
-
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.tags.Tag;
 
 /**
- * Interface marker using for mark dataset like input.
- *
- * Using for understand which kind of data income from external system.
+ * Context is using to keep information in action.
+ * It's basic record with additional clone function.
  *
  * @since 0.0.1
  */
@@ -34,21 +32,22 @@ public interface Context extends Record {
 
     /**
      * Clone with included tags.
-     * @param includes
-     * @return
+     * @param includes Tags what need to clone in new context.
+     * @return New context.
      */
-    Context clone(Tag<?>... includes);
+    Context cloneContext(Tag<?>... includes);
 
     /**
-     * Clone all without system tags.
+     * Clone all tags except system.
      * @return Cloned context.
      */
-    Context clone();
+    Context cloneContext();
 
     /**
-     * Clone from record.
-     * @param record Record to clone.
-     * @return Clone context.
+     * Clone using exists record.
+     * Merge current and provided record except system.
+     * @param record Record using to merge with new context.
+     * @return Cloned context.
      */
-    Context clone(Record record);
+    Context cloneContext(Record record);
 }

@@ -20,6 +20,7 @@
 package insideworld.engine.actions;
 
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.tags.ActionsTags;
 
 /**
  * Exception during to an action processing.
@@ -56,7 +57,7 @@ public class ActionException extends Exception {
      * @param exp Orignal exception.
      */
     public ActionException(final Context input, final Exception exp) {
-        super(String.format(EXCEPTION_MESSAGE, input.get(ActionsTags.ACTION)), exp);
+        super(String.format(ActionException.EXCEPTION_MESSAGE, input.get(ActionsTags.ACTION)), exp);
     }
 
 }

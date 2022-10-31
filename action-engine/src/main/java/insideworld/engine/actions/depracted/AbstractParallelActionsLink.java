@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.chain.parallel;
+package insideworld.engine.actions.depracted;
 
 import com.google.common.collect.Lists;
 import insideworld.engine.actions.Action;
@@ -32,24 +32,36 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * Deprecated.
+ * @since 0.1.0
+ */
 public abstract class AbstractParallelActionsLink implements Link {
 
+    /**
+     * Deprecated.
+     */
     private final ThreadPool pool;
+
+    /**
+     * Deprecated.
+     */
     private final ClassActionExecutor executor;
 
-    public AbstractParallelActionsLink(final ThreadPool pool,
-                                       final ClassActionExecutor executor) {
+    /**
+     * Deprecated.
+     * @param pool Deprecated.
+     * @param executor Deprecated.
+     */
+    public AbstractParallelActionsLink(
+        final ThreadPool pool,
+        final ClassActionExecutor executor) {
         this.pool = pool;
         this.executor = executor;
     }
 
-    /**
-     * @param context
-     * @param output
-     * @throws ActionException
-     */
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         final Collection<Context> contexts = this.contexts(context);
         final Collection<Pair<Context, Future<Output>>> futures =
             Lists.newArrayListWithCapacity(contexts.size());
@@ -63,23 +75,28 @@ public abstract class AbstractParallelActionsLink implements Link {
         for (final Pair<Context, Future<Output>> future : futures) {
             try {
                 this.handleResults(
-                    Pair.of(context, future.getLeft()),
-                    Pair.of(output, future.getRight().get())
-                    );
+                    Pair.of(context, future.getLeft()), Pair.of(output, future.getRight().get())
+                );
             } catch (final InterruptedException | ExecutionException exp) {
                 this.handleException(exp, future.getLeft());
             }
         }
     }
 
-    protected void handleResults(final Pair<Context, Context> contexts,
-                                 final Pair<Output, Output> outputs) {
+    /**
+     * Deprecated.
+     * @param contexts Qwe.
+     * @param outputs Qwe.
+     * @checkstyle NonStaticMethodCheck (2 lines)
+     */
+    protected void handleResults(
+        final Pair<Context, Context> contexts,
+        final Pair<Output, Output> outputs) {
         outputs.getLeft().merge(outputs.getRight());
     }
 
     /**
      * Split context to separate data.
-     *
      * @param context Context.
      * @return Splited contexts.
      */
@@ -87,17 +104,15 @@ public abstract class AbstractParallelActionsLink implements Link {
 
     /**
      * Action which need to apply.
-     *
-     * @return
+     * @return Qwe.
      */
     protected abstract Class<? extends Action> action();
 
     /**
      * Handle thread exception.
-     *
-     * @param exp
-     * @param context
-     * @throws ActionException
+     * @param exp Qwe.
+     * @param context Qwe.
+     * @throws ActionException Qwe.
      */
     protected void handleException(final Exception exp, final Context context)
         throws ActionException {

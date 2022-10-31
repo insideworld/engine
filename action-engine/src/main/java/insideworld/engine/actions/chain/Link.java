@@ -23,7 +23,6 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 
-
 /**
  * Link of chain.
  * Use separate functionality of actions and reuse code.
@@ -36,14 +35,17 @@ public interface Link {
      * Execute logic of link.
      * @param context Context.
      * @param output Output.
+     * @throws ActionException Action exception during process action.
      */
     void process(Context context, Output output) throws ActionException;
 
     /**
      * Can execute this link.
      * @param context Context.
-     * @return if return true - link will executed, if false - skip this link.
+     * @return If return true - link will executed, if false - skip this link.
      */
-    default boolean can(Context context) { return true; }
+    default boolean can(Context context) {
+        return true;
+    }
 
 }

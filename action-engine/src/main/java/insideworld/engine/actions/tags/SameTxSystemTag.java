@@ -17,11 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.output;
+package insideworld.engine.actions.tags;
 
-import insideworld.engine.actions.keeper.Record;
+import insideworld.engine.actions.keeper.context.SystemTag;
+import insideworld.engine.actions.keeper.tags.Tag;
+import javax.inject.Singleton;
 
-
-public interface OutputRecord extends Record {
-
+/**
+ * Exclude USE_SAME_TX tag from clone contest.
+ * @since 0.14.0
+ */
+@Singleton
+public class SameTxSystemTag implements SystemTag {
+    @Override
+    public final Tag<?> get() {
+        return ActionsTags.USE_EXIST_TX;
+    }
 }

@@ -63,7 +63,7 @@ class TestTagPropagation {
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());
         final Output output = this.executor.execute(PropagateTagAction.class, context);
-        assert output.records().size() == 1;
+        assert output.getRecords().size() == 1;
         final Record record = output.iterator().next();
         assert record.contains(TestChainTags.ONE);
         assert !record.contains(TestChainTags.TWO);

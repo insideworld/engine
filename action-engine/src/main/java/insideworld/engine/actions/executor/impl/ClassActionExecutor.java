@@ -22,9 +22,7 @@ package insideworld.engine.actions.executor.impl;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.injection.ObjectFactory;
-import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
-import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -41,8 +39,9 @@ public class ClassActionExecutor extends AbstractActionExecutor<Class<? extends 
      * @param profiles Execute profiles.
      */
     @Inject
-    public ClassActionExecutor(final ObjectFactory factory,
-                               final Collection<ExecuteProfile> profiles) {
+    public ClassActionExecutor(
+        final ObjectFactory factory,
+        final Collection<ExecuteProfile> profiles) {
         super(factory, profiles);
     }
 

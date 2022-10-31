@@ -22,8 +22,7 @@ package insideworld.engine.actions.keeper;
 import java.util.Collection;
 
 /**
- * Reprasentation of array to keep information.
- *
+ * Interface to collect a lot of records.
  * @since 0.2.0
  */
 public interface Table extends Iterable<Record> {
@@ -36,22 +35,30 @@ public interface Table extends Iterable<Record> {
 
     /**
      * Create a new object of row for next filling.
+     * Alias is a tag which add to record.
+     * You may use it manually.
      * @param alias Alias of record.
      * @return Empty row for next initialisation.
      */
     Record createRecord(String alias);
 
     /**
-     * Merge rows.
+     * Merge another table to current one.
+     * All record from input table will be added to this.
+     * @param table Table to merge.
      */
     void merge(Table table);
 
+    /**
+     * Add record to current table.
+     * @param record Record to add.
+     */
     void add(Record record);
 
     /**
-     * Return collection of reccords.
-     * @return
+     * Return collection of records.
+     * @return Collection of records.
      */
-    Collection<Record> records();
+    Collection<Record> getRecords();
 
 }

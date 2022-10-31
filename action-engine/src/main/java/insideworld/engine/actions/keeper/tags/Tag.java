@@ -19,8 +19,18 @@
 
 package insideworld.engine.actions.keeper.tags;
 
+/**
+ * Generic tag.
+ * Usually using constance to define which type of data will keep in record under this tag.
+ * @param <T> Type of this tag.
+ * @since 0.1.0
+ */
 public interface Tag<T> {
 
+    /**
+     * String key of tag.
+     * @return String key of tag.
+     */
     String getTag();
 
 }

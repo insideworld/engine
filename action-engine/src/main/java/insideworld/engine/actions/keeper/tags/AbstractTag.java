@@ -19,25 +19,39 @@
 
 package insideworld.engine.actions.keeper.tags;
 
+/**
+ * Abstract tag based on string key.
+ * For creating a new tag type just extend from this class.
+ * @param <T> Data type for this tag.
+ * @since 0.1.0
+ */
 public abstract class AbstractTag<T> implements Tag<T> {
 
+    /**
+     * Tag key.
+     */
     private final String tag;
 
-    public AbstractTag(final String tag) {
-        this.tag = tag;
+    /**
+     * Default constructor.
+     * @param ptag Tag key.
+     */
+    public AbstractTag(final String ptag) {
+        this.tag = ptag;
     }
 
-    public String getTag() {
+    @Override
+    public final String getTag() {
         return this.tag;
     }
 
     @Override
-    public boolean equals(Object tag) {
-        return this.tag.equals(tag);
+    public final boolean equals(final Object ptag) {
+        return this.tag.equals(ptag);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return this.tag.hashCode();
     }
 }

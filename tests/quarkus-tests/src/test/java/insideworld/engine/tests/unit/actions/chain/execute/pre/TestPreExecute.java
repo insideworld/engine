@@ -96,7 +96,7 @@ public class TestPreExecute {
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());
         final Output output = this.executor.execute(action, context);
-        assert output.records().size() == 0;
+        assert output.getRecords().size() == 0;
     }
 
     /**
@@ -107,8 +107,8 @@ public class TestPreExecute {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         final Output output = this.executor.execute(action, context);
-        assert output.records().size() == 1;
-        final Record record = output.records().iterator().next();
+        assert output.getRecords().size() == 1;
+        final Record record = output.getRecords().iterator().next();
         assert record.contains(TestChainTags.TWO);
     }
 

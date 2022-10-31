@@ -94,7 +94,7 @@ class TestKeyExecutor {
         final UUID uuid = UUID.randomUUID();
         context.put(TestExecutorTags.UUID, uuid);
         final Output output = executor.execute(key, context);
-        assert output.records().size() == 1;
+        assert output.getRecords().size() == 1;
         assert uuid.equals(output.iterator().next().get(TestExecutorTags.UUID));
     }
 

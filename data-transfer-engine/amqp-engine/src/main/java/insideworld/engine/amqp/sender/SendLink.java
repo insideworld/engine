@@ -20,7 +20,6 @@
 package insideworld.engine.amqp.sender;
 
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.chain.ChainTags;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.keeper.Record;
@@ -84,8 +83,8 @@ public class SendLink<T extends AbstractActionSender> implements Link {
 
     private void sendBulk(final Output output) throws ActionException {
         final Record result = this.factory.createObject(OutputMapRecord.class);
-        final Iterator<Record> iterator = output.records().iterator();
-        for (int i = 0; i < output.records().size(); i++) {
+        final Iterator<Record> iterator = output.getRecords().iterator();
+        for (int i = 0; i < output.getRecords().size(); i++) {
             result.put(String.valueOf(i), iterator.next());
         }
         result.put(ChainTags.BULK, "");

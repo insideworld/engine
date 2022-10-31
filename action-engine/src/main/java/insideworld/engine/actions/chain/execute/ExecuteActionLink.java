@@ -26,6 +26,7 @@ import insideworld.engine.actions.keeper.tags.Tag;
  * Execute action link.
  * Using to execute specific action with specific key.
  * @param <T> Key type for execute an action.
+ * @since 0.1.0
  */
 public interface ExecuteActionLink<T> extends Link {
     /**

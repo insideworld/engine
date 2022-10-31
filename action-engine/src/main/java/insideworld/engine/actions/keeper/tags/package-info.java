@@ -17,22 +17,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.tags;
-
 /**
- * Single tag.
- * Implementation using to collect in a record single based type as is.
- * @param <T> Type of single tag.
- * @since 0.1.0
+ * Tags mechanism. Provide ability to use typed data in records.
+ * Here represent two implementations.
+ * Usually new tags creates in final class with private constructor like constants
+ * Example: public static final SingleTag<String> MY_TAG = new SingleTag("SomeKey")
+ * Key of tag should be unique in whole system so better will set a key with package name.
+ * @see insideworld.engine.actions.keeper.tags.SingleTag
+ * @see insideworld.engine.actions.keeper.tags.MultipleTag
  */
-public class SingleTag<T> extends AbstractTag<T> {
-
-    /**
-     * Default constructor.
-     * @param tag String key of this tag.
-     */
-    public SingleTag(final String tag) {
-        super(tag);
-    }
-
-}
+package insideworld.engine.actions.keeper.tags;

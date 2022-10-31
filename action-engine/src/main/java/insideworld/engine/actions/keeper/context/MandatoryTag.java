@@ -17,17 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.tags;
+package insideworld.engine.actions.keeper.context;
+
+import insideworld.engine.actions.keeper.tags.Tag;
 
 /**
  * Mandatory tag which using in clone context.
- *
- * @see insideworld.engine.actions.keeper.context.Context#clone(Tag[])
- *
+ * @see insideworld.engine.actions.keeper.context.Context#cloneContext(Tag[])
  * @since 0.3.0
  */
 public interface MandatoryTag {
 
+    /**
+     * Provide one of mandatory tag.
+     * @return Mandatory tag.
+     */
     Tag<?> get();
 
 }

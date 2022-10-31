@@ -21,8 +21,18 @@ package insideworld.engine.actions.keeper.tags;
 
 import java.util.Collection;
 
+/**
+ * Multiple tag.
+ * Using to keep in record collection of specific type.
+ * @param <T> Type of keeping collection.
+ * @since 0.1.0
+ */
 public class MultipleTag<T> extends AbstractTag<Collection<T>> {
 
+    /**
+     * Default constructor.
+     * @param tag String key of this tag.
+     */
     public MultipleTag(final String tag) {
         super(tag);
     }

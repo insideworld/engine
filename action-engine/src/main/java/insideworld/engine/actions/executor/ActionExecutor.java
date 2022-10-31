@@ -19,17 +19,13 @@
 
 package insideworld.engine.actions.executor;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import javax.enterprise.util.TypeLiteral;
-
 
 /**
- * Using for launch action.
- *
+ * Interface to provide ability to execute an action.
  * @param <T> Type of action selector.
  * @since 0.0.1
  */
@@ -40,7 +36,7 @@ public interface ActionExecutor<T> {
      * @param parameter Parameter for define an action.
      * @param context Input context.
      * @return Result of action.
-     * @throws ActionException Something went wrong.
+     * @throws ActionRuntimeException Something went wrong.
      */
     Output execute(T parameter, Context context) throws ActionRuntimeException;
 
@@ -49,8 +45,8 @@ public interface ActionExecutor<T> {
      * @param parameter Action parameter.
      * @param context Context parameter.
      * @param profile Execute with specific profile.
-     * @return
-     * @throws ActionRuntimeException
+     * @return Result of action.
+     * @throws ActionRuntimeException Something went wrong.
      */
     Output execute(T parameter, Context context, Class<? extends ExecuteProfile> profile)
         throws ActionRuntimeException;
@@ -60,7 +56,5 @@ public interface ActionExecutor<T> {
      * @return Context instance.
      */
     Context createContext();
-
-//    Class<T> type();
 
 }

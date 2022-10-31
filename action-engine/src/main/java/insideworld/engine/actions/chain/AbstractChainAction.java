@@ -21,7 +21,6 @@ package insideworld.engine.actions.chain;
 
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import java.util.Collection;
@@ -50,7 +49,7 @@ public abstract class AbstractChainAction implements Action {
     }
 
     @Override
-    public void execute(final Context context, final Output output) throws ActionException {
+    public final void execute(final Context context, final Output output) throws ActionException {
         for (final Link link : this.links) {
             if (context.contains(ChainTags.BREAK_CHAIN)) {
                 break;

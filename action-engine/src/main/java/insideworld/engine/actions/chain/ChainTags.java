@@ -27,10 +27,6 @@ import insideworld.engine.actions.keeper.tags.SingleTag;
  */
 public final class ChainTags {
 
-    private ChainTags() {
-        //No need to create an instance.
-    }
-
     /**
      * Use exists transaction when execute a new action.
      * Default will use the same TX.
@@ -38,6 +34,16 @@ public final class ChainTags {
     public static final SingleTag<Object> BREAK_CHAIN =
         new SingleTag<>("engine.action.chain.break");
 
+    /**
+     * Bulk operations.
+     */
     public static final SingleTag<Object> BULK =
         new SingleTag<>("engine.action.chain.bulk");
+
+    /**
+     * Private constructor.
+     */
+    private ChainTags() {
+        //No need to create an instance.
+    }
 }

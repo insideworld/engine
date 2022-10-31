@@ -21,17 +21,15 @@ package insideworld.engine.actions.chain.execute;
 
 import com.google.common.collect.Lists;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
+import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -40,6 +38,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * Need to extend realisation to support different key types.
  *
  * @param <T> Key type for execute an action.
+ * @since 0.1.0
  */
 public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActionLink<T> {
 
@@ -47,14 +46,17 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
      * Executor of action.
      */
     private final ActionExecutor<T> executor;
+
     /**
      * PreExecute instances.
      */
-    private final Collection<PreExecute> pres = Lists.newLinkedList();
+    private final Collection<PreExecute> pres;
+
     /**
      * Post execute instances.
      */
-    private final Collection<PostExecute> posts = Lists.newLinkedList();
+    private final Collection<PostExecute> posts;
+
     /**
      * Object factory.
      */
@@ -73,50 +75,60 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
     /**
      * Using the same TX in child action.
      */
-    private boolean sametx = false;
+    private boolean sametx;
 
     /**
      * Default constructor.
+     *
      * @param executor Action executor.
      * @param factory Object factory.
      */
     @Inject
-    public AbstractExecuteActionLink(final ActionExecutor<T> executor,
-                                     final ObjectFactory factory) {
+    public AbstractExecuteActionLink(
+        final ActionExecutor<T> executor,
+        final ObjectFactory factory
+    ) {
         this.executor = executor;
         this.factory = factory;
+        this.pres = Lists.newLinkedList();
+        this.posts = Lists.newLinkedList();
     }
 
     @Override
     public final void process(final Context parent, final Output output) throws ActionException {
-        final Context child = this.tags == null ? parent.clone() : parent.clone(this.tags);
+        final Context child;
+        if (this.tags == null) {
+            child = parent.cloneContext();
+        } else {
+            child = parent.cloneContext(this.tags);
+        }
         if (this.pres.isEmpty() || this.pres.stream().allMatch(pre -> pre.apply(parent, child))) {
-            final Output results;
             if (this.sametx) {
                 child.put(ActionsTags.USE_EXIST_TX, new Object());
             }
             if (this.key == null) {
                 throw new ActionException("Action is not set!");
             }
-            results = this.executor.execute(this.key, child);
-            if (this.posts.isEmpty()){
+            final Output results = this.executor.execute(this.key, child);
+            if (this.posts.isEmpty()) {
                 output.merge(results);
             } else {
-                this.posts.forEach(post ->
-                    post.apply(Pair.of(parent, output), Pair.of(child, results)));
+                this.posts.forEach(
+                    post -> post.apply(Pair.of(parent, output), Pair.of(child, results))
+                );
             }
         }
     }
 
     @Override
-    public final ExecuteActionLink<T> setTags(final Tag<?>... tags) {
-        this.tags = tags;
+    public final ExecuteActionLink<T> setTags(final Tag<?>... ptags) {
+        this.tags = Arrays.copyOf(ptags, ptags.length);
         return this;
     }
 
     @Override
-    public final ExecuteActionLink<T> setKey(final T key) {
-        this.key = key;
+    public final ExecuteActionLink<T> setKey(final T pkey) {
+        this.key = pkey;
         return this;
     }
 
@@ -153,5 +165,4 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
         this.sametx = true;
         return this;
     }
-
 }

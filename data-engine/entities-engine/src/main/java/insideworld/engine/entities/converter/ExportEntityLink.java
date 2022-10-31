@@ -22,7 +22,6 @@ package insideworld.engine.entities.converter;
 import com.google.common.collect.Lists;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
@@ -52,8 +51,8 @@ public class ExportEntityLink implements Link {
     @Override
     public void process(final Context context, final Output output) throws ActionException {
         final Collection<Entity> entities = Lists.newLinkedList();
-        context.optional(this.single).ifPresent(entities::add);
-        context.optional(this.multiple).ifPresent(entities::addAll);
+        context.getOptional(this.single).ifPresent(entities::add);
+        context.getOptional(this.multiple).ifPresent(entities::addAll);
         for (final Entity entity : entities) {
             output.add(this.converter.convert(entity));
         }

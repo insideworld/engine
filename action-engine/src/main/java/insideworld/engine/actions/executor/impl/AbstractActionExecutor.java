@@ -23,16 +23,14 @@ import com.google.common.collect.Maps;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.ActionRuntimeException;
-import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.executor.ActionChanger;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.injection.ObjectFactory;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,10 +40,10 @@ import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Abstract class to execute different actions.
  * Need to extend from this class to support execute action from specific key.
+ *
  * @param <T> Key of action.
  * @since 0.0.1
  */
@@ -59,11 +57,13 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
     /**
      * Map of all actions in the system.
      */
-    private final Map<T, Action> actions = Maps.newHashMap();
+    private final Map<T, Action> actions;
+
     /**
      * Object factory.
      */
     private final ObjectFactory factory;
+
     /**
      * All ExecuteProfiles in the system.
      */
@@ -71,18 +71,23 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
 
     /**
      * Default constructor.
+     *
      * @param factory Object factory.
      * @param profiles Collection of all executor profiles.
      */
-    public AbstractActionExecutor(final ObjectFactory factory,
-                                  final Collection<ExecuteProfile> profiles) {
+    public AbstractActionExecutor(
+        final ObjectFactory factory,
+        final Collection<ExecuteProfile> profiles) {
         this.factory = factory;
         this.profiles = profiles.stream().collect(
-            Collectors.toMap(ExecuteProfile::getClass, Function.identity()));
+            Collectors.toMap(ExecuteProfile::getClass, Function.identity())
+        );
+        this.actions = Maps.newHashMap();
     }
 
     @Override
-    public final Output execute(final T parameter, final Context context) throws ActionRuntimeException {
+    public final Output execute(final T parameter, final Context context)
+        throws ActionRuntimeException {
         return this.execute(parameter, context, DefaultExecuteProfile.class);
     }
 
@@ -99,6 +104,7 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
         return output;
     }
 
+    @Override
     public final Context createContext() {
         return this.factory.createObject(Context.class);
     }
@@ -108,21 +114,16 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
         this.actions.put(this.defineKey(action), action);
     }
 
-    public final void addActions(final Collection<Action> actions) {
-        actions.forEach(this::addAction);
+    @Override
+    public final void addActions(final Collection<Action> pactions) {
+        pactions.forEach(this::addAction);
     }
-
-    /**
-     * Abstract method to define key of each action.
-     * @param action Action,
-     * @return Key of action.
-     */
-    protected abstract T defineKey(final Action action);
 
     /**
      * Execute action in the same TX.
      * Use JTA transaction annotation.
      * This method is public but should be private. JTA is not support private method.
+     *
      * @param parameter Action key.
      * @param context Context.
      * @param profile Executor profile.
@@ -138,6 +139,7 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
      * Execute action in the new TX.
      * Use JTA transaction annotation.
      * This method is public but should be private. JTA is not support private method.
+     *
      * @param parameter Action key.
      * @param context Context.
      * @param profile Executor profile.
@@ -150,8 +152,17 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
     }
 
     /**
+     * Abstract method to define key of each action.
+     *
+     * @param action Action,
+     * @return Key of action.
+     */
+    protected abstract T defineKey(Action action);
+
+    /**
      * Execute action.
      * This method internal and using for common point for executeNewTx and executeSameTx methods.
+     *
      * @param parameter Action key.
      * @param context Context.
      * @param profile Executor profile.
@@ -174,6 +185,7 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
 
     /**
      * Find execution action by key.
+     *
      * @param parameter Action key.
      * @return Action bound to the key.
      */
@@ -182,5 +194,4 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
         Validate.notNull(action, "Can't find an action with parameter: %s", parameter);
         return action;
     }
-
 }

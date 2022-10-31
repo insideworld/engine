@@ -25,7 +25,7 @@ import insideworld.engine.actions.executor.PreExecutor;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.executor.ActionChanger;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
-import insideworld.engine.actions.keeper.tags.MandatoryTag;
+import insideworld.engine.actions.keeper.context.MandatoryTag;
 import insideworld.engine.quarkus.AbstractBeans;
 import java.util.Collection;
 import javax.enterprise.inject.Instance;

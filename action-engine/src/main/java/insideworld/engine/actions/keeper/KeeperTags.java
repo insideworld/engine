@@ -19,15 +19,26 @@
 
 package insideworld.engine.actions.keeper;
 
-import insideworld.engine.actions.Action;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 
-public class KeeperTags {
+/**
+ * Keeper tags.
+ * @since 0.1.0
+ */
+public final class KeeperTags {
 
     /**
-     * Current action instance.
+     * Alias of record int table.
+     * @see ListTable#createRecord(String)
      */
     public static final SingleTag<String> ALIAS =
         new SingleTag<>("engine.actions.keeper.alias");
+
+    /**
+     * Private constructor.
+     */
+    private KeeperTags() {
+        //Empty constructor.
+    }
 
 }

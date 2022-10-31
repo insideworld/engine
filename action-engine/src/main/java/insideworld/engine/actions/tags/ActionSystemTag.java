@@ -17,22 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.tags;
+package insideworld.engine.actions.tags;
+
+import insideworld.engine.actions.keeper.context.SystemTag;
+import insideworld.engine.actions.keeper.tags.Tag;
+import javax.inject.Singleton;
 
 /**
- * Single tag.
- * Implementation using to collect in a record single based type as is.
- * @param <T> Type of single tag.
- * @since 0.1.0
+ * Exclude action tag from clone contest.
+ * @since 0.14.0
  */
-public class SingleTag<T> extends AbstractTag<T> {
-
-    /**
-     * Default constructor.
-     * @param tag String key of this tag.
-     */
-    public SingleTag(final String tag) {
-        super(tag);
+@Singleton
+public class ActionSystemTag implements SystemTag {
+    @Override
+    public final Tag<?> get() {
+        return ActionsTags.ACTION;
     }
-
 }

@@ -17,14 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.output;
+package insideworld.engine.actions.keeper.context;
 
-import insideworld.engine.actions.keeper.MapRecord;
-import java.io.Serializable;
-import javax.enterprise.context.Dependent;
+import insideworld.engine.actions.keeper.tags.Tag;
 
-@Dependent
-public class OutputMapRecord extends MapRecord implements OutputRecord, Serializable {
+/**
+ * System tags which won't using in clone context.
+ * @since 0.14.0
+ */
+public interface SystemTag {
 
+    /**
+     * Provide one of system tag.
+     * @return System tag.
+     */
+    Tag<?> get();
 
 }

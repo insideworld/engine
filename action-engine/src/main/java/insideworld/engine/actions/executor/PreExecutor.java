@@ -37,7 +37,7 @@ public interface PreExecutor {
      * @param context Context.
      * @throws ActionException Some exception.
      */
-    void preExecute(final Context context) throws ActionException;
+    void preExecute(Context context) throws ActionException;
 
     /**
      * For which profile need to perform the implementation.

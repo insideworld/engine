@@ -30,20 +30,73 @@ import java.util.Arrays;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
 
+/**
+ * Link to propagate some context tags to new record in output.
+ * If tags is not setup - will copy whole context with rules of clone context method.
+ * @since 0.1.0
+ */
 @Dependent
 public class ContextToOutput implements Link {
 
+    /**
+     * Tags to copy.
+     */
     private final Collection<String> tags = Lists.newLinkedList();
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         if (this.tags.isEmpty()) {
-            addAll(context, output);
+            ContextToOutput.addAll(context, output);
         } else {
-            addWithTags(context, output);
+            this.addWithTags(context, output);
         }
     }
 
+    /**
+     * Add tag to copy.
+     * @param tag Tag.
+     * @return The same instance.
+     */
+    public final ContextToOutput addTag(final Tag<?> tag) {
+        this.tags.add(tag.getTag());
+        return this;
+    }
+
+    /**
+     * Add tags to copy.
+     * @param ptags Tags.
+     * @return The same instance.
+     */
+    public final ContextToOutput addTags(final Tag<?>... ptags) {
+        Arrays.stream(ptags).forEach(tag -> this.tags.add(tag.getTag()));
+        return this;
+    }
+
+    /**
+     * Add tag by string key.
+     * @param tag String key.
+     * @return The same instance.
+     */
+    public final ContextToOutput addTag(final String tag) {
+        this.tags.add(tag);
+        return this;
+    }
+
+    /**
+     * Add tags by string keys.
+     * @param ptags String keys.
+     * @return The same instance.
+     */
+    public final ContextToOutput addTags(final String... ptags) {
+        this.tags.addAll(Arrays.asList(ptags));
+        return this;
+    }
+
+    /**
+     * Add new record with provided tags.
+     * @param context Context.
+     * @param output Output.
+     */
     private void addWithTags(final Context context, final Output output) {
         final Record record = output.createRecord();
         for (final String tag : this.tags) {
@@ -53,28 +106,13 @@ public class ContextToOutput implements Link {
         }
     }
 
-    private void addAll(final Context context, final Output output) {
-        output.add(context.clone());
-    }
-
-    public ContextToOutput addTag(final Tag<?> tag) {
-        this.tags.add(tag.getTag());
-        return this;
-    }
-
-    public ContextToOutput addTags(final Tag<?>... tags) {
-        Arrays.stream(tags).forEach(tag -> this.tags.add(tag.getTag()));
-        return this;
-    }
-
-    public ContextToOutput addTag(final String tag) {
-        this.tags.add(tag);
-        return this;
-    }
-
-    public ContextToOutput addTags(final String... tags) {
-        this.tags.addAll(Arrays.asList(tags));
-        return this;
+    /**
+     * Clone all tags from context by context.clone() rules.
+     * @param context Context.
+     * @param output Output.
+     */
+    private static void addAll(final Context context, final Output output) {
+        output.add(context.cloneContext());
     }
 
 }

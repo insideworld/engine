@@ -20,7 +20,7 @@
 package insideworld.engine.security.common.action;
 
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionsTags;
+import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.actions.executor.PreExecutor;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;

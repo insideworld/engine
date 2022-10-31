@@ -54,7 +54,7 @@ public interface LinksBuilder {
     /**
      * Add specific link with generic parameters.
      * Usually using for singleton link instance with generic chain actions.
-     * @param type Type literal. Example: new TypeLiteral<SomeGenericLink<T>>() {}
+     * @param type Type literal.
      * @return The same instance.
      */
     LinksBuilder addLink(TypeLiteral<? extends Link> type);

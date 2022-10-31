@@ -24,19 +24,22 @@ import java.util.Collection;
 
 /**
  * Using for change or add action to action mechanism.
+ *
  * @since 0.1.0
  */
 public interface ActionChanger {
 
-   /**
-    * Register an action to the system,
-    * @param action Action instance.
-    */
-   void addAction(final Action action);
+    /**
+     * Register an action to the system.
+     *
+     * @param action Action instance.
+     */
+    void addAction(Action action);
 
-   /**
-    * Register action to the system.
-    * @param actions Collection of actions.
-    */
-   void addActions(final Collection<Action> actions);
+    /**
+     * Register action to the system.
+     *
+     * @param actions Collection of actions.
+     */
+    void addActions(Collection<Action> actions);
 }

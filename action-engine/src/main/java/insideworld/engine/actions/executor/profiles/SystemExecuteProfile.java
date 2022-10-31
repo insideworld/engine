@@ -41,6 +41,7 @@ public class SystemExecuteProfile implements ExecuteProfile {
      * Default execute profile.
      */
     private final DefaultExecuteProfile def;
+
     /**
      * PreExecutors for this instance.
      */
@@ -52,8 +53,9 @@ public class SystemExecuteProfile implements ExecuteProfile {
      * @param executors Collection of all executors in the system.
      */
     @Inject
-    public SystemExecuteProfile(final DefaultExecuteProfile def,
-                                final Collection<PreExecutor> executors) {
+    public SystemExecuteProfile(
+        final DefaultExecuteProfile def,
+        final Collection<PreExecutor> executors) {
         this.def = def;
         this.executors = executors.stream()
             .filter(executor -> executor.forProfile().contains(SystemExecuteProfile.class))

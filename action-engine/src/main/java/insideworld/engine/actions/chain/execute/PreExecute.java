@@ -20,7 +20,6 @@
 package insideworld.engine.actions.chain.execute;
 
 import insideworld.engine.actions.keeper.context.Context;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Execute before process child action.

@@ -19,7 +19,7 @@
 
 package insideworld.engine.security.common;
 
-import insideworld.engine.actions.keeper.tags.MandatoryTag;
+import insideworld.engine.actions.keeper.context.MandatoryTag;
 import insideworld.engine.actions.keeper.tags.Tag;
 import javax.inject.Singleton;
 

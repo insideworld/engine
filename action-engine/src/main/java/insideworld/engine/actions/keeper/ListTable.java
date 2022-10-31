@@ -20,7 +20,6 @@
 package insideworld.engine.actions.keeper;
 
 import com.google.common.collect.Lists;
-import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,28 +28,40 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Linked list implementation of Table class.
+ * @since 0.1.0
+ */
 @Dependent
 public class ListTable implements Table {
 
-    private final List<Record> records = Lists.newLinkedList();
+    /**
+     * Records collection.
+     */
+    private final List<Record> records;
+
+    /**
+     * Object factory.
+     */
     private final ObjectFactory factory;
 
+    /**
+     * Default constructor.
+     * @param factory Object factory.
+     */
     @Inject
     public ListTable(final ObjectFactory factory) {
         this.factory = factory;
+        this.records = Lists.newLinkedList();
     }
 
     @Override
-    public Record createRecord() {
+    public final Record createRecord() {
         return this.createRecord(null);
     }
 
-    /**
-     * Can be
-     * @return
-     */
     @Override
-    public Record createRecord(String alias) {
+    public final Record createRecord(final String alias) {
         final Record record = this.factory.createObject(this.recordType());
         if (StringUtils.isNotEmpty(alias)) {
             record.put(KeeperTags.ALIAS, alias);
@@ -59,31 +70,32 @@ public class ListTable implements Table {
         return record;
     }
 
-    /**
-     *
-     * @return
-     */
-    protected Class<? extends Record> recordType() {
-        return Record.class;
+    @Override
+    public final void merge(final Table table) {
+        this.records.addAll(table.getRecords());
     }
 
     @Override
-    public void merge(final Table table) {
-        this.records.addAll(table.records());
-    }
-
-    @Override
-    public void add(final Record record) {
+    public final void add(final Record record) {
         this.records.add(record);
     }
 
     @Override
-    public Collection<Record> records() {
+    public final Collection<Record> getRecords() {
         return this.records;
     }
 
     @Override
-    public Iterator<Record> iterator() {
+    public final Iterator<Record> iterator() {
         return this.records.iterator();
+    }
+
+    /**
+     * Record type which need to use for create a new record.
+     * @return Type of record.
+     * @checkstyle NonStaticMethodCheck (2 lines)
+     */
+    protected Class<? extends Record> recordType() {
+        return Record.class;
     }
 }

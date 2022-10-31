@@ -22,13 +22,13 @@ package insideworld.engine.actions.depracted;
 import com.google.common.collect.Maps;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionsTags;
 import insideworld.engine.actions.chain.ChainTags;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.executor.impl.ClassActionExecutor;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.tags.ActionsTags;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,14 +55,8 @@ public class BulkHandlingLink implements Link {
         this.executor = executor;
     }
 
-    /**
-     * Some.
-     * @param context Some.
-     * @param output Some.
-     * @throws ActionException Some.
-     */
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         if (!context.contains(ChainTags.BULK)) {
             return;
         }
@@ -75,7 +69,7 @@ public class BulkHandlingLink implements Link {
         }
         final Action action = context.get(ActionsTags.ACTION);
         for (final Record record : records.values()) {
-            final Context clone = context.clone(record);
+            final Context clone = context.cloneContext(record);
             output.merge(this.executor.execute(action.getClass(), clone));
         }
         context.put(ChainTags.BREAK_CHAIN, new Object());

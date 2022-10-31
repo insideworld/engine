@@ -43,7 +43,7 @@ public class LinksBuilderFactory implements LinksBuilder {
     /**
      * Collections of links.
      */
-    private final ImmutableList.Builder<Link> links = ImmutableList.builder();
+    private final ImmutableList.Builder<Link> links;
 
     /**
      * Default constructor.
@@ -52,6 +52,7 @@ public class LinksBuilderFactory implements LinksBuilder {
     @Inject
     public LinksBuilderFactory(final ObjectFactory factory) {
         this.factory = factory;
+        this.links = ImmutableList.builder();
     }
 
     @Override
@@ -62,7 +63,8 @@ public class LinksBuilderFactory implements LinksBuilder {
     }
 
     @Override
-    public final  <T extends Link> LinksBuilder addLink(final Class<T> type, final Consumer<T> init) {
+    public final  <T extends Link> LinksBuilder addLink(
+        final Class<T> type, final Consumer<T> init) {
         final T link = this.factory.createObject(type);
         init.accept(link);
         this.links.add(link);

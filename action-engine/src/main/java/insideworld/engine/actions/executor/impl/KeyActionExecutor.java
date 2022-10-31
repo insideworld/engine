@@ -23,7 +23,6 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
-import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -41,8 +40,9 @@ public class KeyActionExecutor extends AbstractActionExecutor<String> {
      * @param profiles Execute profiles.
      */
     @Inject
-    public KeyActionExecutor(final ObjectFactory factory,
-                             final Collection<ExecuteProfile> profiles) {
+    public KeyActionExecutor(
+        final ObjectFactory factory,
+        final Collection<ExecuteProfile> profiles) {
         super(factory, profiles);
     }
 

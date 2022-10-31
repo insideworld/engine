@@ -22,6 +22,8 @@ package insideworld.engine.actions.keeper.output;
 import insideworld.engine.actions.keeper.Table;
 
 /**
+ * Interface for output which using to provide result of action call.
+ * Based on Table.
  * @since 0.0.1
  */
 public interface Output extends Table {

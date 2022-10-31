@@ -17,22 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.tags;
-
 /**
- * Single tag.
- * Implementation using to collect in a record single based type as is.
- * @param <T> Type of single tag.
- * @since 0.1.0
+ * Package using for transfer information between actions and endpoints.
+ * Generic using method to easily reuse exists code.
+ * @see insideworld.engine.actions.keeper.context.Context
+ * @see insideworld.engine.actions.keeper.output.Output
+ * @see insideworld.engine.actions.keeper.tags.Tag
  */
-public class SingleTag<T> extends AbstractTag<T> {
-
-    /**
-     * Default constructor.
-     * @param tag String key of this tag.
-     */
-    public SingleTag(final String tag) {
-        super(tag);
-    }
-
-}
+package insideworld.engine.actions.keeper;

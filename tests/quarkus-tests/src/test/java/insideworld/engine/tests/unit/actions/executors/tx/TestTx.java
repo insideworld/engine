@@ -20,7 +20,7 @@
 package insideworld.engine.tests.unit.actions.executors.tx;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionsTags;
+import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.storages.Storage;
