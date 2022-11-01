@@ -25,6 +25,7 @@ import insideworld.engine.actions.executor.ActionChanger;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.runtime.Startup;
 import java.util.Collection;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +39,7 @@ public class ActionsInit {
     private final ObjectFactory factory;
 
     @Inject
-    public ActionsInit(final Collection<Action> actions,
+    public ActionsInit(final List<Action> actions,
                        final Collection<ActionChanger> changers,
                        final ObjectFactory factory) {
         this.actions = actions;

@@ -19,54 +19,81 @@
 
 package insideworld.engine.actions.executor.profiles;
 
+import com.google.common.collect.ImmutableSet;
+import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.executor.PreExecutor;
 import insideworld.engine.actions.keeper.context.Context;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.startup.OnStartUp;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * System execute profile.
  * Use this profile to execute an action inside the same system (usually from jobs).
- * Also execute PreExecutes from DefaultExecuteProfile.
+ * Create a chain of wrappers for System and Default profiles on startup.
  * @see DefaultExecuteProfile
  * @since 0.1.0
  */
 @Singleton
-public class SystemExecuteProfile implements ExecuteProfile {
+public class SystemExecuteProfile implements ExecuteProfile, OnStartUp {
 
     /**
-     * Default execute profile.
+     * Type of profiles which need to use.
      */
-    private final DefaultExecuteProfile def;
+    private final Set<Class<? extends ExecuteProfile>> profiles;
 
     /**
-     * PreExecutors for this instance.
+     * Filtered wrappers for System and Default profile.
      */
-    private final Collection<PreExecutor> executors;
+    private final List<ExecuteWrapper> wrappers;
+
+    /**
+     * First wrapper in the chain.
+     */
+    private ExecuteWrapper first;
 
     /**
      * Default constructor.
-     * @param def Default execute profile.
      * @param executors Collection of all executors in the system.
      */
     @Inject
-    public SystemExecuteProfile(
-        final DefaultExecuteProfile def,
-        final Collection<PreExecutor> executors) {
-        this.def = def;
-        this.executors = executors.stream()
-            .filter(executor -> executor.forProfile().contains(SystemExecuteProfile.class))
-            .collect(Collectors.toUnmodifiableList());
+    public SystemExecuteProfile(final List<ExecuteWrapper> executors) {
+        this.profiles = ImmutableSet.of(
+            SystemExecuteProfile.class,
+            DefaultExecuteProfile.class
+        );
+        this.wrappers = executors.stream()
+            .filter(executor -> !Collections.disjoint(executor.forProfile(), this.profiles))
+            .sorted(Comparator.comparingInt(ExecuteWrapper::order).reversed())
+            .toList();
     }
 
     @Override
-    public final void preExecute(final Context context) throws ActionException {
-        for (final PreExecutor executor : this.executors) {
-            executor.preExecute(context);
+    public final void execute(final Action action, final Context context, final Output output)
+        throws ActionException {
+        this.first.execute(action, context, output);
+    }
+
+    @Override
+    public final void startUp() {
+        final Iterator<ExecuteWrapper> iterator = this.wrappers.iterator();
+        ExecuteWrapper last = iterator.next();
+        this.first = last;
+        while (iterator.hasNext()) {
+            final ExecuteWrapper next = iterator.next();
+            last.setNext(next);
+            last = next;
         }
-        this.def.preExecute(context);
+    }
+
+    @Override
+    public final int order() {
+        return 2000;
     }
 }

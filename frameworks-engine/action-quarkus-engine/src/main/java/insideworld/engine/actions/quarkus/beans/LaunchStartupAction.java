@@ -22,7 +22,7 @@ package insideworld.engine.actions.quarkus.beans;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.OnStartupAction;
-import insideworld.engine.actions.executor.impl.ClassActionExecutor;
+import insideworld.engine.actions.executor.ClassActionExecutor;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.injection.ObjectFactory;

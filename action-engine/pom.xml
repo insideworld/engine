@@ -34,6 +34,19 @@
     <jacoco.overall.exec>${maven.compiler.target}/target/jacoco_analysis/jacoco.exec</jacoco.overall.exec>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-bom</artifactId>
+        <version>${quarkus.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
@@ -57,8 +70,27 @@
       <version>${jakarta.enterprise.cdi-api.version}</version>
       <scope>compile</scope>
     </dependency>
-  </dependencies>
 
+
+    <!--  Tests  -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-engine</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-runtime-engine</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -87,39 +119,88 @@
           </dependency>
         </dependencies>
       </plugin>
-
-
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.8</version>
+        <configuration>
+          <output>file</output>
+        </configuration>
+
         <executions>
           <execution>
-            <id>default-prepare-agent</id>
+            <id>jacoco-initialize</id>
+            <phase>process-resources</phase>
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+          </execution>
+          <execution>
+            <id>jacoco-check</id>
+            <phase>test</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
             <configuration>
-              <append>true</append>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <!--                  <limits>-->
+                  <!--                    <limit>-->
+                  <!--                      <counter>INSTRUCTION</counter>-->
+                  <!--                      <value>COVEREDRATIO</value>-->
+                  <!--                      <minimum>${code.cvrg.instructions}</minimum>-->
+                  <!--                    </limit>-->
+                  <!--                    <limit>-->
+                  <!--                      <counter>LINE</counter>-->
+                  <!--                      <value>COVEREDRATIO</value>-->
+                  <!--                      <minimum>${code.cvrg.line}</minimum>-->
+                  <!--                    </limit>-->
+                  <!--                    <limit>-->
+                  <!--                      <counter>BRANCH</counter>-->
+                  <!--                      <value>COVEREDRATIO</value>-->
+                  <!--                      <minimum>${code.cvrg.branch}</minimum>-->
+                  <!--                    </limit>-->
+                  <!--                    <limit>-->
+                  <!--                      <counter>COMPLEXITY</counter>-->
+                  <!--                      <value>COVEREDRATIO</value>-->
+                  <!--                      <minimum>${code.cvrg.complexity}</minimum>-->
+                  <!--                    </limit>-->
+                  <!--                    <limit>-->
+                  <!--                      <counter>METHOD</counter>-->
+                  <!--                      <value>COVEREDRATIO</value>-->
+                  <!--                      <minimum>${code.cvrg.methods}</minimum>-->
+                  <!--                    </limit>-->
+                  <!--                    <limit>-->
+                  <!--                      <counter>CLASS</counter>-->
+                  <!--                      <value>MISSEDCOUNT</value>-->
+                  <!--                      <maximum>${code.cvrg.classes-without-tests}</maximum>-->
+                  <!--                    </limit>-->
+                  <!--                  </limits>-->
+                </rule>
+              </rules>
             </configuration>
+          </execution>
+          <execution>
+            <id>jacoco-report</id>
+            <phase>install</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+        <configuration>
+          <systemPropertyVariables>
+            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+            <maven.home>${maven.home}</maven.home>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
     </plugins>
-
-    <pluginManagement>
-      <plugins>
-
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.8</version>
-          <configuration>
-            <destFile>${jacoco.overall.exec}</destFile>
-            <dataFile>${jacoco.overall.exec}</dataFile>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
 </project>

@@ -21,7 +21,7 @@ package insideworld.engine.actions.quarkus.beans;
 
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.executor.PreExecutor;
+import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.executor.ActionChanger;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
@@ -39,7 +39,7 @@ public class ActionBeans extends AbstractBeans {
     }
 
     @Produces
-    public Collection<PreExecutor> preExecutors(final Instance<PreExecutor> instance) {
+    public Collection<ExecuteWrapper> preExecutors(final Instance<ExecuteWrapper> instance) {
         return this.fromInstance(instance);
     }
 

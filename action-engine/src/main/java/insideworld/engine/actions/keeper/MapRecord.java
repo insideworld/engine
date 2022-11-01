@@ -24,15 +24,13 @@ import com.google.common.collect.Maps;
 import insideworld.engine.actions.keeper.tags.Tag;
 import java.util.Map;
 import java.util.Optional;
-import javax.enterprise.context.Dependent;
 import org.apache.commons.lang3.Validate;
 
 /**
  * Record implementation based on hash map.
  * @since 0.1.0
  */
-@Dependent
-public class MapRecord implements Record {
+public abstract class MapRecord implements Record {
 
     /**
      * Map to store keys and values.

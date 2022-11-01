@@ -20,6 +20,7 @@
 package insideworld.engine.actions.keeper.output;
 
 import insideworld.engine.actions.keeper.ListTable;
+import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.injection.ObjectFactory;
 import java.io.Serializable;
 import javax.enterprise.context.Dependent;
@@ -30,7 +31,7 @@ import javax.inject.Inject;
  * @since 0.0.1
  */
 @Dependent
-public class OutputTable extends ListTable implements Output, Serializable {
+public final class OutputTable extends ListTable implements Output, Serializable {
 
     /**
      * Default constructor.
@@ -39,6 +40,11 @@ public class OutputTable extends ListTable implements Output, Serializable {
     @Inject
     public OutputTable(final ObjectFactory factory) {
         super(factory);
+    }
+
+    @Override
+    public Class<? extends Record> recordType() {
+        return OutputRecord.class;
     }
 
 }

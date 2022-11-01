@@ -26,7 +26,6 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
-import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,11 +72,6 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
     private Tag<?>[] tags;
 
     /**
-     * Using the same TX in child action.
-     */
-    private boolean sametx;
-
-    /**
      * Default constructor.
      *
      * @param executor Action executor.
@@ -103,9 +97,6 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
             child = parent.cloneContext(this.tags);
         }
         if (this.pres.isEmpty() || this.pres.stream().allMatch(pre -> pre.apply(parent, child))) {
-            if (this.sametx) {
-                child.put(ActionsTags.USE_EXIST_TX, new Object());
-            }
             if (this.key == null) {
                 throw new ActionException("Action is not set!");
             }
@@ -158,11 +149,5 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
         final PostExecute[] array = Arrays.stream(executes)
             .map(execute -> this.factory.createObject(execute)).toArray(PostExecute[]::new);
         return this.addPostExecute(array);
-    }
-
-    @Override
-    public final ExecuteActionLink<T> useSameTx() {
-        this.sametx = true;
-        return this;
     }
 }

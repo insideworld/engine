@@ -38,7 +38,7 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>action-engine</artifactId>
+      <artifactId>common-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

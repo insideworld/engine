@@ -19,21 +19,25 @@
 
 package insideworld.engine.actions.executor.profiles;
 
+import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
 
 /**
  * Execute profile.
- * Using to register some PreExecute action for specific conditions.
+ * Using to register some wrappers action for specific conditions.
  * @since 0.1.0
  */
 public interface ExecuteProfile {
 
     /**
-     * Execute pre executes conditions for profile implentation.
+     * Execute wrapper login for profile implementation.
+     * @param action Executed action.
      * @param context Context.
+     * @param output Output.
      * @throws ActionException Action exception.
      */
-    void preExecute(Context context) throws ActionException;
+    void execute(Action action, Context context, Output output) throws ActionException;
 
 }

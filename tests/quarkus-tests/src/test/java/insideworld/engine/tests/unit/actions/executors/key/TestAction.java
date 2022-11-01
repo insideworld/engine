@@ -24,7 +24,6 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.tests.unit.actions.executors.TestExecutorTags;
-import java.util.UUID;
 import javax.inject.Singleton;
 
 /**

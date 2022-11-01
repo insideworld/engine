@@ -40,14 +40,14 @@ class TestTagPropagation {
     /**
      * Class action executor.
      */
-    private ActionExecutor<Class<? extends Action>> executor;
+    private final ActionExecutor<Class<? extends Action>> executor;
 
     /**
      * Default constructor.
      * @param executor Class action executor.
      */
     @Inject
-    public TestTagPropagation(final ActionExecutor<Class<? extends Action>> executor) {
+    TestTagPropagation(final ActionExecutor<Class<? extends Action>> executor) {
         this.executor = executor;
     }
 
@@ -58,7 +58,7 @@ class TestTagPropagation {
      * ER: Output contains only one record with ONE tag.
      */
     @Test
-    public void testTagPropagate() {
+    final void testTagPropagate() {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());

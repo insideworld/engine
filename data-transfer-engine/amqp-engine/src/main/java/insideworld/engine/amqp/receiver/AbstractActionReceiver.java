@@ -22,11 +22,12 @@ package insideworld.engine.amqp.receiver;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import insideworld.engine.actions.executor.impl.KeyActionExecutor;
+import insideworld.engine.actions.executor.KeyActionExecutor;
 import insideworld.engine.actions.keeper.MapRecord;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.output.OutputRecord;
 import insideworld.engine.amqp.destination.Channel;
 import insideworld.engine.datatransfer.endpoint.PreExecute;
 import insideworld.engine.threads.ThreadPool;
@@ -108,7 +109,7 @@ public abstract class AbstractActionReceiver extends AbstractReceiver {
 
     //TODO - create a handler mechanism
     private Record parseObject(final Map<String, Object> map) {
-        final Record record = new MapRecord();
+        final Record record = new OutputRecord();
         for (var entry : map.entrySet()) {
             final Object value = entry.getValue();
             if (value instanceof Map) {

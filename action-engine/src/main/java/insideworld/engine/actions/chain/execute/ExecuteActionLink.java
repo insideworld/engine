@@ -78,10 +78,4 @@ public interface ExecuteActionLink<T> extends Link {
      */
     ExecuteActionLink<T> addPostExecute(Class<? extends PostExecute>... execute);
 
-    /**
-     * Use the same transaction in child action.
-     * Will execute in separate transaction by default.
-     * @return The same instance.
-     */
-    ExecuteActionLink<T> useSameTx();
 }

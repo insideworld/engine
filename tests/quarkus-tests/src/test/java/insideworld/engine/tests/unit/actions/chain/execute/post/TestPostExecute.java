@@ -40,7 +40,7 @@ public class TestPostExecute {
     /**
      * Class action executor.
      */
-    private ActionExecutor<Class<? extends Action>> executor;
+    private final ActionExecutor<Class<? extends Action>> executor;
 
     /**
      * Default constructor.

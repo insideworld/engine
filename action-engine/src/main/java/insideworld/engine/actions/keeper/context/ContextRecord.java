@@ -23,7 +23,6 @@ import insideworld.engine.actions.keeper.MapRecord;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.tags.Tag;
 import insideworld.engine.injection.ObjectFactory;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,10 +31,11 @@ import javax.inject.Inject;
 
 /**
  * Hash map based implementation of context based on MapRecord.
+ * This class is final so if you need you own record - create a new class.
  * @since 0.0.1
  */
 @Dependent
-public class ContextRecord extends MapRecord implements Context {
+public final class ContextRecord extends MapRecord implements Context {
 
     /**
      * Object factory.
@@ -45,12 +45,12 @@ public class ContextRecord extends MapRecord implements Context {
     /**
      * Mandatory tags to clone.
      */
-    private final Collection<MandatoryTag> mandatory;
+    private final List<MandatoryTag> mandatory;
 
     /**
      * System tags to won't clone.
      */
-    private final Collection<SystemTag> systems;
+    private final List<SystemTag> systems;
 
     /**
      * Default constructor.
@@ -61,15 +61,15 @@ public class ContextRecord extends MapRecord implements Context {
     @Inject
     public ContextRecord(
         final ObjectFactory factory,
-        final Collection<MandatoryTag> mandatory,
-        final Collection<SystemTag> systems) {
+        final List<MandatoryTag> mandatory,
+        final List<SystemTag> systems) {
         this.factory = factory;
         this.mandatory = mandatory;
         this.systems = systems;
     }
 
     @Override
-    public final Context cloneContext(final Tag<?>... includes) {
+    public Context cloneContext(final Tag<?>... includes) {
         final Context clone = this.factory.createObject(this.clazz());
         for (final Tag tag : includes) {
             clone.put(tag, this.get(tag));
@@ -80,7 +80,7 @@ public class ContextRecord extends MapRecord implements Context {
     }
 
     @Override
-    public final Context cloneContext() {
+    public Context cloneContext() {
         final Context clone = this.factory.createObject(this.clazz());
         this.values().forEach(clone::put);
         this.removeSystem(clone);
@@ -88,7 +88,7 @@ public class ContextRecord extends MapRecord implements Context {
     }
 
     @Override
-    public final Context cloneContext(final Record record) {
+    public Context cloneContext(final Record record) {
         final Context clone = this.factory.createObject(this.clazz());
         record.values().forEach(clone::put);
         this.fillMandatory(clone);
@@ -98,11 +98,9 @@ public class ContextRecord extends MapRecord implements Context {
 
     /**
      * Class of new clone context.
-     * Using for inheritance.
      * @return Type of context which need create using clone.
-     * @checkstyle NonStaticMethodCheck (2 lines)
      */
-    protected Class<? extends Context> clazz() {
+    private static Class<? extends Context> clazz() {
         return ContextRecord.class;
     }
 

@@ -23,7 +23,7 @@ import com.google.common.collect.Lists;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.executor.impl.ClassActionExecutor;
+import insideworld.engine.actions.executor.ClassActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.threads.ThreadPool;

@@ -24,7 +24,6 @@ import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,8 +31,7 @@ import org.apache.commons.lang3.StringUtils;
  * Linked list implementation of Table class.
  * @since 0.1.0
  */
-@Dependent
-public class ListTable implements Table {
+public abstract class ListTable implements Table {
 
     /**
      * Records collection.
@@ -93,9 +91,6 @@ public class ListTable implements Table {
     /**
      * Record type which need to use for create a new record.
      * @return Type of record.
-     * @checkstyle NonStaticMethodCheck (2 lines)
      */
-    protected Class<? extends Record> recordType() {
-        return Record.class;
-    }
+    protected abstract Class<? extends Record> recordType();
 }

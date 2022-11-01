@@ -19,7 +19,7 @@
 
 package insideworld.engine.tests.integration.tests.transactions;
 
-import insideworld.engine.actions.executor.impl.ClassActionExecutor;
+import insideworld.engine.actions.executor.ClassActionExecutor;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.storages.Storage;
@@ -78,7 +78,7 @@ public class TestTransactions {
 //            entityManager.detach(nestedent);
             nestedent.setTwo(5L);
             context.put("nested", nestedent);
-            this.executor.executeSameTx(NewTxAction.class, context, SystemExecuteProfile.class);
+//            this.executor.executeSameTx(NewTxAction.class, context, SystemExecuteProfile.class);
 //            throw new RuntimeException();
 //            System.out.println("qwe");
         }
