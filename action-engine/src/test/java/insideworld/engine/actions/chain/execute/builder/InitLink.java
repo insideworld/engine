@@ -17,32 +17,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.chain.execute.builder;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.execute.TestChainTags;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import java.util.UUID;
+import javax.enterprise.context.Dependent;
 
-@Startup(3000)
-@Singleton
-public class ProcessOnStartUp {
+/**
+ * Link with init executed by class add.
+ * @since 0.14.0
+ */
+@Dependent
+class InitLink implements Link {
 
-    private final List<OnStartUp> startups;
+    /**
+     * UUID.
+     */
+    private UUID uuid;
 
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    @Override
+    public final void process(final Context context, final Output output) throws ActionException {
+        context.put(TestChainTags.UUID, this.uuid);
     }
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    /**
+     * Set UUID to link.
+     * @param puuid UUID.
+     */
+    public final void setUuid(final UUID puuid) {
+        this.uuid = puuid;
     }
-
 }

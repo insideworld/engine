@@ -17,47 +17,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.tags;
+package insideworld.engine.actions.chain.execute.builder;
+
+import insideworld.engine.actions.chain.AbstractChainAction;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinksBuilder;
+import java.util.Collection;
+import java.util.UUID;
+import javax.enterprise.util.TypeLiteral;
+import javax.inject.Singleton;
 
 /**
- * Abstract tag based on string key.
- * For creating a new tag type just extend from this class.
- * @param <T> Data type for this tag.
- * @since 0.1.0
+ * Test action.
+ * Add 4 links to test different methods to add link.
+ * @since 0.14.0
  */
-public abstract class AbstractTag<T> implements Tag<T> {
-
-    /**
-     * Tag key.
-     */
-    private final String tag;
+@Singleton
+class TestAction extends AbstractChainAction {
 
     /**
      * Default constructor.
-     * @param ptag Tag key.
+     *
+     * @param builder Links builder instance.
      */
-    public AbstractTag(final String ptag) {
-        this.tag = ptag;
+    TestAction(final LinksBuilder builder) {
+        super(builder);
     }
 
     @Override
-    public final String getTag() {
-        return this.tag;
+    public final String key() {
+        return "insideworld.engine.actions.chain.execute.builder.TestAction";
     }
 
     @Override
-    public final boolean equals(final Object ptag) {
-        final boolean equal;
-        if (ptag instanceof Tag) {
-            equal = this.tag.equals(((Tag) ptag).getTag());
-        } else {
-            equal = false;
-        }
-        return equal;
-    }
-
-    @Override
-    public final int hashCode() {
-        return this.tag.hashCode();
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+        return builder
+            .addLink(IntegerLink.class)
+            .addLink(new TypeLiteral<GenericLink<String>>() { })
+            .addLink(InitLink.class, link -> link.setUuid(UUID.randomUUID()))
+            .addLink(
+                new TypeLiteral<GenericLink<UUID>>() { },
+                link -> link.setValue(UUID.randomUUID())
+            ).build();
     }
 }

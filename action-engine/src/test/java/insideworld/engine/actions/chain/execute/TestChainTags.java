@@ -19,6 +19,7 @@
 
 package insideworld.engine.actions.chain.execute;
 
+import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 import java.util.UUID;
 
@@ -33,6 +34,12 @@ public final class TestChainTags {
      */
     public static final SingleTag<UUID> UUID =
         new SingleTag<>("engine.tests.unit.actions.chain.execute.uuid");
+
+    /**
+     * One more UUID.
+     */
+    public static final SingleTag<UUID> UUID_ADDITIONAL =
+        new SingleTag<>("engine.tests.unit.actions.chain.execute.uuid.additional");
 
     /**
      * Some string to test propagation child to parent output.
@@ -51,6 +58,24 @@ public final class TestChainTags {
      */
     public static final SingleTag<Object> TWO =
         new SingleTag<>("engine.tests.unit.actions.chain.execute.two");
+
+    /**
+     * String tag.
+     */
+    public static final SingleTag<Object> STRING =
+        new SingleTag<>("engine.tests.unit.actions.chain.execute.string");
+
+    /**
+     * Integer tag.
+     */
+    public static final SingleTag<Object> INTEGER =
+        new SingleTag<>("engine.tests.unit.actions.chain.execute.integer");
+
+    /**
+     * List of integers.
+     */
+    public static final MultipleTag<Integer> LIST =
+        new MultipleTag<>("engine.tests.unit.actions.chain.execute.list");
 
     /**
      * Private constructor.

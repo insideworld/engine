@@ -17,52 +17,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.executors;
+package insideworld.engine.actions.keeper;
 
-import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.actions.keeper.tags.SingleTag;
-import java.util.UUID;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
 
 /**
- * Test executor tags.
+ * Just test TAG on equals and hashcode.
  * @since 0.14.0
  */
-public final class TestExecutorTags {
+@QuarkusTest
+class TagTest {
 
     /**
-     * UUID for compare.
+     * Test key.
      */
-    public static final SingleTag<UUID> UUID =
-        new SingleTag<>("engine.tests.unit.actions.executors.uuid");
+    private static final String TAG_KEY = "testKey";
 
     /**
-     * UUID for compare.
+     * Test tag one.
      */
-    public static final SingleTag<UUID> COPY_UUID =
-        new SingleTag<>("engine.tests.unit.actions.executors.uuid.copy");
+    private static final SingleTag<Object> ONE = new SingleTag<>(TagTest.TAG_KEY);
 
     /**
-     * Just dummy tag.
+     * Test tag two.
      */
-    public static final SingleTag<Object> DUMMY =
-        new SingleTag<>("engine.tests.unit.actions.executors.uuid.dummy");
+    private static final SingleTag<Object> TWO = new SingleTag<>(TagTest.TAG_KEY);
 
     /**
-     * Using to test sequence of wrappers execution.
+     * Test tag another.
      */
-    public static final MultipleTag<Integer> SEQUENCE =
-        new MultipleTag<>("insideworld.engine.actions.executors.TestExecutorTags.SEQUENCE");
+    private static final SingleTag<Object> ANOTHER = new SingleTag<>("Another");
 
     /**
-     * Which exception should call.
+     * TC: Just compare different tags between each other.
      */
-    public static final SingleTag<Integer> EXCEPTION =
-        new SingleTag<>("insideworld.engine.actions.executors.TestExecutorTags.EXCEPTION");
-
-    /**
-     * Private constructor.
-     */
-    private TestExecutorTags() {
-        //Nothing to do.
+    @Test
+    void test() {
+        assert TagTest.ONE.equals(TagTest.TWO);
+        assert !TagTest.ONE.equals(TagTest.ANOTHER);
+        assert !TagTest.ONE.equals(new Object());
+        assert TagTest.ONE.hashCode() == TagTest.TWO.hashCode();
+        assert TagTest.ONE.hashCode() != TagTest.ANOTHER.hashCode();
+        assert TagTest.ONE.getTag().equals(TagTest.TAG_KEY)
+            && TagTest.TWO.getTag().equals(TagTest.TAG_KEY);
     }
 }

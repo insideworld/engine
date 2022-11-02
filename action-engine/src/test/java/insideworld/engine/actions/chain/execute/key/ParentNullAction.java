@@ -17,32 +17,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.chain.execute.key;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.chain.AbstractChainAction;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinksBuilder;
+import insideworld.engine.actions.chain.execute.ExecuteActionLink;
+import java.util.Collection;
+import javax.enterprise.util.TypeLiteral;
 import javax.inject.Singleton;
 
-@Startup(3000)
+/**
+ * Action to test null for executor.
+ * @since 0.14.0
+ */
 @Singleton
-public class ProcessOnStartUp {
+class ParentNullAction extends AbstractChainAction {
 
-    private final List<OnStartUp> startups;
-
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    /**
+     * Default constructor.
+     *
+     * @param builder Links builder instance.
+     */
+    ParentNullAction(final LinksBuilder builder) {
+        super(builder);
     }
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    @Override
+    public final String key() {
+        return "insideworld.engine.actions.chain.execute.key.ParentNullAction";
     }
 
+    @Override
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+        return builder
+            .addLink(
+                new TypeLiteral<ExecuteActionLink<Class<? extends Action>>>() { }
+            )
+            .build();
+    }
 }

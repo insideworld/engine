@@ -51,7 +51,13 @@ public abstract class MapRecord implements Record {
 
     @Override
     public final <T> T get(final Tag<T> tag) {
-        return (T) this.map.get(tag.getTag());
+        final T value;
+        if (tag == null) {
+            value = null;
+        } else {
+            value = (T) this.map.get(tag.getTag());
+        }
+        return value;
     }
 
     @Override
@@ -83,7 +89,9 @@ public abstract class MapRecord implements Record {
 
     @Override
     public final <T> void cloneTag(final Tag<T> tag, final Record record) {
-        record.put(tag, this.get(tag));
+        if (tag != null) {
+            record.put(tag, this.get(tag));
+        }
     }
 
     @Override
@@ -95,13 +103,17 @@ public abstract class MapRecord implements Record {
     @Override
     public final <T> void put(final Tag<T> tag, final T value)
         throws IllegalArgumentException {
-        this.put(tag.getTag(), value, false);
+        if (tag != null) {
+            this.put(tag.getTag(), value, false);
+        }
     }
 
     @Override
     public final <T> void put(final Tag<T> tag, final T value, final boolean replace)
         throws IllegalArgumentException {
-        this.put(tag.getTag(), value, replace);
+        if (tag != null) {
+            this.put(tag.getTag(), value, replace);
+        }
     }
 
     @Override
@@ -111,7 +123,7 @@ public abstract class MapRecord implements Record {
             replace || !this.map.containsKey(key),
             "Record already contains this key!"
         );
-        if (value != null) {
+        if (key != null && value != null) {
             this.map.put(key, value);
         }
     }

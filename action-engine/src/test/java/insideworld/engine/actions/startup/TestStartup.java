@@ -17,32 +17,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.startup;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.executor.ActionExecutor;
+import insideworld.engine.actions.keeper.context.Context;
+import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
-import javax.inject.Singleton;
+import org.junit.jupiter.api.Test;
 
-@Startup(3000)
-@Singleton
-public class ProcessOnStartUp {
+/**
+ * Test startup.
+ * @since 0.14.0
+ */
+@QuarkusTest
+class TestStartup {
 
-    private final List<OnStartUp> startups;
+    /**
+     * Class action executor.
+     */
+    private final ActionExecutor<Class<? extends Action>> executor;
 
+    /**
+     * Default constructor.
+     * @param executor Class action executor.
+     */
     @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    TestStartup(final ActionExecutor<Class<? extends Action>> executor) {
+        this.executor = executor;
     }
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    /**
+     * TC: Execute action which set in context a specific tag to validate that this action
+     * was executed before.
+     * ER:
+     * Should present inited tag with true value.
+     */
+    @Test
+    final void test() {
+        final Context context = this.executor.createContext();
+        this.executor.execute(TestStartupAction.class, context);
+        assert Boolean.TRUE.equals(context.get("inited"));
     }
-
 }

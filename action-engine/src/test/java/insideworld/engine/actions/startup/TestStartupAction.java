@@ -17,32 +17,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.startup;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.executor.OnStartupAction;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
 import javax.inject.Singleton;
 
-@Startup(3000)
+/**
+ * Startup action for test.
+ * Set inited value to true on the launch.
+ * After that should set in context - true.
+ * @since 0.14.0
+ */
+@OnStartupAction
 @Singleton
-public class ProcessOnStartUp {
+public class TestStartupAction implements Action {
 
-    private final List<OnStartUp> startups;
+    /**
+     * Variable to check that action was executed before.
+     */
+    private Boolean inited;
 
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    @Override
+    public final void execute(final Context context, final Output output) throws ActionException {
+        context.put("inited", this.inited);
+        if (this.inited == null) {
+            this.inited = true;
+        }
     }
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    @Override
+    public final String key() {
+        return "insideworld.engine.actions.startup.TestStartupAction";
     }
-
 }

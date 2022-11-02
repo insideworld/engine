@@ -17,32 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import insideworld.engine.actions.keeper.context.MandatoryTag;
+import insideworld.engine.actions.keeper.tags.Tag;
 import javax.inject.Singleton;
 
-@Startup(3000)
+/**
+ * Mandatory tag to test.
+ * @since 0.14.0
+ */
 @Singleton
-public class ProcessOnStartUp {
+public class TestMandatoryTag implements MandatoryTag {
 
-    private final List<OnStartUp> startups;
-
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    @Override
+    public final Tag<?> get() {
+        return ActionsTestTags.MANDATORY;
     }
-
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
-    }
-
 }

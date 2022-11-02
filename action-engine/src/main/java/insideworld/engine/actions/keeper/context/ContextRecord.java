@@ -19,15 +19,17 @@
 
 package insideworld.engine.actions.keeper.context;
 
+import com.google.common.collect.Sets;
 import insideworld.engine.actions.keeper.MapRecord;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.tags.Tag;
 import insideworld.engine.injection.ObjectFactory;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Hash map based implementation of context based on MapRecord.
@@ -69,30 +71,22 @@ public final class ContextRecord extends MapRecord implements Context {
     }
 
     @Override
+    public void cloneToRecord(final Record record, final String... includes) {
+        final Collection<String> tocopy = Sets.newHashSet();
+        if (ArrayUtils.isEmpty(includes)) {
+            tocopy.addAll(this.values().keySet());
+        } else {
+            tocopy.addAll(List.of(includes));
+        }
+        this.mandatory.forEach(tag -> tocopy.add(tag.get().getTag()));
+        this.systems.forEach(tag -> tocopy.remove(tag.get().getTag()));
+        tocopy.forEach(tag -> record.put(tag, this.get(tag)));
+    }
+
+    @Override
     public Context cloneContext(final Tag<?>... includes) {
         final Context clone = this.factory.createObject(this.clazz());
-        for (final Tag tag : includes) {
-            clone.put(tag, this.get(tag));
-        }
-        this.fillMandatory(clone);
-        this.removeSystem(clone);
-        return clone;
-    }
-
-    @Override
-    public Context cloneContext() {
-        final Context clone = this.factory.createObject(this.clazz());
-        this.values().forEach(clone::put);
-        this.removeSystem(clone);
-        return clone;
-    }
-
-    @Override
-    public Context cloneContext(final Record record) {
-        final Context clone = this.factory.createObject(this.clazz());
-        record.values().forEach(clone::put);
-        this.fillMandatory(clone);
-        this.removeSystem(clone);
+        this.cloneToRecord(clone, Arrays.stream(includes).map(Tag::getTag).toArray(String[]::new));
         return clone;
     }
 
@@ -102,28 +96,5 @@ public final class ContextRecord extends MapRecord implements Context {
      */
     private static Class<? extends Context> clazz() {
         return ContextRecord.class;
-    }
-
-    /**
-     * Fill mandatory tags to cloned context.
-     * @param clone Cloned context.
-     */
-    private void fillMandatory(final Context clone) {
-        final List<? extends Tag<?>> tags =
-            this.mandatory.stream().map(MandatoryTag::get).collect(Collectors.toList());
-        for (final Tag tag : tags) {
-            clone.put(tag, this.get(tag));
-        }
-    }
-
-    /**
-     * Remove system tags from cloned context.
-     * @param clone Cloned context.
-     */
-    private void removeSystem(final Context clone) {
-        final Map<String, ? super Object> values = clone.values();
-        for (final SystemTag system : this.systems) {
-            values.remove(system.get().getTag());
-        }
     }
 }

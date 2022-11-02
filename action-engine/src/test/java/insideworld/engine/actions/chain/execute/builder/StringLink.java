@@ -17,32 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.chain.execute.builder;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.chain.execute.TestChainTags;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import java.util.Objects;
+import javax.enterprise.context.Dependent;
 
-@Startup(3000)
-@Singleton
-public class ProcessOnStartUp {
+/**
+ * Link to test TypeLiteral.
+ * Just add the string tag to context.
+ * @since 0.14.0
+ */
+@Dependent
+class StringLink implements GenericLink<String> {
 
-    private final List<OnStartUp> startups;
+    /**
+     * String value.
+     */
+    private String string;
 
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    @Override
+    public final void process(final Context context, final Output output) throws ActionException {
+        context.put(TestChainTags.STRING, Objects.requireNonNullElse(this.string, "2"));
     }
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    @Override
+    public final void setValue(final String value) {
+        this.string = value;
     }
-
 }

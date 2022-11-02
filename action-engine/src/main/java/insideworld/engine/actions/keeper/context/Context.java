@@ -32,22 +32,17 @@ public interface Context extends Record {
 
     /**
      * Clone with included tags.
+     * If includes is null - will copy all.
      * @param includes Tags what need to clone in new context.
      * @return New context.
      */
     Context cloneContext(Tag<?>... includes);
 
     /**
-     * Clone all tags except system.
-     * @return Cloned context.
+     * Clone with included tags to provided record.
+     * If includes is null - will copy all.
+     * @param record Record where need to clone.
+     * @param includes Tags what need to clone in new context.
      */
-    Context cloneContext();
-
-    /**
-     * Clone using exists record.
-     * Merge current and provided record except system.
-     * @param record Record using to merge with new context.
-     * @return Cloned context.
-     */
-    Context cloneContext(Record record);
+    void cloneToRecord(Record record, String... includes);
 }

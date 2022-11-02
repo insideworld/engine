@@ -17,32 +17,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.chain.execute.sequence;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import insideworld.engine.actions.chain.AbstractChainAction;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinksBuilder;
+import java.util.Collection;
 import javax.inject.Singleton;
 
-@Startup(3000)
+/**
+ * Add all links in necessary sequence.
+ * @since 0.14.0
+ */
 @Singleton
-public class ProcessOnStartUp {
+class TestAction extends AbstractChainAction {
 
-    private final List<OnStartUp> startups;
-
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    /**
+     * Default constructor.
+     *
+     * @param builder Links builder instance.
+     */
+    TestAction(final LinksBuilder builder) {
+        super(builder);
     }
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    @Override
+    public final String key() {
+        return "insideworld.engine.actions.chain.execute.sequence.TestAction";
     }
 
+    @Override
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+        return builder
+            .addLink(LinkOne.class)
+            .addLink(LinkTwo.class)
+            .addLink(LinkThree.class)
+            .addLink(LinkSkip.class)
+            .addLink(LinkBreakChain.class)
+            .addLink(LinkAfterBreakChain.class)
+            .build();
+    }
 }

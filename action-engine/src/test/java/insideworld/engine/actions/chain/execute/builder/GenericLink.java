@@ -17,32 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.chain.execute.builder;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.actions.chain.Link;
 
-@Startup(3000)
-@Singleton
-public class ProcessOnStartUp {
+/**
+ * Some generic link just for tests.
+ * @param <T> Some type.
+ * @since 0.14.0
+ */
+public interface GenericLink<T> extends Link {
 
-    private final List<OnStartUp> startups;
-
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
-    }
-
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
-    }
+    /**
+     * Set a value to link.
+     * @param value Value.
+     */
+    void setValue(T value);
 
 }

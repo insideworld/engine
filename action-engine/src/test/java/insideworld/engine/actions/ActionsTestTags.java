@@ -17,32 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.actions.keeper.tags.SingleTag;
 
-@Startup(3000)
-@Singleton
-public class ProcessOnStartUp {
+/**
+ * Common actions tags for testing.
+ * @since 0.14.0
+ */
+public final class ActionsTestTags {
 
-    private final List<OnStartUp> startups;
+    /**
+     * Test system tag.
+     */
+    public static final SingleTag<Object> SYSTEM =
+        new SingleTag<>("insideworld.engine.actions.keeper.TestKeeperTags.system");
 
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
-    }
+    /**
+     * Test mandatory tag.
+     */
+    public static final SingleTag<Object> MANDATORY =
+        new SingleTag<>("insideworld.engine.actions.keeper.TestKeeperTags.mandatory");
 
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
+    /**
+     * Private constructor.
+     */
+    private ActionsTestTags() {
+        //Nothing to do.
     }
 
 }

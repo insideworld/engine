@@ -20,6 +20,7 @@
 package insideworld.engine.actions.chain.execute.key;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.Record;
@@ -80,6 +81,25 @@ class TestKeyAction {
     @Test
     final void testString() {
         this.executeAction(ParentStringAction.class);
+    }
+
+    /**
+     * TC: Execute action where not set an action key in link.
+     * ER: Should throw exception.
+     */
+    @Test
+    final void testNull() {
+        boolean exception = false;
+        try {
+            this.executeAction(ParentNullAction.class);
+        } catch (final ActionRuntimeException exp) {
+            if ("insideworld.engine.actions.ActionException: Action is not set!"
+                .equals(exp.getMessage())
+            ) {
+                exception = true;
+            }
+        }
+        assert exception;
     }
 
     /**

@@ -22,7 +22,6 @@ package insideworld.engine.actions.chain.links;
 import com.google.common.collect.Lists;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
@@ -98,12 +97,7 @@ public class ContextToOutput implements Link {
      * @param output Output.
      */
     private void addWithTags(final Context context, final Output output) {
-        final Record record = output.createRecord();
-        for (final String tag : this.tags) {
-            if (context.contains(tag)) {
-                record.put(tag, context.get(tag));
-            }
-        }
+        context.cloneToRecord(output.createRecord(), this.tags.toArray(String[]::new));
     }
 
     /**

@@ -20,6 +20,7 @@
 package insideworld.engine.actions.executors.key;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
@@ -82,6 +83,49 @@ class TestKeyExecutor {
             this.kexecutor,
             "insideworld.engine.tests.unit.actions.executors.key.TestAction"
         );
+    }
+
+    /**
+     * TC: Execute different ActionExceptions.
+     * For 1 - Exception with custom message.
+     * For 2 - Exception based on another exception and with message about action.
+     * For 3 - Exception based on another exception and based message.
+     * ER:
+     * For each case right message.
+     */
+    @Test
+    final void testExceptions() {
+        final Context context = this.cexecutor.createContext();
+        context.put(TestExecutorTags.EXCEPTION, 1, true);
+        boolean exception = false;
+        try {
+            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
+        } catch (final ActionRuntimeException exp) {
+            exception = exp.getMessage().equals(
+                "insideworld.engine.actions.ActionException: With message without exception"
+            );
+        }
+        assert exception;
+        context.put(TestExecutorTags.EXCEPTION, 2, true);
+        exception = false;
+        try {
+            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
+        } catch (final ActionRuntimeException exp) {
+            exception = exp.getMessage().startsWith(
+                "insideworld.engine.actions.ActionException: Exception during execute action insideworld.engine.actions.executors.key.ExceptionAction"
+            );
+        }
+        assert exception;
+        context.put(TestExecutorTags.EXCEPTION, 3, true);
+        exception = false;
+        try {
+            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
+        } catch (final ActionRuntimeException exp) {
+            exception = exp.getMessage().equals(
+                "insideworld.engine.actions.ActionException: With message and exception"
+            );
+        }
+        assert exception;
     }
 
     /**

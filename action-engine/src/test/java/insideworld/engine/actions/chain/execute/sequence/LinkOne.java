@@ -17,32 +17,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.startup;
+package insideworld.engine.actions.chain.execute.sequence;
 
-import insideworld.engine.startup.OnStartUp;
-import io.quarkus.runtime.Startup;
-import java.util.Comparator;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.execute.TestChainTags;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
 import javax.inject.Singleton;
 
-@Startup(3000)
+/**
+ * Add to List in context 1.
+ * @since 0.14.0
+ */
 @Singleton
-public class ProcessOnStartUp {
+public class LinkOne implements Link {
 
-    private final List<OnStartUp> startups;
-
-    @Inject
-    public ProcessOnStartUp(final List<OnStartUp> startups) {
-        this.startups = startups;
+    @Override
+    public final void process(final Context context, final Output output) throws ActionException {
+        context.get(TestChainTags.LIST).add(1);
     }
-
-    @PostConstruct
-    public void init() {
-        this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order))
-            .forEach(OnStartUp::startUp);
-    }
-
 }
