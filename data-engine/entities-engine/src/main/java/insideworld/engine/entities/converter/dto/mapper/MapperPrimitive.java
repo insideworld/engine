@@ -27,30 +27,32 @@ import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import javax.inject.Singleton;
 
 /**
- *
+ * Map primitives to record from entity and vice versa.
+ * @since 0.0.1
  */
 @Singleton
 public class MapperPrimitive extends AbstractMapper {
 
     @Override
-    public void toEntity(final Record record, final Entity entity, final Descriptor descriptor)
+    public final void toEntity(
+        final Record record, final Entity entity, final Descriptor descriptor)
         throws ActionException {
-        this.write(entity, record.get(descriptor.getName()), descriptor);
+        this.write(entity, record.get(descriptor.name()), descriptor);
     }
 
     @Override
-    public void toRecord(final Record record,
-                         final Entity entity,
-                         final Descriptor descriptor) throws ActionException {
+    public final void toRecord(
+        final Record record, final Entity entity, final Descriptor descriptor)
+        throws ActionException {
         final Object target = this.read(entity, descriptor);
         if (target != null) {
-            record.put(descriptor.getName(), target);
+            record.put(descriptor.name(), target);
         }
     }
 
     @Override
-    public boolean canApply(final Descriptor descriptor) {
-        final Class<?> type = descriptor.getType();
+    public final boolean canApply(final Descriptor descriptor) {
+        final Class<?> type = descriptor.type();
         return type.isPrimitive() || type.equals(String.class) || Primitives.isWrapperType(type);
     }
 }

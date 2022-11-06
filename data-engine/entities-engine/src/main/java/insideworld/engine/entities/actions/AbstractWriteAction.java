@@ -30,31 +30,66 @@ import insideworld.engine.entities.tags.EntityTag;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
+/**
+ * Abstract action to write entity.
+ * This class is necessary to fast creation of typical actions to write entity.
+ * Entity should come to this action in raw representation.
+ * First they import to context, then write and after that - exported.
+ * Context arguments:
+ * Raw entity.
+ * Output results:
+ * Raw entity.
+ * @param <T> Type of entity.
+ * @see ImportEntityLink
+ * @see ExportEntityLink
+ * @since 0.0.1
+ */
 public abstract class AbstractWriteAction<T extends Entity> extends AbstractChainAction {
 
-    public AbstractWriteAction(LinksBuilder builder) {
+    /**
+     * Default constructor.
+     * @param builder Link builder.
+     */
+    public AbstractWriteAction(final LinksBuilder builder) {
         super(builder);
     }
 
     @Override
-    protected Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
         builder.addLink(ImportEntityLink.class, link -> link.setTag(this.getTag(), this.getType()));
         this.afterImport(builder);
         builder.addLink(
-            new TypeLiteral<WriteEntityLink<T>>() {},
-            link -> link.setTag(this.getTag()));
+            new TypeLiteral<WriteEntityLink<T>>() { },
+            link -> link.setTag(this.getTag())
+        );
         builder.addLink(ExportEntityLink.class, link -> link.setTag(this.getTag()));
-        return this.afterExport(builder).build();
+        this.afterExport(builder);
+        return builder.build();
     }
 
+    /**
+     * Tag for place entity in context.
+     * @return Entity tag.
+     */
     protected abstract EntityTag<T> getTag();
 
+    /**
+     * Type of entity.
+     * Using to define storage.
+     * @return Type of entity.
+     */
     protected abstract Class<T> getType();
 
-    protected LinksBuilder afterImport(final LinksBuilder builder) {
-        return builder;
-    }
+    /**
+     * Perform some operation after import entity.
+     * @param builder Link builder.
+     */
+    protected abstract void afterImport(LinksBuilder builder);
 
-    protected LinksBuilder afterExport(final LinksBuilder builder) { return builder; }
+    /**
+     * Perform some operation after export entity.
+     * @param builder Link builder.
+     */
+    protected abstract void afterExport(LinksBuilder builder);
 
 }

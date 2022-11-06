@@ -27,4 +27,6 @@ public interface ObjectFactory {
 
     <T> T createObject(TypeLiteral<T> type, Object... args);
 
+    <T> Class<? extends T> implementation(Class<T> type);
+
 }

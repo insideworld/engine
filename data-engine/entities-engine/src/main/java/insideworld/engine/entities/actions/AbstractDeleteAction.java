@@ -31,14 +31,28 @@ import insideworld.engine.entities.tags.StorageTags;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
+/**
+ * Abstract action to delete entity by ID or IDS tags.
+ * This class is necessary to fast creation of typical actions to delete entity.
+ * Input arguments:
+ * insideworld.engine.entities.tags.StorageTags#ID - for delete only single entity.
+ * or
+ * insideworld.engine.entities.tags.StorageTags#IDS - for delete several entities.
+ * @param <T> Type of entity.
+ * @since 0.0.1
+ */
 public abstract class AbstractDeleteAction<T extends Entity> extends AbstractChainAction {
 
+    /**
+     * Default constructor.
+     * @param builder Link builder.
+     */
     public AbstractDeleteAction(final LinksBuilder builder) {
         super(builder);
     }
 
     @Override
-    protected Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
         return builder
             .addLink(
                 new TypeLiteral<ReadEntityLink<T>>() {
@@ -56,10 +70,23 @@ public abstract class AbstractDeleteAction<T extends Entity> extends AbstractCha
             .build();
     }
 
-
+    /**
+     * Tag of entity which will using to keep it in context.
+     * Return null here if you want to disable delete by id.
+     * @return Entity tag.
+     */
     protected abstract EntityTag<T> getTag();
 
+    /**
+     * Tag of entities which will using to keep it in context.
+     * Return null here if you want to disable delete by ids.
+     * @return Entities tag.
+     */
     protected abstract EntitiesTag<T> getTags();
 
+    /**
+     * Type of entity.
+     * @return Type of entity.
+     */
     protected abstract Class<T> getType();
 }

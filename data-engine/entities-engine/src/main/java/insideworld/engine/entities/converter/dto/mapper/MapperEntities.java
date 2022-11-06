@@ -33,23 +33,32 @@ import javax.inject.Singleton;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
- * Tag mapper for base entity.
- *
+ * Mapper for collection of entities.
+ * Will add or take in record value with key field name + postfix Ids.
  * @since 0.0.1
  */
 @Singleton
 public class MapperEntities extends AbstractMapper {
 
+    /**
+     * Storage keeper.
+     */
     private final StorageKeeper storages;
 
+    /**
+     * Default constructor.
+     * @param storages Storage keeper.
+     */
     @Inject
     public MapperEntities(final StorageKeeper storages) {
         this.storages = storages;
     }
 
     @Override
-    public void toEntity(Record record, Entity entity, Descriptor descriptor) throws ActionException {
-        final String tag = this.defineTag(descriptor.getName());
+    public final void toEntity(
+        final Record record, final Entity entity, final Descriptor descriptor)
+        throws ActionException {
+        final String tag = this.defineTag(descriptor.name());
         if (record.contains(tag)) {
             final Class<?> type = this.getGeneric(descriptor);
             final Collection<Long> ids = record.get(tag);
@@ -68,28 +77,40 @@ public class MapperEntities extends AbstractMapper {
     }
 
     @Override
-    public void toRecord(final Record record, final Entity entity, final Descriptor descriptor)
+    public final void toRecord(
+        final Record record, final Entity entity, final Descriptor descriptor)
         throws ActionException {
         final Collection<Entity> entities = (Collection<Entity>) this.read(entity, descriptor);
         if (CollectionUtils.isNotEmpty(entities)) {
             record.put(
-                this.defineTag(descriptor.getName()),
+                this.defineTag(descriptor.name()),
                 entities.stream().map(Entity::getId).collect(Collectors.toUnmodifiableList())
             );
         }
     }
 
     @Override
-    public boolean canApply(final Descriptor descriptor) {
-        return Collection.class.isAssignableFrom(descriptor.getType()) &&
-            Entity.class.isAssignableFrom(this.getGeneric(descriptor));
+    public final boolean canApply(final Descriptor descriptor) {
+        return Collection.class.isAssignableFrom(descriptor.type())
+            && Entity.class.isAssignableFrom(this.getGeneric(descriptor));
     }
 
-    private Class<?> getGeneric(final Descriptor descriptor) {
-        return (Class<?>) ((ParameterizedType) descriptor.getParameterized()).getActualTypeArguments()[0];
+    /**
+     * Extract generic type from provided field.
+     * @param descriptor Field descriptor.
+     * @return Generic type of collection.
+     */
+    private static Class<?> getGeneric(final Descriptor descriptor) {
+        return (Class<?>) ((ParameterizedType) descriptor.generic())
+            .getActualTypeArguments()[0];
     }
 
-    private String defineTag(final String origin) {
+    /**
+     * Define string key for record.
+     * @param origin Field name.
+     * @return Field name + Ids
+     */
+    private static String defineTag(final String origin) {
         return String.format("%sIds", origin);
     }
 }

@@ -26,17 +26,32 @@ import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.inject.Singleton;
 
+/**
+ * Map date value in string from record to entity and vice versa.
+ * Look on the mask of DateFormat.
+ *
+ * @since 0.6.0
+ */
 @Singleton
 public class MapperDate extends AbstractMapper {
 
+    /**
+     * Mask for date.
+     */
     private final ThreadLocal<SimpleDateFormat> format =
-        ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
+        ThreadLocal.withInitial(
+            () -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault())
+        );
 
     @Override
-    public void toEntity(Record record, Entity entity, Descriptor descriptor) throws ActionException {
-        final Object object = record.get(descriptor.getName());
+    public final void toEntity(
+        final Record record, final Entity entity, final Descriptor descriptor
+    )
+        throws ActionException {
+        final Object object = record.get(descriptor.name());
         final Date date;
         if (object == null) {
             date = null;
@@ -53,15 +68,18 @@ public class MapperDate extends AbstractMapper {
     }
 
     @Override
-    public void toRecord(Record record, Entity entity, Descriptor descriptor) throws ActionException {
+    public final void toRecord(
+        final Record record, final Entity entity, final Descriptor descriptor
+    )
+        throws ActionException {
         final Object target = this.read(entity, descriptor);
         if (target != null) {
-            record.put(descriptor.getName(), target);
+            record.put(descriptor.name(), target);
         }
     }
 
     @Override
-    public boolean canApply(final Descriptor descriptor) {
-        return descriptor.getType().equals(Date.class);
+    public final boolean canApply(final Descriptor descriptor) {
+        return descriptor.type().equals(Date.class);
     }
 }

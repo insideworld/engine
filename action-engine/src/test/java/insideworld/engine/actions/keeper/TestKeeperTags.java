@@ -41,6 +41,18 @@ public final class TestKeeperTags {
         new SingleTag<>("insideworld.engine.actions.keeper.TestKeeperTags.dummy");
 
     /**
+     * Dummy object one.
+     */
+    public static final SingleTag<Object> ONE =
+        new SingleTag<>("insideworld.engine.actions.keeper.TestKeeperTags.one");
+
+    /**
+     * Dummy object two.
+     */
+    public static final SingleTag<Object> TWO =
+        new SingleTag<>("insideworld.engine.actions.keeper.TestKeeperTags.two");
+
+    /**
      * Private constructor.
      */
     private TestKeeperTags() {

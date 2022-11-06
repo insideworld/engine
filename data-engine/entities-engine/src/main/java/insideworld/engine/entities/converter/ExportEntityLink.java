@@ -32,24 +32,38 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 /**
- * Export entity to DTO representation.
+ * Export entity or entities to output.
+ * @since 0.0.6
  */
 @Dependent
 public class ExportEntityLink implements Link {
 
+    /**
+     * Entity converter.
+     */
     private final EntityConverter converter;
 
+    /**
+     * Single entity tag.
+     */
     private EntityTag<?> single;
 
+    /**
+     * Multiple entities tag.
+     */
     private EntitiesTag<?> multiple;
 
+    /**
+     * Default constructor.
+     * @param converter Entity converter.
+     */
     @Inject
     public ExportEntityLink(final EntityConverter converter) {
         this.converter = converter;
     }
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         final Collection<Entity> entities = Lists.newLinkedList();
         context.getOptional(this.single).ifPresent(entities::add);
         context.getOptional(this.multiple).ifPresent(entities::addAll);
@@ -58,12 +72,24 @@ public class ExportEntityLink implements Link {
         }
     }
 
-    public ExportEntityLink setTag(final EntityTag<?> tag) {
+    /**
+     * Set single tag to export.
+     * Make single record in output.
+     * @param tag Entity tag.
+     * @return The same instance.
+     */
+    public final ExportEntityLink setTag(final EntityTag<?> tag) {
         this.single = tag;
         return this;
     }
 
-    public ExportEntityLink setTag(final EntitiesTag<?> tag) {
+    /**
+     * Set multiple tag to export.
+     * Make as many records in output than exists in collection under the tag.
+     * @param tag Multiple tag.
+     * @return The same instance.
+     */
+    public final ExportEntityLink setTag(final EntitiesTag<?> tag) {
         this.multiple = tag;
         return this;
     }

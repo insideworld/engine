@@ -94,6 +94,6 @@ public class SystemExecuteProfile implements ExecuteProfile, OnStartUp {
 
     @Override
     public final int order() {
-        return 2000;
+        return 20_000;
     }
 }

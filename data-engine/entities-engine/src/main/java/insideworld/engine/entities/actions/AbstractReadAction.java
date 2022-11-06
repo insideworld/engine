@@ -31,37 +31,74 @@ import insideworld.engine.entities.tags.StorageTags;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
+/**
+ * Abstract action to read entity by ID or IDS tags.
+ * This class is necessary to fast creation of typical actions to read entity.
+ * Input arguments:
+ * insideworld.engine.entities.tags.StorageTags#ID - for read only single entity.
+ * or
+ * insideworld.engine.entities.tags.StorageTags#IDS - for read several entities.
+ * All read entity or entities will add to output using ExportEntityLink.
+ *
+ * @param <T> Type of entity.
+ * @see ExportEntityLink
+ * @since 0.0.1
+ */
 public abstract class AbstractReadAction<T extends Entity> extends AbstractChainAction {
 
+    /**
+     * Default constructor.
+     *
+     * @param builder Link builder.
+     */
     public AbstractReadAction(final LinksBuilder builder) {
         super(builder);
     }
 
     @Override
-    protected Collection<Link> attachLinks(final LinksBuilder builder) {
-        final LinksBuilder export = builder.addLink(
-                new TypeLiteral<ReadEntityLink<T>>() {
-                },
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+        builder
+            .addLink(
+                new TypeLiteral<ReadEntityLink<T>>() { },
                 link -> link.setType(this.getType())
                     .setTag(StorageTags.ID, this.getTag())
                     .setTags(StorageTags.IDS, this.getTags()))
-            .addLink(ExportEntityLink.class, link -> link
-                .setTag(this.getTag())
-                .setTag(this.getTags()));
-        return this.afterExport(export).build();
+            .addLink(
+                ExportEntityLink.class,
+                link -> link
+                    .setTag(this.getTag())
+                    .setTag(this.getTags()));
+        this.afterExport(builder);
+        return builder.build();
     }
 
     /**
-     * @return Tag if read of single entity supported. Null if not.
+     * Tag which using to store entity in context.
+     * Return null here if you want to disable read by id.
+     *
+     * @return Entity tag.
      */
     protected abstract EntityTag<T> getTag();
 
+    /**
+     * Tag which using to store entities in context.
+     * Return null here if you want to disable read by ids.
+     *
+     * @return Entity tag.
+     */
     protected abstract EntitiesTag<T> getTags();
 
+    /**
+     * Type of entity.
+     * Using to define storage.
+     * @return Type of entity.
+     */
     protected abstract Class<T> getType();
 
-    protected LinksBuilder afterExport(final LinksBuilder builder) {
-        return builder;
-    }
+    /**
+     * Some operations which need to make after export entities.
+     * @param builder Link builder.
+     */
+    protected abstract void afterExport(LinksBuilder builder);
 
 }

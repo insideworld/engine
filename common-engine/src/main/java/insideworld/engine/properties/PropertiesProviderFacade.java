@@ -20,6 +20,7 @@
 package insideworld.engine.properties;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Priority;
@@ -38,7 +39,7 @@ public class PropertiesProviderFacade implements PropertiesProvider {
     private final Collection<Properties> providers;
 
     @Inject
-    public PropertiesProviderFacade(final Collection<Properties> providers) {
+    public PropertiesProviderFacade(final List<Properties> providers) {
         this.providers = providers.stream()
             .filter(provider -> !provider.getClass().equals(this.getClass()))
             .collect(Collectors.toList());

@@ -19,17 +19,45 @@
 
 package insideworld.engine.entities.extractor;
 
-import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.output.Output;
 import java.util.Map;
 
+/**
+ * Extractor is using to get some information from database based on schema.
+ * @since 0.0.1
+ */
 public interface Extractor {
 
+    /**
+     * Extract information by schema.
+     * @param context Map with input arguments for schema.
+     * @param schema Schema which using to extract data.
+     * @return Output with data.
+     */
     Output extract(Map<String, ?> context, String schema);
 
-    Output extract(Context context, String schema);
+    /**
+     * Extract information by schema.
+     * @param record Record with input parameters.
+     * @param schema Schema which using to extract data.
+     * @return Output with data.
+     */
+    Output extract(Record record, String schema);
 
+    /**
+     * Just execute some query and etc in database.
+     * @param context Input parameters.
+     * @param schema Schema.
+     * @return Number of results.
+     */
     int execute(Map<String, ?> context, String schema);
 
-    int execute(Context context, String schema);
+    /**
+     * Just execute some query and etc in database.
+     * @param record Input parameters.
+     * @param schema Schema.
+     * @return Number of results.
+     */
+    int execute(Record record, String schema);
 }

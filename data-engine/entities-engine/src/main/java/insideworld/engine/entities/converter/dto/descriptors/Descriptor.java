@@ -20,41 +20,14 @@
 package insideworld.engine.entities.converter.dto.descriptors;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class Descriptor {
-
-    private final String name;
-    private final Class<?> type;
-    private final Type parameterized;
-    private final Method method;
-
-    public Descriptor(
-        final String name,
-        final Class<?> type,
-        final Type parameterized,
-        final Method method) {
-        this.name = name;
-        this.type = type;
-        this.parameterized = parameterized;
-        this.method = method;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Class<?> getType() {
-        return this.type;
-    }
-
-    public Type getParameterized() {
-        return this.parameterized;
-    }
-
-    public Method getMethod() {
-        return this.method;
-    }
-
-}
+/**
+ * Descriptor. It's just data entity.
+ * @param name Field name
+ * @param type Type of field.
+ * @param generic Generic type of field.
+ * @param method Method to call.
+ * @since 0.0.1
+ */
+public record Descriptor(String name, Class<?> type, Type generic, Method method) {}

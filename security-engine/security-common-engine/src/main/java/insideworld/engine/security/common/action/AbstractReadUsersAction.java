@@ -24,7 +24,7 @@ import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.actions.links.ReadEntityLink;
 import insideworld.engine.entities.converter.ExportEntityLink;
-import insideworld.engine.entities.converter.OutputRemoveLink;
+import insideworld.engine.actions.keeper.links.OutputRemove;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.security.common.UserTags;
 import insideworld.engine.security.common.entities.User;
@@ -50,7 +50,7 @@ public abstract class AbstractReadUsersAction extends AbstractChainAction implem
                         new TypeLiteral<ReadEntityLink<User>>() {},
                         link -> link.setType(User.class).setTags(StorageTags.IDS, UserTags.USERS_EXT))
                 .addLink(ExportEntityLink.class, link -> link.setTag(UserTags.USERS_EXT))
-                .addLink(OutputRemoveLink.class, link -> link.add(UserTags.TOKEN))
+                .addLink(OutputRemove.class, link -> link.add(UserTags.TOKEN))
                 .build();
     }
 

@@ -22,47 +22,77 @@ package insideworld.engine.entities.converter.dto.mapper;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Abstract mapper with generic methods which provide call setter or getter.
+ *
+ * @since 0.6.0
+ */
 public abstract class AbstractMapper implements Mapper {
 
-    protected final void write(final Entity entity,
-                               final Object target,
-                               final Descriptor descriptor) throws ActionException {
+    /**
+     * Call write method from entity object.
+     *
+     * @param entity Entity.
+     * @param target What needs to write.
+     * @param descriptor Field descriptor.
+     * @throws ActionException Can't write field.
+     */
+    protected static void write(
+        final Entity entity, final Object target, final Descriptor descriptor)
+        throws ActionException {
         try {
-            final Method method = descriptor.getMethod();
+            final Method method = descriptor.method();
             if (method != null) {
                 method.invoke(entity, target);
             }
-        } catch (final Exception exp) {
+        } catch (final
+            IllegalAccessException
+                | IllegalArgumentException
+                    | InvocationTargetException exp) {
             throw new ActionException(
-                String.format("Can't write field %s with type %s from %s",
-                    descriptor.getName(), descriptor.getType(), entity.getClass()
+                String.format(
+                    "Can't write field %s with type %s from %s",
+                    descriptor.name(), descriptor.type(), entity.getClass()
                 ),
                 exp
             );
         }
     }
 
-    protected final Object read(final Entity entity,
-                                final Descriptor descriptor) throws ActionException {
-        final Method method = descriptor.getMethod();
+    /**
+     * Call read method from entity object.
+     *
+     * @param entity Entity.
+     * @param descriptor Field descriptor.
+     * @return Field value.
+     * @throws ActionException Can't read field.
+     */
+    protected static Object read(
+        final Entity entity, final Descriptor descriptor)
+        throws ActionException {
+        final Method method = descriptor.method();
         final Object target;
-        if (method != null) {
+        if (method == null) {
+            target = null;
+        } else {
             try {
                 target = method.invoke(entity);
-            } catch (final Exception exp) {
+            } catch (final
+                IllegalAccessException
+                    | IllegalArgumentException
+                        | InvocationTargetException exp) {
                 throw new ActionException(
-                    String.format("Can't read field %s with type %s from %s",
-                        descriptor.getName(), descriptor.getType(), entity.getClass()
+                    String.format(
+                        "Can't read field %s with type %s from %s",
+                        descriptor.name(), descriptor.type(), entity.getClass()
                     ),
                     exp
                 );
             }
-        } else {
-            target = null;
         }
         return target;
     }
-
 }

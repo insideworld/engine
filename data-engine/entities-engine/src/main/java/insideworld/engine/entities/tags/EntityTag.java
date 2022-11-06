@@ -22,8 +22,17 @@ package insideworld.engine.entities.tags;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 import insideworld.engine.entities.Entity;
 
+/**
+ * Tag to keep in record single entity value.
+ * @param <T> Entity type.
+ * @since 0.0.1
+ */
 public class EntityTag<T extends Entity> extends SingleTag<T> {
 
+    /**
+     * Default constructor.
+     * @param tag Entity tag.
+     */
     public EntityTag(final String tag) {
         super(tag);
     }

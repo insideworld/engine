@@ -21,8 +21,16 @@ package insideworld.engine.entities;
 
 import java.io.Serializable;
 
+/**
+ * Entity interface.
+ * @since 0.0.1
+ */
 public interface Entity extends Serializable {
 
+    /**
+     * Get id of this entity.
+     * @return ID.
+     */
     long getId();
 
 }

@@ -21,7 +21,6 @@ package insideworld.engine.data.jpa;
 
 
 import insideworld.engine.entities.Entity;
-import javax.management.relation.Role;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

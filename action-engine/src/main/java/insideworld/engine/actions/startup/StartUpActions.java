@@ -76,6 +76,6 @@ public class StartUpActions implements OnStartUp {
 
     @Override
     public final int order() {
-        return 3000;
+        return 30_000;
     }
 }

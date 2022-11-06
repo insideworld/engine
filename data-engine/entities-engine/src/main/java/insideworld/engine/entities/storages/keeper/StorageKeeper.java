@@ -19,13 +19,24 @@
 
 package insideworld.engine.entities.storages.keeper;
 
-
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 
+/**
+ * Storage keeper.
+ * Can provide necessary storage for entity type.
+ * @since 0.0.1
+ */
 public interface StorageKeeper {
 
+    /**
+     * Get storage by entity type.
+     * @param type Entity type.
+     * @return Storage for this type of entity.
+     * @param <T> Entity type.
+     * @throws StorageException Can't find storage for this entity.
+     */
     <T extends Entity> Storage<T> getStorage(Class<? extends T> type) throws StorageException;
 
 }

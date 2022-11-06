@@ -24,36 +24,60 @@ import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.injection.ObjectFactory;
-import java.util.Collection;
+import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.startup.StartupException;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Hash map based storage keeper.
+ *
+ * @since 0.0.1
+ */
 @Singleton
-public class HashStorageKeeper implements StorageKeeper {
+public class HashStorageKeeper implements StorageKeeper, OnStartUp {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(HashStorageKeeper.class);
 
+    /**
+     * Map of storages.
+     * Key - entity type.
+     * Value - storage for this entity type.
+     */
     private final Map<Class<? extends Entity>, Storage<?>> storages;
 
     /**
-     * Crutch for Quarkus because this stupid DI can't works with wildcards
-     * @param storages
+     * Collection of all storages.
+     */
+    private final List<Storage<?>> all;
+
+    /**
+     * Object factory.
+     */
+    private final ObjectFactory factory;
+
+    /**
+     * Default constructor.
+     *
+     * @param all List of all storages.
+     * @param factory Object factory.
      */
     @Inject
-    public HashStorageKeeper(final Collection<Storage> storages,
-                             final ObjectFactory factory) throws StorageException {
-        this.storages = Maps.newHashMapWithExpectedSize(storages.size() * 2);
-        for (final Storage storage : storages) {
-            this.storages.put(this.findImplementation(storage, factory), storage);
-            this.storages.put(storage.forEntity(), storage);
-        }
+    public HashStorageKeeper(final List<Storage<?>> all, final ObjectFactory factory) {
+        this.storages = Maps.newHashMapWithExpectedSize(all.size() * 2);
+        this.all = all;
+        this.factory = factory;
     }
 
     @Override
-    public <T extends Entity> Storage<T> getStorage(final Class<? extends T> type)
+    public final <T extends Entity> Storage<T> getStorage(final Class<? extends T> type)
         throws StorageException {
         final Storage<T> storage;
         if (this.storages.containsKey(type)) {
@@ -64,18 +88,43 @@ public class HashStorageKeeper implements StorageKeeper {
         return storage;
     }
 
-    private Class<? extends Entity> findImplementation(
-        final Storage storage, final ObjectFactory factory) throws StorageException {
-        HashStorageKeeper.LOGGER.trace("Init storage " + storage.getClass().getName());
-        final Object object = factory.createObject(storage.forEntity());
-        if (object == null) {
-            throw new StorageException(String.format(
-                "Can't init HashStorage keeper because can't find implementation of %s for storage %s",
-                storage.forEntity().getName(),
-                storage.getClass().getName()
-            ));
+    @Override
+    public final void startUp() throws StartupException {
+        for (final Storage<?> storage : this.all) {
+            try {
+                this.storages.put(this.findImplementation(storage), storage);
+            } catch (final StorageException exp) {
+                throw new StartupException(exp);
+            }
+            this.storages.put(storage.forEntity(), storage);
         }
-        return (Class<? extends Entity>) object.getClass();
     }
 
+    @Override
+    public final int order() {
+        return 5000;
+    }
+
+    /**
+     * Find implementation of storage using object factory if in storage provided interface type.
+     *
+     * @param storage Storage.
+     * @return Implementation type of entity for this storage.
+     * @throws StorageException Can't find implementation.
+     */
+    private Class<? extends Entity> findImplementation(final Storage<?> storage)
+        throws StorageException {
+        HashStorageKeeper.LOGGER.trace("Init storage {} ", storage.getClass().getName());
+        final Class<? extends Entity> type = this.factory.implementation(storage.forEntity());
+        if (type == null) {
+            throw new StorageException(
+                String.format(
+                    "Can't init HashStorage keeper because can't find implementation of %s for storage %s",
+                    storage.forEntity().getName(),
+                    storage.getClass().getName()
+                )
+            );
+        }
+        return type;
+    }
 }

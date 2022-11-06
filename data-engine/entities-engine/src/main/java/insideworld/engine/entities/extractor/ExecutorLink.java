@@ -28,25 +28,45 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.commons.lang3.Validate;
 
+/**
+ * Link to call executor from chain action.
+ * Need to set schema at init.
+ * @since 0.0.1
+ */
 @Dependent
 public class ExecutorLink implements Link {
 
+    /**
+     * Extractor.
+     */
     private final Extractor extractor;
+
+    /**
+     * Schema.
+     */
     private String schema;
 
+    /**
+     * Default constructor.
+     * @param extractor Extractor instance.
+     */
     @Inject
     public ExecutorLink(final Extractor extractor) {
         this.extractor = extractor;
     }
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         Validate.notNull(this.schema, "You didn't init a schema!");
         output.createRecord(this.schema)
             .put(StorageTags.COUNT, this.extractor.execute(context, this.schema));
     }
 
-    public void setSchema(final String schema) {
-        this.schema = schema;
+    /**
+     * Set schema for call.
+     * @param pschema Schema.
+     */
+    public void setSchema(final String pschema) {
+        this.schema = pschema;
     }
 }

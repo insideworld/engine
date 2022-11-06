@@ -23,21 +23,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import insideworld.engine.entities.converter.dto.mapper.Mapper;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Read descriptors. Using to read field value from entity.
+ * Will skip method which marked JsonIgnore annotation.
+ * @since 0.0.1
+ */
 @Singleton
 public class ReadDescriptors extends AbstractDescriptors {
 
+    /**
+     * Default constructor.
+     * @param mappers Mappers.
+     */
     @Inject
-    public ReadDescriptors(final Collection<Mapper> mappers) {
+    public ReadDescriptors(final List<Mapper> mappers) {
         super(mappers);
     }
 
     @Override
-    protected Descriptor createDescriptor(final PropertyDescriptor descriptor) {
+    protected final Descriptor createDescriptor(final PropertyDescriptor descriptor) {
         final Descriptor result;
         final Method method = descriptor.getReadMethod();
         if (method == null || method.isAnnotationPresent(JsonIgnore.class)) {

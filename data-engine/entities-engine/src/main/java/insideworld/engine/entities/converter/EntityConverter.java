@@ -23,22 +23,28 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 
-
+/**
+ * Interface to convert entity to record and vice versa.
+ * @see Entity
+ * @since 0.0.1
+ */
 public interface EntityConverter {
 
     /**
      * Map entity to record.
-     * @param entity
-     * @param record
-     * @throws ActionException
+     * @param entity Entity to convert.
+     * @return Record with raw values.
+     * @throws ActionException Can't convert entity.
      */
     Record convert(Entity entity) throws ActionException;
 
     /**
      * Map record to entity.
-     * @param entity
-     * @param record
-     * @throws ActionException
+     * @param record Record with raw entity.
+     * @param type Type of entity.
+     * @param <T> Type of entity.
+     * @return Entity.
+     * @throws ActionException Can't convert entity.
      */
     <T extends Entity> T convert(Record record, Class<T> type) throws ActionException;
 

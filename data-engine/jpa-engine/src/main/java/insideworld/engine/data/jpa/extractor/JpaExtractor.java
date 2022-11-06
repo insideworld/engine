@@ -20,10 +20,9 @@
 package insideworld.engine.data.jpa.extractor;
 
 import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.data.jpa.schema.QueriesStorage;
 import insideworld.engine.data.jpa.schema.Queries;
+import insideworld.engine.data.jpa.schema.QueriesStorage;
 import insideworld.engine.entities.extractor.Extractor;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.List;
@@ -69,8 +68,8 @@ public class JpaExtractor implements Extractor {
     }
 
     @Override
-    public Output extract(final Context context, String schema) {
-        return this.extract(context.values(), schema);
+    public Output extract(final Record record, String schema) {
+        return this.extract(record.values(), schema);
     }
 
     @Override
@@ -79,8 +78,8 @@ public class JpaExtractor implements Extractor {
     }
 
     @Override
-    public int execute(final Context context, final String schema) {
-        return this.execute(context.values(), schema);
+    public int execute(final Record record, final String schema) {
+        return this.execute(record.values(), schema);
     }
 
     private Query createQuery(final Map<String, ?> context, final String schema) {

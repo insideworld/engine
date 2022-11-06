@@ -23,7 +23,7 @@ import insideworld.engine.entities.Entity;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public abstract class AbstractCrudGenericStorage<T extends Entity, C extends T>
+public abstract class  AbstractCrudGenericStorage<T extends Entity, C extends T>
     extends AbstractCrudStorage<T, C> {
 
     private final Class<C> crud;

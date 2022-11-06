@@ -24,14 +24,38 @@ import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 
+/**
+ * Mapper for data.
+ * Using descriptor to identify field and row in record to propagate.
+ * @since 0.6.0
+ */
 public interface Mapper {
 
+    /**
+     * Map record value to entity field.
+     * @param record Record.
+     * @param entity Entity.
+     * @param descriptor What needs to map.
+     * @throws ActionException Something went wrong.
+     */
     void toEntity(Record record, Entity entity, Descriptor descriptor)
         throws ActionException;
 
+    /**
+     * Map entity field to record value.
+     * @param record Record.
+     * @param entity Entity.
+     * @param descriptor What needs to map.
+     * @throws ActionException Something went wrong.
+     */
     void toRecord(Record record, Entity entity, Descriptor descriptor)
         throws ActionException;
 
+    /**
+     * Can apply provided descriptor to this mapper.
+     * @param descriptor Descriptor.
+     * @return If can - true, if not - false.
+     */
     boolean canApply(Descriptor descriptor);
 
 }

@@ -27,25 +27,45 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.commons.lang3.Validate;
 
+/**
+ * Link to call extractor from chain action.
+ * Need to set schema at init.
+ * @since 0.0.1
+ */
 @Dependent
 public class ExtractorLink implements Link {
 
+    /**
+     * Extractor.
+     */
     private final Extractor extractor;
+
+    /**
+     * Schema.
+     */
     private String schema;
 
+    /**
+     * Default constructor.
+     * @param extractor Extractor.
+     */
     @Inject
     public ExtractorLink(final Extractor extractor) {
         this.extractor = extractor;
     }
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         Validate.notNull(this.schema, "You didn't init a schema!");
         final Output result = this.extractor.extract(context, this.schema);
         output.merge(result);
     }
 
-    public void setSchema(final String schema) {
-        this.schema = schema;
+    /**
+     * Schema to call.
+     * @param pschema Schema.
+     */
+    public final void setSchema(final String pschema) {
+        this.schema = pschema;
     }
 }

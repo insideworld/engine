@@ -30,26 +30,34 @@ import javax.inject.Singleton;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Tag mapper for base entity.
- *
+ * Mapper for entity.
+ * Will add or take in record value with key field name + postfix Id.
  * @since 0.0.1
  */
 @Singleton
 public class MapperEntity extends AbstractMapper {
 
+    /**
+     * Storage keeper.
+     */
     private final StorageKeeper storages;
 
+    /**
+     * Default constructor.
+     * @param storages Storage keeper.
+     */
     @Inject
     public MapperEntity(final StorageKeeper storages) {
         this.storages = storages;
     }
 
     @Override
-    public void toEntity(final Record record, final Entity entity, final Descriptor descriptor)
+    public final void toEntity(
+        final Record record, final Entity entity, final Descriptor descriptor)
         throws ActionException {
-        final String tag = this.defineTag(descriptor.getName());
+        final String tag = this.defineTag(descriptor.name());
         if (record.contains(tag)) {
-            final Class<?> type = descriptor.getType();
+            final Class<?> type = descriptor.type();
             Validate.isTrue(Entity.class.isAssignableFrom(type));
             final long id = record.get(tag);
             final Entity target;
@@ -67,20 +75,26 @@ public class MapperEntity extends AbstractMapper {
     }
 
     @Override
-    public void toRecord(final Record record, final Entity entity, final Descriptor descriptor)
+    public final void toRecord(
+        final Record record, final Entity entity, final Descriptor descriptor)
         throws ActionException {
         final Entity target = (Entity) this.read(entity, descriptor);
         if (target != null) {
-            record.put(this.defineTag(descriptor.getName()), target.getId());
+            record.put(this.defineTag(descriptor.name()), target.getId());
         }
     }
 
     @Override
-    public boolean canApply(final Descriptor descriptor) {
-        return Entity.class.isAssignableFrom(descriptor.getType());
+    public final boolean canApply(final Descriptor descriptor) {
+        return Entity.class.isAssignableFrom(descriptor.type());
     }
 
-    private String defineTag(final String origin) {
+    /**
+     * Define string key for record.
+     * @param origin Field name.
+     * @return Field name + Id
+     */
+    private static String defineTag(final String origin) {
         return String.format("%sId", origin);
     }
 }

@@ -22,8 +22,17 @@ package insideworld.engine.entities.tags;
 import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.entities.Entity;
 
+/**
+ * Tag to keep in record multiple entities values.
+ * @param <T> Entity type.
+ * @since 0.0.1
+ */
 public class EntitiesTag<T extends Entity> extends MultipleTag<T> {
 
+    /**
+     * Default constructor.
+     * @param tag Entity tag.
+     */
     public EntitiesTag(final String tag) {
         super(tag);
     }

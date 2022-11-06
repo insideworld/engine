@@ -21,6 +21,8 @@ package insideworld.engine.entities.converter.dto.descriptors;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.mapper.Mapper;
 import java.beans.IntrospectionException;
@@ -31,40 +33,87 @@ import java.util.Map;
 import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 
-
+/**
+ * Abstract descriptors.
+ * Using to describe fields in entity to provide work with it.
+ * @since 0.0.1
+ */
 public abstract class AbstractDescriptors {
 
     /**
-     *
+     * Object for lock.
      */
-    public final Map<Class<? extends Entity>, Pair<Mapper, Descriptor>[]> descriptors =
-        Maps.newConcurrentMap();
+    private final Object lock;
 
+    /**
+     * Map of descriptors.
+     * Key - type of entity.
+     * Value - array of pair mapper and descriptor.
+     */
+    private final Map<Class<? extends Entity>, Pair<Mapper, Descriptor>[]> descriptors;
+
+    /**
+     * Collection of all mappers.
+     */
     private final Collection<Mapper> mappers;
 
+    /**
+     * Default constructor.
+     * @param mappers Mappers.
+     */
     @Inject
     public AbstractDescriptors(final Collection<Mapper> mappers) {
         this.mappers = mappers;
+        this.descriptors = Maps.newConcurrentMap();
+        this.lock = new Object();
     }
 
-    public Pair<Mapper, Descriptor>[] getDescriptors(final Class<? extends Entity> type) {
-        return this.descriptors.containsKey(type) ?
-            this.descriptors.get(type) :
-            this.getDescriptorsSync(type);
-    }
-
-    //TODO: Make rental lock.
-    private synchronized Pair<Mapper, Descriptor>[] getDescriptorsSync(
-        final Class<? extends Entity> type) {
-        if (!this.descriptors.containsKey(type)) {
-            this.descriptors.put(type, this.createDescriptors(type));
+    /**
+     * Get a pair of descriptors by entity.
+     * @param type Entity type.
+     * @return Pairs of mapper and descriptor.
+     */
+    public final Pair<Mapper, Descriptor>[] getDescriptors(final Class<? extends Entity> type) {
+        final Pair<Mapper, Descriptor>[] result;
+        if (this.descriptors.containsKey(type)) {
+            result = this.descriptors.get(type);
+        } else {
+            result = this.getDescriptorsSync(type);
         }
-        return this.descriptors.get(type);
+        return result;
     }
 
+    /**
+     * Create custom descriptor from property descriptor.
+     * @param descriptor Java beans descriptor.
+     * @return Custom descriptor.
+     */
+    protected abstract Descriptor createDescriptor(PropertyDescriptor descriptor);
+
+    /**
+     * Sync method to cache descriptors internally.
+     * @param type Entity type.
+     * @return Pairs of mapper and descriptor.
+     */
+    private Pair<Mapper, Descriptor>[] getDescriptorsSync(final Class<? extends Entity> type) {
+        synchronized (this.lock) {
+            if (!this.descriptors.containsKey(type)) {
+                this.descriptors.put(type, this.createDescriptors(type));
+            }
+            return this.descriptors.get(type);
+        }
+    }
+
+    /**
+     * Create a pair of mapper and descriptor for specific entity.
+     * Using Introspector to take all information about field, getters and setters.
+     * @param type Entity type.
+     * @return Pairs of mapper and descriptor.
+     */
     private Pair<Mapper, Descriptor>[] createDescriptors(final Class<? extends Entity> type) {
         try {
-            final var beans = Introspector.getBeanInfo(type).getPropertyDescriptors();
+            final var beans = Introspector.getBeanInfo(type)
+                .getPropertyDescriptors();
             final Collection<Pair<Mapper, Descriptor>> result =
                 Lists.newArrayListWithCapacity(beans.length);
             for (final var bean : beans) {
@@ -79,13 +128,9 @@ public abstract class AbstractDescriptors {
                     }
                 }
             }
-            return result.toArray(new Pair[result.size()]);
+            return result.toArray(new Pair[0]);
         } catch (final IntrospectionException exp) {
-            throw new RuntimeException(exp);
+            throw new ActionRuntimeException(new ActionException("Can't read bean", exp));
         }
     }
-
-    protected abstract Descriptor createDescriptor(PropertyDescriptor descriptor);
 }
-
-

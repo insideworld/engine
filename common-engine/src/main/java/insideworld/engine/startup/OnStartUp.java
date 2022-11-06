@@ -21,7 +21,7 @@ package insideworld.engine.startup;
 
 public interface OnStartUp {
 
-    void startUp();
+    void startUp() throws StartupException;
 
     int order();
 

@@ -24,39 +24,60 @@ import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.StorageException;
-import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntityTag;
-import insideworld.engine.entities.tags.StorageTags;
-import insideworld.engine.injection.ObjectFactory;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+/**
+ * Import context to entity representation.
+ * @since 0.6.0
+ */
 @Dependent
 public class ImportEntityLink implements Link {
 
+    /**
+     * Converter.
+     */
     private final EntityConverter converter;
+
+    /**
+     * Entity tag.
+     */
     private EntityTag<? extends Entity> tag;
+
+    /**
+     * Type of entity.
+     */
     private Class<? extends Entity> type;
 
+    /**
+     * Default constructor.
+     * @param converter Entity converter.
+     */
     @Inject
     public ImportEntityLink(final EntityConverter converter) {
         this.converter = converter;
     }
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         final Entity entity = this.converter.convert(context, this.type);
         context.put(this.tag.getTag(), entity);
     }
 
     @Override
-    public boolean can(final Context context) {
+    public final boolean can(final Context context) {
         return !context.contains(this.tag);
     }
 
-    public <T extends Entity> void setTag(final EntityTag<T> tag, final Class<T> type) {
-        this.tag = tag;
-        this.type = type;
+    /**
+     * Set tag and type to import.
+     * @param ptag Entity tag.
+     * @param ptype Entity type.
+     * @param <T> Entity type.
+     */
+    public final  <T extends Entity> void setTag(final EntityTag<T> ptag, final Class<T> ptype) {
+        this.tag = ptag;
+        this.type = ptype;
     }
 }

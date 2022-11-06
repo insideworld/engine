@@ -65,6 +65,6 @@ public class ActionsInit implements OnStartUp {
 
     @Override
     public final int order() {
-        return 1000;
+        return 10_000;
     }
 }

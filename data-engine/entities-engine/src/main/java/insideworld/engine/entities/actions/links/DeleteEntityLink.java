@@ -34,21 +34,47 @@ import java.util.Collections;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+/**
+ * Delete entities link.
+ * Using to call delete method in storage for specific entity or entities from context.
+ * This is link required to init. See setTag, setTags and setType method comments.
+ * @param <T> Entity type to delete.
+ * @since 0.0.1
+ */
 @Dependent
 public class DeleteEntityLink<T extends Entity> implements Link {
 
+    /**
+     * Storage keeper.
+     */
     private final StorageKeeper storages;
+
+    /**
+     * Storage for this link.
+     */
     private Storage<T> storage;
+
+    /**
+     * Tag for single entity.
+     */
     private EntityTag<T> single;
+
+    /**
+     * Tag for collection of entitites.
+     */
     private EntitiesTag<T> multiple;
 
+    /**
+     * Default constructor.
+     * @param storages Storage keeper.
+     */
     @Inject
     public DeleteEntityLink(final StorageKeeper storages) {
         this.storages = storages;
     }
 
     @Override
-    public void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws ActionException {
         if (this.single != null && context.contains(this.single)) {
             this.storage.delete(Collections.singleton(context.get(this.single)));
         } else {
@@ -59,33 +85,35 @@ public class DeleteEntityLink<T extends Entity> implements Link {
     }
 
     /**
-     * Set single tag to read.
-     * @param read ID tag with entity ID.
-     * @param put Entity tag to put in context.
+     * Set single tag to delete.
+     * Will call delete for entity keeping under this tag.
+     * @param psingle Single entity tag.
      * @return The same instance.
      */
-    public DeleteEntityLink<T> setTag(final EntityTag<T> single) {
-        this.single = single;
+    public DeleteEntityLink<T> setTag(final EntityTag<T> psingle) {
+        this.single = psingle;
         return this;
     }
 
     /**
-     * Set multiple tag to read.
-     * @param read ID's tag with entity ID's.
-     * @param put Entities tag to put in context.
+     * Set multiple tag to delete.
+     * Will call delete for entities keeping under this tag.
+     * @param pmultiple Single entity tag.
      * @return The same instance.
      */
-    public DeleteEntityLink<T> setTags(final EntitiesTag<T> multiple) {
-        this.multiple = multiple;
+    public final DeleteEntityLink<T> setTags(final EntitiesTag<T> pmultiple) {
+        this.multiple = pmultiple;
         return this;
     }
 
     /**
      * Set type of entity.
+     * It's necessary to define which storage need to use.
      * @param type Entity type.
      * @return The same instance
+     * @throws ActionRuntimeException If storage can't find for provided type.
      */
-    public DeleteEntityLink<T> setType(final Class<T> type) {
+    public final DeleteEntityLink<T> setType(final Class<T> type) {
         try {
             this.storage = this.storages.getStorage(type);
         } catch (final StorageException exp) {
