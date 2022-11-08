@@ -20,12 +20,12 @@
 package insideworld.engine.actions.keeper.links;
 
 import com.google.common.collect.Lists;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
+import insideworld.engine.exception.CommonException;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
@@ -43,7 +43,7 @@ public class OutputRemove implements Link {
     private final Collection<String> remove = Lists.newLinkedList();
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws CommonException {
         for (final Record record : output) {
             record.values().keySet().removeAll(this.remove);
         }

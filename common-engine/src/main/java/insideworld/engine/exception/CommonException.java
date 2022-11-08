@@ -20,25 +20,41 @@
 package insideworld.engine.exception;
 
 /**
- * Common exception for all exceptions in system.
+ * Common exception for all exceptions in engine.
  * @since 0.14.0
  */
-public class CommonException extends Exception {
+public abstract class CommonException extends Exception {
 
-    public CommonException(final Exception exception) {
+    /**
+     * Create exception based on another exception.
+     * @param exception Exception.
+     */
+    public CommonException(final Throwable exception) {
         super(exception);
+        this.module();
     }
 
-    public CommonException(final String message) {
-        super(message);
+    /**
+     * Create exception based on string format message.
+     * @param message String format message.
+     * @param args String format args.
+     */
+    public CommonException(final String message, final Object... args) {
+        super(String.format(message, args));
+        this.module();
     }
 
-    public CommonException(final String message, final Exception exception) {
-        super(message, exception);
-    }
-
-    public CommonException(final Exception exception, final String message, final Object... args) {
+    /**
+     * Create exception based on another exception with string format message.
+     * @param exception Exception.
+     * @param message String format message.
+     * @param args String format args.
+     */
+    public CommonException(final Throwable exception, final String message, final Object... args) {
         super(String.format(message, args), exception);
+        this.module();
     }
+
+    protected abstract String module();
 
 }

@@ -22,6 +22,7 @@ package insideworld.engine.actions;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Action interface.
@@ -37,11 +38,19 @@ public interface Action {
      * Execute an action.
      * @param context Context is using for input data.
      * @param output Output is using for store result of the action.
-     * @throws ActionException Exception during action execution.
+     * @throws CommonException Exception during action execution.
      * @see Context
      * @see Output
      */
-    void execute(Context context, Output output) throws ActionException;
+    void execute(Context context, Output output) throws CommonException;
+
+    /**
+     * Make some inits before call action.
+     * @throws ActionException Some exception at init.
+     */
+    default void init() throws ActionException {
+        //By default - nothing to do.
+    }
 
     /**
      * Key of action in string representation.

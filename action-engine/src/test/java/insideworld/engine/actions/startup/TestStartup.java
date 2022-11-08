@@ -22,6 +22,7 @@ package insideworld.engine.actions.startup;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -52,9 +53,10 @@ class TestStartup {
      * was executed before.
      * ER:
      * Should present inited tag with true value.
+     * @throws CommonException Exception.
      */
     @Test
-    final void test() {
+    final void test() throws CommonException {
         final Context context = this.executor.createContext();
         this.executor.execute(TestStartupAction.class, context);
         assert Boolean.TRUE.equals(context.get("inited"));

@@ -22,7 +22,6 @@ package insideworld.engine.actions.chain;
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
-import java.util.function.Consumer;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
@@ -64,9 +63,9 @@ public class LinksBuilderFactory implements LinksBuilder {
 
     @Override
     public final  <T extends Link> LinksBuilder addLink(
-        final Class<T> type, final Consumer<T> init) {
+        final Class<T> type, final LinkConsumer<T> init) throws LinkInitException {
         final T link = this.factory.createObject(type);
-        init.accept(link);
+        init.init(link);
         this.links.add(link);
         return this;
     }
@@ -79,10 +78,11 @@ public class LinksBuilderFactory implements LinksBuilder {
     }
 
     @Override
-    public final  <T extends Link> LinksBuilder addLink(
-        final TypeLiteral<T> type, final Consumer<T> init) {
+    public final <T extends Link> LinksBuilder addLink(
+        final TypeLiteral<T> type, final LinkConsumer<T> init)
+        throws LinkInitException {
         final T link = this.factory.createObject(type);
-        init.accept(link);
+        init.init(link);
         this.links.add(link);
         return this;
     }

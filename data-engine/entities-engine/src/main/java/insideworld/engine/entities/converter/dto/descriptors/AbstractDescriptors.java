@@ -22,7 +22,6 @@ package insideworld.engine.entities.converter.dto.descriptors;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.mapper.Mapper;
 import java.beans.IntrospectionException;

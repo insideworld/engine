@@ -21,7 +21,7 @@ package insideworld.engine.jobs.common;
 
 import com.google.common.collect.ImmutableMap;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.jobs.common.entity.JobEntity;
 
 import io.quarkus.runtime.Startup;

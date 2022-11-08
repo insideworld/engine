@@ -19,9 +19,9 @@
 
 package insideworld.engine.actions.chain;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Link of chain.
@@ -35,9 +35,9 @@ public interface Link {
      * Execute logic of link.
      * @param context Context.
      * @param output Output.
-     * @throws ActionException Action exception during process action.
+     * @throws CommonException Action exception during process action.
      */
-    void process(Context context, Output output) throws ActionException;
+    void process(Context context, Output output) throws CommonException;
 
     /**
      * Can execute this link.

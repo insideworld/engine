@@ -19,10 +19,10 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.exception.CommonException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
@@ -39,7 +39,7 @@ public abstract class AbstractMapper<D, E> implements Mapper {
     @Override
     public final void toEntity(
         final Record record, final Entity entity, final Descriptor descriptor)
-        throws CommonException {
+        throws StorageException {
         final String tag = this.defineTag(descriptor.name());
         if (record.contains(tag)) {
             AbstractMapper.write(entity, this.toEntity(record.get(tag), descriptor), descriptor);
@@ -51,7 +51,7 @@ public abstract class AbstractMapper<D, E> implements Mapper {
     @Override
     public final void toRecord(
         final Record record, final Entity entity, final Descriptor descriptor)
-        throws CommonException {
+        throws StorageException {
         final D target = this.toRecord(
             (E) AbstractMapper.read(entity, descriptor),
             descriptor
@@ -71,7 +71,7 @@ public abstract class AbstractMapper<D, E> implements Mapper {
      * @throws CommonException Can't parse.
      */
     protected abstract E toEntity(D target, Descriptor descriptor)
-        throws CommonException;
+        throws StorageException;
 
     /**
      * Convert from entity to record.
@@ -108,18 +108,18 @@ public abstract class AbstractMapper<D, E> implements Mapper {
      * @param entity Entity.
      * @param target What needs to write.
      * @param descriptor Field descriptor.
-     * @throws CommonException Can't write field.
+     * @throws StorageException Can't write field.
      */
     private static void write(
         final Entity entity, final Object target, final Descriptor descriptor)
-        throws CommonException {
+        throws StorageException {
         try {
             descriptor.method().invoke(entity, target);
         } catch (final
             IllegalAccessException
                 | IllegalArgumentException
                     | InvocationTargetException exp) {
-            throw new CommonException(
+            throw new StorageException(
                 exp,
                 "Can't write field %s with type %s from %s",
                 descriptor.name(), descriptor.type(), entity.getClass()
@@ -136,14 +136,14 @@ public abstract class AbstractMapper<D, E> implements Mapper {
      * @throws CommonException Can't read field.
      */
     private static Object read(final Entity entity, final Descriptor descriptor)
-        throws CommonException {
+        throws StorageException {
         try {
             return descriptor.method().invoke(entity);
         } catch (final
             IllegalAccessException
                 | IllegalArgumentException
                     | InvocationTargetException exp) {
-            throw new CommonException(
+            throw new StorageException(
                 exp,
                 "Can't read field %s with type %s from %s",
                 descriptor.name(), descriptor.type(), entity.getClass()

@@ -22,7 +22,7 @@ package insideworld.engine.entities.storages.keeper;
 import com.google.common.collect.Maps;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
 import insideworld.engine.startup.StartupException;

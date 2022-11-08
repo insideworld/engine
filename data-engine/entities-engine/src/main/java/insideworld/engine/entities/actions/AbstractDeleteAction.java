@@ -19,6 +19,7 @@
 
 package insideworld.engine.entities.actions;
 
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.chain.LinksBuilder;
@@ -52,7 +53,7 @@ public abstract class AbstractDeleteAction<T extends Entity> extends AbstractCha
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) throws ActionException {
         return builder
             .addLink(
                 new TypeLiteral<ReadEntityLink<T>>() {

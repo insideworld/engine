@@ -24,7 +24,7 @@ import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.tests.data.SomeEntity;
 import insideworld.engine.tests.data.TxTags;

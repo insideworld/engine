@@ -20,10 +20,9 @@
 package insideworld.engine.tests.integration.tests.transactions;
 
 import insideworld.engine.actions.executor.ClassActionExecutor;
-import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.tests.data.CrudSomeEntity;
 import insideworld.engine.tests.data.SomeEntity;
 import insideworld.engine.tests.data.SomeNestedEntity;

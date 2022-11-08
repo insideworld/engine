@@ -19,10 +19,8 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.exception.CommonException;
 import javax.inject.Inject;

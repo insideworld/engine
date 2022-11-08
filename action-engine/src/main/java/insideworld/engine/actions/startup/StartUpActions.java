@@ -23,6 +23,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.OnStartupAction;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +63,7 @@ public class StartUpActions implements OnStartUp {
     }
 
     @Override
-    public final void startUp() {
+    public final void startUp() throws CommonException {
         for (final Action action : this.actions) {
             if (action.getClass().isAnnotationPresent(OnStartupAction.class)) {
                 this.executor.execute(

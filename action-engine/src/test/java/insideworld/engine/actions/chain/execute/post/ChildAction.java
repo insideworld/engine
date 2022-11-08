@@ -20,10 +20,10 @@
 package insideworld.engine.actions.chain.execute.post;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -36,7 +36,7 @@ import javax.inject.Singleton;
 class ChildAction implements Action {
 
     @Override
-    public final void execute(final Context context, final Output output) throws ActionException {
+    public final void execute(final Context context, final Output output) throws CommonException {
         context.put(TestChainTags.OUTPUT_ADDITIONAL, "ChildAction");
         context.cloneTag(TestChainTags.UUID, output.createRecord());
         output.createRecord();

@@ -21,7 +21,7 @@ package insideworld.engine.entities.storages.keeper;
 
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 
 /**
  * Storage keeper.

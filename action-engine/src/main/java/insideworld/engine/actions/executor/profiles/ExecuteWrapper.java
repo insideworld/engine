@@ -20,9 +20,9 @@
 package insideworld.engine.actions.executor.profiles;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 
 /**
@@ -42,9 +42,9 @@ public interface ExecuteWrapper {
      * @param action Action instance.
      * @param context Context.
      * @param output Output instance.
-     * @throws ActionException Some exception.
+     * @throws CommonException Some exception.
      */
-    void execute(Action action, Context context, Output output) throws ActionException;
+    void execute(Action action, Context context, Output output) throws CommonException;
 
     /**
      * Order of execute profile.

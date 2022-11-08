@@ -25,6 +25,7 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -54,9 +55,10 @@ class TestPreExecute {
      * TC:
      * Execute action with pre-execute with false condition if contains TWO tag.
      * ER: Output should be empty because child action shouldn't execute.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPreExecuteFalse() {
+    final void testPreExecuteFalse() throws CommonException {
         this.preExecuteFalse(ParentAction.class);
     }
 
@@ -64,33 +66,37 @@ class TestPreExecute {
      * TC:
      * Execute action with pre-execute with true result and add to context TWO tag.
      * ER: Output should contain ONE and TWO tag.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPreExecuteTrue() {
+    final void testPreExecuteTrue() throws CommonException {
         this.preExecuteTrue(ParentAction.class);
     }
 
     /**
      * The same testPreExecuteFalse but using DI.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPreExecuteDiFalse() {
+    final void testPreExecuteDiFalse() throws CommonException {
         this.preExecuteFalse(ParentDiAction.class);
     }
 
     /**
      * The same testPreExecuteTrue but using DI.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPreExecuteDiTrue() {
+    final void testPreExecuteDiTrue() throws CommonException {
         this.preExecuteTrue(ParentDiAction.class);
     }
 
     /**
      * Common method for TC of testPreExecuteFalse and testPreExecuteDIFalse.
      * @param action Action to execute.
+     * @throws CommonException Exception.
      */
-    private void preExecuteFalse(final Class<? extends Action> action) {
+    private void preExecuteFalse(final Class<? extends Action> action) throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());
@@ -101,8 +107,9 @@ class TestPreExecute {
     /**
      * Common method for TC of testPreExecuteTrue and testPreExecuteDITrue.
      * @param action Action to execute.
+     * @throws CommonException Exception.
      */
-    private void preExecuteTrue(final Class<? extends Action> action) {
+    private void preExecuteTrue(final Class<? extends Action> action) throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         final Output output = this.executor.execute(action, context);

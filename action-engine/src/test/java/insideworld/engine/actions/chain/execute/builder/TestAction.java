@@ -21,6 +21,7 @@ package insideworld.engine.actions.chain.execute.builder;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkInitException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import java.util.Collection;
 import java.util.UUID;
@@ -50,7 +51,8 @@ class TestAction extends AbstractChainAction {
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder)
+        throws LinkInitException {
         return builder
             .addLink(IntegerLink.class)
             .addLink(new TypeLiteral<GenericLink<String>>() { })

@@ -19,45 +19,52 @@
 
 package insideworld.engine.actions;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.tags.ActionsTags;
+import insideworld.engine.exception.CommonException;
 
 /**
- * Exception during to an action processing.
- *
- * @since 0.1.0
+ * Action exception.
+ * Should be thrown at action processing.
+ * @since 0.0.1
  */
-public class ActionException extends Exception {
+public class ActionException extends CommonException {
 
     /**
      * Default exception message.
      */
-    private static final String EXCEPTION_MESSAGE = "Exception during execute action %s";
+    private static final String EXCEPTION_MESSAGE =
+        "Exception during process action %s with reason %s";
 
     /**
-     * Constructor with message parameter.
-     * @param message Exception message.
+     * Constructor to create an exception with message.
+     * @param action Action class.
+     * @param message Message.
+     * @param args String format arguments.
      */
-    public ActionException(final String message) {
-        super(message);
+    public ActionException(
+        final Class<? extends Action> action, final String message, final Object... args) {
+        super(
+            String.format(
+                ActionException.EXCEPTION_MESSAGE,
+                action.getName(),
+                message
+            ),
+            args
+        );
     }
 
     /**
-     * Constructor to wrap an exists exception.
-     * @param message Exception message.
-     * @param exp Original exception.
+     * Constructor to create an exception with message.
+     * @param action Action class.
+     * @param exception Exception.
      */
-    public ActionException(final String message, final Exception exp) {
-        super(message, exp);
+    public ActionException(
+        final Class<? extends Action> action, final Throwable exception) {
+        super(exception, ActionException.EXCEPTION_MESSAGE, action.getName(), "Exception");
     }
 
-    /**
-     * Contructor to wrap an exists exception with default message.
-     * @param input Context with action information.
-     * @param exp Orignal exception.
-     */
-    public ActionException(final Context input, final Exception exp) {
-        super(String.format(ActionException.EXCEPTION_MESSAGE, input.get(ActionsTags.ACTION)), exp);
+    @Override
+    protected final String module() {
+        return "action-engine";
     }
 
 }

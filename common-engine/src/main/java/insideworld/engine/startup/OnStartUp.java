@@ -19,9 +19,11 @@
 
 package insideworld.engine.startup;
 
+import insideworld.engine.exception.CommonException;
+
 public interface OnStartUp {
 
-    void startUp() throws StartupException;
+    void startUp() throws CommonException;
 
     int order();
 

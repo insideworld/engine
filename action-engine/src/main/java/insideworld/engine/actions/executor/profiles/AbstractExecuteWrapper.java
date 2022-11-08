@@ -20,9 +20,9 @@
 package insideworld.engine.actions.executor.profiles;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Abstract class for execute wrapper.
@@ -44,10 +44,10 @@ public abstract class AbstractExecuteWrapper implements ExecuteWrapper {
      * @param action Action instance.
      * @param context Context.
      * @param output Output instance.
-     * @throws ActionException Action exception.
+     * @throws CommonException Action exception.
      */
     public void execute(final Action action, final Context context, final Output output)
-        throws ActionException {
+        throws CommonException {
         if (this.next != null) {
             this.next.execute(action, context, output);
         }

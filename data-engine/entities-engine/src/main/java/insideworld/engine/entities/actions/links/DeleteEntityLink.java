@@ -26,7 +26,7 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
@@ -38,6 +38,7 @@ import javax.inject.Inject;
  * Delete entities link.
  * Using to call delete method in storage for specific entity or entities from context.
  * This is link required to init. See setTag, setTags and setType method comments.
+ *
  * @param <T> Entity type to delete.
  * @since 0.0.1
  */
@@ -66,6 +67,7 @@ public class DeleteEntityLink<T extends Entity> implements Link {
 
     /**
      * Default constructor.
+     *
      * @param storages Storage keeper.
      */
     @Inject
@@ -87,6 +89,7 @@ public class DeleteEntityLink<T extends Entity> implements Link {
     /**
      * Set single tag to delete.
      * Will call delete for entity keeping under this tag.
+     *
      * @param psingle Single entity tag.
      * @return The same instance.
      */
@@ -98,6 +101,7 @@ public class DeleteEntityLink<T extends Entity> implements Link {
     /**
      * Set multiple tag to delete.
      * Will call delete for entities keeping under this tag.
+     *
      * @param pmultiple Single entity tag.
      * @return The same instance.
      */
@@ -109,16 +113,13 @@ public class DeleteEntityLink<T extends Entity> implements Link {
     /**
      * Set type of entity.
      * It's necessary to define which storage need to use.
+     *
      * @param type Entity type.
      * @return The same instance
-     * @throws ActionRuntimeException If storage can't find for provided type.
+     * @throws StorageException If storage can't find for provided type.
      */
-    public final DeleteEntityLink<T> setType(final Class<T> type) {
-        try {
-            this.storage = this.storages.getStorage(type);
-        } catch (final StorageException exp) {
-            throw new ActionRuntimeException(new ActionException("Can't find storage", exp));
-        }
+    public final DeleteEntityLink<T> setType(final Class<T> type) throws StorageException {
+        this.storage = this.storages.getStorage(type);
         return this;
     }
 }

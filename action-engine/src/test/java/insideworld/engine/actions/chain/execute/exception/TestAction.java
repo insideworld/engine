@@ -17,29 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.storages;
+package insideworld.engine.actions.chain.execute.exception;
 
-import insideworld.engine.exception.CommonException;
+import insideworld.engine.actions.chain.AbstractChainAction;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkInitException;
+import insideworld.engine.actions.chain.LinksBuilder;
+import java.util.Collection;
 
 /**
- * Storage exception.
- * @since 0.0.1
+ * Test action with exception at init.
+ * @since 0.14.0
  */
-public class StorageException extends CommonException {
+class TestAction extends AbstractChainAction {
 
     /**
-     * Create exception bases on another exception.
-     * @param exp Exception.
+     * Default constructor.
+     *
+     * @param builder Links builder instance.
      */
-    public StorageException(final Exception exp) {
-        super(exp);
+    TestAction(final LinksBuilder builder) {
+        super(builder);
     }
 
-    /**
-     * Create exception based on string message.
-     * @param message Message.
-     */
-    public StorageException(final String message) {
-        super(message);
+    @Override
+    public final String key() {
+        return "insideworld.engine.actions.chain.execute.exception.TestAction";
+    }
+
+    @Override
+    protected final Collection<Link> attachLinks(final LinksBuilder builder)
+        throws LinkInitException {
+        return builder
+            .addLink(LinkWithException.class, LinkWithException::init)
+            .build();
     }
 }

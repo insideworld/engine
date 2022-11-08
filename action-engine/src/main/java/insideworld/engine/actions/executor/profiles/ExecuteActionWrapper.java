@@ -20,9 +20,9 @@
 package insideworld.engine.actions.executor.profiles;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import java.util.Collections;
 import javax.enterprise.context.Dependent;
@@ -37,7 +37,7 @@ public class ExecuteActionWrapper extends AbstractExecuteWrapper {
 
     @Override
     public final void execute(final Action action, final Context context, final Output output)
-        throws ActionException {
+        throws CommonException {
         action.execute(context, output);
         super.execute(action, context, output);
     }

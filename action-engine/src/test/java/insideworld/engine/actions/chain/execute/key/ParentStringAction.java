@@ -21,6 +21,7 @@ package insideworld.engine.actions.chain.execute.key;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkInitException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.actions.chain.execute.ExecuteActionLink;
 import java.util.Collection;
@@ -55,7 +56,8 @@ class ParentStringAction extends AbstractChainAction {
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder)
+        throws LinkInitException {
         return builder
             .addLink(
                 new TypeLiteral<ExecuteActionLink<String>>() { },

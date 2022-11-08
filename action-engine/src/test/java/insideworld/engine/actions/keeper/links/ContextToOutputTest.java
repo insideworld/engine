@@ -19,12 +19,12 @@
 
 package insideworld.engine.actions.keeper.links;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.ActionsTestTags;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
@@ -56,10 +56,10 @@ class ContextToOutputTest {
      * Execute link with different condition and use different methods to set tags.
      * ER: Mandatory tags should be present in any case.
      * System tags should absent even if required.
-     * @throws ActionException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
     @Test
-    final void test() throws ActionException {
+    final void test() throws CommonException {
         final Context context = this.factory.createObject(Context.class);
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());
@@ -76,9 +76,9 @@ class ContextToOutputTest {
     /**
      * Call link for move all.
      * @param context Context with tags.
-     * @throws ActionException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
-    private void checkAll(final Context context) throws ActionException {
+    private void checkAll(final Context context) throws CommonException {
         final Output output = this.factory.createObject(Output.class);
         final ContextToOutput link = this.factory.createObject(ContextToOutput.class);
         link.process(context, output);
@@ -96,9 +96,9 @@ class ContextToOutputTest {
     /**
      * Call link with added single tags.
      * @param context Context with tags.
-     * @throws ActionException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
-    private void checkSingle(final Context context) throws ActionException {
+    private void checkSingle(final Context context) throws CommonException {
         final Output output = this.factory.createObject(Output.class);
         final ContextToOutput link = this.factory.createObject(ContextToOutput.class);
         link
@@ -121,9 +121,9 @@ class ContextToOutputTest {
     /**
      * Call link with added tags by array method.
      * @param context Context with tags.
-     * @throws ActionException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
-    private void checkMultiTags(final Context context) throws ActionException {
+    private void checkMultiTags(final Context context) throws CommonException {
         final Output output = this.factory.createObject(Output.class);
         final ContextToOutput link = this.factory.createObject(ContextToOutput.class);
         link
@@ -144,9 +144,9 @@ class ContextToOutputTest {
     /**
      * Call link with added string tags by arrays method.
      * @param context Context with tags.
-     * @throws ActionException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
-    private void checkMultiString(final Context context) throws ActionException {
+    private void checkMultiString(final Context context) throws CommonException {
         final Output output = this.factory.createObject(Output.class);
         final ContextToOutput link = this.factory.createObject(ContextToOutput.class);
         link

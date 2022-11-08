@@ -20,9 +20,9 @@
 package insideworld.engine.actions.executor.profiles;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Execute profile.
@@ -36,8 +36,8 @@ public interface ExecuteProfile {
      * @param action Executed action.
      * @param context Context.
      * @param output Output.
-     * @throws ActionException Action exception.
+     * @throws CommonException Action exception.
      */
-    void execute(Action action, Context context, Output output) throws ActionException;
+    void execute(Action action, Context context, Output output) throws CommonException;
 
 }

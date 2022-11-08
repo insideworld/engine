@@ -24,6 +24,7 @@ import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -60,25 +61,28 @@ class TestPostExecute {
      * output which contain UUID tag.
      * ER: Output should contain only one record with UUID
      * Context should contain the additional tag with the ChildAction value.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPostExecute() {
+    final void testPostExecute() throws CommonException {
         this.postExecute(ParentAction.class);
     }
 
     /**
      * The same as testPostExecute but using DI.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPostExecuteDI() {
+    final void testPostExecuteDI() throws CommonException {
         this.postExecute(ParentDiAction.class);
     }
 
     /**
      * Common method for both tests.
      * @param action Action to execute.
+     * @throws CommonException Exception.
      */
-    private void postExecute(final Class<? extends Action> action) {
+    private void postExecute(final Class<? extends Action> action) throws CommonException {
         final UUID uuid = UUID.randomUUID();
         final Context context = this.executor.createContext();
         context.put(TestChainTags.UUID, uuid);

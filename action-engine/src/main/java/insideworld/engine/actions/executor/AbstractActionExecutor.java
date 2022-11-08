@@ -21,13 +21,12 @@ package insideworld.engine.actions.executor;
 
 import com.google.common.collect.Maps;
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.tags.ActionsTags;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +41,7 @@ import org.slf4j.LoggerFactory;
  * Abstract class to execute different actions.
  * Need to extend from this class to support execute action from specific key.
  * The executed action will execute in process wrappers chain in default profile.
+ *
  * @param <T> Key of action.
  * @since 0.0.1
  */
@@ -85,24 +85,20 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
 
     @Override
     public final Output execute(final T parameter, final Context context)
-        throws ActionRuntimeException {
+        throws CommonException {
         return this.execute(parameter, context, DefaultExecuteProfile.class);
     }
 
     @Override
     public final Output execute(
         final T parameter, final Context context, final Class<? extends ExecuteProfile> profile)
-        throws ActionRuntimeException {
+        throws CommonException {
         final Action action = this.provide(parameter);
         LOGGER.info("Start action {} with key {}", action.getClass().getSimpleName(), action.key());
         context.put(ActionsTags.ACTION, action);
-        try {
-            final var output = this.factory.createObject(Output.class);
-            this.profiles.get(profile).execute(action, context, output);
-            return output;
-        } catch (final ActionException exp) {
-            throw new ActionRuntimeException(exp);
-        }
+        final var output = this.factory.createObject(Output.class);
+        this.profiles.get(profile).execute(action, context, output);
+        return output;
     }
 
     @Override

@@ -20,11 +20,11 @@
 package insideworld.engine.actions.executors.key;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class and key executors of action.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -49,6 +50,7 @@ class TestKeyExecutor {
 
     /**
      * Default constructor.
+     *
      * @param cexecutor Class action executor.
      * @param kexecutor Key action executor.
      */
@@ -65,9 +67,11 @@ class TestKeyExecutor {
      * Execute the test action using class action executor.
      * ER:
      * Output should contain one record with UUID tag from context.
+     *
+     * @throws CommonException Exception.
      */
     @Test
-    final void testClass() {
+    final void testClass() throws CommonException {
         TestKeyExecutor.test(this.cexecutor, TestAction.class);
     }
 
@@ -76,9 +80,11 @@ class TestKeyExecutor {
      * Execute the test action using string action executor.
      * ER:
      * Output should contain one record with UUID tag from context.
+     *
+     * @throws CommonException Exception.
      */
     @Test
-    final void testKey() {
+    final void testKey() throws CommonException {
         TestKeyExecutor.test(
             this.kexecutor,
             "insideworld.engine.tests.unit.actions.executors.key.TestAction"
@@ -87,9 +93,7 @@ class TestKeyExecutor {
 
     /**
      * TC: Execute different ActionExceptions.
-     * For 1 - Exception with custom message.
-     * For 2 - Exception based on another exception and with message about action.
-     * For 3 - Exception based on another exception and based message.
+     * Exception during action processing.
      * ER:
      * For each case right message.
      */
@@ -100,41 +104,22 @@ class TestKeyExecutor {
         boolean exception = false;
         try {
             this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
-        } catch (final ActionRuntimeException exp) {
-            exception = exp.getMessage().equals(
-                "insideworld.engine.actions.ActionException: With message without exception"
-            );
-        }
-        assert exception;
-        context.put(TestExecutorTags.EXCEPTION, 2, true);
-        exception = false;
-        try {
-            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
-        } catch (final ActionRuntimeException exp) {
-            exception = exp.getMessage().startsWith(
-                "insideworld.engine.actions.ActionException: Exception during execute action insideworld.engine.actions.executors.key.ExceptionAction"
-            );
-        }
-        assert exception;
-        context.put(TestExecutorTags.EXCEPTION, 3, true);
-        exception = false;
-        try {
-            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
-        } catch (final ActionRuntimeException exp) {
-            exception = exp.getMessage().equals(
-                "insideworld.engine.actions.ActionException: With message and exception"
-            );
+        } catch (final CommonException exp) {
+            exception = exp.getMessage().contains("Exception!");
         }
         assert exception;
     }
 
     /**
      * Common method to execute action with different executors.
+     *
      * @param executor Executor.
      * @param key Action key.
      * @param <T> Type of action key.
+     * @throws CommonException Exception.
      */
-    private static  <T> void test(final ActionExecutor<T> executor, final T key) {
+    private static <T> void test(final ActionExecutor<T> executor, final T key)
+        throws CommonException {
         final Context context = executor.createContext();
         final UUID uuid = UUID.randomUUID();
         context.put(TestExecutorTags.UUID, uuid);

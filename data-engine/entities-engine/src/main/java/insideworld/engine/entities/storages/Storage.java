@@ -20,6 +20,7 @@
 package insideworld.engine.entities.storages;
 
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import java.util.Collection;
 
 /**

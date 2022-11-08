@@ -23,7 +23,7 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;

@@ -24,6 +24,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collection;
 import java.util.Iterator;
@@ -59,9 +60,10 @@ class TestWrappers {
      * After that execute dummy action.
      * ER:
      * Sequence should contain values from 3 to -1 with right order.
+     * @throws CommonException Exception.
      */
     @Test
-    final void test() {
+    final void test() throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestExecutorTags.SEQUENCE, Lists.newLinkedList());
         this.executor.execute(DummyAction.class, context);

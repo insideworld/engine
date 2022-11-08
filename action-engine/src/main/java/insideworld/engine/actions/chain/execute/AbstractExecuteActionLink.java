@@ -26,6 +26,8 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
+import insideworld.engine.actions.tags.ActionsTags;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Arrays;
 import java.util.Collection;
@@ -89,7 +91,7 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
     }
 
     @Override
-    public final void process(final Context parent, final Output output) throws ActionException {
+    public final void process(final Context parent, final Output output) throws CommonException {
         final Context child;
         if (this.tags == null) {
             child = parent.cloneContext();
@@ -98,7 +100,9 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
         }
         if (this.pres.isEmpty() || this.pres.stream().allMatch(pre -> pre.apply(parent, child))) {
             if (this.key == null) {
-                throw new ActionException("Action is not set!");
+                throw new ActionException(
+                    parent.get(ActionsTags.ACTION).getClass(), "Action is not set!"
+                );
             }
             final Output results = this.executor.execute(this.key, child);
             if (this.posts.isEmpty()) {

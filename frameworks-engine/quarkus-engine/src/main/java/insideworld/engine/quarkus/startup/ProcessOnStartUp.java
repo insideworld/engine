@@ -19,8 +19,8 @@
 
 package insideworld.engine.quarkus.startup;
 
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
-import insideworld.engine.startup.StartupException;
 import io.quarkus.runtime.Startup;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ProcessOnStartUp {
     }
 
     @PostConstruct
-    public void init() throws StartupException {
+    public void init() throws CommonException {
         final List<OnStartUp> sorted = this.startups.stream()
             .sorted(Comparator.comparingInt(OnStartUp::order)).toList();
         for (final OnStartUp start : sorted) {

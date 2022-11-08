@@ -17,11 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.startup;
+package insideworld.engine.actions.chain.execute.exception;
 
-public class StartupException extends Exception {
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkInitException;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
+import javax.inject.Singleton;
 
-    public StartupException(final Exception exception) {
-        super(exception);
+/**
+ * Link which should throw exception at init.
+ * @since 0.14.0
+ */
+@Singleton
+public class LinkWithException implements Link {
+
+    @Override
+    public final void process(final Context context, final Output output) throws CommonException {
+        //Nothing to do.
+    }
+
+    /**
+     * Throw exception.
+     * @throws LinkInitException Expected link exception.
+     */
+    public final void init() throws LinkInitException {
+        throw new LinkInitException(
+            new IllegalArgumentException("Exception at link init"),
+            this.getClass()
+        );
     }
 }

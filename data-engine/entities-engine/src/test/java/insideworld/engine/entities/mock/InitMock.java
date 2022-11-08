@@ -26,7 +26,7 @@ import insideworld.engine.entities.mock.entities.positive.MockOneEntityImpl;
 import insideworld.engine.entities.mock.entities.positive.MockTwoEntity;
 import insideworld.engine.entities.mock.entities.positive.MockTwoEntityImpl;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.runtime.Startup;
 import java.util.Date;

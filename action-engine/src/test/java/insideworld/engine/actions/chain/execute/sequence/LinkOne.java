@@ -19,11 +19,11 @@
 
 package insideworld.engine.actions.chain.execute.sequence;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -34,7 +34,7 @@ import javax.inject.Singleton;
 public class LinkOne implements Link {
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws CommonException {
         context.get(TestChainTags.LIST).add(1);
     }
 }

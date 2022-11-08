@@ -19,10 +19,10 @@
 
 package insideworld.engine.actions.keeper.links;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.TestKeeperTags;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Iterator;
@@ -53,10 +53,10 @@ class OutputRemoveTest {
     /**
      * TC: Create 3 record in output with different tags.
      * ER: Should stay only 1 tag in the first record.
-     * @throws ActionException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
     @Test
-    final void test() throws ActionException {
+    final void test() throws CommonException {
         final Output output = this.factory.createObject(Output.class);
         final Record one = output.createRecord();
         one.put(TestKeeperTags.DUMMY, new Object());

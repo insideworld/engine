@@ -21,11 +21,10 @@ package insideworld.engine.tests.integration.tests.entities.generated;
 
 import insideworld.engine.data.generator.inmemory.entity.abstracts.MemoryEntity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.integration.entities.generated.GeneratedInMemoryEntity;
 import io.quarkus.test.junit.QuarkusTest;
-import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 

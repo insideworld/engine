@@ -23,6 +23,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -54,9 +55,10 @@ class TestBuilder {
      * Each link just add to context a specific tag.
      * ER:
      * All 4 tags should present in context.
+     * @throws CommonException Exception.
      */
     @Test
-    final void test() {
+    final void test() throws CommonException {
         final Context context = this.executor.createContext();
         this.executor.execute(TestAction.class, context);
         assert context.contains(TestChainTags.STRING);

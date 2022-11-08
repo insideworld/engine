@@ -24,6 +24,7 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -58,9 +59,10 @@ class TestProfile {
      * Default executor profile shouldn't contain COPY_UUID tag.
      * System executor profile should contain COPY_UUID tag.
      * All profiles shouldn't execute DummyWrapper.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testPreExecutor() {
+    final void testPreExecutor() throws CommonException {
         final UUID uuid = UUID.randomUUID();
         final Context def = this.executor.createContext();
         def.put(TestExecutorTags.UUID, uuid);

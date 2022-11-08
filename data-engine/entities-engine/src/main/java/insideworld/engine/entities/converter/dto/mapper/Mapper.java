@@ -19,11 +19,10 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.exception.CommonException;
+import insideworld.engine.entities.StorageException;
 
 /**
  * Mapper for data.
@@ -37,20 +36,20 @@ public interface Mapper {
      * @param record Record.
      * @param entity Entity.
      * @param descriptor What needs to map.
-     * @throws CommonException Something went wrong.
+     * @throws StorageException Something went wrong.
      */
     void toEntity(Record record, Entity entity, Descriptor descriptor)
-        throws CommonException;
+        throws StorageException;
 
     /**
      * Map entity field to record value.
      * @param record Record.
      * @param entity Entity.
      * @param descriptor What needs to map.
-     * @throws CommonException Something went wrong.
+     * @throws StorageException Something went wrong.
      */
     void toRecord(Record record, Entity entity, Descriptor descriptor)
-        throws CommonException;
+        throws StorageException;
 
     /**
      * Can apply provided descriptor to this mapper.

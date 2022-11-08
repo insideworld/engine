@@ -28,7 +28,7 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.jobs.common.entity.JobEntity;
 import java.util.Map;
 import javax.inject.Inject;

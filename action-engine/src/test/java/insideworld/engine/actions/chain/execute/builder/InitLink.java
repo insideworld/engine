@@ -19,11 +19,11 @@
 
 package insideworld.engine.actions.chain.execute.builder;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import java.util.UUID;
 import javax.enterprise.context.Dependent;
 
@@ -40,7 +40,7 @@ class InitLink implements Link {
     private UUID uuid;
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws CommonException {
         context.put(TestChainTags.UUID, this.uuid);
     }
 

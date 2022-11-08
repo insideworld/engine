@@ -25,7 +25,7 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.mock.InitMock;
 import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;

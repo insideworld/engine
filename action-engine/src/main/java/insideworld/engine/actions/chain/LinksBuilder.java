@@ -20,7 +20,6 @@
 package insideworld.engine.actions.chain;
 
 import java.util.Collection;
-import java.util.function.Consumer;
 import javax.enterprise.util.TypeLiteral;
 
 /**
@@ -46,10 +45,12 @@ public interface LinksBuilder {
      * Usually using for non singleton links which behavior depended on action.
      * @param type Class type of link.
      * @param init Init predicate which execute once at action init.
-     * @return The same instance.
      * @param <T> Link type.
+     * @return The same instance.
+     * @throws LinkInitException Can't init link.
      */
-    <T extends Link> LinksBuilder addLink(Class<T> type, Consumer<T> init);
+    <T extends Link> LinksBuilder addLink(Class<T> type, LinkConsumer<T> init)
+        throws LinkInitException;
 
     /**
      * Add specific link with generic parameters.
@@ -64,10 +65,12 @@ public interface LinksBuilder {
      * Usually using for non singleton links which behavior depended on generic actions.
      * @param type Type literal. Example: new TypeLiteral<SomeGenericLink<T>>() {}
      * @param init Init predicate which execute once at action init.
-     * @return The same instance.
      * @param <T> Link type.
+     * @return The same instance.
+     * @throws LinkInitException Can't init link.
      */
-    <T extends Link> LinksBuilder addLink(TypeLiteral<T> type, Consumer<T> init);
+    <T extends Link> LinksBuilder addLink(TypeLiteral<T> type, LinkConsumer<T> init)
+        throws LinkInitException;
 
     /**
      * Build links collections.

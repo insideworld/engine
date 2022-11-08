@@ -25,6 +25,7 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -56,9 +57,10 @@ class TestTagPropagation {
      * TC:
      * Execute child action with propagate only tag ONE.
      * ER: Output contains only one record with ONE tag.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testTagPropagate() {
+    final void testTagPropagate() throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());

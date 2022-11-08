@@ -19,10 +19,10 @@
 
 package insideworld.engine.actions.chain.execute.builder;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import java.util.Objects;
 import javax.enterprise.context.Dependent;
 
@@ -40,7 +40,7 @@ class StringLink implements GenericLink<String> {
     private String string;
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws CommonException {
         context.put(TestChainTags.STRING, Objects.requireNonNullElse(this.string, "2"));
     }
 

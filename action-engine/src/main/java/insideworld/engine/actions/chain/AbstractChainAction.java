@@ -23,6 +23,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 
 /**
@@ -36,20 +37,26 @@ import java.util.Collection;
 public abstract class AbstractChainAction implements Action {
 
     /**
+     * Link builder.
+     */
+    private final LinksBuilder builder;
+
+    /**
      * Collections of links.
      */
-    private final Collection<Link> links;
+    private Collection<Link> links;
 
     /**
      * Default constructor.
+     *
      * @param builder Links builder instance.
      */
     public AbstractChainAction(final LinksBuilder builder) {
-        this.links = this.attachLinks(builder);
+        this.builder = builder;
     }
 
     @Override
-    public final void execute(final Context context, final Output output) throws ActionException {
+    public final void execute(final Context context, final Output output) throws CommonException {
         for (final Link link : this.links) {
             if (context.contains(ChainTags.BREAK_CHAIN)) {
                 break;
@@ -60,6 +67,19 @@ public abstract class AbstractChainAction implements Action {
         }
     }
 
+    @Override
+    public final void init() throws ActionException {
+        if (this.links == null) {
+            try {
+                this.links = this.attachLinks(this.builder);
+            } catch (final LinkInitException exp) {
+                throw new ActionException(this.getClass(), exp);
+            }
+        } else {
+            throw new ActionException(this.getClass(), "Chain action already init!");
+        }
+    }
+
     /**
      * You need implement method attachLinks in inherited class and add you links use LinkBuilder.
      * Links will execute successively in order will you add through LinkBuilder.
@@ -67,8 +87,10 @@ public abstract class AbstractChainAction implements Action {
      *
      * @param builder LinksBuilder instance.
      * @return Collection of links.
+     * @throws LinkInitException Exception at link init.
      * @see LinksBuilder
+     * @checkstyle HiddenFieldCheck (2 lines)
      */
-    protected abstract Collection<Link> attachLinks(LinksBuilder builder);
+    protected abstract Collection<Link> attachLinks(LinksBuilder builder) throws LinkInitException;
 
 }

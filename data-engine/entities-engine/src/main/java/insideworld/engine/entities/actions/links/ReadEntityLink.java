@@ -28,7 +28,7 @@ import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;

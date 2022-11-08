@@ -22,6 +22,7 @@ package insideworld.engine.actions.chain.execute.propogation;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkInitException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.actions.chain.execute.ExecuteActionLink;
 import insideworld.engine.actions.chain.execute.TestChainTags;
@@ -50,7 +51,8 @@ class PropagateTagAction extends AbstractChainAction {
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder)
+        throws LinkInitException {
         return builder.addLink(
             new TypeLiteral<ExecuteActionLink<Class<? extends Action>>>() { },
             link -> link.setKey(ChildAction.class).setTags(TestChainTags.ONE)

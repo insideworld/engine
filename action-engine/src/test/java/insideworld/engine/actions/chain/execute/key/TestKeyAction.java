@@ -20,12 +20,12 @@
 package insideworld.engine.actions.chain.execute.key;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Map;
 import java.util.UUID;
@@ -67,9 +67,10 @@ class TestKeyAction {
      * TC: Execute action from chain action and add only action parameter using class key.
      * ER: In child action should add to output UUID from parent context and add one more record
      * to test merge.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testClass() {
+    final void testClass() throws CommonException {
         this.executeAction(ParentClassAction.class);
     }
 
@@ -77,9 +78,10 @@ class TestKeyAction {
      * TC: Execute action from chain action and add only action parameter using string key.
      * ER: In child action should add to output UUID from parent context and add one more record
      * to test merge.
+     * @throws CommonException Exception.
      */
     @Test
-    final void testString() {
+    final void testString() throws CommonException {
         this.executeAction(ParentStringAction.class);
     }
 
@@ -92,10 +94,8 @@ class TestKeyAction {
         boolean exception = false;
         try {
             this.executeAction(ParentNullAction.class);
-        } catch (final ActionRuntimeException exp) {
-            if ("insideworld.engine.actions.ActionException: Action is not set!"
-                .equals(exp.getMessage())
-            ) {
+        } catch (final CommonException exp) {
+            if (exp.getMessage().contains("Action is not set!")) {
                 exception = true;
             }
         }
@@ -105,8 +105,9 @@ class TestKeyAction {
     /**
      * Just execute action and make compare by UUID and Additional tag.
      * @param action Test action to execute.
+     * @throws CommonException Exception.
      */
-    private void executeAction(final Class<? extends Action> action) {
+    private void executeAction(final Class<? extends Action> action) throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.UUID, (UUID) this.results.get(TestChainTags.UUID.getTag()));
         final Output output = this.executor.execute(action, context);

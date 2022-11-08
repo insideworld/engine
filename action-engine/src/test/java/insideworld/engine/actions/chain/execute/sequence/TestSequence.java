@@ -24,6 +24,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.execute.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collection;
 import java.util.Iterator;
@@ -59,9 +60,10 @@ class TestSequence {
      * List should contain 1,2,3.
      * 4 shouldn't present because link should skip.
      * 5 shouldn't present because chain should break.
+     * @throws CommonException Exception.
      */
     @Test
-    final void test() {
+    final void test() throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.LIST, Lists.newLinkedList());
         this.executor.execute(TestAction.class, context);

@@ -20,10 +20,10 @@
 package insideworld.engine.actions.startup;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.OnStartupAction;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -42,7 +42,7 @@ public class TestStartupAction implements Action {
     private Boolean inited;
 
     @Override
-    public final void execute(final Context context, final Output output) throws ActionException {
+    public final void execute(final Context context, final Output output) throws CommonException {
         context.put("inited", this.inited);
         if (this.inited == null) {
             this.inited = true;

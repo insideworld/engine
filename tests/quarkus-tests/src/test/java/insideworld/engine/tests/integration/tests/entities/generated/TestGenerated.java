@@ -19,7 +19,7 @@
 
 package insideworld.engine.tests.integration.tests.entities.generated;
 
-import insideworld.engine.entities.storages.StorageException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;

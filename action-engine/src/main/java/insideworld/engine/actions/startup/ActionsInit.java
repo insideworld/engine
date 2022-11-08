@@ -21,6 +21,7 @@ package insideworld.engine.actions.startup;
 
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionChanger;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
 import java.util.Collection;
 import java.util.List;
@@ -57,7 +58,10 @@ public class ActionsInit implements OnStartUp {
     }
 
     @Override
-    public final void startUp() {
+    public final void startUp() throws CommonException {
+        for (final Action action : this.actions) {
+            action.init();
+        }
         for (final ActionChanger changer : this.changers) {
             changer.addActions(this.actions);
         }
