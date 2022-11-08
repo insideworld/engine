@@ -21,38 +21,39 @@ package insideworld.engine.entities.converter.dto.mapper;
 
 import com.google.common.primitives.Primitives;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
+import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
  * Map primitives to record from entity and vice versa.
+ * Using for single primitive.
+ * Logic is easy - the same in record, the same in entity.
  * @since 0.0.1
  */
 @Singleton
-public class MapperPrimitive extends AbstractMapper {
-
-    @Override
-    public final void toEntity(
-        final Record record, final Entity entity, final Descriptor descriptor)
-        throws ActionException {
-        this.write(entity, record.get(descriptor.name()), descriptor);
-    }
-
-    @Override
-    public final void toRecord(
-        final Record record, final Entity entity, final Descriptor descriptor)
-        throws ActionException {
-        final Object target = this.read(entity, descriptor);
-        if (target != null) {
-            record.put(descriptor.name(), target);
-        }
-    }
+public class MapperPrimitive extends AbstractMapper<Object, Object> {
 
     @Override
     public final boolean canApply(final Descriptor descriptor) {
         final Class<?> type = descriptor.type();
         return type.isPrimitive() || type.equals(String.class) || Primitives.isWrapperType(type);
     }
+
+    @Override
+    protected final Object toEntity(final Object target, final Descriptor descriptor)
+        throws CommonException {
+        return target;
+    }
+
+    @Override
+    protected final Object toRecord(final Object value, final Descriptor descriptor) {
+        return value;
+    }
+
+    @Override
+    protected final String defineTag(final String origin) {
+        return origin;
+    }
+
 }

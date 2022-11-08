@@ -19,10 +19,10 @@
 
 package insideworld.engine.entities.storages.keeper;
 
+import insideworld.engine.entities.mock.entities.positive.MockEntity;
+import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.StorageException;
-import insideworld.engine.entities.test.MockEntity;
-import insideworld.engine.entities.test.MockEntityImpl;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.StartupException;
 import io.quarkus.test.junit.QuarkusTest;

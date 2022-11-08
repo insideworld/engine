@@ -17,29 +17,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.storages;
+package insideworld.engine.entities.mock.entities.exclude;
 
-import insideworld.engine.exception.CommonException;
+import javax.enterprise.context.Dependent;
 
 /**
- * Storage exception.
- * @since 0.0.1
+ * Class to test absent methods for field.
+ * @since 0.14.0
  */
-public class StorageException extends CommonException {
+@Dependent
+public class MockExcludeEntityImpl implements MockExcludeEntity {
 
     /**
-     * Create exception bases on another exception.
-     * @param exp Exception.
+     * Id.
      */
-    public StorageException(final Exception exp) {
-        super(exp);
+    private long id;
+
+    /**
+     * Field without getter.
+     */
+    private String noget = "testnoget";
+
+    /**
+     * Field without setter.
+     */
+    @SuppressWarnings("PMD.ImmutableField")
+    private String noset = "testnoset";
+
+    /**
+     * Field without methods.
+     */
+    @SuppressWarnings("PMD.ImmutableField")
+    private String nomethods = "testnomethods";
+
+    @Override
+    public final long getId() {
+        return this.id;
     }
 
-    /**
-     * Create exception based on string message.
-     * @param message Message.
-     */
-    public StorageException(final String message) {
-        super(message);
+    @Override
+    public final void setNoget(final String pnoget) {
+        this.noget = pnoget;
+    }
+
+    @Override
+    public final String getNoset() {
+        return this.noset;
+    }
+
+    @Override
+    public final boolean check(final String nogetvalue) {
+        return "testnoset".equals(this.noset)
+            && "testnomethods".equals(this.nomethods)
+            && nogetvalue.equals(this.noget);
     }
 }

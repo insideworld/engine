@@ -19,23 +19,25 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
+import com.google.common.collect.Lists;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.exception.CommonException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 import javax.inject.Singleton;
 
 /**
- * Map date value in string from record to entity and vice versa.
+ * Map dates collection in string from record to entity and vice versa.
  * Can parse date from record to entity from string type by mask.
  *
  * @since 0.6.0
  */
 @Singleton
-public class MapperDate extends AbstractMapper<Object, Date> {
+public class MapperDates extends AbstractMapper<Collection<Object>, Collection<Date>> {
 
     /**
      * Mask for date.
@@ -47,30 +49,34 @@ public class MapperDate extends AbstractMapper<Object, Date> {
 
     @Override
     public final boolean canApply(final Descriptor descriptor) {
-        return descriptor.type().equals(Date.class);
+        return Collection.class.isAssignableFrom(descriptor.type())
+            && Date.class.equals(AbstractMapper.getGeneric(descriptor));
     }
 
     @Override
-    protected final Date toEntity(
-        final Object target, final Descriptor descriptor) throws CommonException {
-        final Date date;
-        if (target == null) {
-            date = null;
-        } else if (Date.class.equals(target.getClass())) {
-            date = (Date) target;
-        } else {
-            try {
-                date = this.format.get().parse(target.toString());
-            } catch (final ParseException exp) {
-                throw new CommonException("Can't parse date", exp);
+    protected final Collection<Date> toEntity(
+        final Collection<Object> target, final Descriptor descriptor) throws CommonException {
+        final Collection<Date> result = Lists.newArrayListWithCapacity(target.size());
+        for (final Object date : target) {
+            if (date == null) {
+                continue;
+            } else if (Date.class.equals(date.getClass())) {
+                result.add((Date) date);
+            } else {
+                try {
+                    result.add(this.format.get().parse(target.toString()));
+                } catch (final ParseException exp) {
+                    throw new CommonException("Can't parse date", exp);
+                }
             }
         }
-        return date;
+        return result;
     }
 
     @Override
-    protected final Object toRecord(final Date value, final Descriptor descriptor) {
-        return value;
+    protected final Collection<Object> toRecord(
+        final Collection<Date> value, final Descriptor descriptor) {
+        return value.stream().map(obj -> (Object) obj).toList();
     }
 
     @Override

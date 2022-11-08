@@ -17,11 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.converter.dto;
+package insideworld.engine.entities.mock.entities.positive;
+
+import javax.enterprise.context.Dependent;
 
 /**
- * DTO tests.
+ * Mock entity for tests.
  * @since 0.14.0
  */
-public class DtoConverterTest {
+@Dependent
+public class MockOneEntityImpl implements MockOneEntity {
+
+    /**
+     * ID.
+     */
+    private Long id;
+
+    @Override
+    public final long getId() {
+        return this.id;
+    }
+
+    /**
+     * Set id.
+     * @param pid Id.
+     */
+    public final void setId(final Long pid) {
+        if (pid != null) {
+            this.id = pid;
+        }
+    }
 }

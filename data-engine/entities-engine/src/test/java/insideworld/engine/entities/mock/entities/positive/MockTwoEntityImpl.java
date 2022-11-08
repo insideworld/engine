@@ -17,7 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+package insideworld.engine.entities.mock.entities.positive;
+
+import javax.enterprise.context.Dependent;
+
 /**
- * Qwe.
+ * Mock entity for tests.
+ * @since 0.14.0
  */
-package insideworld.engine.entities.test;
+@Dependent
+public class MockTwoEntityImpl implements MockTwoEntity {
+
+    /**
+     * ID.
+     */
+    private Long id;
+
+    @Override
+    public final long getId() {
+        return this.id;
+    }
+
+    /**
+     * Set id.
+     * @param pid Id.
+     */
+    public final void setId(final Long pid) {
+        if (pid != null) {
+            this.id = pid;
+        }
+    }
+}

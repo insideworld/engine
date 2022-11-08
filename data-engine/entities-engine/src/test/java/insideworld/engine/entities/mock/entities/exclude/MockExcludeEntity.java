@@ -17,29 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.storages;
+package insideworld.engine.entities.mock.entities.exclude;
 
-import insideworld.engine.exception.CommonException;
+import insideworld.engine.entities.Entity;
 
 /**
- * Storage exception.
- * @since 0.0.1
+ * Interface for test behavior of absent methods.
+ * @since 0.14.0
  */
-public class StorageException extends CommonException {
+public interface MockExcludeEntity extends Entity {
 
     /**
-     * Create exception bases on another exception.
-     * @param exp Exception.
+     * Setter for noget.
+     * @param pnoget Value to set.
      */
-    public StorageException(final Exception exp) {
-        super(exp);
-    }
+    void setNoget(String pnoget);
 
     /**
-     * Create exception based on string message.
-     * @param message Message.
+     * Getter for not set field.
+     * @return No set.
      */
-    public StorageException(final String message) {
-        super(message);
-    }
+    String getNoset();
+
+    /**
+     * Check that no set and no method fields didn't change values.
+     * @param nogetvalue Value to check of no get.
+     * @return If field withoud setters change state or field with setter not equals
+     *  with value false.
+     */
+    boolean check(String nogetvalue);
 }

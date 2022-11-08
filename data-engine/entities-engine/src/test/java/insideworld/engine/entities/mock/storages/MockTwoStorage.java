@@ -17,44 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.test;
+package insideworld.engine.entities.mock.storages;
 
-import javax.enterprise.context.Dependent;
+import insideworld.engine.entities.mock.entities.positive.MockTwoEntity;
+import javax.inject.Singleton;
 
 /**
- * Mock entity implementation.
+ * Mock two storage.
  * @since 0.14.0
  */
-@Dependent
-public class MockEntityImpl implements MockEntity {
-
-    /**
-     * Id.
-     */
-    private long id;
-
-    /**
-     * Value.
-     */
-    private String value;
+@Singleton
+public class MockTwoStorage extends AbstractMockStorage<MockTwoEntity> {
 
     @Override
-    public final long getId() {
-        return this.id;
-    }
-
-    @Override
-    public final void setId(final long pid) {
-        this.id = pid;
-    }
-
-    @Override
-    public final String getValue() {
-        return this.value;
-    }
-
-    @Override
-    public final void setValue(final String pvalue) {
-        this.value = pvalue;
+    public final Class<? extends MockTwoEntity> forEntity() {
+        return MockTwoEntity.class;
     }
 }

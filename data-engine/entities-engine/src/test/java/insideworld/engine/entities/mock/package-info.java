@@ -17,29 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.storages;
-
-import insideworld.engine.exception.CommonException;
-
 /**
- * Storage exception.
- * @since 0.0.1
+ * Qwe.
  */
-public class StorageException extends CommonException {
-
-    /**
-     * Create exception bases on another exception.
-     * @param exp Exception.
-     */
-    public StorageException(final Exception exp) {
-        super(exp);
-    }
-
-    /**
-     * Create exception based on string message.
-     * @param message Message.
-     */
-    public StorageException(final String message) {
-        super(message);
-    }
-}
+package insideworld.engine.entities.mock;

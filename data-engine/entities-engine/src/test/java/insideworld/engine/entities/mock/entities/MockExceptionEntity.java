@@ -17,13 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.test;
+package insideworld.engine.entities.mock.entities;
 
 import insideworld.engine.entities.Entity;
+import javax.enterprise.context.Dependent;
 
 /**
- * Mock nested entity.
+ * Test class for exception cases.
  * @since 0.14.0
  */
-public interface MokNestedOneEntity extends Entity {
+@Dependent
+public class MockExceptionEntity implements Entity {
+    @Override
+    public final long getId() {
+        return 0;
+    }
 }

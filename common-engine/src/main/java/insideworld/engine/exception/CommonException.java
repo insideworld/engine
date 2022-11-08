@@ -17,29 +17,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.storages;
-
-import insideworld.engine.exception.CommonException;
+package insideworld.engine.exception;
 
 /**
- * Storage exception.
- * @since 0.0.1
+ * Common exception for all exceptions in system.
+ * @since 0.14.0
  */
-public class StorageException extends CommonException {
+public class CommonException extends Exception {
 
-    /**
-     * Create exception bases on another exception.
-     * @param exp Exception.
-     */
-    public StorageException(final Exception exp) {
-        super(exp);
+    public CommonException(final Exception exception) {
+        super(exception);
     }
 
-    /**
-     * Create exception based on string message.
-     * @param message Message.
-     */
-    public StorageException(final String message) {
+    public CommonException(final String message) {
         super(message);
     }
+
+    public CommonException(final String message, final Exception exception) {
+        super(message, exception);
+    }
+
+    public CommonException(final Exception exception, final String message, final Object... args) {
+        super(String.format(message, args), exception);
+    }
+
 }

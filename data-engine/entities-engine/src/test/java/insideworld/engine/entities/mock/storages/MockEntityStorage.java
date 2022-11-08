@@ -17,11 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.test;
+package insideworld.engine.entities.mock.storages;
+
+import insideworld.engine.entities.mock.entities.positive.MockEntity;
+import javax.inject.Singleton;
 
 /**
- * Mock nested entity.
+ * Mock entity storage impl.
  * @since 0.14.0
  */
-public interface MockNestedTwoEntity {
+@Singleton
+public class MockEntityStorage extends AbstractMockStorage<MockEntity> {
+
+    @Override
+    public final Class<? extends MockEntity> forEntity() {
+        return MockEntity.class;
+    }
 }

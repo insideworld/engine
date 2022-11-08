@@ -20,17 +20,87 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
 import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
+import insideworld.engine.exception.CommonException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * Abstract mapper with generic methods which provide call setter or getter.
  *
+ * @param <D> DTO type to mapping.
+ * @param <E> Entity field type to mapping.
  * @since 0.6.0
  */
-public abstract class AbstractMapper implements Mapper {
+public abstract class AbstractMapper<D, E> implements Mapper {
+
+    @Override
+    public final void toEntity(
+        final Record record, final Entity entity, final Descriptor descriptor)
+        throws CommonException {
+        final String tag = this.defineTag(descriptor.name());
+        if (record.contains(tag)) {
+            AbstractMapper.write(entity, this.toEntity(record.get(tag), descriptor), descriptor);
+        } else {
+            AbstractMapper.write(entity, null, descriptor);
+        }
+    }
+
+    @Override
+    public final void toRecord(
+        final Record record, final Entity entity, final Descriptor descriptor)
+        throws CommonException {
+        final D target = this.toRecord(
+            (E) AbstractMapper.read(entity, descriptor),
+            descriptor
+        );
+        if (target != null) {
+            record.put(this.defineTag(descriptor.name()), target);
+        }
+    }
+
+    /**
+     * Convert from record to entity.
+     * Using to bulk convert values which keeping in record to insert into entity.
+     *
+     * @param target Initial values.
+     * @param descriptor Descriptor of field.
+     * @return Collection of objects which write to entity object.
+     * @throws CommonException Can't parse.
+     */
+    protected abstract E toEntity(D target, Descriptor descriptor)
+        throws CommonException;
+
+    /**
+     * Convert from entity to record.
+     * Using to bulk convert value from entity to record.
+     *
+     * @param value Collection from entity.
+     * @param descriptor Descriptor of field.
+     * @return Values for DTO.
+     */
+    protected abstract D toRecord(E value, Descriptor descriptor);
+
+    /**
+     * Define string key for record.
+     *
+     * @param origin Field name.
+     * @return Record key.
+     */
+    protected abstract String defineTag(String origin);
+
+    /**
+     * Extract generic type from provided field.
+     *
+     * @param descriptor Field descriptor.
+     * @return Generic type of collection.
+     */
+    protected static Class<?> getGeneric(final Descriptor descriptor) {
+        return (Class<?>) ((ParameterizedType) descriptor.generic())
+            .getActualTypeArguments()[0];
+    }
 
     /**
      * Call write method from entity object.
@@ -38,26 +108,21 @@ public abstract class AbstractMapper implements Mapper {
      * @param entity Entity.
      * @param target What needs to write.
      * @param descriptor Field descriptor.
-     * @throws ActionException Can't write field.
+     * @throws CommonException Can't write field.
      */
-    protected static void write(
+    private static void write(
         final Entity entity, final Object target, final Descriptor descriptor)
-        throws ActionException {
+        throws CommonException {
         try {
-            final Method method = descriptor.method();
-            if (method != null) {
-                method.invoke(entity, target);
-            }
+            descriptor.method().invoke(entity, target);
         } catch (final
             IllegalAccessException
                 | IllegalArgumentException
                     | InvocationTargetException exp) {
-            throw new ActionException(
-                String.format(
-                    "Can't write field %s with type %s from %s",
-                    descriptor.name(), descriptor.type(), entity.getClass()
-                ),
-                exp
+            throw new CommonException(
+                exp,
+                "Can't write field %s with type %s from %s",
+                descriptor.name(), descriptor.type(), entity.getClass()
             );
         }
     }
@@ -68,31 +133,21 @@ public abstract class AbstractMapper implements Mapper {
      * @param entity Entity.
      * @param descriptor Field descriptor.
      * @return Field value.
-     * @throws ActionException Can't read field.
+     * @throws CommonException Can't read field.
      */
-    protected static Object read(
-        final Entity entity, final Descriptor descriptor)
-        throws ActionException {
-        final Method method = descriptor.method();
-        final Object target;
-        if (method == null) {
-            target = null;
-        } else {
-            try {
-                target = method.invoke(entity);
-            } catch (final
-                IllegalAccessException
-                    | IllegalArgumentException
-                        | InvocationTargetException exp) {
-                throw new ActionException(
-                    String.format(
-                        "Can't read field %s with type %s from %s",
-                        descriptor.name(), descriptor.type(), entity.getClass()
-                    ),
-                    exp
-                );
-            }
+    private static Object read(final Entity entity, final Descriptor descriptor)
+        throws CommonException {
+        try {
+            return descriptor.method().invoke(entity);
+        } catch (final
+            IllegalAccessException
+                | IllegalArgumentException
+                    | InvocationTargetException exp) {
+            throw new CommonException(
+                exp,
+                "Can't read field %s with type %s from %s",
+                descriptor.name(), descriptor.type(), entity.getClass()
+            );
         }
-        return target;
     }
 }

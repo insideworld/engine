@@ -20,25 +20,23 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.entities.storages.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
-import java.lang.reflect.ParameterizedType;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Mapper for collection of entities.
  * Will add or take in record value with key field name + postfix Ids.
+ *
  * @since 0.0.1
  */
 @Singleton
-public class MapperEntities extends AbstractMapper {
+public class MapperEntities extends AbstractMapper<Collection<Long>, Collection<Entity>> {
 
     /**
      * Storage keeper.
@@ -47,6 +45,7 @@ public class MapperEntities extends AbstractMapper {
 
     /**
      * Default constructor.
+     *
      * @param storages Storage keeper.
      */
     @Inject
@@ -55,62 +54,27 @@ public class MapperEntities extends AbstractMapper {
     }
 
     @Override
-    public final void toEntity(
-        final Record record, final Entity entity, final Descriptor descriptor)
-        throws ActionException {
-        final String tag = this.defineTag(descriptor.name());
-        if (record.contains(tag)) {
-            final Class<?> type = this.getGeneric(descriptor);
-            final Collection<Long> ids = record.get(tag);
-            final Collection<? extends Entity> target;
-            try {
-                target = this.storages
-                    .getStorage((Class<? extends Entity>) type)
-                    .read(ids);
-            } catch (final StorageException exp) {
-                throw new ActionException(String.format("Can't read %s by %s", type, ids), exp);
-            }
-            this.write(entity, target, descriptor);
-        } else {
-            this.write(entity, null, descriptor);
-        }
-    }
-
-    @Override
-    public final void toRecord(
-        final Record record, final Entity entity, final Descriptor descriptor)
-        throws ActionException {
-        final Collection<Entity> entities = (Collection<Entity>) this.read(entity, descriptor);
-        if (CollectionUtils.isNotEmpty(entities)) {
-            record.put(
-                this.defineTag(descriptor.name()),
-                entities.stream().map(Entity::getId).collect(Collectors.toUnmodifiableList())
-            );
-        }
-    }
-
-    @Override
     public final boolean canApply(final Descriptor descriptor) {
         return Collection.class.isAssignableFrom(descriptor.type())
             && Entity.class.isAssignableFrom(this.getGeneric(descriptor));
     }
 
-    /**
-     * Extract generic type from provided field.
-     * @param descriptor Field descriptor.
-     * @return Generic type of collection.
-     */
-    private static Class<?> getGeneric(final Descriptor descriptor) {
-        return (Class<?>) ((ParameterizedType) descriptor.generic())
-            .getActualTypeArguments()[0];
+    @Override
+    protected final Collection<Entity> toEntity(
+        final Collection<Long> target, final Descriptor descriptor) throws CommonException {
+        final Class<? extends Entity> type = (Class<? extends Entity>) this.getGeneric(descriptor);
+        return (Collection<Entity>) this.storages
+            .getStorage((Class<? extends Entity>) type).read(target);
     }
 
-    /**
-     * Define string key for record.
-     * @param origin Field name.
-     * @return Field name + Ids
-     */
-    private static String defineTag(final String origin) {
+    @Override
+    protected final Collection<Long> toRecord(
+        final Collection<Entity> value, final Descriptor descriptor) {
+        return value.stream().map(Entity::getId).toList();
+    }
+
+    @Override
+    protected final String defineTag(final String origin) {
         return String.format("%sIds", origin);
     }
 }

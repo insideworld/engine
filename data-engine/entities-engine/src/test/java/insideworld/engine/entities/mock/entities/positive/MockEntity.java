@@ -17,9 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.entities.test;
+package insideworld.engine.entities.mock.entities.positive;
 
 import insideworld.engine.entities.Entity;
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * Mock entity.
@@ -31,19 +33,106 @@ public interface MockEntity extends Entity {
 
     /**
      * Set id.
+     *
      * @param id ID.
      */
-    void setId(long id);
+    void setId(Long id);
 
     /**
      * Get value.
+     *
      * @return Value.
      */
     String getValue();
 
     /**
      * Set value.
+     *
      * @param value Value.
      */
     void setValue(String value);
+
+    /**
+     * Get date.
+     *
+     * @return Date.
+     */
+    Date getDate();
+
+    /**
+     * Set date.
+     *
+     * @param date Date.
+     */
+    void setDate(Date date);
+
+    /**
+     * Get dates.
+     *
+     * @return Dates.
+     */
+    Collection<Date> getDates();
+
+    /**
+     * Set dates.
+     *
+     * @param dates Dates.
+     */
+    void setDates(Collection<Date> dates);
+
+    /**
+     * Get values.
+     *
+     * @return Values.
+     */
+    Collection<Long> getValues();
+
+    /**
+     * Set values.
+     *
+     * @param values Values.
+     */
+    void setValues(Collection<Long> values);
+
+    /**
+     * Get one.
+     *
+     * @return One.
+     */
+    MockOneEntity getOne();
+
+    /**
+     * Set one.
+     *
+     * @param one One.
+     */
+    void setOne(MockOneEntity one);
+
+    /**
+     * Get tows.
+     *
+     * @return Tows.
+     */
+    Collection<MockTwoEntity> getTwos();
+
+    /**
+     * Set twos.
+     *
+     * @param twos Twos.
+     */
+    void setTwos(Collection<MockTwoEntity> twos);
+
+    /**
+     * Using to test null objects.
+     *
+     * @return Null.
+     */
+    String getTestnull();
+
+    /**
+     * Using to test null objects.
+     * @param ptestnull Null.
+     */
+    void setTestnull(String ptestnull);
+
 }

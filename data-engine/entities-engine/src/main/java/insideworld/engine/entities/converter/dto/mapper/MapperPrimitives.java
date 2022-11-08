@@ -19,59 +19,50 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
+import com.google.common.primitives.Primitives;
 import insideworld.engine.actions.ActionException;
-import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.entities.storages.StorageException;
-import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.exception.CommonException;
-import javax.inject.Inject;
+import java.util.Collection;
 import javax.inject.Singleton;
 
 /**
- * Mapper for entity.
- * Will add or take in record value with key field name + postfix Id.
- *
- * @since 0.0.1
+ * Mapper for collection of primitives.
+ * Logic is easy - the same in record, the same in entity.
+ * Tag is the same.
+ * @since 0.14.0
  */
 @Singleton
-public class MapperEntity extends AbstractMapper<Long, Entity> {
-
-    /**
-     * Storage keeper.
-     */
-    private final StorageKeeper storages;
-
-    /**
-     * Default constructor.
-     *
-     * @param storages Storage keeper.
-     */
-    @Inject
-    public MapperEntity(final StorageKeeper storages) {
-        this.storages = storages;
-    }
+public class MapperPrimitives extends AbstractMapper<Collection<Object>, Collection<Object>> {
 
     @Override
     public final boolean canApply(final Descriptor descriptor) {
-        return Entity.class.isAssignableFrom(descriptor.type());
+        final boolean can;
+        if (Collection.class.isAssignableFrom(descriptor.type())) {
+            final Class<?> generic = this.getGeneric(descriptor);
+            can = generic.isPrimitive()
+                || generic.equals(String.class)
+                || Primitives.isWrapperType(generic);
+        } else {
+            can = false;
+        }
+        return can;
     }
 
     @Override
-    protected final Entity toEntity(final Long target, final Descriptor descriptor)
-        throws CommonException {
-        return this.storages
-            .getStorage((Class<? extends Entity>) descriptor.type())
-            .read(target);
+    protected final Collection<Object> toEntity(
+        final Collection<Object> target, final Descriptor descriptor) throws CommonException {
+        return target;
     }
 
     @Override
-    protected final Long toRecord(final Entity value, final Descriptor descriptor) {
-        return value.getId();
+    protected final Collection<Object> toRecord(
+        final Collection<Object> value, final Descriptor descriptor) {
+        return value;
     }
 
     @Override
     protected final String defineTag(final String origin) {
-        return String.format("%sId", origin);
+        return origin;
     }
 }

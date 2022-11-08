@@ -23,6 +23,7 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Mapper for data.
@@ -36,20 +37,20 @@ public interface Mapper {
      * @param record Record.
      * @param entity Entity.
      * @param descriptor What needs to map.
-     * @throws ActionException Something went wrong.
+     * @throws CommonException Something went wrong.
      */
     void toEntity(Record record, Entity entity, Descriptor descriptor)
-        throws ActionException;
+        throws CommonException;
 
     /**
      * Map entity field to record value.
      * @param record Record.
      * @param entity Entity.
      * @param descriptor What needs to map.
-     * @throws ActionException Something went wrong.
+     * @throws CommonException Something went wrong.
      */
     void toRecord(Record record, Entity entity, Descriptor descriptor)
-        throws ActionException;
+        throws CommonException;
 
     /**
      * Can apply provided descriptor to this mapper.
