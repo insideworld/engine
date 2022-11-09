@@ -48,23 +48,6 @@ public class StorageException extends CommonException {
         super("%s for entity %s with id %d", message, type.getName(), id);
     }
 
-
-//    public StorageException(final Throwable exception) {
-//        super(exception);
-//    }
-//
-//    public StorageException(final String message) {
-//        super(message);
-//    }
-//
-//    public StorageException(final Throwable exception, final String message) {
-//        super(exception, message);
-//    }
-//
-//    public StorageException(final Throwable exception, final String message, final Object... args) {
-//        super(exception, message, args);
-//    }
-
     @Override
     protected final String module() {
         return "entities-engine";

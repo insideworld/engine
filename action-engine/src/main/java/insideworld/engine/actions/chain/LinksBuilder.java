@@ -47,10 +47,10 @@ public interface LinksBuilder {
      * @param init Init predicate which execute once at action init.
      * @param <T> Link type.
      * @return The same instance.
-     * @throws LinkInitException Can't init link.
+     * @throws LinkException Can't init link.
      */
     <T extends Link> LinksBuilder addLink(Class<T> type, LinkConsumer<T> init)
-        throws LinkInitException;
+        throws LinkException;
 
     /**
      * Add specific link with generic parameters.
@@ -67,10 +67,10 @@ public interface LinksBuilder {
      * @param init Init predicate which execute once at action init.
      * @param <T> Link type.
      * @return The same instance.
-     * @throws LinkInitException Can't init link.
+     * @throws LinkException Can't init link.
      */
     <T extends Link> LinksBuilder addLink(TypeLiteral<T> type, LinkConsumer<T> init)
-        throws LinkInitException;
+        throws LinkException;
 
     /**
      * Build links collections.

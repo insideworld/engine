@@ -20,6 +20,7 @@
 package insideworld.engine.actions.executors.key;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
@@ -94,8 +95,7 @@ class TestKeyExecutor {
     /**
      * TC: Execute different ActionExceptions.
      * Exception during action processing.
-     * ER:
-     * For each case right message.
+     * ER: For each case right message.
      */
     @Test
     final void testExceptions() {
@@ -104,8 +104,15 @@ class TestKeyExecutor {
         boolean exception = false;
         try {
             this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
-        } catch (final CommonException exp) {
+        } catch (final ActionException exp) {
             exception = exp.getMessage().contains("Exception!");
+        }
+        assert exception;
+        context.put(TestExecutorTags.EXCEPTION, 2, true);
+        try {
+            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
+        } catch (final ActionException exp) {
+            exception = exp.getCause().getMessage().contains("Unhandled");
         }
         assert exception;
     }
@@ -116,10 +123,10 @@ class TestKeyExecutor {
      * @param executor Executor.
      * @param key Action key.
      * @param <T> Type of action key.
-     * @throws CommonException Exception.
+     * @throws ActionException Exception.
      */
     private static <T> void test(final ActionExecutor<T> executor, final T key)
-        throws CommonException {
+        throws ActionException {
         final Context context = executor.createContext();
         final UUID uuid = UUID.randomUUID();
         context.put(TestExecutorTags.UUID, uuid);

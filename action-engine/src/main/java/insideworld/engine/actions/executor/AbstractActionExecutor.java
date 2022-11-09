@@ -21,12 +21,12 @@ package insideworld.engine.actions.executor;
 
 import com.google.common.collect.Maps;
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.tags.ActionsTags;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.List;
@@ -85,19 +85,27 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
 
     @Override
     public final Output execute(final T parameter, final Context context)
-        throws CommonException {
+        throws ActionException {
         return this.execute(parameter, context, DefaultExecuteProfile.class);
     }
 
     @Override
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidRethrowingException"})
     public final Output execute(
         final T parameter, final Context context, final Class<? extends ExecuteProfile> profile)
-        throws CommonException {
+        throws ActionException {
         final Action action = this.provide(parameter);
         LOGGER.info("Start action {} with key {}", action.getClass().getSimpleName(), action.key());
         context.put(ActionsTags.ACTION, action);
         final var output = this.factory.createObject(Output.class);
-        this.profiles.get(profile).execute(action, context, output);
+        //@checkstyle IllegalCatchCheck (7 lines)
+        try {
+            this.profiles.get(profile).execute(action, context, output);
+        } catch (final ActionException exp) {
+            throw exp;
+        } catch (final Exception exp) {
+            throw new ActionException(exp, action.getClass());
+        }
         return output;
     }
 

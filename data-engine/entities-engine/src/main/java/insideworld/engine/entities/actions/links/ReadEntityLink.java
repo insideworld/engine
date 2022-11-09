@@ -19,9 +19,8 @@
 
 package insideworld.engine.entities.actions.links;
 
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionRuntimeException;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.MultipleTag;
@@ -43,9 +42,10 @@ import org.apache.commons.lang3.tuple.Pair;
  * This is link required to init.
  * Need to set one or both tags - for multiple and single entity. Also need to set a type.
  * In case if ID won't present in context:
- *  - For single tag just skip filling.
- *  - For multiple tag will read all entities.
- *  All results will put in context.
+ * - For single tag just skip filling.
+ * - For multiple tag will read all entities.
+ * All results will put in context.
+ *
  * @param <T> Entity type.
  * @since 0.0.1
  */
@@ -74,6 +74,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
 
     /**
      * Constructor.
+     *
      * @param storages Storage keeper instance.
      */
     @Inject
@@ -82,7 +83,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws StorageException {
         if (this.single != null && context.contains(this.single.getLeft())) {
             context.put(
                 this.single.getRight(),
@@ -100,6 +101,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
 
     /**
      * Set single tag to read.
+     *
      * @param read ID tag with entity ID.
      * @param put Entity tag to put in context.
      * @return The same instance.
@@ -113,6 +115,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
 
     /**
      * Set multiple tag to read.
+     *
      * @param read ID's tag with entity ID's.
      * @param put Entities tag to put in context.
      * @return The same instance.
@@ -126,30 +129,28 @@ public class ReadEntityLink<T extends Entity> implements Link {
 
     /**
      * Set type of entity.
+     *
      * @param type Entity type.
      * @return The same instance
      */
-    public ReadEntityLink<T> setType(final Class<T> type) {
+    public ReadEntityLink<T> setType(final Class<T> type) throws LinkException {
         try {
             this.storage = this.storages.getStorage(type);
         } catch (final StorageException exp) {
-            throw new ActionRuntimeException(new ActionException("Can't find storage", exp));
+            throw new LinkException(exp, this.getClass());
         }
         return this;
     }
 
     /**
      * Read a single entity by id.
+     *
      * @param id ID of entity.
      * @return Entity.
-     * @throws ActionException Wrapped storage exception about read fail.
+     * @throws StorageException Wrapped storage exception about read fail.
      */
-    private T processSingle(final Long id) throws ActionException {
-        try {
-            return this.storage.read(id);
-        } catch (final StorageException exp) {
-            throw new ActionException("Can't read an entity", exp);
-        }
+    private T processSingle(final Long id) throws StorageException {
+        return this.storage.read(id);
     }
 
     /**
@@ -158,19 +159,15 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param ids Ids of entities.
      * @return Collection of entities.
-     * @throws ActionException Can't read an entity.
+     * @throws StorageException Can't read an entity.
      */
-    private Collection<T> processMultiple(final Collection<Long> ids) throws ActionException {
-        try {
-            final Collection<T> collection;
-            if (CollectionUtils.isEmpty(ids)) {
-                collection = this.storage.readAll();
-            } else {
-                collection = this.storage.read(ids);
-            }
-            return collection;
-        } catch (final StorageException exp) {
-            throw new ActionException("Can't read an entity", exp);
+    private Collection<T> processMultiple(final Collection<Long> ids) throws StorageException {
+        final Collection<T> collection;
+        if (CollectionUtils.isEmpty(ids)) {
+            collection = this.storage.readAll();
+        } else {
+            collection = this.storage.read(ids);
         }
+        return collection;
     }
 }

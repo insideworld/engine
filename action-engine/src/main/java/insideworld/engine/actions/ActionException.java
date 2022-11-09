@@ -54,12 +54,17 @@ public class ActionException extends CommonException {
 
     /**
      * Constructor to create an exception with message.
-     * @param action Action class.
      * @param exception Exception.
+     * @param action Action class.
      */
     public ActionException(
-        final Class<? extends Action> action, final Throwable exception) {
-        super(exception, ActionException.EXCEPTION_MESSAGE, action.getName(), "Exception");
+        final Throwable exception, final Class<? extends Action> action) {
+        super(
+            exception,
+            ActionException.EXCEPTION_MESSAGE,
+            action.getName(),
+            "without description"
+        );
     }
 
     @Override

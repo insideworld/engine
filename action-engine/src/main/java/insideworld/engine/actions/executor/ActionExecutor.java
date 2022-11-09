@@ -19,10 +19,10 @@
 
 package insideworld.engine.actions.executor;
 
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
 
 /**
  * Interface to provide ability to execute an action.
@@ -36,20 +36,20 @@ public interface ActionExecutor<T> {
      * @param parameter Parameter for define an action.
      * @param context Input context.
      * @return Result of action.
-     * @throws CommonException Something went wrong.
+     * @throws ActionException Something went wrong.
      */
-    Output execute(T parameter, Context context) throws CommonException;
+    Output execute(T parameter, Context context) throws ActionException;
 
     /**
-     * Execute action in internal mechanism like jobs, preinit and etc.
+     * Execute action in internal mechanism like jobs, preinit, etc.
      * @param parameter Action parameter.
      * @param context Context parameter.
      * @param profile Execute with specific profile.
      * @return Result of action.
-     * @throws CommonException Something went wrong.
+     * @throws ActionException Something went wrong.
      */
     Output execute(T parameter, Context context, Class<? extends ExecuteProfile> profile)
-        throws CommonException;
+        throws ActionException;
 
     /**
      * Create a context.

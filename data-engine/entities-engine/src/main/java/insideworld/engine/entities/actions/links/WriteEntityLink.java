@@ -40,6 +40,7 @@ import javax.inject.Inject;
  * Write entities link.
  * Using to call write method in storage for specific entity or entities from context.
  * This is link required to init. See setTag and count method comments.
+ *
  * @param <T> Entity type to delete.
  * @since 0.0.1
  */
@@ -69,6 +70,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     /**
      * Default constructor.
+     *
      * @param storages Storage keeper.
      */
     @Inject
@@ -77,15 +79,11 @@ public class WriteEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws StorageException {
         if (this.single != null && context.contains(this.single)) {
-            try {
-                context.put(
-                    this.single, this.writeSingle(context.get(this.single)), true
-                );
-            } catch (final StorageException exp) {
-                throw new ActionException(context, exp);
-            }
+            context.put(
+                this.single, this.writeSingle(context.get(this.single)), true
+            );
             if (this.count) {
                 final Record record = output.createRecord();
                 record.put("type", this.single.getTag());
@@ -93,13 +91,9 @@ public class WriteEntityLink<T extends Entity> implements Link {
             }
         }
         if (this.multiple != null && context.contains(this.multiple)) {
-            try {
-                context.put(
-                    this.multiple, this.writeMultiple(context.get(this.multiple)), true
-                );
-            } catch (final StorageException exp) {
-                throw new ActionException(context, exp);
-            }
+            context.put(
+                this.multiple, this.writeMultiple(context.get(this.multiple)), true
+            );
             if (this.count) {
                 final Record record = output.createRecord();
                 record.put("type", this.multiple.getTag());
@@ -110,6 +104,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     /**
      * Set tag of entity which need to write.
+     *
      * @param tag Entity tag.
      * @return The same instance.
      */
@@ -120,6 +115,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     /**
      * Set tag of entities which need to write.
+     *
      * @param tag Entities tag.
      * @return The same instance.
      */
@@ -130,6 +126,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     /**
      * Create a record in output with count of written entities.
+     *
      * @return The same instance.
      */
     public WriteEntityLink<T> setCount() {
@@ -139,6 +136,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     /**
      * Write single entity.
+     *
      * @param entity Entity.
      * @return Persisted entity.
      * @throws StorageException Can't write entity.
@@ -150,6 +148,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     /**
      * Write entities.
+     *
      * @param collection Collection of entities.
      * @return Persisted entities.
      * @throws StorageException Can't write entities.

@@ -20,10 +20,10 @@
 package insideworld.engine.actions.executors.key;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -34,7 +34,7 @@ import javax.inject.Singleton;
 class TestAction implements Action {
 
     @Override
-    public final void execute(final Context context, final Output output) throws CommonException {
+    public final void execute(final Context context, final Output output) throws ActionException {
         context.cloneTag(TestExecutorTags.UUID, output.createRecord());
     }
 

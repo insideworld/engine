@@ -63,7 +63,7 @@ public class LinksBuilderFactory implements LinksBuilder {
 
     @Override
     public final  <T extends Link> LinksBuilder addLink(
-        final Class<T> type, final LinkConsumer<T> init) throws LinkInitException {
+        final Class<T> type, final LinkConsumer<T> init) throws LinkException {
         final T link = this.factory.createObject(type);
         init.init(link);
         this.links.add(link);
@@ -80,7 +80,7 @@ public class LinksBuilderFactory implements LinksBuilder {
     @Override
     public final <T extends Link> LinksBuilder addLink(
         final TypeLiteral<T> type, final LinkConsumer<T> init)
-        throws LinkInitException {
+        throws LinkException {
         final T link = this.factory.createObject(type);
         init.init(link);
         this.links.add(link);

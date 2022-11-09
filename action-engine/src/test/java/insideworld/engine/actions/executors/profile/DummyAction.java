@@ -20,10 +20,10 @@
 package insideworld.engine.actions.executors.profile;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ class DummyAction implements Action {
     private static final Logger LOGGER = LoggerFactory.getLogger(DummyAction.class);
 
     @Override
-    public final void execute(final Context context, final Output output) throws CommonException {
+    public final void execute(final Context context, final Output output) throws ActionException {
         if (context.contains(TestExecutorTags.SEQUENCE)) {
             DummyAction.LOGGER.debug("Wrapper 0");
             context.get(TestExecutorTags.SEQUENCE).add(0);

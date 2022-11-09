@@ -29,8 +29,8 @@ public interface LinkConsumer<T extends Link> {
     /**
      * Init link.
      * @param link Link.
-     * @throws LinkInitException Can't init link.
+     * @throws LinkException Can't init link.
      */
-    void init(T link) throws LinkInitException;
+    void init(T link) throws LinkException;
 
 }

@@ -21,9 +21,9 @@ package insideworld.engine.actions.executor.profiles;
 
 import com.google.common.collect.ImmutableSet;
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
 import java.util.Collections;
 import java.util.Comparator;
@@ -76,7 +76,7 @@ public class SystemExecuteProfile implements ExecuteProfile, OnStartUp {
 
     @Override
     public final void execute(final Action action, final Context context, final Output output)
-        throws CommonException {
+        throws ActionException {
         this.first.execute(action, context, output);
     }
 

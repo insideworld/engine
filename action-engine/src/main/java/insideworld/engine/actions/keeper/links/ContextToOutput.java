@@ -21,10 +21,10 @@ package insideworld.engine.actions.keeper.links;
 
 import com.google.common.collect.Lists;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.Tag;
-import insideworld.engine.exception.CommonException;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
@@ -43,7 +43,7 @@ public class ContextToOutput implements Link {
     private final Collection<String> tags = Lists.newLinkedList();
 
     @Override
-    public final void process(final Context context, final Output output) throws CommonException {
+    public final void process(final Context context, final Output output) throws LinkException {
         if (this.tags.isEmpty()) {
             ContextToOutput.addAll(context, output);
         } else {

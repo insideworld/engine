@@ -24,7 +24,6 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -35,11 +34,15 @@ import javax.inject.Singleton;
 class ExceptionAction implements Action {
 
     @Override
-    public final void execute(final Context context, final Output output) throws CommonException {
-        if (context.get(TestExecutorTags.EXCEPTION) == 1) {
-            throw new ActionException(this.getClass(), "Exception!");
+    public final void execute(final Context context, final Output output) throws ActionException {
+        switch (context.get(TestExecutorTags.EXCEPTION)) {
+            case 1:
+                throw new ActionException(this.getClass(), "Exception!");
+            case 2:
+                throw new IllegalArgumentException("Unhandled");
+            default:
+                throw new IllegalArgumentException("And what I should do?");
         }
-        throw new IllegalArgumentException("And what I should do?");
     }
 
     @Override
