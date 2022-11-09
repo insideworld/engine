@@ -20,12 +20,14 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
+import java.util.Collections;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Mapper for collection of entities.
@@ -59,10 +61,16 @@ public class MapperEntities extends AbstractMapper<Collection<Long>, Collection<
 
     @Override
     protected final Collection<Entity> toEntity(
-        final Collection<Long> target, final Descriptor descriptor) throws CommonException {
+        final Collection<Long> target, final Descriptor descriptor) throws StorageException {
         final Class<? extends Entity> type = (Class<? extends Entity>) this.getGeneric(descriptor);
-        return (Collection<Entity>) this.storages
-            .getStorage((Class<? extends Entity>) type).read(target);
+        final Collection<Entity> results;
+        if (CollectionUtils.isEmpty(target)) {
+            results = Collections.emptyList();
+        } else {
+            results = (Collection<Entity>) this.storages
+                .getStorage((Class<? extends Entity>) type).read(target);
+        }
+        return results;
     }
 
     @Override

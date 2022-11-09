@@ -34,9 +34,29 @@ import java.util.Date;
 public final class MockTags {
 
     /**
-     * Value.
+     * String.
      */
-    public static final SingleTag<String> VALUE = new SingleTag<>("value");
+    public static final SingleTag<String> STRPRIM = new SingleTag<>("strprim");
+
+    /**
+     * Wrapped primitive.
+     */
+    public static final SingleTag<Long> WRAPPRIM = new SingleTag<>("wrapprim");
+
+    /**
+     * Primitive.
+     */
+    public static final SingleTag<Long> PRIM = new SingleTag<>("prim");
+
+    /**
+     * String primitives.
+     */
+    public static final MultipleTag<String> STRPRIMS = new MultipleTag<>("strprims");
+
+    /**
+     * Wrapped primitives.
+     */
+    public static final MultipleTag<Long> WRAPPRIMS = new MultipleTag<>("wrapprims");
 
     /**
      * Date.
@@ -47,11 +67,6 @@ public final class MockTags {
      * Dates.
      */
     public static final MultipleTag<Date> DATES = new MultipleTag<>("dates");
-
-    /**
-     * Values.
-     */
-    public static final MultipleTag<Long> VALUES = new MultipleTag<>("values");
 
     /**
      * One.
@@ -92,6 +107,16 @@ public final class MockTags {
      * No get method field.
      */
     public static final SingleTag<String> NO_GET = new SingleTag<>("noget");
+
+    /**
+     * Ignore tag.
+     */
+    public static final SingleTag<String> IGNORE = new SingleTag<>("ignore");
+
+    /**
+     * Ignore tag.
+     */
+    public static final MultipleTag<Object> OBJECTS = new MultipleTag<>("objects");
 
     /**
      * Private constructor.

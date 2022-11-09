@@ -29,14 +29,21 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.startup.ActionsInit;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.matchers.ExceptionClassMatcher;
+import insideworld.engine.matchers.ExceptionMatchers;
+import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test exception at link init.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -59,6 +66,7 @@ class TestLinkException {
 
     /**
      * Default constructor.
+     *
      * @param builder Link builder.
      * @param actions All actions.
      * @param executor Class action executor.
@@ -77,7 +85,6 @@ class TestLinkException {
     /**
      * TC: Just execute an action which should fail an init.
      * ER: Exception with message.
-     * @checkstyle BooleanExpressionComplexityCheck (20 lines)
      */
     @Test
     final void testLinkInit() {
@@ -85,18 +92,28 @@ class TestLinkException {
             Collections.singletonList(new TestInitAction(this.builder)),
             Collections.emptyList()
         );
-        boolean exception = false;
-        try {
-            init.startUp();
-        } catch (final CommonException exp) {
-            exception =
-                exp.getClass().equals(ActionException.class)
-                && exp.getCause().getClass().equals(LinkException.class)
-                && exp.getCause().getMessage().contains("Exception in link")
-                && exp.getCause().getCause().getClass().equals(IllegalArgumentException.class)
-                && exp.getCause().getCause().getMessage().equals("Exception at link init");
-        }
-        assert exception;
+        final StartUpException exception = Assertions.assertThrows(
+            StartUpException.class,
+            init::startUp,
+            "Expected exception at init"
+        );
+        MatcherAssert.assertThat(
+            "Exception message wrong",
+            exception,
+            Matchers.allOf(
+                ExceptionMatchers.classMatcher(1, ActionException.class),
+                ExceptionMatchers.classMatcher(2, LinkException.class),
+                ExceptionMatchers.messageMatcher(
+                    2, Matchers.containsString("Exception in link")
+                ),
+                ExceptionMatchers.classMatcher(
+                    3, IllegalArgumentException.class
+                ),
+                ExceptionMatchers.messageMatcher(
+                    3, Matchers.equalTo("Exception at link init")
+                )
+            )
+        );
     }
 
     /**
@@ -124,7 +141,8 @@ class TestLinkException {
 
     /**
      * TC: Try to catch handle and unhandled exception.
-     * ER: Handled exception should be wrapped 1 time. Unhandled should be wrapped 2 times.
+     * ER: Handled exception should be wrapped 1 time.
+     * Unhandled and wrapped should be wrapped 2 times.
      */
     @Test
     final void testException() {
@@ -142,6 +160,13 @@ class TestLinkException {
             this.executor.execute(TestAction.class, context.cloneContext());
         } catch (final ActionException exp) {
             exception = exp.getCause().getCause().getMessage().contains("Unhandled");
+        }
+        assert exception;
+        context.put(TestChainTags.EXCEPTION, 3, true);
+        try {
+            this.executor.execute(TestAction.class, context.cloneContext());
+        } catch (final ActionException exp) {
+            exception = exp.getCause().getCause().getMessage().contains("Handled");
         }
         assert exception;
     }

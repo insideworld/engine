@@ -20,30 +20,63 @@
 package insideworld.engine.entities.mock.entities.exclude;
 
 import insideworld.engine.entities.Entity;
+import java.util.Collection;
 
 /**
  * Interface for test behavior of absent methods.
+ *
  * @since 0.14.0
  */
 public interface MockExcludeEntity extends Entity {
 
     /**
      * Setter for noget.
+     *
      * @param pnoget Value to set.
      */
     void setNoget(String pnoget);
 
     /**
      * Getter for not set field.
+     *
      * @return No set.
      */
     String getNoset();
 
     /**
      * Check that no set and no method fields didn't change values.
+     *
      * @param nogetvalue Value to check of no get.
-     * @return If field withoud setters change state or field with setter not equals
-     *  with value false.
+     * @return If field withoud setters change state or field with setter not
+     *  equals with value false.
      */
     boolean check(String nogetvalue);
+
+    /**
+     * Ignore getter.
+     *
+     * @return Doesn't matter.
+     */
+    String getIgnore();
+
+    /**
+     * Ignore setter.
+     *
+     * @param pignore Doesn't matter.
+     */
+    void setIgnore(String pignore);
+
+    /**
+     * Collection of objects should ignore.
+     *
+     * @return Doesn't matter.
+     */
+    Collection<Object> getObjects();
+
+    /**
+     * Collection of objects should ignore.
+     *
+     * @param pobjects Doesn't matter.
+     */
+    void setObjects(Collection<Object> pobjects);
 }

@@ -19,9 +19,8 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
-import insideworld.engine.actions.ActionException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.exception.CommonException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +51,7 @@ public class MapperDate extends AbstractMapper<Object, Date> {
 
     @Override
     protected final Date toEntity(
-        final Object target, final Descriptor descriptor) throws CommonException {
+        final Object target, final Descriptor descriptor) throws StorageException {
         final Date date;
         if (target == null) {
             date = null;
@@ -62,7 +61,11 @@ public class MapperDate extends AbstractMapper<Object, Date> {
             try {
                 date = this.format.get().parse(target.toString());
             } catch (final ParseException exp) {
-                throw new CommonException("Can't parse date", exp);
+                throw new StorageException(
+                    exp,
+                    "Can't parse date for field %s of %s",
+                    descriptor.name(), descriptor.parent()
+                );
             }
         }
         return date;

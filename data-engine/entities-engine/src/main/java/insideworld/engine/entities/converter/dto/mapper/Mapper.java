@@ -21,8 +21,8 @@ package insideworld.engine.entities.converter.dto.mapper;
 
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 
 /**
  * Mapper for data.

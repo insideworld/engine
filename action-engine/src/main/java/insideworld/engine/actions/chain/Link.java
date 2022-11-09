@@ -21,6 +21,7 @@ package insideworld.engine.actions.chain;
 
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Link of chain.
@@ -45,6 +46,15 @@ public interface Link {
      */
     default boolean can(Context context) {
         return true;
+    }
+
+    /**
+     * Using to convert common exception to link representation.
+     * @param exp Exception.
+     * @return Wrapped link exception.
+     */
+    default LinkException exception(final CommonException exp) {
+        return new LinkException(exp, this.getClass());
     }
 
 }

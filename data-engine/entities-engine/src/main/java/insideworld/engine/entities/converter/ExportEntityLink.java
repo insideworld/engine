@@ -20,11 +20,12 @@
 package insideworld.engine.entities.converter;
 
 import com.google.common.collect.Lists;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
 import java.util.Collection;
@@ -63,12 +64,16 @@ public class ExportEntityLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
+    public final void process(final Context context, final Output output) throws LinkException {
         final Collection<Entity> entities = Lists.newLinkedList();
         context.getOptional(this.single).ifPresent(entities::add);
         context.getOptional(this.multiple).ifPresent(entities::addAll);
         for (final Entity entity : entities) {
-            output.add(this.converter.convert(entity));
+            try {
+                output.add(this.converter.convert(entity));
+            } catch (final StorageException exp) {
+                throw this.exception(exp);
+            }
         }
     }
 

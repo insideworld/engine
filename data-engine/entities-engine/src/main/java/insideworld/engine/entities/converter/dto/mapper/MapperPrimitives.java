@@ -20,9 +20,8 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
 import com.google.common.primitives.Primitives;
-import insideworld.engine.actions.ActionException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.inject.Singleton;
 
@@ -40,9 +39,7 @@ public class MapperPrimitives extends AbstractMapper<Collection<Object>, Collect
         final boolean can;
         if (Collection.class.isAssignableFrom(descriptor.type())) {
             final Class<?> generic = this.getGeneric(descriptor);
-            can = generic.isPrimitive()
-                || generic.equals(String.class)
-                || Primitives.isWrapperType(generic);
+            can = generic.equals(String.class) || Primitives.isWrapperType(generic);
         } else {
             can = false;
         }
@@ -51,7 +48,7 @@ public class MapperPrimitives extends AbstractMapper<Collection<Object>, Collect
 
     @Override
     protected final Collection<Object> toEntity(
-        final Collection<Object> target, final Descriptor descriptor) throws CommonException {
+        final Collection<Object> target, final Descriptor descriptor) throws StorageException {
         return target;
     }
 

@@ -22,14 +22,13 @@ package insideworld.engine.entities.converter.dto;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.EntityConverter;
 import insideworld.engine.entities.converter.dto.descriptors.ReadDescriptors;
 import insideworld.engine.entities.converter.dto.descriptors.WriteDescriptors;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.StorageTags;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,6 +39,7 @@ import javax.inject.Singleton;
  * replaced to ID and ID's accordingly.
  * Because almost all entities has link with static record, no need to send it each time.
  * See package-info to more information about naming rules and instruction to use.
+ *
  * @since 0.6.0
  */
 @Singleton
@@ -67,6 +67,7 @@ public class DtoConverter implements EntityConverter {
 
     /**
      * Default constructor.
+     *
      * @param reads Read descriptors.
      * @param writes Write descriptor.
      * @param factory Object factory.
@@ -85,7 +86,7 @@ public class DtoConverter implements EntityConverter {
     }
 
     @Override
-    public final Record convert(final Entity entity) throws CommonException {
+    public final Record convert(final Entity entity) throws StorageException {
         final Record record = this.factory.createObject(Context.class);
         for (final var descriptor : this.reads.getDescriptors(entity.getClass())) {
             descriptor.getLeft().toRecord(record, entity, descriptor.getRight());
@@ -95,9 +96,9 @@ public class DtoConverter implements EntityConverter {
 
     @Override
     public final <T extends Entity> T convert(final Record record, final Class<T> type)
-        throws CommonException {
+        throws StorageException {
         final T entity = this.readEntity(record, type);
-        for (final var descriptor : this.writes.getDescriptors(type)) {
+        for (final var descriptor : this.writes.getDescriptors(entity.getClass())) {
             descriptor.getLeft().toEntity(record, entity, descriptor.getRight());
         }
         return entity;
@@ -106,6 +107,7 @@ public class DtoConverter implements EntityConverter {
     /**
      * Read entity using storage.
      * If ID null or 0 - will create a new object.
+     *
      * @param context Record with DTO entity.
      * @param type Type of entity.
      * @param <T> Type of entity.
@@ -113,7 +115,7 @@ public class DtoConverter implements EntityConverter {
      * @throws StorageException Can't find storage by id.
      */
     private <T extends Entity> T readEntity(final Record context, final Class<T> type)
-        throws CommonException {
+        throws StorageException {
         final Long id = context.get(StorageTags.ID);
         final T entity;
         if (id == null || id.equals(0L)) {
@@ -121,6 +123,13 @@ public class DtoConverter implements EntityConverter {
         } else {
             final Storage<T> storage = this.storages.getStorage(type);
             entity = storage.read(id);
+        }
+        if (entity == null) {
+            throw new StorageException(
+                "Can't read because storage return null",
+                type,
+                id
+            );
         }
         return entity;
     }

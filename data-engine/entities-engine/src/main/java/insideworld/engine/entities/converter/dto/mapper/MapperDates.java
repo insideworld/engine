@@ -20,9 +20,8 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
 import com.google.common.collect.Lists;
-import insideworld.engine.actions.ActionException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.exception.CommonException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -55,7 +54,7 @@ public class MapperDates extends AbstractMapper<Collection<Object>, Collection<D
 
     @Override
     protected final Collection<Date> toEntity(
-        final Collection<Object> target, final Descriptor descriptor) throws CommonException {
+        final Collection<Object> target, final Descriptor descriptor) throws StorageException {
         final Collection<Date> result = Lists.newArrayListWithCapacity(target.size());
         for (final Object date : target) {
             if (date == null) {
@@ -64,9 +63,13 @@ public class MapperDates extends AbstractMapper<Collection<Object>, Collection<D
                 result.add((Date) date);
             } else {
                 try {
-                    result.add(this.format.get().parse(target.toString()));
+                    result.add(this.format.get().parse(date.toString()));
                 } catch (final ParseException exp) {
-                    throw new CommonException("Can't parse date", exp);
+                    throw new StorageException(
+                        exp,
+                        "Can't parse date for field %s of %s",
+                        descriptor.name(), descriptor.parent()
+                    );
                 }
             }
         }

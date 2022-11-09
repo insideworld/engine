@@ -21,6 +21,7 @@ package insideworld.engine.entities.extractor;
 
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.entities.StorageException;
 import java.util.Map;
 
 /**
@@ -34,30 +35,34 @@ public interface Extractor {
      * @param context Map with input arguments for schema.
      * @param schema Schema which using to extract data.
      * @return Output with data.
+     * @throws StorageException Can't extract.
      */
-    Output extract(Map<String, ?> context, String schema);
+    Output extract(Map<String, ?> context, String schema) throws StorageException;
 
     /**
      * Extract information by schema.
      * @param record Record with input parameters.
      * @param schema Schema which using to extract data.
      * @return Output with data.
+     * @throws StorageException Can't extract.
      */
-    Output extract(Record record, String schema);
+    Output extract(Record record, String schema) throws StorageException;
 
     /**
      * Just execute some query and etc in database.
      * @param context Input parameters.
      * @param schema Schema.
      * @return Number of results.
+     * @throws StorageException Can't extract.
      */
-    int execute(Map<String, ?> context, String schema);
+    int execute(Map<String, ?> context, String schema) throws StorageException;
 
     /**
      * Just execute some query and etc in database.
      * @param record Input parameters.
      * @param schema Schema.
      * @return Number of results.
+     * @throws StorageException Can't extract.
      */
-    int execute(Record record, String schema);
+    int execute(Record record, String schema) throws StorageException;
 }

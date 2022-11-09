@@ -20,11 +20,12 @@
 package insideworld.engine.actions.startup;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.OnStartupAction;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
@@ -63,14 +64,18 @@ public class StartUpActions implements OnStartUp {
     }
 
     @Override
-    public final void startUp() throws CommonException {
+    public final void startUp() throws StartUpException {
         for (final Action action : this.actions) {
             if (action.getClass().isAnnotationPresent(OnStartupAction.class)) {
-                this.executor.execute(
-                    action.getClass(),
-                    this.executor.createContext(),
-                    SystemExecuteProfile.class
-                );
+                try {
+                    this.executor.execute(
+                        action.getClass(),
+                        this.executor.createContext(),
+                        SystemExecuteProfile.class
+                    );
+                } catch (final ActionException exp) {
+                    throw new StartUpException(exp);
+                }
             }
         }
     }

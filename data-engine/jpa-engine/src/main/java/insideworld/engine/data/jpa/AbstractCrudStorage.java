@@ -20,8 +20,8 @@
 package insideworld.engine.data.jpa;
 
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import java.util.Collection;
 import java.util.stream.Collectors;

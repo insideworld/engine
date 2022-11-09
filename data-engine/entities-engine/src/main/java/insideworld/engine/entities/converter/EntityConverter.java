@@ -19,10 +19,9 @@
 
 package insideworld.engine.entities.converter;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.exception.CommonException;
+import insideworld.engine.entities.StorageException;
 
 /**
  * Interface to convert entity to record and vice versa.
@@ -35,9 +34,9 @@ public interface EntityConverter {
      * Map entity to record.
      * @param entity Entity to convert.
      * @return Record with raw values.
-     * @throws ActionException Can't convert entity.
+     * @throws StorageException Can't convert entity.
      */
-    Record convert(Entity entity) throws CommonException;
+    Record convert(Entity entity) throws StorageException;
 
     /**
      * Map record to entity.
@@ -45,8 +44,8 @@ public interface EntityConverter {
      * @param type Type of entity.
      * @param <T> Type of entity.
      * @return Entity.
-     * @throws ActionException Can't convert entity.
+     * @throws StorageException Can't convert entity.
      */
-    <T extends Entity> T convert(Record record, Class<T> type) throws CommonException;
+    <T extends Entity> T convert(Record record, Class<T> type) throws StorageException;
 
 }

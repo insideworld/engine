@@ -19,6 +19,7 @@
 
 package insideworld.engine.entities.mock;
 
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.entities.mock.entities.positive.MockOneEntity;
@@ -26,7 +27,6 @@ import insideworld.engine.entities.mock.entities.positive.MockOneEntityImpl;
 import insideworld.engine.entities.mock.entities.positive.MockTwoEntity;
 import insideworld.engine.entities.mock.entities.positive.MockTwoEntityImpl;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.runtime.Startup;
 import java.util.Date;
@@ -37,6 +37,7 @@ import javax.inject.Singleton;
 
 /**
  * Init mock storages.
+ *
  * @since 0.14.0
  */
 @Startup(3000)
@@ -65,6 +66,7 @@ public class InitMock {
 
     /**
      * Default constructor.
+     *
      * @param primary Primary storage.
      * @param one One storage.
      * @param two Two storage.
@@ -85,6 +87,7 @@ public class InitMock {
 
     /**
      * Post construct method.
+     *
      * @throws StorageException Some storage exception.
      */
     @PostConstruct
@@ -96,6 +99,7 @@ public class InitMock {
 
     /**
      * Write primary.
+     *
      * @return New mock entity.
      * @throws StorageException Some exception.
      */
@@ -105,8 +109,11 @@ public class InitMock {
         entity.setDates(
             List.of(new Date(2_000_000), new Date(3_000_000), new Date(4_000_000))
         );
-        entity.setValue("Some value");
-        entity.setValues(List.of(1L, 2L, 3L, 4L, 5L));
+        entity.setPrim(1337);
+        entity.setStrprim("7331");
+        entity.setWrapprim(1414L);
+        entity.setStrprims(List.of("One", "Two"));
+        entity.setWrapprims(List.of(1L, 2L, 3L, 4L));
         entity.setOne(this.one.read(1));
         entity.setTwos(
             List.of(this.two.read(1), this.two.read(2), this.two.read(3))
@@ -116,8 +123,10 @@ public class InitMock {
 
     /**
      * Create one entity.
+     *
+     * @throws StorageException Some exception.
      */
-    private void createOne() {
+    private void createOne() throws StorageException {
         //@checkstyle IllegalTokenCheck (2 lines)
         for (int idx = 0; idx < 10; idx++) {
             final MockOneEntityImpl entity = this.factory.createObject(MockOneEntityImpl.class);
@@ -128,8 +137,10 @@ public class InitMock {
 
     /**
      * Create two entity.
+     *
+     * @throws StorageException Some exception.
      */
-    private void createTwo() {
+    private void createTwo() throws StorageException {
         //@checkstyle IllegalTokenCheck (2 lines)
         for (int idx = 0; idx < 10; idx++) {
             final MockTwoEntityImpl entity = this.factory.createObject(MockTwoEntityImpl.class);

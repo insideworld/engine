@@ -39,18 +39,64 @@ public interface MockEntity extends Entity {
     void setId(Long id);
 
     /**
-     * Get value.
-     *
-     * @return Value.
+     * Getter for string primitive.
+     * @return String primitive.
      */
-    String getValue();
+    String getStrprim();
 
     /**
-     * Set value.
-     *
-     * @param value Value.
+     * Setter string primitive.
+     * @param strprimitive Value.
      */
-    void setValue(String value);
+    void setStrprim(String strprimitive);
+
+    /**
+     * Getter for wrapped primitive.
+     * @return Wrapped primitive.
+     */
+    Long getWrapprim();
+
+    /**
+     * Setter for wrapped primitive.
+     * @param wrapprimitive Value.
+     */
+    void setWrapprim(Long wrapprimitive);
+
+    /**
+     * Getter for primitive.
+     * @return Primitive.
+     */
+    long getPrim();
+
+    /**
+     * Setter for primitive.
+     * @param primitive Value.
+     */
+    void setPrim(long primitive);
+
+    /**
+     * Getter for strings.
+     * @return Strings.
+     */
+    Collection<String> getStrprims();
+
+    /**
+     * Setter strings.
+     * @param pstrprims Strings.
+     */
+    void setStrprims(Collection<String> pstrprims);
+
+    /**
+     * Getter for wrapped primitives.
+     * @return Primitives.
+     */
+    Collection<Long> getWrapprims();
+
+    /**
+     * Wrapper primitives.
+     * @param pwrapprims Primitives.
+     */
+    void setWrapprims(Collection<Long> pwrapprims);
 
     /**
      * Get date.
@@ -79,20 +125,6 @@ public interface MockEntity extends Entity {
      * @param dates Dates.
      */
     void setDates(Collection<Date> dates);
-
-    /**
-     * Get values.
-     *
-     * @return Values.
-     */
-    Collection<Long> getValues();
-
-    /**
-     * Set values.
-     *
-     * @param values Values.
-     */
-    void setValues(Collection<Long> values);
 
     /**
      * Get one.

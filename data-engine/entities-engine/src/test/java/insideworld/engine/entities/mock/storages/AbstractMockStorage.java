@@ -19,15 +19,15 @@
 
 package insideworld.engine.entities.mock.storages;
 
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.ActionRuntimeException;
+import com.google.common.collect.Lists;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -41,7 +41,7 @@ public abstract class AbstractMockStorage<T extends Entity> implements Storage<T
     /**
      * Collection of entities.
      */
-    private final Map<Long, T> entities;
+    private final Map<Long, T> map;
 
     /**
      * Count of entity.
@@ -52,22 +52,22 @@ public abstract class AbstractMockStorage<T extends Entity> implements Storage<T
      * Default constructor.
      */
     protected AbstractMockStorage() {
-        this.entities = new HashMap<>();
+        this.map = new HashMap<>();
         this.count = new AtomicLong(2);
     }
 
     @Override
     public final Collection<T> readAll() throws StorageException {
-        return this.entities.values();
+        return this.map.values();
     }
 
     @Override
     public final T read(final long id) throws StorageException {
-        return this.entities.get(id);
+        return this.map.get(id);
     }
 
     @Override
-    public final T write(final T entity) {
+    public final T write(final T entity) throws StorageException {
         if (entity.getId() == 0) {
             try {
                 final Method method = entity.getClass().getDeclaredMethod("setId", Long.class);
@@ -76,30 +76,34 @@ public abstract class AbstractMockStorage<T extends Entity> implements Storage<T
                 NoSuchMethodException
                     | IllegalAccessException
                         | InvocationTargetException exp) {
-                throw new ActionRuntimeException(new ActionException("Problem?", exp));
+                throw new StorageException(exp, "Problem?");
             }
         }
-        this.entities.put(entity.getId(), entity);
+        this.map.put(entity.getId(), entity);
         return entity;
     }
 
     @Override
-    public final Collection<T> writeAll(final Collection<T> entity) {
-        return entity.stream().map(this::write).toList();
+    public final Collection<T> writeAll(final Collection<T> entities) throws StorageException {
+        final List<T> result = Lists.newArrayListWithCapacity(entities.size());
+        for (final T entity : entities) {
+            result.add(this.write(entity));
+        }
+        return result;
     }
 
     @Override
     public final void delete(final Collection<T> pentities) {
-        pentities.forEach(ent -> this.entities.remove(ent.getId()));
+        pentities.forEach(ent -> this.map.remove(ent.getId()));
     }
 
     @Override
     public final boolean exists(final long id) {
-        return this.entities.containsKey(id);
+        return this.map.containsKey(id);
     }
 
     @Override
     public final Collection<T> read(final Collection<Long> ids) throws StorageException {
-        return ids.stream().map(this.entities::get).toList();
+        return ids.stream().map(this.map::get).toList();
     }
 }

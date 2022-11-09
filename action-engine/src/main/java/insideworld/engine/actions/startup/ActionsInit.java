@@ -20,9 +20,10 @@
 package insideworld.engine.actions.startup;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionChanger;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
@@ -58,9 +59,13 @@ public class ActionsInit implements OnStartUp {
     }
 
     @Override
-    public final void startUp() throws CommonException {
+    public final void startUp() throws StartUpException {
         for (final Action action : this.actions) {
-            action.init();
+            try {
+                action.init();
+            } catch (final ActionException exp) {
+                throw new StartUpException(exp);
+            }
         }
         for (final ActionChanger changer : this.changers) {
             changer.addActions(this.actions);

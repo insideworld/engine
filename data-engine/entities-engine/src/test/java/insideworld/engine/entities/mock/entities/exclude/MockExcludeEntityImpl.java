@@ -19,6 +19,9 @@
 
 package insideworld.engine.entities.mock.entities.exclude;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Collection;
+import java.util.List;
 import javax.enterprise.context.Dependent;
 
 /**
@@ -50,6 +53,16 @@ public class MockExcludeEntityImpl implements MockExcludeEntity {
     @SuppressWarnings("PMD.ImmutableField")
     private String nomethods = "testnomethods";
 
+    /**
+     * Test string for ignore case.
+     */
+    private String ignore = "ignore";
+
+    /**
+     * Collection of objects.
+     */
+    private Collection<Object> objects = List.of(new Object(), new Object());
+
     @Override
     public final long getId() {
         return this.id;
@@ -69,6 +82,29 @@ public class MockExcludeEntityImpl implements MockExcludeEntity {
     public final boolean check(final String nogetvalue) {
         return "testnoset".equals(this.noset)
             && "testnomethods".equals(this.nomethods)
+            && "ignore".equals(this.ignore)
             && nogetvalue.equals(this.noget);
+    }
+
+    @JsonIgnore
+    @Override
+    public final String getIgnore() {
+        return this.ignore;
+    }
+
+    @JsonIgnore
+    @Override
+    public final void setIgnore(final String pignore) {
+        this.ignore = pignore;
+    }
+
+    @Override
+    public final Collection<Object> getObjects() {
+        return this.objects;
+    }
+
+    @Override
+    public final void setObjects(final Collection<Object> pobjects) {
+        this.objects = pobjects;
     }
 }

@@ -19,10 +19,10 @@
 
 package insideworld.engine.entities.converter.dto.mapper;
 
+import com.google.common.base.Defaults;
 import com.google.common.primitives.Primitives;
-import insideworld.engine.actions.ActionException;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
-import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -42,8 +42,14 @@ public class MapperPrimitive extends AbstractMapper<Object, Object> {
 
     @Override
     protected final Object toEntity(final Object target, final Descriptor descriptor)
-        throws CommonException {
-        return target;
+        throws StorageException {
+        final Object result;
+        if (target == null && descriptor.type().isPrimitive()) {
+            result = Defaults.defaultValue(descriptor.type());
+        } else {
+            result = target;
+        }
+        return result;
     }
 
     @Override

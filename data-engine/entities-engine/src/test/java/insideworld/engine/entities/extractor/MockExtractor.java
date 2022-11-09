@@ -21,7 +21,10 @@ package insideworld.engine.entities.extractor;
 
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.entities.StorageException;
+import insideworld.engine.injection.ObjectFactory;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -30,14 +33,38 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class MockExtractor implements Extractor {
+
+    /**
+     * Object factory.
+     */
+    private final ObjectFactory factory;
+
+    /**
+     * Default constructor.
+     * @param factory Object factory.
+     */
+    @Inject
+    public MockExtractor(final ObjectFactory factory) {
+        this.factory = factory;
+    }
+
     @Override
     public final Output extract(final Map<String, ?> context, final String schema) {
         return null;
     }
 
     @Override
-    public final Output extract(final Record record, final String schema) {
-        return null;
+    public final Output extract(final Record record, final String schema) throws StorageException {
+        if (record.contains(ExtractorTestTags.EXCEPTION)) {
+            throw new StorageException(
+                new IllegalArgumentException("Extract"),
+                "Can't extract for schema %s",
+                schema
+            );
+        }
+        final Output output = this.factory.createObject(Output.class);
+        output.createRecord().put(ExtractorTestTags.OUTPUT_VALUE, new Object());
+        return output;
     }
 
     @Override
@@ -46,7 +73,7 @@ public class MockExtractor implements Extractor {
     }
 
     @Override
-    public final int execute(final Record record, final String schema) {
-        return 0;
+    public final int execute(final Record record, final String schema) throws StorageException {
+        return this.extract(record, schema).getRecords().size();
     }
 }

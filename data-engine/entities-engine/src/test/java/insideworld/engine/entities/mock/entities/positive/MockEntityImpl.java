@@ -37,9 +37,29 @@ public class MockEntityImpl implements MockEntity {
     private long id;
 
     /**
-     * Value.
+     * String primitive.
      */
-    private String value;
+    private String strprim;
+
+    /**
+     * String primitive.
+     */
+    private Long wrapprim;
+
+    /**
+     * String primitive.
+     */
+    private long prim;
+
+    /**
+     * Collections of string primitives.
+     */
+    private Collection<String> strprims;
+
+    /**
+     * Wrapped primitives.
+     */
+    private Collection<Long> wrapprims;
 
     /**
      * Date.
@@ -50,11 +70,6 @@ public class MockEntityImpl implements MockEntity {
      * Dates.
      */
     private Collection<Date> dates;
-
-    /**
-     * Values.
-     */
-    private Collection<Long> values;
 
     /**
      * One.
@@ -84,13 +99,53 @@ public class MockEntityImpl implements MockEntity {
     }
 
     @Override
-    public final String getValue() {
-        return this.value;
+    public final String getStrprim() {
+        return this.strprim;
     }
 
     @Override
-    public final void setValue(final String pvalue) {
-        this.value = pvalue;
+    public final void setStrprim(final String pstrprimitive) {
+        this.strprim = pstrprimitive;
+    }
+
+    @Override
+    public final Long getWrapprim() {
+        return this.wrapprim;
+    }
+
+    @Override
+    public final void setWrapprim(final Long pwrapprimitive) {
+        this.wrapprim = pwrapprimitive;
+    }
+
+    @Override
+    public final long getPrim() {
+        return this.prim;
+    }
+
+    @Override
+    public final void setPrim(final long pprimitive) {
+        this.prim = pprimitive;
+    }
+
+    @Override
+    public final Collection<String> getStrprims() {
+        return this.strprims;
+    }
+
+    @Override
+    public final void setStrprims(final Collection<String> pstrprims) {
+        this.strprims = pstrprims;
+    }
+
+    @Override
+    public final Collection<Long> getWrapprims() {
+        return this.wrapprims;
+    }
+
+    @Override
+    public final void setWrapprims(final Collection<Long> pwrapprims) {
+        this.wrapprims = pwrapprims;
     }
 
     @Override
@@ -111,16 +166,6 @@ public class MockEntityImpl implements MockEntity {
     @Override
     public final void setDates(final Collection<Date> pdates) {
         this.dates = pdates;
-    }
-
-    @Override
-    public final Collection<Long> getValues() {
-        return this.values;
-    }
-
-    @Override
-    public final void setValues(final Collection<Long> pvalues) {
-        this.values = pvalues;
     }
 
     @Override

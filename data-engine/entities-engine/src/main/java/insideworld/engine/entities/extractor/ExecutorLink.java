@@ -19,18 +19,19 @@
 
 package insideworld.engine.entities.extractor;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.tags.StorageTags;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Link to call executor from chain action.
  * Need to set schema at init.
+ *
  * @since 0.0.1
  */
 @Dependent
@@ -48,6 +49,7 @@ public class ExecutorLink implements Link {
 
     /**
      * Default constructor.
+     *
      * @param extractor Extractor instance.
      */
     @Inject
@@ -56,14 +58,23 @@ public class ExecutorLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
-        Validate.notNull(this.schema, "You didn't init a schema!");
-        output.createRecord(this.schema)
-            .put(StorageTags.COUNT, this.extractor.execute(context, this.schema));
+    public final void process(final Context context, final Output output) throws LinkException {
+        if (this.schema == null) {
+            throw new LinkException(this.getClass(), "You didn't init a schema!");
+        }
+        try {
+            output.createRecord(this.schema).put(
+                StorageTags.COUNT,
+                this.extractor.execute(context, this.schema)
+            );
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
+        }
     }
 
     /**
      * Set schema for call.
+     *
      * @param pschema Schema.
      */
     public void setSchema(final String pschema) {

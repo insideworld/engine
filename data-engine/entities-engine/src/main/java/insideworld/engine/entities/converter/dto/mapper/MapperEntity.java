@@ -20,9 +20,9 @@
 package insideworld.engine.entities.converter.dto.mapper;
 
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
-import insideworld.engine.exception.CommonException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -57,10 +57,16 @@ public class MapperEntity extends AbstractMapper<Long, Entity> {
 
     @Override
     protected final Entity toEntity(final Long target, final Descriptor descriptor)
-        throws CommonException {
-        return this.storages
-            .getStorage((Class<? extends Entity>) descriptor.type())
-            .read(target);
+        throws StorageException {
+        final Entity entity;
+        if (target == null) {
+            entity = null;
+        } else {
+            entity = this.storages
+                .getStorage((Class<? extends Entity>) descriptor.type())
+                .read(target);
+        }
+        return entity;
     }
 
     @Override

@@ -20,6 +20,7 @@
 package insideworld.engine.entities.converter.dto.descriptors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.converter.dto.mapper.Mapper;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -45,13 +46,15 @@ public class WriteDescriptors extends AbstractDescriptors {
     }
 
     @Override
-    protected final Descriptor createDescriptor(final PropertyDescriptor descriptor) {
+    protected final Descriptor createDescriptor(
+        final Class<? extends Entity> parent, final PropertyDescriptor descriptor) {
         final Descriptor result;
         final Method method = descriptor.getWriteMethod();
         if (method == null || method.isAnnotationPresent(JsonIgnore.class)) {
             result = null;
         } else {
             result = new Descriptor(
+                parent,
                 descriptor.getName(),
                 method.getParameterTypes()[0],
                 method.getGenericParameterTypes()[0],

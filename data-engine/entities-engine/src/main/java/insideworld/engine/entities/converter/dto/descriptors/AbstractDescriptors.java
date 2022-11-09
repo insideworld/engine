@@ -21,8 +21,8 @@ package insideworld.engine.entities.converter.dto.descriptors;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.mapper.Mapper;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -71,8 +71,10 @@ public abstract class AbstractDescriptors {
      * Get a pair of descriptors by entity.
      * @param type Entity type.
      * @return Pairs of mapper and descriptor.
+     * @throws StorageException Can't init descriptor.
      */
-    public final Pair<Mapper, Descriptor>[] getDescriptors(final Class<? extends Entity> type) {
+    public final Pair<Mapper, Descriptor>[] getDescriptors(final Class<? extends Entity> type)
+        throws StorageException {
         final Pair<Mapper, Descriptor>[] result;
         if (this.descriptors.containsKey(type)) {
             result = this.descriptors.get(type);
@@ -84,17 +86,21 @@ public abstract class AbstractDescriptors {
 
     /**
      * Create custom descriptor from property descriptor.
+     * @param parent Parent entity.
      * @param descriptor Java beans descriptor.
      * @return Custom descriptor.
      */
-    protected abstract Descriptor createDescriptor(PropertyDescriptor descriptor);
+    protected abstract Descriptor createDescriptor(
+        Class<? extends Entity> parent, PropertyDescriptor descriptor);
 
     /**
      * Sync method to cache descriptors internally.
      * @param type Entity type.
      * @return Pairs of mapper and descriptor.
+     * @throws StorageException Can't init descriptor.
      */
-    private Pair<Mapper, Descriptor>[] getDescriptorsSync(final Class<? extends Entity> type) {
+    private Pair<Mapper, Descriptor>[] getDescriptorsSync(final Class<? extends Entity> type)
+        throws StorageException {
         synchronized (this.lock) {
             if (!this.descriptors.containsKey(type)) {
                 this.descriptors.put(type, this.createDescriptors(type));
@@ -108,15 +114,17 @@ public abstract class AbstractDescriptors {
      * Using Introspector to take all information about field, getters and setters.
      * @param type Entity type.
      * @return Pairs of mapper and descriptor.
+     * @throws StorageException Can't init descriptor.
      */
-    private Pair<Mapper, Descriptor>[] createDescriptors(final Class<? extends Entity> type) {
+    private Pair<Mapper, Descriptor>[] createDescriptors(final Class<? extends Entity> type)
+        throws StorageException {
         try {
             final var beans = Introspector.getBeanInfo(type)
                 .getPropertyDescriptors();
             final Collection<Pair<Mapper, Descriptor>> result =
                 Lists.newArrayListWithCapacity(beans.length);
             for (final var bean : beans) {
-                final Descriptor descriptor = this.createDescriptor(bean);
+                final Descriptor descriptor = this.createDescriptor(type, bean);
                 if (descriptor == null) {
                     continue;
                 }
@@ -129,7 +137,7 @@ public abstract class AbstractDescriptors {
             }
             return result.toArray(new Pair[0]);
         } catch (final IntrospectionException exp) {
-            throw new ActionRuntimeException(new ActionException("Can't read bean", exp));
+            throw new StorageException(exp, "Can't read beans for type %s", type.getName());
         }
     }
 }

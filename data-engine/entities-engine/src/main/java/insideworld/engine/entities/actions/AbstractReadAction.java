@@ -21,6 +21,7 @@ package insideworld.engine.entities.actions;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.actions.links.ReadEntityLink;
@@ -56,7 +57,7 @@ public abstract class AbstractReadAction<T extends Entity> extends AbstractChain
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
         builder
             .addLink(
                 new TypeLiteral<ReadEntityLink<T>>() { },

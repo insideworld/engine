@@ -19,15 +19,22 @@
 
 package insideworld.engine.entities.converter.dto.descriptors;
 
+import insideworld.engine.entities.Entity;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 /**
  * Descriptor. It's just data entity.
+ * @param parent Parent entity.
  * @param name Field name
  * @param type Type of field.
  * @param generic Generic type of field.
  * @param method Method to call.
  * @since 0.0.1
  */
-public record Descriptor(String name, Class<?> type, Type generic, Method method) {}
+public record Descriptor(
+    Class<? extends Entity> parent,
+    String name, Class<?> type,
+    Type generic,
+    Method method
+) {}

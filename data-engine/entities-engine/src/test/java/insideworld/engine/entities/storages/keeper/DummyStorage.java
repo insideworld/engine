@@ -19,8 +19,8 @@
 
 package insideworld.engine.entities.storages.keeper;
 
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import java.util.Collection;
 import java.util.Collections;
 

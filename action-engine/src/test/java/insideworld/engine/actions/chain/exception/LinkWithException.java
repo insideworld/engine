@@ -39,6 +39,8 @@ public class LinkWithException implements Link {
                 throw new LinkException(this.getClass(), "Exception!");
             case 2:
                 throw new IllegalArgumentException("Unhandled");
+            case 3:
+                throw this.exception(new TestCommonException("Handled"));
             default:
                 throw new IllegalArgumentException("And what I should do?");
         }

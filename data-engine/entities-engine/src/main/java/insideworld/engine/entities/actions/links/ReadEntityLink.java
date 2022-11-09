@@ -26,8 +26,8 @@ import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
@@ -83,7 +83,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws StorageException {
+    public final void process(final Context context, final Output output) throws LinkException {
         if (this.single != null && context.contains(this.single.getLeft())) {
             context.put(
                 this.single.getRight(),
@@ -132,6 +132,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param type Entity type.
      * @return The same instance
+     * @throws LinkException Can't find storage.
      */
     public ReadEntityLink<T> setType(final Class<T> type) throws LinkException {
         try {
@@ -147,10 +148,14 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param id ID of entity.
      * @return Entity.
-     * @throws StorageException Wrapped storage exception about read fail.
+     * @throws LinkException Wrapped storage exception about read fail.
      */
-    private T processSingle(final Long id) throws StorageException {
-        return this.storage.read(id);
+    private T processSingle(final Long id) throws LinkException {
+        try {
+            return this.storage.read(id);
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
+        }
     }
 
     /**
@@ -159,14 +164,18 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param ids Ids of entities.
      * @return Collection of entities.
-     * @throws StorageException Can't read an entity.
+     * @throws LinkException Can't read an entity.
      */
-    private Collection<T> processMultiple(final Collection<Long> ids) throws StorageException {
+    private Collection<T> processMultiple(final Collection<Long> ids) throws LinkException {
         final Collection<T> collection;
-        if (CollectionUtils.isEmpty(ids)) {
-            collection = this.storage.readAll();
-        } else {
-            collection = this.storage.read(ids);
+        try {
+            if (CollectionUtils.isEmpty(ids)) {
+                collection = this.storage.readAll();
+            } else {
+                collection = this.storage.read(ids);
+            }
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
         }
         return collection;
     }

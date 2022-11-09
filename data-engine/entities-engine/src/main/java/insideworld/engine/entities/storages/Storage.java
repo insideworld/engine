@@ -58,21 +58,24 @@ public interface Storage<T extends Entity> {
      * Write entity.
      * @param entity Entity.
      * @return Wrote entity.
+     * @throws StorageException Can't write.
      */
-    T write(T entity);
+    T write(T entity) throws StorageException;
 
     /**
      * Write all entities.
      * @param entity Entities.
      * @return Collection of wrote entities.
+     * @throws StorageException Can't write.
      */
-    Collection<T> writeAll(Collection<T> entity);
+    Collection<T> writeAll(Collection<T> entity) throws StorageException;
 
     /**
      * Delete entities.
      * @param entities Entities.
+     * @throws StorageException Can't delete.
      */
-    void delete(Collection<T> entities);
+    void delete(Collection<T> entities) throws StorageException;
 
     /**
      * Is entity exists by this ID.

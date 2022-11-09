@@ -19,14 +19,14 @@
 
 package insideworld.engine.entities.actions.links;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
@@ -79,7 +79,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws StorageException {
+    public final void process(final Context context, final Output output) throws LinkException {
         if (this.single != null && context.contains(this.single)) {
             context.put(
                 this.single, this.writeSingle(context.get(this.single)), true
@@ -139,11 +139,15 @@ public class WriteEntityLink<T extends Entity> implements Link {
      *
      * @param entity Entity.
      * @return Persisted entity.
-     * @throws StorageException Can't write entity.
+     * @throws LinkException Can't write entity.
      */
-    private T writeSingle(final T entity) throws StorageException {
-        final Storage<T> storage = (Storage<T>) this.storages.getStorage(entity.getClass());
-        return storage.write(entity);
+    private T writeSingle(final T entity) throws LinkException {
+        try {
+            final Storage<T> storage = (Storage<T>) this.storages.getStorage(entity.getClass());
+            return storage.write(entity);
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
+        }
     }
 
     /**
@@ -151,16 +155,20 @@ public class WriteEntityLink<T extends Entity> implements Link {
      *
      * @param collection Collection of entities.
      * @return Persisted entities.
-     * @throws StorageException Can't write entities.
+     * @throws LinkException Can't write entities.
      */
     private Collection<T> writeMultiple(final Collection<T> collection)
-        throws StorageException {
+        throws LinkException {
         final Collection<T> results;
         final Optional<T> entity = collection.stream().findAny();
         if (entity.isPresent()) {
-            final Storage<T> storage =
-                (Storage<T>) this.storages.getStorage(entity.get().getClass());
-            results = storage.writeAll(collection);
+            try {
+                final Storage<T> storage =
+                    (Storage<T>) this.storages.getStorage(entity.get().getClass());
+                results = storage.writeAll(collection);
+            } catch (final StorageException exp) {
+                throw this.exception(exp);
+            }
         } else {
             results = Collections.emptyList();
         }

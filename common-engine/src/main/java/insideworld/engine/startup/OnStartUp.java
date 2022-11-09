@@ -23,7 +23,7 @@ import insideworld.engine.exception.CommonException;
 
 public interface OnStartUp {
 
-    void startUp() throws CommonException;
+    void startUp() throws StartUpException;
 
     int order();
 

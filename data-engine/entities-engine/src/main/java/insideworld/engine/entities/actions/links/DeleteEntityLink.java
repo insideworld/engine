@@ -19,13 +19,13 @@
 
 package insideworld.engine.entities.actions.links;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
@@ -75,13 +75,17 @@ public class DeleteEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
-        if (this.single != null && context.contains(this.single)) {
-            this.storage.delete(Collections.singleton(context.get(this.single)));
-        } else {
-            if (this.multiple != null && context.contains(this.multiple)) {
-                this.storage.delete(context.get(this.multiple));
+    public final void process(final Context context, final Output output) throws LinkException {
+        try {
+            if (this.single != null && context.contains(this.single)) {
+                this.storage.delete(Collections.singleton(context.get(this.single)));
+            } else {
+                if (this.multiple != null && context.contains(this.multiple)) {
+                    this.storage.delete(context.get(this.multiple));
+                }
             }
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
         }
     }
 
@@ -115,10 +119,14 @@ public class DeleteEntityLink<T extends Entity> implements Link {
      *
      * @param type Entity type.
      * @return The same instance
-     * @throws StorageException If storage can't find for provided type.
+     * @throws LinkException If storage can't find for provided type.
      */
-    public final DeleteEntityLink<T> setType(final Class<T> type) throws StorageException {
-        this.storage = this.storages.getStorage(type);
+    public final DeleteEntityLink<T> setType(final Class<T> type) throws LinkException {
+        try {
+            this.storage = this.storages.getStorage(type);
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
+        }
         return this;
     }
 }

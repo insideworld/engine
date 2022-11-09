@@ -21,11 +21,11 @@ package insideworld.engine.entities.storages.keeper;
 
 import com.google.common.collect.Maps;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
-import insideworld.engine.startup.StartupException;
+import insideworld.engine.startup.StartUpException;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -83,18 +83,18 @@ public class HashStorageKeeper implements StorageKeeper, OnStartUp {
         if (this.storages.containsKey(type)) {
             storage = (Storage<T>) this.storages.get(type);
         } else {
-            throw new StorageException(String.format("Storage for type %s not found", type));
+            throw new StorageException("Storage not found", type);
         }
         return storage;
     }
 
     @Override
-    public final void startUp() throws StartupException {
+    public final void startUp() throws StartUpException {
         for (final Storage<?> storage : this.all) {
             try {
                 this.storages.put(this.findImplementation(storage), storage);
             } catch (final StorageException exp) {
-                throw new StartupException(exp);
+                throw new StartUpException(exp);
             }
             this.storages.put(storage.forEntity(), storage);
         }
@@ -118,11 +118,8 @@ public class HashStorageKeeper implements StorageKeeper, OnStartUp {
         final Class<? extends Entity> type = this.factory.implementation(storage.forEntity());
         if (type == null) {
             throw new StorageException(
-                String.format(
-                    "Can't init HashStorage keeper because can't find implementation of %s for storage %s",
-                    storage.forEntity().getName(),
-                    storage.getClass().getName()
-                )
+                "Can't init HashStorage keeper because can't find implementation of",
+                storage.forEntity()
             );
         }
         return type;

@@ -22,15 +22,18 @@ package insideworld.engine.entities.converter.dto;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.InitMock;
 import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
-import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -77,16 +80,19 @@ class DtoConverterPositiveTest {
      * TC: Check that mock entity keeping in storage was converted to DTO.
      * ER: Record with propagated field from entity.
      * @throws StorageException Can't cause.
-     * @throws ActionException Can't cause.
+     * @checkstyle CyclomaticComplexityCheck (20 lines)
      */
     @Test
-    final void testToRecord() throws StorageException, ActionException {
+    final void testToRecord() throws StorageException {
         final MockEntity entity = this.mock.createPrimary();
         final long id = entity.getId();
         final Record record = this.converter.convert(entity);
         assert record.contains(StorageTags.ID) && record.get(StorageTags.ID).equals(id);
-        assert record.contains(MockTags.VALUE) && "Some value".equals(record.get(MockTags.VALUE));
-        assert record.contains(MockTags.VALUES) && record.get(MockTags.VALUES).size() == 5;
+        assert record.contains(MockTags.PRIM) && record.get(MockTags.PRIM) == 1337;
+        assert record.contains(MockTags.WRAPPRIM) && record.get(MockTags.WRAPPRIM).equals(1414L);
+        assert record.contains(MockTags.STRPRIM) && record.get(MockTags.STRPRIM).equals("7331");
+        assert record.contains(MockTags.STRPRIMS) && record.get(MockTags.STRPRIMS).size() == 2;
+        assert record.contains(MockTags.WRAPPRIMS) && record.get(MockTags.WRAPPRIMS).size() == 4;
         assert record.contains(MockTags.ONE_ID) && record.get(MockTags.ONE_ID) == 1L;
         assert record.contains(MockTags.TWOS_IDS) && record.get(MockTags.TWOS_IDS).size() == 3;
         assert record.contains(MockTags.DATE) && record.get(MockTags.DATE).getTime() == 1_000_000;
@@ -103,16 +109,16 @@ class DtoConverterPositiveTest {
     @Test
     final void testToEntityNew() throws StorageException, ActionException {
         final Context context = this.factory.createObject(Context.class);
-        context.put(MockTags.VALUE, "Value");
-        context.put(MockTags.VALUES, List.of(5L, 6L));
+        context.put(MockTags.STRPRIM, "Value");
+        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
         context.put(MockTags.ONE_ID, 2L);
         context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
         context.put(MockTags.DATE, new Date(1_500_000));
         context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
         final MockEntity entity = this.converter.convert(context, MockEntity.class);
         assert entity.getId() == 0;
-        assert "Value".equals(entity.getValue());
-        assert entity.getValues().size() == 2;
+        assert "Value".equals(entity.getStrprim());
+        assert entity.getWrapprims().size() == 2;
         assert entity.getOne().getId() == 2;
         assert entity.getTwos().size() == 3;
         assert entity.getDate().getTime() == 1_500_000;
@@ -122,28 +128,48 @@ class DtoConverterPositiveTest {
 
     /**
      * Test that exists entity changed with new values.
-     * @throws ActionException
+     * @throws StorageException Can't cause.
      */
     @Test
-    final void testToEntityExists() throws ActionException, StorageException {
+    final void testToEntityExists() throws StorageException {
         final MockEntity entity = this.mock.createPrimary();
         final long id = entity.getId();
         final Context context = this.factory.createObject(Context.class);
         context.put(StorageTags.ID, entity.getId());
-        context.put(MockTags.VALUE, "Value");
-        context.put(MockTags.VALUES, List.of(5L, 6L));
+        context.put(MockTags.STRPRIM, "Value");
+        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
         context.put(MockTags.ONE_ID, 2L);
         context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
         context.put(MockTags.DATE, new Date(1_500_000));
         context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
         final MockEntity convert = this.converter.convert(context, MockEntity.class);
         assert convert.getId() == id;
-        assert "Value".equals(convert.getValue());
-        assert convert.getValues().size() == 2;
+        assert "Value".equals(entity.getStrprim());
+        assert entity.getWrapprims().size() == 2;
         assert convert.getOne().getId() == 2;
         assert convert.getTwos().size() == 3;
         assert convert.getDate().getTime() == 1_500_000;
         assert convert.getDates().size() == 2;
         assert convert.getTestnull() == null;
+    }
+
+    /**
+     * TC: Test string date to converter.
+     * Set in date and dates tag string representation with the same mask as in mappers
+     * ER: Created date should equal with dates from entity.
+     * @throws StorageException Can't cause.
+     */
+    @Test
+    final void testStringDate() throws StorageException {
+        final SimpleDateFormat format =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
+        final Date date = new Date();
+        final String str = format.format(date);
+        final Context context = this.factory.createObject(Context.class);
+        context.put(MockTags.DATE.getTag(), str);
+        context.put(MockTags.DATES.getTag(), Collections.singleton(str));
+        final MockEntity entity = this.converter.convert(context, MockEntity.class);
+        assert entity.getDate().equals(date);
+        assert entity.getDates().iterator().next().equals(date);
     }
 }

@@ -19,11 +19,12 @@
 
 package insideworld.engine.entities.converter;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.Entity;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.tags.EntityTag;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -60,9 +61,18 @@ public class ImportEntityLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws ActionException {
-        final Entity entity = this.converter.convert(context, this.type);
-        context.put(this.tag.getTag(), entity);
+    public final void process(final Context context, final Output output) throws LinkException {
+        if (this.tag == null || this.type == null) {
+            throw new LinkException(
+                this.getClass(), "Link is not init: tag %s type %s", this.tag, this.type
+            );
+        }
+        try {
+            final Entity entity = this.converter.convert(context, this.type);
+            context.put(this.tag.getTag(), entity);
+        } catch (final StorageException exp) {
+            throw this.exception(exp);
+        }
     }
 
     @Override

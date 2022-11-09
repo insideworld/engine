@@ -19,14 +19,15 @@
 
 package insideworld.engine.entities.converter.dto;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.exclude.MockExcludeEntity;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
+import java.util.List;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 
@@ -63,31 +64,36 @@ class DtoConverterExcludedTest {
     /**
      * TC: Check that in record propagate only fields with getter method.
      * ER: In record should present only ID and NO_SET tag.
-     * @throws ActionException Can't cause.
+     * @throws StorageException Can't cause.
      */
     @Test
-    final void toRecord() throws ActionException {
+    final void toRecord() throws StorageException {
         final MockExcludeEntity entity = this.factory.createObject(MockExcludeEntity.class);
         final Record record = this.converter.convert(entity);
         assert record.contains(StorageTags.ID);
         assert record.contains(MockTags.NO_SET);
         assert !record.contains(MockTags.NO_GET);
         assert !record.contains(MockTags.NO_METHODS);
+        assert !record.contains(MockTags.IGNORE);
+        assert !record.contains(MockTags.OBJECTS);
     }
 
     /**
      * TC: Check that in entity propagate only field with setter method.
      * ER: In entity should change only NO_GET field.
-     * @throws ActionException Can't cause.
+     * @throws StorageException Can't cause.
      */
     @Test
-    final void toEntity() throws ActionException {
+    final void toEntity() throws StorageException {
         final Context context = this.factory.createObject(Context.class);
         context.put(MockTags.NO_SET, "NewValue1");
         context.put(MockTags.NO_GET, "NewValue2");
         context.put(MockTags.NO_METHODS, "NewValue3");
+        context.put(MockTags.IGNORE, "NewValue4");
+        context.put(MockTags.OBJECTS, List.of(new Object()));
         final MockExcludeEntity entity = this.converter.convert(context, MockExcludeEntity.class);
         assert entity.check("NewValue2");
+        assert entity.getObjects().size() == 2;
     }
 
 }

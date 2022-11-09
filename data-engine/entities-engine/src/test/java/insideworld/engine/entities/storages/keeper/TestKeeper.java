@@ -19,12 +19,12 @@
 
 package insideworld.engine.entities.storages.keeper;
 
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.entities.StorageException;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.startup.StartupException;
+import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import java.util.Objects;
@@ -84,7 +84,7 @@ class TestKeeper {
         boolean exception = false;
         try {
             keeper.startUp();
-        } catch (final StartupException exp) {
+        } catch (final StartUpException exp) {
             if (exp.getMessage().contains("Can't init HashStorage keeper")) {
                 exception = true;
             }
@@ -101,7 +101,7 @@ class TestKeeper {
         try {
             this.storages.getStorage(DummyEntity.class);
         } catch (final StorageException exp) {
-            if (exp.getMessage().contains("Storage for type")) {
+            if (exp.getMessage().contains("Storage not found for entity")) {
                 exception = true;
             }
         }
