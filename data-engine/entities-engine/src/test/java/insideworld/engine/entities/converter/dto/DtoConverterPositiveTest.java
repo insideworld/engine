@@ -99,25 +99,14 @@ class DtoConverterPositiveTest {
                 KeeperMatchers.match(MockTags.WRAPPRIM, Matchers.is(1414L)),
                 KeeperMatchers.match(MockTags.STRPRIM, Matchers.is("7331")),
                 KeeperMatchers.match(MockTags.STRPRIMS, Matchers.hasSize(2)),
-                KeeperMatchers.match(),
-                KeeperMatchers.match(),
-                KeeperMatchers.match(),
-                KeeperMatchers.match(),
-                KeeperMatchers.match(),
-                Matchers.not(KeeperMatchers.recordEquals())
+                KeeperMatchers.match(MockTags.WRAPPRIMS, Matchers.hasSize(4)),
+                KeeperMatchers.match(MockTags.ONE_ID, Matchers.is(1L)),
+                KeeperMatchers.match(MockTags.TWOS_IDS, Matchers.hasSize(3)),
+                KeeperMatchers.match(MockTags.DATE, Matchers.is(new Date(1_000_000))),
+                KeeperMatchers.match(MockTags.DATES, Matchers.hasSize(2)),
+                Matchers.not(KeeperMatchers.contain(MockTags.TEST_NULL))
             )
         );
-        assert record.contains(StorageTags.ID) && record.get(StorageTags.ID).equals(id);
-        assert record.contains(MockTags.PRIM) && record.get(MockTags.PRIM) == 1337;
-        assert record.contains(MockTags.WRAPPRIM) && record.get(MockTags.WRAPPRIM).equals(1414L);
-        assert record.contains(MockTags.STRPRIM) && record.get(MockTags.STRPRIM).equals("7331");
-        assert record.contains(MockTags.STRPRIMS) && record.get(MockTags.STRPRIMS).size() == 2;
-        assert record.contains(MockTags.WRAPPRIMS) && record.get(MockTags.WRAPPRIMS).size() == 4;
-        assert record.contains(MockTags.ONE_ID) && record.get(MockTags.ONE_ID) == 1L;
-        assert record.contains(MockTags.TWOS_IDS) && record.get(MockTags.TWOS_IDS).size() == 3;
-        assert record.contains(MockTags.DATE) && record.get(MockTags.DATE).getTime() == 1_000_000;
-        assert record.contains(MockTags.DATES) && record.get(MockTags.DATES).size() == 3;
-        assert !record.contains(MockTags.TEST_NULL);
     }
 
     /**
