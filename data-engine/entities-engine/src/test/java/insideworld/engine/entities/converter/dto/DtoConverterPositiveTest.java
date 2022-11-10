@@ -124,15 +124,23 @@ class DtoConverterPositiveTest {
         context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
         context.put(MockTags.DATE, new Date(1_500_000));
         context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
-        final MockEntity entity = this.converter.convert(context, MockEntity.class);
-        assert entity.getId() == 0;
-        assert "Value".equals(entity.getStrprim());
-        assert entity.getWrapprims().size() == 2;
-        assert entity.getOne().getId() == 2;
-        assert entity.getTwos().size() == 3;
-        assert entity.getDate().getTime() == 1_500_000;
-        assert entity.getDates().size() == 2;
-        assert entity.getTestnull() == null;
+        MatcherAssert.assertThat(
+            "Entity has wrong fields values",
+            this.converter.convert(context, MockEntity.class),
+            Matchers.allOf(
+                Matchers.hasProperty("id", Matchers.is(0L)),
+                Matchers.hasProperty("strprim", Matchers.is("Value")),
+                Matchers.hasProperty("wrapprims", Matchers.iterableWithSize(2)),
+                Matchers.hasProperty(
+                    "one",
+                    Matchers.hasProperty("id", Matchers.is(2L))
+                ),
+                Matchers.hasProperty("twos", Matchers.iterableWithSize(3)),
+                Matchers.hasProperty("date", Matchers.is(new Date(1_500_000))),
+                Matchers.hasProperty("dates", Matchers.iterableWithSize(2)),
+                Matchers.hasProperty("testnull", Matchers.nullValue())
+            )
+        );
     }
 
     /**
@@ -151,15 +159,23 @@ class DtoConverterPositiveTest {
         context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
         context.put(MockTags.DATE, new Date(1_500_000));
         context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
-        final MockEntity convert = this.converter.convert(context, MockEntity.class);
-        assert convert.getId() == id;
-        assert "Value".equals(entity.getStrprim());
-        assert entity.getWrapprims().size() == 2;
-        assert convert.getOne().getId() == 2;
-        assert convert.getTwos().size() == 3;
-        assert convert.getDate().getTime() == 1_500_000;
-        assert convert.getDates().size() == 2;
-        assert convert.getTestnull() == null;
+        MatcherAssert.assertThat(
+            "Entity has wrong fields values",
+            this.converter.convert(context, MockEntity.class),
+            Matchers.allOf(
+                Matchers.hasProperty("id", Matchers.is(id)),
+                Matchers.hasProperty("strprim", Matchers.is("Value")),
+                Matchers.hasProperty("wrapprims", Matchers.iterableWithSize(2)),
+                Matchers.hasProperty(
+                    "one",
+                    Matchers.hasProperty("id", Matchers.is(2L))
+                ),
+                Matchers.hasProperty("twos", Matchers.iterableWithSize(3)),
+                Matchers.hasProperty("date", Matchers.is(new Date(1_500_000))),
+                Matchers.hasProperty("dates", Matchers.iterableWithSize(2)),
+                Matchers.hasProperty("testnull", Matchers.nullValue())
+            )
+        );
     }
 
     /**
@@ -180,5 +196,13 @@ class DtoConverterPositiveTest {
         final MockEntity entity = this.converter.convert(context, MockEntity.class);
         assert entity.getDate().equals(date);
         assert entity.getDates().iterator().next().equals(date);
+        MatcherAssert.assertThat(
+            "Dates has wrong value",
+            this.converter.convert(context, MockEntity.class),
+            Matchers.allOf(
+                Matchers.hasProperty("date", Matchers.is(date)),
+                Matchers.hasProperty("dates", Matchers.hasItem(date))
+            )
+        );
     }
 }
