@@ -17,31 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.matchers;
+package insideworld.engine.matchers.object;
 
 import org.hamcrest.Matcher;
 
-public final class ExceptionMatchers {
+public final class ObjectMappers {
 
     /**
      * Private constructor.
      */
-    private ExceptionMatchers() {
+    private ObjectMappers() {
         //Nothing to do.
     }
 
-    public static ExceptionClassMatcher classMatcher(
-        final int level,
-        final Class<? extends Throwable> exception
-    ) {
-        return new ExceptionClassMatcher(level,exception);
-    }
-
-    public static ExceptionMessageMatcher messageMatcher(
-        final int level,
-        final Matcher<String> matcher
-    ) {
-        return new ExceptionMessageMatcher(level, matcher);
+    public static<T> FieldMatcher<T> fieldMatcher(final String field, final Matcher<?> matcher) {
+        return new FieldMatcher<T>(field, matcher);
     }
 
 }

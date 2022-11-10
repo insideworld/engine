@@ -20,6 +20,7 @@
 package insideworld.engine.actions.keeper.test;
 
 import insideworld.engine.actions.keeper.tags.Tag;
+import org.hamcrest.Matcher;
 
 /**
  * Static methods for matchers.
@@ -40,8 +41,8 @@ public final class KeeperMatchers {
      * @param tag Tag.
      * @return Matcher.
      */
-    public static RecordContainTagMatcher recordContain(final Tag<?> tag) {
-        return new RecordContainTagMatcher(tag);
+    public static RecordContainMatcher contain(final Tag<?> tag) {
+        return new RecordContainMatcher(tag);
     }
 
     /**
@@ -49,28 +50,28 @@ public final class KeeperMatchers {
      * @param tag Tag.
      * @return Matcher.
      */
-    public static RecordContainTagMatcher recordContain(final String tag) {
-        return new RecordContainTagMatcher(tag);
+    public static RecordContainMatcher contain(final String tag) {
+        return new RecordContainMatcher(tag);
     }
 
     /**
      * Matcher for RecordTagEqualsMatcher.
      * @param tag Tag.
-     * @param value Value.
+     * @param matcher Matcher.
      * @return Matcher.
      */
-    public static RecordTagEqualsMatcher recordEquals(final Tag<?> tag, final Object value) {
-        return new RecordTagEqualsMatcher(tag, value);
+    public static RecordMatcher match(final Tag<?> tag, final Matcher<?> matcher) {
+        return new RecordMatcher(tag, matcher);
     }
 
     /**
      * Matcher for RecordTagEqualsMatcher.
      * @param tag Tag.
-     * @param value Value.
+     * @param matcher Value.
      * @return Matcher.
      */
-    public static RecordTagEqualsMatcher recordEquals(final String tag, final Object value) {
-        return new RecordTagEqualsMatcher(tag, value);
+    public static RecordMatcher match(final String tag, final Matcher<?> matcher) {
+        return new RecordMatcher(tag, matcher);
     }
 
 }

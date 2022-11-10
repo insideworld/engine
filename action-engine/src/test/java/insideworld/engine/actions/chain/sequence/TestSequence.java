@@ -26,13 +26,14 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.Collection;
-import java.util.Iterator;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test of sequence execution of link.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -60,6 +61,7 @@ class TestSequence {
      * List should contain 1,2,3.
      * 4 shouldn't present because link should skip.
      * 5 shouldn't present because chain should break.
+     *
      * @throws CommonException Exception.
      */
     @Test
@@ -67,13 +69,21 @@ class TestSequence {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.LIST, Lists.newLinkedList());
         this.executor.execute(TestAction.class, context);
-        final Collection<Integer> list = context.get(TestChainTags.LIST);
-        assert list.size() == 3;
-        final Iterator<Integer> iterator = list.iterator();
-        //@checkstyle IllegalTokenCheck (2 lines)
-        for (int idx = 1; idx < 4; idx++) {
-            assert iterator.next() == idx;
-        }
+        MatcherAssert.assertThat(
+            "Collection has wrong sequence",
+            context.get(TestChainTags.LIST),
+            Matchers
+                .both(
+                    Matchers.<Integer>iterableWithSize(3)
+                )
+                .and(
+                    Matchers.containsInRelativeOrder(
+                        Matchers.is(1),
+                        Matchers.is(2),
+                        Matchers.is(3)
+                    )
+                )
+        );
     }
 
 }

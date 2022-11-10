@@ -23,12 +23,18 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executors.TestExecutorTags;
+import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -101,20 +107,31 @@ class TestKeyExecutor {
     final void testExceptions() {
         final Context context = this.cexecutor.createContext();
         context.put(TestExecutorTags.EXCEPTION, 1, true);
-        boolean exception = false;
-        try {
-            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
-        } catch (final ActionException exp) {
-            exception = exp.getMessage().contains("Exception!");
-        }
-        assert exception;
+        final ActionException handle = Assertions.assertThrows(
+            ActionException.class,
+            () -> this.cexecutor.execute(ExceptionAction.class, context.cloneContext()),
+            "Action exception is expected"
+        );
+        MatcherAssert.assertThat(
+            "It's not a handle exception",
+            handle,
+            ExceptionMatchers.messageMatcher(
+                0, Matchers.containsString("Exception!")
+            )
+        );
         context.put(TestExecutorTags.EXCEPTION, 2, true);
-        try {
-            this.cexecutor.execute(ExceptionAction.class, context.cloneContext());
-        } catch (final ActionException exp) {
-            exception = exp.getCause().getMessage().contains("Unhandled");
-        }
-        assert exception;
+        final ActionException unhandle = Assertions.assertThrows(
+            ActionException.class,
+            () -> this.cexecutor.execute(ExceptionAction.class, context.cloneContext()),
+            "Action exception is expected"
+        );
+        MatcherAssert.assertThat(
+            "It's not a handle exception",
+            unhandle,
+            ExceptionMatchers.messageMatcher(
+                1, Matchers.containsString("Unhandled")
+            )
+        );
     }
 
     /**
@@ -131,8 +148,19 @@ class TestKeyExecutor {
         final UUID uuid = UUID.randomUUID();
         context.put(TestExecutorTags.UUID, uuid);
         final Output output = executor.execute(key, context);
-        assert output.getRecords().size() == 1;
-        assert uuid.equals(output.iterator().next().get(TestExecutorTags.UUID));
+        MatcherAssert.assertThat(
+            "Output contains record with tag UUID",
+            output,
+            Matchers
+                .both(Matchers.<Record>iterableWithSize(1))
+                .and(
+                    Matchers.hasItem(
+                        KeeperMatchers.match(
+                            TestExecutorTags.UUID, Matchers.is(uuid)
+                        )
+                    )
+                )
+        );
     }
 
 }

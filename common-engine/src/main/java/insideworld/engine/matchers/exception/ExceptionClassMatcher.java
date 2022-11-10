@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.matchers;
+package insideworld.engine.matchers.exception;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

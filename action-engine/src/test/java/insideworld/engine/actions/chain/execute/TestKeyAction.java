@@ -23,14 +23,16 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.Map;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,21 +49,12 @@ class TestKeyAction {
     private final ActionExecutor<Class<? extends Action>> executor;
 
     /**
-     * Results for compare output.
-     */
-    private final Map<String, Object> results;
-
-    /**
      * Default constructor.
      * @param executor Class action executor.
      */
     @Inject
     TestKeyAction(final ActionExecutor<Class<? extends Action>> executor) {
         this.executor = executor;
-        this.results = Map.of(
-            TestChainTags.UUID.getTag(), UUID.randomUUID(),
-            TestChainTags.OUTPUT_ADDITIONAL.getTag(), "ChildAction"
-        );
     }
 
     /**
@@ -92,15 +85,18 @@ class TestKeyAction {
      */
     @Test
     final void testNull() {
-        boolean exception = false;
-        try {
-            this.executeAction(ParentNullAction.class);
-        } catch (final ActionException exp) {
-            if (exp.getCause().getMessage().contains("Action is not set!")) {
-                exception = true;
-            }
-        }
-        assert exception;
+        final var exception = Assertions.assertThrows(
+            ActionException.class,
+            () ->  this.executeAction(ParentNullAction.class),
+            "Expected exception at init"
+        );
+        MatcherAssert.assertThat(
+            "Exception message wrong",
+            exception,
+            ExceptionMatchers.messageMatcher(
+                1, Matchers.containsString("Action is not set!")
+            )
+        );
     }
 
     /**
@@ -109,13 +105,18 @@ class TestKeyAction {
      */
     @Test
     final void testException() {
-        boolean exception = false;
-        try {
-            this.executeAction(ParentExceptionAction.class);
-        } catch (final ActionException exp) {
-            exception = exp.getCause().getCause().getCause().getMessage().contains("Unhandled");
-        }
-        assert exception;
+        final var exception = Assertions.assertThrows(
+            ActionException.class,
+            () ->  this.executeAction(ParentExceptionAction.class),
+            "Expected exception at init"
+        );
+        MatcherAssert.assertThat(
+            "Exception message wrong",
+            exception,
+            ExceptionMatchers.messageMatcher(
+                3, Matchers.containsString("Unhandled")
+            )
+        );
     }
 
     /**
@@ -125,14 +126,27 @@ class TestKeyAction {
      */
     private void executeAction(final Class<? extends Action> action) throws ActionException {
         final Context context = this.executor.createContext();
-        context.put(TestChainTags.UUID, (UUID) this.results.get(TestChainTags.UUID.getTag()));
-        final Output output = this.executor.execute(action, context);
-        for (final Record record : output) {
-            final Map<String, ? super Object> values = record.values();
-            assert values.size() == 1;
-            final Map.Entry<String, ? super Object> next = values.entrySet().iterator().next();
-            assert this.results.containsKey(next.getKey());
-            assert this.results.get(next.getKey()).equals(next.getValue());
-        }
+        final UUID uuid = UUID.randomUUID();
+        context.put(TestChainTags.UUID, uuid);
+        MatcherAssert.assertThat(
+            "Context has incorrect values",
+            this.executor.execute(action, context),
+            Matchers.hasItems(
+                Matchers
+                    .both(KeeperMatchers.contain(TestChainTags.UUID))
+                    .and(
+                        KeeperMatchers.match(
+                            TestChainTags.UUID, Matchers.is(uuid)
+                        )
+                    ),
+                Matchers
+                    .both(KeeperMatchers.contain(TestChainTags.OUTPUT_ADDITIONAL))
+                    .and(
+                        KeeperMatchers.match(
+                            TestChainTags.OUTPUT_ADDITIONAL, Matchers.is("ChildAction")
+                        )
+                    )
+            )
+        );
     }
 }

@@ -28,9 +28,7 @@ import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.startup.ActionsInit;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.matchers.ExceptionClassMatcher;
-import insideworld.engine.matchers.ExceptionMatchers;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
@@ -48,6 +46,11 @@ import org.junit.jupiter.api.Test;
  */
 @QuarkusTest
 class TestLinkException {
+
+    /**
+     * Message about wrong exception.
+     */
+    private static final String MESSAGE = "Exception message wrong";
 
     /**
      * Link builder.
@@ -92,25 +95,23 @@ class TestLinkException {
             Collections.singletonList(new TestInitAction(this.builder)),
             Collections.emptyList()
         );
-        final StartUpException exception = Assertions.assertThrows(
-            StartUpException.class,
-            init::startUp,
-            "Expected exception at init"
-        );
         MatcherAssert.assertThat(
-            "Exception message wrong",
-            exception,
-            Matchers.allOf(
-                ExceptionMatchers.classMatcher(1, ActionException.class),
-                ExceptionMatchers.classMatcher(2, LinkException.class),
-                ExceptionMatchers.messageMatcher(
-                    2, Matchers.containsString("Exception in link")
-                ),
-                ExceptionMatchers.classMatcher(
-                    3, IllegalArgumentException.class
-                ),
-                ExceptionMatchers.messageMatcher(
-                    3, Matchers.equalTo("Exception at link init")
+            TestLinkException.MESSAGE,
+            init::startUp,
+            ExceptionMatchers.catchException(
+                StartUpException.class,
+                Matchers.allOf(
+                    ExceptionMatchers.classMatcher(1, ActionException.class),
+                    ExceptionMatchers.classMatcher(2, LinkException.class),
+                    ExceptionMatchers.messageMatcher(
+                        2, Matchers.containsString("Exception in link")
+                    ),
+                    ExceptionMatchers.classMatcher(
+                        3, IllegalArgumentException.class
+                    ),
+                    ExceptionMatchers.messageMatcher(
+                        3, Matchers.equalTo("Exception at link init")
+                    )
                 )
             )
         );
@@ -123,20 +124,22 @@ class TestLinkException {
      */
     @Test
     final void testTwiceInit() {
-        boolean exception = false;
-        for (final Action action : this.actions) {
-            try {
-                if (AbstractChainAction.class.isAssignableFrom(action.getClass())) {
-                    action.init();
-                }
-            } catch (final ActionException exp) {
-                if (exp.getMessage().contains("Chain action already init!")) {
-                    exception = true;
-                    break;
-                }
-            }
-        }
-        assert exception;
+        final Action chain = this.actions.stream()
+            .filter(action -> AbstractChainAction.class.isAssignableFrom(action.getClass()))
+            .findAny()
+            .get();
+        final var exception = Assertions.assertThrows(
+            ActionException.class,
+            chain::init,
+            "Expected exception at init"
+        );
+        MatcherAssert.assertThat(
+            TestLinkException.MESSAGE,
+            exception,
+            ExceptionMatchers.messageMatcher(
+                0, Matchers.containsString("Chain action already init!")
+            )
+        );
     }
 
     /**
@@ -148,27 +151,38 @@ class TestLinkException {
     final void testException() {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.EXCEPTION, 1, true);
-        boolean exception = false;
-        try {
-            this.executor.execute(TestAction.class, context.cloneContext());
-        } catch (final ActionException exp) {
-            exception = exp.getCause().getMessage().contains("Exception!");
-        }
-        assert exception;
+        final var one = Assertions.assertThrows(
+            ActionException.class,
+            () ->  this.executor.execute(TestAction.class, context.cloneContext()),
+            "Expected Action exception"
+        );
+        MatcherAssert.assertThat(
+            TestLinkException.MESSAGE,
+            one,
+            ExceptionMatchers.messageMatcher(1, Matchers.containsString("Exception!"))
+        );
         context.put(TestChainTags.EXCEPTION, 2, true);
-        try {
-            this.executor.execute(TestAction.class, context.cloneContext());
-        } catch (final ActionException exp) {
-            exception = exp.getCause().getCause().getMessage().contains("Unhandled");
-        }
-        assert exception;
+        final var two = Assertions.assertThrows(
+            ActionException.class,
+            () ->  this.executor.execute(TestAction.class, context.cloneContext()),
+            "Expected Action exception"
+        );
+        MatcherAssert.assertThat(
+            TestLinkException.MESSAGE,
+            two,
+            ExceptionMatchers.messageMatcher(2, Matchers.containsString("Unhandled"))
+        );
         context.put(TestChainTags.EXCEPTION, 3, true);
-        try {
-            this.executor.execute(TestAction.class, context.cloneContext());
-        } catch (final ActionException exp) {
-            exception = exp.getCause().getCause().getMessage().contains("Handled");
-        }
-        assert exception;
+        final var three = Assertions.assertThrows(
+            ActionException.class,
+            () ->  this.executor.execute(TestAction.class, context.cloneContext()),
+            "Expected Action exception"
+        );
+        MatcherAssert.assertThat(
+            TestLinkException.MESSAGE,
+            three,
+            ExceptionMatchers.messageMatcher(2, Matchers.containsString("Handled"))
+        );
     }
 
 }

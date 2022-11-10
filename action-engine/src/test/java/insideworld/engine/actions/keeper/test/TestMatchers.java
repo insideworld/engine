@@ -64,19 +64,19 @@ class TestMatchers {
     final void testContains() {
         final Context context = this.factory.createObject(Context.class);
         context.put(TestKeeperTags.UUID, UUID.randomUUID());
-        final var exists = KeeperMatchers.recordContain(TestKeeperTags.UUID);
+        final var exists = KeeperMatchers.contain(TestKeeperTags.UUID);
         MatcherAssert.assertThat(
             "Should return true because tag exists",
             exists.matchesSafely(context),
             Matchers.is(true)
         );
-        final var not = KeeperMatchers.recordContain(TestKeeperTags.DUMMY);
+        final var not = KeeperMatchers.contain(TestKeeperTags.DUMMY);
         MatcherAssert.assertThat(
             "Should return false because tag not exists",
             not.matchesSafely(context),
             Matchers.is(false)
         );
-        final var existss = KeeperMatchers.recordContain(
+        final var existss = KeeperMatchers.contain(
             TestKeeperTags.UUID.getTag()
         );
         MatcherAssert.assertThat(
@@ -84,7 +84,7 @@ class TestMatchers {
             existss.matchesSafely(context),
             Matchers.is(true)
         );
-        final var nots = KeeperMatchers.recordContain(
+        final var nots = KeeperMatchers.contain(
             TestKeeperTags.DUMMY.getTag()
         );
         MatcherAssert.assertThat(
@@ -118,18 +118,18 @@ class TestMatchers {
         final Context context = this.factory.createObject(Context.class);
         final UUID uuid = UUID.randomUUID();
         context.put(TestKeeperTags.UUID, uuid);
-        final var equals = KeeperMatchers.recordEquals(
+        final var equals = KeeperMatchers.match(
             TestKeeperTags.UUID,
-            uuid
+            Matchers.is(uuid)
         );
         MatcherAssert.assertThat(
             "Should return true because tag exists and value equals",
             equals.matchesSafely(context),
             Matchers.is(true)
         );
-        final var equalss = KeeperMatchers.recordEquals(
+        final var equalss = KeeperMatchers.match(
             TestKeeperTags.UUID.getTag(),
-            uuid
+            Matchers.is(uuid)
         );
         MatcherAssert.assertThat(
             "Should return true because key exists and value equals",
@@ -142,9 +142,9 @@ class TestMatchers {
             equals.matchesSafely(context),
             Matchers.is(false)
         );
-        final var nul = KeeperMatchers.recordEquals(
+        final var nul = KeeperMatchers.match(
             TestKeeperTags.UUID,
-            uuid
+            Matchers.is(uuid)
         );
         MatcherAssert.assertThat(
             "Should return false because tag not exists",
@@ -158,9 +158,8 @@ class TestMatchers {
             description.toString(),
             Matchers.equalTo(
                 String.format(
-                    "Expected value for tag %s is <%s>",
-                    TestKeeperTags.UUID.getTag(),
-                    uuid
+                    "Wrong expected value for %s",
+                    TestKeeperTags.UUID.getTag()
                 )
             )
         );

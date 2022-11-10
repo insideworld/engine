@@ -24,10 +24,13 @@ import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -87,9 +90,20 @@ class TestPostExecute {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.UUID, uuid);
         final Output output = this.executor.execute(action, context);
-        assert "ChildAction".equals(context.get(TestChainTags.OUTPUT_ADDITIONAL));
-        assert output.getRecords().size() == 1;
-        assert uuid.equals(output.getRecords().iterator().next().get(TestChainTags.UUID));
+        MatcherAssert.assertThat(
+            "Expected value in context",
+            context,
+            KeeperMatchers.match(
+                TestChainTags.OUTPUT_ADDITIONAL, Matchers.is("ChildAction")
+            )
+        );
+        MatcherAssert.assertThat(
+            "Expected value in output record",
+            output,
+            Matchers.hasItem(
+                KeeperMatchers.match(TestChainTags.UUID, Matchers.is(uuid))
+            )
+        );
     }
 
 }

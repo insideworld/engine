@@ -108,26 +108,26 @@ class ExtractorTest {
         );
         this.extractor.setSchema(ExtractorTest.SCHEMA);
         this.extractor.process(context, output);
-        MatcherAssert.assertThat(
-            "Output contains record with tag OUTPUT_VALUE",
-            output.getRecords(),
-            Matchers.hasItems(new TypeSafeMatcher<>() {
-                @Override
-                protected boolean matchesSafely(final Record item) {
-                    return item.contains(ExtractorTestTags.OUTPUT_VALUE);
-                }
-
-                @Override
-                public void describeTo(Description description) {
-
-                }
-            })
+//        MatcherAssert.assertThat(
+//            "Output contains record with tag OUTPUT_VALUE",
+//            output.getRecords(),
+//            Matchers.hasItems(new TypeSafeMatcher<>() {
+//                @Override
+//                protected boolean matchesSafely(final Record item) {
+//                    return item.contains(ExtractorTestTags.OUTPUT_VALUE);
+//                }
+//
+//                @Override
+//                public void describeTo(Description description) {
+//
+//                }
+//            })
 //            Matchers.both(Matchers.hasItems(
 //                new TypeSafeMatcher<>() {
 //                }
 //
 //            )).and(Matchers.hasSize(1))
-        );
+//        );
 
 
 //        new TypeSafeMatcher<Collection<?>>() {

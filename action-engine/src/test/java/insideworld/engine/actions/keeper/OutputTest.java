@@ -21,15 +21,18 @@ package insideworld.engine.actions.keeper;
 
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.Iterator;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
  * Output tests.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -42,6 +45,7 @@ class OutputTest {
 
     /**
      * Default constructor.
+     *
      * @param factory Object factory
      */
     @Inject
@@ -63,14 +67,21 @@ class OutputTest {
         final Context context = this.factory.createObject(Context.class);
         context.put(TestKeeperTags.UUID, UUID.randomUUID());
         output.add(context);
-        assert output.getRecords().size() == 3;
-        final Iterator<Record> iterator = output.iterator();
-        final Record one = iterator.next();
-        assert one.contains(TestKeeperTags.DUMMY);
-        final Record two = iterator.next();
-        assert "SomeAlias".equals(two.get(KeeperTags.ALIAS));
-        final Record three = iterator.next();
-        assert three.contains(TestKeeperTags.UUID);
+        MatcherAssert.assertThat(
+            "Output has wrong values",
+            output,
+            Matchers
+                .both(
+                    Matchers.<Record>iterableWithSize(3)
+                )
+                .and(
+                    Matchers.containsInRelativeOrder(
+                        KeeperMatchers.contain(TestKeeperTags.DUMMY),
+                        KeeperMatchers.match(KeeperTags.ALIAS, Matchers.is("SomeAlias")),
+                        KeeperMatchers.contain(TestKeeperTags.UUID)
+                    )
+                )
+        );
     }
 
 }

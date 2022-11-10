@@ -26,15 +26,20 @@ import insideworld.engine.entities.mock.entities.exception.MockWrongMethodEntity
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test exceptions handling for converter.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -51,6 +56,7 @@ class DtoConverterExceptionTest {
 
     /**
      * Default constructor.
+     *
      * @param converter Converter for tests.
      * @param factory Object factory.
      */
@@ -76,13 +82,19 @@ class DtoConverterExceptionTest {
         context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
         context.put(MockTags.DATE, new Date(1_500_000));
         context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
-        boolean exception = false;
-        try {
-            this.converter.convert(context, MockEntity.class);
-        } catch (final StorageException exp) {
-            exception = exp.getMessage().contains("Can't read because storage return null");
-        }
-        assert exception;
+        final StorageException exception = Assertions.assertThrows(
+            StorageException.class,
+            () -> this.converter.convert(context, MockEntity.class),
+            "Should raise an exception"
+        );
+        MatcherAssert.assertThat(
+            "Exception has incorrect message",
+            exception,
+            ExceptionMatchers.messageMatcher(
+                0,
+                Matchers.containsString("Can't read because storage return null")
+            )
+        );
     }
 
     /**
@@ -92,21 +104,35 @@ class DtoConverterExceptionTest {
     @Test
     final void wrongMethods() {
         final MockWrongMethodEntity entity = this.factory.createObject(MockWrongMethodEntity.class);
-        boolean exception = false;
-        try {
-            this.converter.convert(entity);
-        } catch (final StorageException exp) {
-            exception = exp.getMessage().contains("Can't read field failed with type");
-        }
-        assert exception;
-        exception = false;
-        final Context context = this.factory.createObject(Context.class);
-        try {
-            this.converter.convert(context, MockWrongMethodEntity.class);
-        } catch (final StorageException exp) {
-            exception = exp.getMessage().contains("Can't write field failed with type");
-        }
-        assert exception;
+        final StorageException read = Assertions.assertThrows(
+            StorageException.class,
+            () -> this.converter.convert(entity),
+            "Should raise an exception"
+        );
+        MatcherAssert.assertThat(
+            "Exception has incorrect message",
+            read,
+            ExceptionMatchers.messageMatcher(
+                0,
+                Matchers.containsString("Can't read field failed with type")
+            )
+        );
+        final StorageException write = Assertions.assertThrows(
+            StorageException.class,
+            () -> this.converter.convert(
+                this.factory.createObject(Context.class),
+                MockWrongMethodEntity.class
+            ),
+            "Should raise an exception"
+        );
+        MatcherAssert.assertThat(
+            "Exception has incorrect message",
+            write,
+            ExceptionMatchers.messageMatcher(
+                0,
+                Matchers.containsString("Can't write field failed with type")
+            )
+        );
     }
 
     /**
@@ -117,21 +143,31 @@ class DtoConverterExceptionTest {
     final void failDateConvert() {
         final Context ctxsingle = this.factory.createObject(Context.class);
         ctxsingle.put(MockTags.DATE.getTag(), "qqqwertt123");
-        boolean exception = false;
-        try {
-            this.converter.convert(ctxsingle, MockEntity.class);
-        } catch (final StorageException exp) {
-            exception = exp.getMessage().contains("Can't parse date");
-        }
-        assert exception;
+        MatcherAssert.assertThat(
+            "Exception is wrong for date parse",
+            () -> this.converter.convert(ctxsingle, MockEntity.class),
+            ExceptionMatchers.catchException(
+                StorageException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString(("Can't parse date")
+                    )
+                )
+            )
+        );
         final Context ctxmulti = this.factory.createObject(Context.class);
         ctxmulti.put(MockTags.DATES.getTag(), Collections.singleton("qqqwertt123"));
-        exception = false;
-        try {
-            this.converter.convert(ctxmulti, MockEntity.class);
-        } catch (final StorageException exp) {
-            exception = exp.getMessage().contains("Can't parse date");
-        }
-        assert exception;
+        MatcherAssert.assertThat(
+            "Exception is wrong for date parse",
+            () -> this.converter.convert(ctxmulti, MockEntity.class),
+            ExceptionMatchers.catchException(
+                StorageException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString(("Can't parse date")
+                    )
+                )
+            )
+        );
     }
 }

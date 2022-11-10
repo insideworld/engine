@@ -22,6 +22,7 @@ package insideworld.engine.entities.converter.dto;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.InitMock;
 import insideworld.engine.entities.mock.MockTags;
@@ -35,6 +36,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -87,6 +90,23 @@ class DtoConverterPositiveTest {
         final MockEntity entity = this.mock.createPrimary();
         final long id = entity.getId();
         final Record record = this.converter.convert(entity);
+        MatcherAssert.assertThat(
+            "Record has wrong values",
+            record,
+            Matchers.allOf(
+                KeeperMatchers.match(StorageTags.ID, Matchers.is(id)),
+                KeeperMatchers.match(MockTags.PRIM, Matchers.is(1337L)),
+                KeeperMatchers.match(MockTags.WRAPPRIM, Matchers.is(1414L)),
+                KeeperMatchers.match(MockTags.STRPRIM, Matchers.is("7331")),
+                KeeperMatchers.match(MockTags.STRPRIMS, Matchers.hasSize(2)),
+                KeeperMatchers.match(),
+                KeeperMatchers.match(),
+                KeeperMatchers.match(),
+                KeeperMatchers.match(),
+                KeeperMatchers.match(),
+                Matchers.not(KeeperMatchers.recordEquals())
+            )
+        );
         assert record.contains(StorageTags.ID) && record.get(StorageTags.ID).equals(id);
         assert record.contains(MockTags.PRIM) && record.get(MockTags.PRIM) == 1337;
         assert record.contains(MockTags.WRAPPRIM) && record.get(MockTags.WRAPPRIM).equals(1414L);

@@ -21,6 +21,8 @@ package insideworld.engine.actions.keeper;
 
 import insideworld.engine.actions.keeper.tags.SingleTag;
 import io.quarkus.test.junit.QuarkusTest;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -55,12 +57,12 @@ class TagTest {
      */
     @Test
     void test() {
-        assert TagTest.ONE.equals(TagTest.TWO);
-        assert !TagTest.ONE.equals(TagTest.ANOTHER);
-        assert !TagTest.ONE.equals(new Object());
-        assert TagTest.ONE.hashCode() == TagTest.TWO.hashCode();
-        assert TagTest.ONE.hashCode() != TagTest.ANOTHER.hashCode();
-        assert TagTest.ONE.getTag().equals(TagTest.TAG_KEY)
-            && TagTest.TWO.getTag().equals(TagTest.TAG_KEY);
+        MatcherAssert.assertThat(TagTest.ONE, Matchers.is(TagTest.TWO));
+        MatcherAssert.assertThat(TagTest.ONE, Matchers.not(TagTest.ANOTHER));
+        MatcherAssert.assertThat(TagTest.ONE, Matchers.not(new Object()));
+        MatcherAssert.assertThat(TagTest.ONE.hashCode(), Matchers.is(TagTest.TWO.hashCode()));
+        MatcherAssert.assertThat(TagTest.ONE.hashCode(), Matchers.not(TagTest.ANOTHER.hashCode()));
+        MatcherAssert.assertThat(TagTest.ONE.getTag(), Matchers.is(TagTest.TAG_KEY));
+        MatcherAssert.assertThat(TagTest.TWO.getTag(), Matchers.is(TagTest.TAG_KEY));
     }
 }

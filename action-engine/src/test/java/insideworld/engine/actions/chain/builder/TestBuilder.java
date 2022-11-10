@@ -28,7 +28,6 @@ import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -67,22 +66,22 @@ class TestBuilder {
         MatcherAssert.assertThat(
             "STRING tag is absent",
             context,
-            KeeperMatchers.recordContain(TestChainTags.STRING)
+            KeeperMatchers.contain(TestChainTags.STRING)
         );
         MatcherAssert.assertThat(
             "INTEGER tag is absent",
             context,
-            KeeperMatchers.recordContain(TestChainTags.INTEGER)
+            KeeperMatchers.contain(TestChainTags.INTEGER)
         );
         MatcherAssert.assertThat(
             "UUID tag is absent",
             context,
-            KeeperMatchers.recordContain(TestChainTags.UUID)
+            KeeperMatchers.contain(TestChainTags.UUID)
         );
         MatcherAssert.assertThat(
             "UUID_ADDITIONAL tag is absent",
             context,
-            KeeperMatchers.recordContain(TestChainTags.UUID_ADDITIONAL)
+            KeeperMatchers.contain(TestChainTags.UUID_ADDITIONAL)
         );
     }
 

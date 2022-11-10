@@ -22,9 +22,12 @@ package insideworld.engine.actions.startup;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -59,6 +62,9 @@ class TestStartup {
     final void test() throws CommonException {
         final Context context = this.executor.createContext();
         this.executor.execute(TestStartupAction.class, context);
-        assert Boolean.TRUE.equals(context.get("inited"));
+        MatcherAssert.assertThat(
+            context,
+            KeeperMatchers.match("inited", Matchers.is(true))
+        );
     }
 }

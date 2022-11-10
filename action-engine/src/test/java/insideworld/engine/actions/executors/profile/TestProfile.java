@@ -24,14 +24,18 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test execution of profiles.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -44,6 +48,7 @@ class TestProfile {
 
     /**
      * Default constructor.
+     *
      * @param executor Class action executor.
      */
     @Inject
@@ -59,6 +64,7 @@ class TestProfile {
      * Default executor profile shouldn't contain COPY_UUID tag.
      * System executor profile should contain COPY_UUID tag.
      * All profiles shouldn't execute DummyWrapper.
+     *
      * @throws CommonException Exception.
      */
     @Test
@@ -67,13 +73,25 @@ class TestProfile {
         final Context def = this.executor.createContext();
         def.put(TestExecutorTags.UUID, uuid);
         this.executor.execute(DummyAction.class, def);
-        assert !def.contains(TestExecutorTags.COPY_UUID);
-        assert !def.contains(TestExecutorTags.DUMMY);
+        MatcherAssert.assertThat(
+            "COPY_UUID or DUMMY contains in default profile but it's system tags",
+            def,
+            Matchers.allOf(
+                Matchers.not(KeeperMatchers.contain(TestExecutorTags.COPY_UUID)),
+                Matchers.not(KeeperMatchers.contain(TestExecutorTags.DUMMY))
+            )
+        );
         final Context sys = this.executor.createContext();
         sys.put(TestExecutorTags.UUID, uuid);
         this.executor.execute(DummyAction.class, sys, SystemExecuteProfile.class);
-        assert sys.contains(TestExecutorTags.COPY_UUID);
-        assert !sys.contains(TestExecutorTags.DUMMY);
+        MatcherAssert.assertThat(
+            "COPY_UUID should present and DUMMY not",
+            sys,
+            Matchers.allOf(
+                KeeperMatchers.contain(TestExecutorTags.COPY_UUID),
+                Matchers.not(KeeperMatchers.contain(TestExecutorTags.DUMMY))
+            )
+        );
     }
 
 }

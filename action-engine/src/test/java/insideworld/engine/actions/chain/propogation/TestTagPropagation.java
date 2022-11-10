@@ -22,12 +22,13 @@ package insideworld.engine.actions.chain.propogation;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -64,11 +65,14 @@ class TestTagPropagation {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());
-        final Output output = this.executor.execute(PropagateTagAction.class, context);
-        assert output.getRecords().size() == 1;
-        final Record record = output.iterator().next();
-        assert record.contains(TestChainTags.ONE);
-        assert !record.contains(TestChainTags.TWO);
+        MatcherAssert.assertThat(
+            "Expected value in output record",
+            this.executor.execute(PropagateTagAction.class, context),
+            Matchers.hasItems(
+                KeeperMatchers.contain(TestChainTags.ONE),
+                Matchers.not(KeeperMatchers.contain(TestChainTags.TWO))
+            )
+        );
     }
 
 }

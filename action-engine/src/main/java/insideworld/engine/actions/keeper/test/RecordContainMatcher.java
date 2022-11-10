@@ -17,36 +17,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.matchers;
+package insideworld.engine.actions.keeper.test;
 
+import insideworld.engine.actions.keeper.Record;
+import insideworld.engine.actions.keeper.tags.Tag;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class ExceptionMessageMatcher extends TypeSafeMatcher<Throwable> {
+/**
+ * Record matcher.
+ * @since 0.14.0
+ */
+public class RecordContainMatcher extends TypeSafeMatcher<Record> {
 
-    private final int level;
-    private final Matcher<String> matcher;
+    /**
+     * Tag key of checking value.
+     */
+    private final String tag;
 
-    public ExceptionMessageMatcher(
-        final int level,
-        final Matcher<String> matcher
-    ) {
-        this.level = level;
-        this.matcher = matcher;
+    /**
+     * Constructor for tag object.
+     * @param tag Tag.
+     */
+    public RecordContainMatcher(final Tag<?> tag) {
+        this(tag.getTag());
+    }
+
+    /**
+     * Constructor for string key.
+     * @param tag String key of tag.
+     */
+    public RecordContainMatcher(final String tag) {
+        this.tag = tag;
     }
 
     @Override
-    protected boolean matchesSafely(final Throwable item) {
-        Throwable toequals = item;
-        for (int i = 0; i < this.level; i++) {
-            toequals = toequals.getCause();
-        }
-        return this.matcher.matches(toequals.getMessage());
+    public final void describeTo(final Description description) {
+        description.appendText("Tag ").appendText(this.tag).appendText(" is not found in record");
     }
 
     @Override
-    public void describeTo(Description description) {
-        //Later when will write tests.
+    protected final boolean matchesSafely(final Record record) {
+        return record.contains(this.tag);
     }
 }

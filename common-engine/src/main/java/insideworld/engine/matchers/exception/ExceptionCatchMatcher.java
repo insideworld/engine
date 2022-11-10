@@ -17,47 +17,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.keeper.test;
+package insideworld.engine.matchers.exception;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.actions.keeper.tags.Tag;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-/**
- * Record matcher.
- * @since 0.14.0
- */
-public class RecordContainTagMatcher extends TypeSafeMatcher<Record> {
+public class ExceptionCatchMatcher extends TypeSafeMatcher<ExecutableException> {
 
-    /**
-     * Tag key of checking value.
-     */
-    private final String tag;
+    private final Class<? extends Throwable> throwable;
 
-    /**
-     * Constructor for tag object.
-     * @param tag Tag.
-     */
-    public RecordContainTagMatcher(final Tag<?> tag) {
-        this(tag.getTag());
+    private Matcher<? extends Throwable> matcher;
+
+    public ExceptionCatchMatcher(final Class<? extends Throwable> throwable) {
+        this(throwable, null);
     }
 
-    /**
-     * Constructor for string key.
-     * @param tag String key of tag.
-     */
-    public RecordContainTagMatcher(final String tag) {
-        this.tag = tag;
+    public ExceptionCatchMatcher(
+        final Class<? extends Throwable> throwable,
+        final Matcher<? extends Throwable> matcher
+    ) {
+        this.throwable = throwable;
+        this.matcher = matcher;
     }
 
     @Override
-    public final void describeTo(final Description description) {
-        description.appendText("Tag ").appendText(this.tag).appendText(" is not found in record");
+    protected boolean matchesSafely(final ExecutableException item) {
+        boolean result = false;
+        try {
+            item.execute();
+        } catch (final Throwable exp) {
+            result = this.throwable.equals(exp.getClass())
+                && (this.matcher == null || this.matcher.matches(exp));
+        }
+        return result;
     }
 
     @Override
-    protected final boolean matchesSafely(final Record record) {
-        return record.contains(this.tag);
+    public void describeTo(Description description) {
+
     }
 }

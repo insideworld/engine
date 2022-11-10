@@ -26,13 +26,14 @@ import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.Collection;
-import java.util.Iterator;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test wrappers and they execution sequence.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -60,6 +61,7 @@ class TestWrappers {
      * After that execute dummy action.
      * ER:
      * Sequence should contain values from 3 to -1 with right order.
+     *
      * @throws CommonException Exception.
      */
     @Test
@@ -67,12 +69,22 @@ class TestWrappers {
         final Context context = this.executor.createContext();
         context.put(TestExecutorTags.SEQUENCE, Lists.newLinkedList());
         this.executor.execute(DummyAction.class, context);
-        final Collection<Integer> sequence = context.get(TestExecutorTags.SEQUENCE);
-        final Iterator<Integer> iterator = sequence.iterator();
-        //@checkstyle IllegalTokenCheck (2 lines)
-        for (int idx = 3; idx > -1; idx--) {
-            assert iterator.hasNext();
-            assert iterator.next().equals(idx);
-        }
+        MatcherAssert.assertThat(
+            "Collection has wrong sequence",
+            context.get(TestExecutorTags.SEQUENCE),
+            Matchers
+                .both(
+                    Matchers.<Integer>iterableWithSize(5)
+                )
+                .and(
+                    Matchers.containsInRelativeOrder(
+                        Matchers.is(3),
+                        Matchers.is(2),
+                        Matchers.is(1),
+                        Matchers.is(0),
+                        Matchers.is(-1)
+                    )
+                )
+        );
     }
 }

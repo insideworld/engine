@@ -21,15 +21,15 @@ package insideworld.engine.actions.keeper.test;
 
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.tags.Tag;
-import java.util.Objects;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
  * Check that record contain tag.
  * @since 0.14.0
  */
-public class RecordTagEqualsMatcher extends TypeSafeMatcher<Record> {
+public class RecordMatcher extends TypeSafeMatcher<Record> {
 
     /**
      * Tag to equals.
@@ -37,46 +37,38 @@ public class RecordTagEqualsMatcher extends TypeSafeMatcher<Record> {
     private final String tag;
 
     /**
-     * Value to equals.
+     * Matcher.
      */
-    private final Object value;
+    private final Matcher<?> matcher;
 
     /**
      * Constructor for tag object.
      * @param tag Tag object.
-     * @param value Value to equals.
+     * @param matcher Matcher.
      */
-    public RecordTagEqualsMatcher(final Tag<?> tag, final Object value) {
-        this(tag.getTag(), value);
+    public RecordMatcher(final Tag<?> tag, final Matcher<?> matcher) {
+        this(tag.getTag(), matcher);
     }
 
     /**
      * Constructor for string key.
      * @param tag String key.
-     * @param value Value to equals.
+     * @param matcher Value to equals.
      */
-    public RecordTagEqualsMatcher(final String tag, final Object value) {
+    public RecordMatcher(final String tag, final Matcher<?> matcher) {
         this.tag = tag;
-        this.value = value;
+        this.matcher = matcher;
     }
 
     @Override
     public final void describeTo(final Description description) {
         description
-            .appendText("Expected value for tag ")
-            .appendText(this.tag)
-            .appendText(" is ")
-            .appendValue(this.value);
+            .appendText("Wrong expected value for ")
+            .appendText(this.tag);
     }
 
     @Override
     protected final boolean matchesSafely(final Record item) {
-        final boolean exists;
-        if (item.contains(this.tag)) {
-            exists = Objects.equals(this.value, item.get(this.tag));
-        } else {
-            exists = false;
-        }
-        return exists;
+        return this.matcher.matches(item.get(this.tag));
     }
 }

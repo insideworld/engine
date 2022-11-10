@@ -22,12 +22,13 @@ package insideworld.engine.actions.chain.pre;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -100,8 +101,11 @@ class TestPreExecute {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
         context.put(TestChainTags.TWO, new Object());
-        final Output output = this.executor.execute(action, context);
-        assert output.getRecords().size() == 0;
+        MatcherAssert.assertThat(
+            "Output should be empty",
+            this.executor.execute(action, context),
+            Matchers.emptyIterable()
+        );
     }
 
     /**
@@ -112,10 +116,13 @@ class TestPreExecute {
     private void preExecuteTrue(final Class<? extends Action> action) throws CommonException {
         final Context context = this.executor.createContext();
         context.put(TestChainTags.ONE, new Object());
-        final Output output = this.executor.execute(action, context);
-        assert output.getRecords().size() == 1;
-        final Record record = output.getRecords().iterator().next();
-        assert record.contains(TestChainTags.TWO);
+        MatcherAssert.assertThat(
+            "Expected value in output record",
+            this.executor.execute(action, context),
+            Matchers.hasItem(
+                KeeperMatchers.contain(TestChainTags.TWO)
+            )
+        );
     }
 
 }

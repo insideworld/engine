@@ -19,20 +19,24 @@
 
 package insideworld.engine.entities.converter.dto;
 
-import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.exclude.MockExcludeEntity;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.matchers.object.ObjectMappers;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.List;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test scenario for converter where some method is missed.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -50,6 +54,7 @@ class DtoConverterExcludedTest {
 
     /**
      * Default constructor.
+     *
      * @param converter Converter for tests.
      * @param factory Object factory.
      */
@@ -64,23 +69,30 @@ class DtoConverterExcludedTest {
     /**
      * TC: Check that in record propagate only fields with getter method.
      * ER: In record should present only ID and NO_SET tag.
+     *
      * @throws StorageException Can't cause.
      */
     @Test
     final void toRecord() throws StorageException {
         final MockExcludeEntity entity = this.factory.createObject(MockExcludeEntity.class);
-        final Record record = this.converter.convert(entity);
-        assert record.contains(StorageTags.ID);
-        assert record.contains(MockTags.NO_SET);
-        assert !record.contains(MockTags.NO_GET);
-        assert !record.contains(MockTags.NO_METHODS);
-        assert !record.contains(MockTags.IGNORE);
-        assert !record.contains(MockTags.OBJECTS);
+        MatcherAssert.assertThat(
+            "Record has incorrect tags",
+            this.converter.convert(entity),
+            Matchers.allOf(
+                KeeperMatchers.contain(StorageTags.ID),
+                KeeperMatchers.contain(MockTags.NO_SET),
+                Matchers.not(KeeperMatchers.contain(MockTags.NO_GET)),
+                Matchers.not(KeeperMatchers.contain(MockTags.NO_METHODS)),
+                Matchers.not(KeeperMatchers.contain(MockTags.IGNORE)),
+                Matchers.not(KeeperMatchers.contain(MockTags.OBJECTS))
+            )
+        );
     }
 
     /**
      * TC: Check that in entity propagate only field with setter method.
      * ER: In entity should change only NO_GET field.
+     *
      * @throws StorageException Can't cause.
      */
     @Test
@@ -92,8 +104,17 @@ class DtoConverterExcludedTest {
         context.put(MockTags.IGNORE, "NewValue4");
         context.put(MockTags.OBJECTS, List.of(new Object()));
         final MockExcludeEntity entity = this.converter.convert(context, MockExcludeEntity.class);
-        assert entity.check("NewValue2");
-        assert entity.getObjects().size() == 2;
+        MatcherAssert.assertThat(
+            "Fields values are not as expected",
+            entity,
+            Matchers.allOf(
+                ObjectMappers.fieldMatcher("objects", Matchers.iterableWithSize(2)),
+                ObjectMappers.fieldMatcher("noset", Matchers.is("testnoset")),
+                ObjectMappers.fieldMatcher("ignore", Matchers.is("ignore")),
+                ObjectMappers.fieldMatcher("nomethods", Matchers.is("testnomethods")),
+                ObjectMappers.fieldMatcher("noget", Matchers.is("NewValue2"))
+            )
+        );
     }
 
 }
