@@ -65,6 +65,9 @@ public class ExportEntityLink implements Link {
 
     @Override
     public final void process(final Context context, final Output output) throws LinkException {
+        if (this.single == null && this.multiple == null) {
+            throw new LinkException(this.getClass(), "Link is not init!");
+        }
         final Collection<Entity> entities = Lists.newLinkedList();
         context.getOptional(this.single).ifPresent(entities::add);
         context.getOptional(this.multiple).ifPresent(entities::addAll);

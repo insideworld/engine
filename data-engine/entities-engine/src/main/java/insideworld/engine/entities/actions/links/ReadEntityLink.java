@@ -84,18 +84,20 @@ public class ReadEntityLink<T extends Entity> implements Link {
 
     @Override
     public final void process(final Context context, final Output output) throws LinkException {
+        if (this.single == null && this.multiple == null) {
+            throw new LinkException(this.getClass(), "Link was not init");
+        }
         if (this.single != null && context.contains(this.single.getLeft())) {
             context.put(
                 this.single.getRight(),
                 this.processSingle(context.get(this.single.getLeft()))
             );
-        } else {
-            if (this.multiple != null) {
-                context.put(
-                    this.multiple.getRight(),
-                    this.processMultiple(context.get(this.multiple.getLeft()))
-                );
-            }
+        }
+        if (this.multiple != null) {
+            context.put(
+                this.multiple.getRight(),
+                this.processMultiple(context.get(this.multiple.getLeft()))
+            );
         }
     }
 

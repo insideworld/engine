@@ -21,6 +21,7 @@ package insideworld.engine.entities.mock;
 
 import insideworld.engine.actions.keeper.tags.MultipleTag;
 import insideworld.engine.actions.keeper.tags.SingleTag;
+import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.mock.entities.positive.MockOneEntity;
 import insideworld.engine.entities.mock.entities.positive.MockTwoEntity;
 import insideworld.engine.entities.tags.EntitiesTag;
@@ -117,6 +118,16 @@ public final class MockTags {
      * Ignore tag.
      */
     public static final MultipleTag<Object> OBJECTS = new MultipleTag<>("objects");
+
+    /**
+     * Primary entity.
+     */
+    public static final EntityTag<MockEntity> PRIMARY = new EntityTag<>("primary");
+
+    /**
+     * Primary entities.
+     */
+    public static final EntitiesTag<MockEntity> PRIMARIES = new EntitiesTag<>("primaries");
 
     /**
      * Private constructor.

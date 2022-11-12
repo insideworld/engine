@@ -27,13 +27,13 @@ import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.InitMock;
 import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
+import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
 import org.hamcrest.MatcherAssert;
@@ -83,7 +83,6 @@ class DtoConverterPositiveTest {
      * TC: Check that mock entity keeping in storage was converted to DTO.
      * ER: Record with propagated field from entity.
      * @throws StorageException Can't cause.
-     * @checkstyle CyclomaticComplexityCheck (20 lines)
      */
     @Test
     final void testToRecord() throws StorageException {
@@ -103,7 +102,7 @@ class DtoConverterPositiveTest {
                 KeeperMatchers.match(MockTags.ONE_ID, Matchers.is(1L)),
                 KeeperMatchers.match(MockTags.TWOS_IDS, Matchers.hasSize(3)),
                 KeeperMatchers.match(MockTags.DATE, Matchers.is(new Date(1_000_000))),
-                KeeperMatchers.match(MockTags.DATES, Matchers.hasSize(2)),
+                KeeperMatchers.match(MockTags.DATES, Matchers.hasSize(3)),
                 Matchers.not(KeeperMatchers.contain(MockTags.TEST_NULL))
             )
         );
@@ -118,12 +117,7 @@ class DtoConverterPositiveTest {
     @Test
     final void testToEntityNew() throws StorageException, ActionException {
         final Context context = this.factory.createObject(Context.class);
-        context.put(MockTags.STRPRIM, "Value");
-        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
-        context.put(MockTags.ONE_ID, 2L);
-        context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
-        context.put(MockTags.DATE, new Date(1_500_000));
-        context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
+        this.mock.fillContext(context);
         MatcherAssert.assertThat(
             "Entity has wrong fields values",
             this.converter.convert(context, MockEntity.class),
@@ -153,12 +147,7 @@ class DtoConverterPositiveTest {
         final long id = entity.getId();
         final Context context = this.factory.createObject(Context.class);
         context.put(StorageTags.ID, entity.getId());
-        context.put(MockTags.STRPRIM, "Value");
-        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
-        context.put(MockTags.ONE_ID, 2L);
-        context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
-        context.put(MockTags.DATE, new Date(1_500_000));
-        context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
+        this.mock.fillContext(context);
         MatcherAssert.assertThat(
             "Entity has wrong fields values",
             this.converter.convert(context, MockEntity.class),
@@ -202,6 +191,59 @@ class DtoConverterPositiveTest {
             Matchers.allOf(
                 Matchers.hasProperty("date", Matchers.is(date)),
                 Matchers.hasProperty("dates", Matchers.hasItem(date))
+            )
+        );
+    }
+
+    /**
+     * TC: Test convert entity with null values.
+     * ER: All field for primitive and dates should null
+     *  and collection should be empty, but no null.
+     * @throws StorageException Shouldn't throw.
+     */
+    @Test
+    final void nullValueContext() throws StorageException {
+        final Context context = this.factory.createObject(Context.class);
+        context.put(MockTags.STRPRIM, null);
+        context.put(MockTags.WRAPPRIMS, null);
+        context.put(MockTags.ONE_ID, null);
+        context.put(MockTags.TWOS_IDS, null);
+        context.put(MockTags.DATE, null);
+        context.put(MockTags.DATES, null);
+        MatcherAssert.assertThat(
+            "Entity has wrong fields values for nulls",
+            this.converter.convert(context, MockEntity.class),
+            Matchers.allOf(
+                Matchers.hasProperty("strprim", Matchers.nullValue()),
+                Matchers.hasProperty("wrapprims", Matchers.iterableWithSize(0)),
+                Matchers.hasProperty("one", Matchers.nullValue()),
+                Matchers.hasProperty("twos", Matchers.iterableWithSize(0)),
+                Matchers.hasProperty("date", Matchers.nullValue()),
+                Matchers.hasProperty("dates", Matchers.iterableWithSize(0)),
+                Matchers.hasProperty("testnull", Matchers.nullValue())
+            )
+        );
+    }
+
+    @Test
+    final void nullValueEntity() throws StorageException {
+        final MockEntity entity = new MockEntityImpl();
+        final Record record = this.converter.convert(entity);
+        MatcherAssert.assertThat(
+            "Record has wrong values",
+            record,
+            Matchers.allOf(
+                Matchers.not(KeeperMatchers.contain(StorageTags.ID)),
+                Matchers.not(KeeperMatchers.contain(MockTags.PRIM)),
+                Matchers.not(KeeperMatchers.contain(MockTags.WRAPPRIM)),
+                Matchers.not(KeeperMatchers.contain(MockTags.STRPRIM)),
+                Matchers.not(KeeperMatchers.contain(MockTags.STRPRIMS)),
+                Matchers.not(KeeperMatchers.contain(MockTags.WRAPPRIMS)),
+                Matchers.not(KeeperMatchers.contain(MockTags.ONE_ID)),
+                Matchers.not(KeeperMatchers.contain(MockTags.TWOS_IDS)),
+                Matchers.not(KeeperMatchers.contain(MockTags.DATE)),
+                Matchers.not(KeeperMatchers.contain(MockTags.DATES)),
+                Matchers.not(KeeperMatchers.contain(MockTags.TEST_NULL))
             )
         );
     }

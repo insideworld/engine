@@ -21,7 +21,6 @@ package insideworld.engine.entities.converter;
 
 import insideworld.engine.actions.keeper.tags.SingleTag;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
-import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
 
 /**

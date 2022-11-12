@@ -62,7 +62,8 @@ public abstract class AbstractMapper<D, E> implements Mapper {
      *
      * @param target Initial values.
      * @param descriptor Descriptor of field.
-     * @return Collection of objects which write to entity object.
+     * @return Value to set in entity.
+     *  In case if you use collection - need to return empty collection.
      * @throws StorageException Can't parse.
      */
     protected abstract E toEntity(D target, Descriptor descriptor)
@@ -75,6 +76,7 @@ public abstract class AbstractMapper<D, E> implements Mapper {
      * @param value Collection from entity.
      * @param descriptor Descriptor of field.
      * @return Values for DTO.
+     *  In case if you use collection - need to return null here.
      */
     protected abstract D toRecord(E value, Descriptor descriptor);
 

@@ -76,7 +76,13 @@ public class MapperEntities extends AbstractMapper<Collection<Long>, Collection<
     @Override
     protected final Collection<Long> toRecord(
         final Collection<Entity> value, final Descriptor descriptor) {
-        return value.stream().map(Entity::getId).toList();
+        final Collection<Long> results;
+        if (CollectionUtils.isEmpty(value)) {
+            results = null;
+        } else {
+            results = value.stream().map(Entity::getId).toList();
+        }
+        return results;
     }
 
     @Override

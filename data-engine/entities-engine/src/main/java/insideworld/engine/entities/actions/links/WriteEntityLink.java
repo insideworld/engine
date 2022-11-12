@@ -31,10 +31,9 @@ import insideworld.engine.entities.storages.keeper.StorageKeeper;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Write entities link.
@@ -80,26 +79,15 @@ public class WriteEntityLink<T extends Entity> implements Link {
 
     @Override
     public final void process(final Context context, final Output output) throws LinkException {
-        if (this.single != null && context.contains(this.single)) {
-            context.put(
-                this.single, this.writeSingle(context.get(this.single)), true
-            );
-            if (this.count) {
-                final Record record = output.createRecord();
-                record.put("type", this.single.getTag());
-                record.put("count", 1);
-            }
+        if (this.single == null && this.multiple == null) {
+            throw new LinkException(this.getClass(), "Link was not init");
         }
-        if (this.multiple != null && context.contains(this.multiple)) {
-            context.put(
-                this.multiple, this.writeMultiple(context.get(this.multiple)), true
-            );
-            if (this.count) {
-                final Record record = output.createRecord();
-                record.put("type", this.multiple.getTag());
-                record.put("count", context.get(this.multiple).size());
-            }
-        }
+        context.put(
+            this.single, this.writeSingle(context.get(this.single), output), true
+        );
+        context.put(
+            this.multiple, this.writeMultiple(context.get(this.multiple), output), true
+        );
     }
 
     /**
@@ -138,41 +126,60 @@ public class WriteEntityLink<T extends Entity> implements Link {
      * Write single entity.
      *
      * @param entity Entity.
-     * @return Persisted entity.
+     * @param output Output.
+     * @return Persisted entity or null.
      * @throws LinkException Can't write entity.
      */
-    private T writeSingle(final T entity) throws LinkException {
-        try {
-            final Storage<T> storage = (Storage<T>) this.storages.getStorage(entity.getClass());
-            return storage.write(entity);
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
+    private T writeSingle(final T entity, final Output output) throws LinkException {
+        final T result;
+        if (entity == null) {
+            result = null;
+        } else {
+            try {
+                final Storage<T> storage =
+                    (Storage<T>) this.storages.getStorage(entity.getClass());
+                result = storage.write(entity);
+            } catch (final StorageException exp) {
+                throw this.exception(exp);
+            }
+            if (this.count) {
+                final Record record = output.createRecord();
+                record.put("type", this.single.getTag());
+                record.put("count", 1);
+            }
         }
+        return result;
     }
 
     /**
      * Write entities.
      *
      * @param collection Collection of entities.
-     * @return Persisted entities.
+     * @param output Output.
+     * @return Persisted entities or empty collection.
      * @throws LinkException Can't write entities.
      */
-    private Collection<T> writeMultiple(final Collection<T> collection)
+    private Collection<T> writeMultiple(final Collection<T> collection, final Output output)
         throws LinkException {
-        final Collection<T> results;
-        final Optional<T> entity = collection.stream().findAny();
-        if (entity.isPresent()) {
+        final Collection<T> result;
+        if (CollectionUtils.isEmpty(collection)) {
+            result = null;
+        } else {
             try {
-                final Storage<T> storage =
-                    (Storage<T>) this.storages.getStorage(entity.get().getClass());
-                results = storage.writeAll(collection);
+                final Storage<T> storage = (Storage<T>) this.storages.getStorage(
+                    collection.iterator().next().getClass()
+                );
+                result = storage.writeAll(collection);
             } catch (final StorageException exp) {
                 throw this.exception(exp);
             }
-        } else {
-            results = Collections.emptyList();
+            if (this.count) {
+                final Record record = output.createRecord();
+                record.put("type", this.multiple.getTag());
+                record.put("count", result.size());
+            }
         }
-        return results;
+        return result;
     }
 
 }

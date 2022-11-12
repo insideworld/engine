@@ -23,6 +23,8 @@ import com.google.common.primitives.Primitives;
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 import javax.inject.Singleton;
 
 /**
@@ -49,7 +51,7 @@ public class MapperPrimitives extends AbstractMapper<Collection<Object>, Collect
     @Override
     protected final Collection<Object> toEntity(
         final Collection<Object> target, final Descriptor descriptor) throws StorageException {
-        return target;
+        return Objects.requireNonNullElse(target, Collections.emptyList());
     }
 
     @Override

@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 /**
  * Import context to entity representation.
+ * If entity already present in context with setup tag - this link will skip.
  * @since 0.6.0
  */
 @Dependent

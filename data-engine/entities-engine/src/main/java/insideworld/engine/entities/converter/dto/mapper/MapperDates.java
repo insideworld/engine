@@ -25,9 +25,11 @@ import insideworld.engine.entities.converter.dto.descriptors.Descriptor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import javax.inject.Singleton;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Map dates collection in string from record to entity and vice versa.
@@ -55,6 +57,41 @@ public class MapperDates extends AbstractMapper<Collection<Object>, Collection<D
     @Override
     protected final Collection<Date> toEntity(
         final Collection<Object> target, final Descriptor descriptor) throws StorageException {
+        final Collection<Date> result;
+        if (CollectionUtils.isEmpty(target)) {
+            result = Collections.emptyList();
+        } else {
+            result = this.parseDates(target, descriptor);
+        }
+        return result;
+    }
+
+    @Override
+    protected final Collection<Object> toRecord(
+        final Collection<Date> value, final Descriptor descriptor) {
+        final Collection<Object> result;
+        if (CollectionUtils.isEmpty(value)) {
+            result = null;
+        } else {
+            result = value.stream().map(obj -> (Object) obj).toList();
+        }
+        return result;
+    }
+
+    @Override
+    protected final String defineTag(final String origin) {
+        return origin;
+    }
+
+    /**
+     * Try to parse collection of dates.
+     * @param target Collection of objects.
+     * @param descriptor Descriptor.
+     * @return Collection of dates.
+     * @throws StorageException Date has wrong format.
+     */
+    private Collection<Date> parseDates(
+        final Collection<Object> target, final Descriptor descriptor) throws StorageException {
         final Collection<Date> result = Lists.newArrayListWithCapacity(target.size());
         for (final Object date : target) {
             if (date == null) {
@@ -74,17 +111,6 @@ public class MapperDates extends AbstractMapper<Collection<Object>, Collection<D
             }
         }
         return result;
-    }
-
-    @Override
-    protected final Collection<Object> toRecord(
-        final Collection<Date> value, final Descriptor descriptor) {
-        return value.stream().map(obj -> (Object) obj).toList();
-    }
-
-    @Override
-    protected final String defineTag(final String origin) {
-        return origin;
     }
 
 }

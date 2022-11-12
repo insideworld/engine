@@ -76,13 +76,15 @@ public class DeleteEntityLink<T extends Entity> implements Link {
 
     @Override
     public final void process(final Context context, final Output output) throws LinkException {
+        if (this.single == null && this.multiple == null && this.storage == null) {
+            throw new LinkException(this.getClass(), "Link was not init");
+        }
         try {
-            if (this.single != null && context.contains(this.single)) {
+            if (context.contains(this.single)) {
                 this.storage.delete(Collections.singleton(context.get(this.single)));
-            } else {
-                if (this.multiple != null && context.contains(this.multiple)) {
-                    this.storage.delete(context.get(this.multiple));
-                }
+            }
+            if (context.contains(this.multiple)) {
+                this.storage.delete(context.get(this.multiple));
             }
         } catch (final StorageException exp) {
             throw this.exception(exp);

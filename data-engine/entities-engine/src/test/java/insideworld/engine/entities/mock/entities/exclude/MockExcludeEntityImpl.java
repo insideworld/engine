@@ -34,11 +34,12 @@ public class MockExcludeEntityImpl implements MockExcludeEntity {
     /**
      * Id.
      */
-    private long id;
+    private static final long ID = 9999;
 
     /**
      * Field without getter.
      */
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private String noget = "testnoget";
 
     /**
@@ -50,7 +51,7 @@ public class MockExcludeEntityImpl implements MockExcludeEntity {
     /**
      * Field without methods.
      */
-    @SuppressWarnings("PMD.ImmutableField")
+    @SuppressWarnings({"PMD.ImmutableField", "PMD.UnusedPrivateField"})
     private String nomethods = "testnomethods";
 
     /**
@@ -65,7 +66,7 @@ public class MockExcludeEntityImpl implements MockExcludeEntity {
 
     @Override
     public final long getId() {
-        return this.id;
+        return MockExcludeEntityImpl.ID;
     }
 
     @Override
@@ -76,14 +77,6 @@ public class MockExcludeEntityImpl implements MockExcludeEntity {
     @Override
     public final String getNoset() {
         return this.noset;
-    }
-
-    @Override
-    public final boolean check(final String nogetvalue) {
-        return "testnoset".equals(this.noset)
-            && "testnomethods".equals(this.nomethods)
-            && "ignore".equals(this.ignore)
-            && nogetvalue.equals(this.noget);
     }
 
     @JsonIgnore

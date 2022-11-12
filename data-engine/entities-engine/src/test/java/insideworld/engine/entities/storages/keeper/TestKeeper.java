@@ -22,17 +22,19 @@ package insideworld.engine.entities.storages.keeper;
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
-import java.util.Objects;
 import javax.inject.Inject;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test keeper.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -50,6 +52,7 @@ class TestKeeper {
 
     /**
      * Default constructor.
+     *
      * @param storages Storage.
      * @param factory Object factory.
      */
@@ -62,13 +65,16 @@ class TestKeeper {
     /**
      * TC: Try to get storage by interface and class entity.
      * ER: Objects should equal by address.
+     *
      * @throws StorageException Test.
      */
     @Test
     final void testStorageGet() throws StorageException {
-        final Storage<MockEntity> inter = this.storages.getStorage(MockEntity.class);
-        final Storage<MockEntityImpl> impl = this.storages.getStorage(MockEntityImpl.class);
-        assert Objects.equals(inter, impl);
+        MatcherAssert.assertThat(
+            "Storage from keeper by implementation different that by interface",
+            this.storages.getStorage(MockEntity.class),
+            Matchers.is(this.storages.getStorage(MockEntityImpl.class))
+        );
     }
 
     /**
@@ -81,15 +87,17 @@ class TestKeeper {
             Collections.singletonList(new DummyStorage()),
             this.factory
         );
-        boolean exception = false;
-        try {
-            keeper.startUp();
-        } catch (final StartUpException exp) {
-            if (exp.getMessage().contains("Can't init HashStorage keeper")) {
-                exception = true;
-            }
-        }
-        assert exception;
+        MatcherAssert.assertThat(
+            "Expected exception at init",
+            keeper::startUp,
+            ExceptionMatchers.catchException(
+                StartUpException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Can't init HashStorage keeper")
+                )
+            )
+        );
     }
 
     /**
@@ -97,14 +105,16 @@ class TestKeeper {
      */
     @Test
     final void testNegativeGet() {
-        boolean exception = false;
-        try {
-            this.storages.getStorage(DummyEntity.class);
-        } catch (final StorageException exp) {
-            if (exp.getMessage().contains("Storage not found for entity")) {
-                exception = true;
-            }
-        }
-        assert exception;
+        MatcherAssert.assertThat(
+            "Expected exception at init",
+            () -> this.storages.getStorage(DummyEntity.class),
+            ExceptionMatchers.catchException(
+                StorageException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Storage not found for entity")
+                )
+            )
+        );
     }
 }

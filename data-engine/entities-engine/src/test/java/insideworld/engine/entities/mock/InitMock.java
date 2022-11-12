@@ -19,6 +19,7 @@
 
 package insideworld.engine.entities.mock;
 
+import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
@@ -95,6 +96,8 @@ public class InitMock {
         this.createOne();
         this.createTwo();
         this.createPrimary();
+        this.createPrimary();
+        this.createPrimary();
     }
 
     /**
@@ -119,6 +122,20 @@ public class InitMock {
             List.of(this.two.read(1), this.two.read(2), this.two.read(3))
         );
         return this.primary.write(entity);
+    }
+
+    /**
+     * Fill context by DTO entity.
+     * @param context Context to fill.
+     * @checkstyle NonStaticMethodCheck (10 lines)
+     */
+    public final void fillContext(final Context context) {
+        context.put(MockTags.STRPRIM, "Value");
+        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
+        context.put(MockTags.ONE_ID, 2L);
+        context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
+        context.put(MockTags.DATE, new Date(1_500_000));
+        context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
     }
 
     /**

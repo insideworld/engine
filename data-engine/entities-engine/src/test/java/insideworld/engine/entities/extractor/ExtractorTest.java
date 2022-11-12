@@ -23,22 +23,19 @@ import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.Collection;
 import javax.inject.Inject;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test extractor and executor links.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -66,6 +63,7 @@ class ExtractorTest {
 
     /**
      * Default constructor.
+     *
      * @param extractor Extractor instance.
      * @param executor Executor instance.
      * @param factory Object factory.
@@ -90,69 +88,45 @@ class ExtractorTest {
      * 1. Exception.
      * 2. Output should contain 1 record with OUTPUT_VALUE tag.
      * 3. Exception.
+     *
      * @throws LinkException Should raise.
      */
     @Test
     final void testExtractor() throws LinkException {
         final Context context = this.factory.createObject(Context.class);
         final Output output = this.factory.createObject(Output.class);
-        final LinkException schema = Assertions.assertThrows(
-            LinkException.class,
-            () -> this.extractor.process(context, output),
-            "Should raise an exception because didn't init a schema"
-        );
         MatcherAssert.assertThat(
-            "Wrong message about absent schema exception",
-            schema.getMessage(),
-            Matchers.containsString("You didn't init a schema!")
+            "Should raise an exception because didn't init a schema",
+            () -> this.extractor.process(context, output),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0, Matchers.containsString("You didn't init a schema!")
+                )
+            )
         );
         this.extractor.setSchema(ExtractorTest.SCHEMA);
         this.extractor.process(context, output);
-//        MatcherAssert.assertThat(
-//            "Output contains record with tag OUTPUT_VALUE",
-//            output.getRecords(),
-//            Matchers.hasItems(new TypeSafeMatcher<>() {
-//                @Override
-//                protected boolean matchesSafely(final Record item) {
-//                    return item.contains(ExtractorTestTags.OUTPUT_VALUE);
-//                }
-//
-//                @Override
-//                public void describeTo(Description description) {
-//
-//                }
-//            })
-//            Matchers.both(Matchers.hasItems(
-//                new TypeSafeMatcher<>() {
-//                }
-//
-//            )).and(Matchers.hasSize(1))
-//        );
-
-
-//        new TypeSafeMatcher<Collection<?>>() {
-//            @Override
-//            protected boolean matchesSafely(Collection<?> item) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void describeTo(Description description) {
-//
-//            }
-//        }
-
-//        assert output.getRecords().size() == 1;
-//        assert output.getRecords().iterator().next().contains(ExtractorTestTags.OUTPUT_VALUE);
-//        context.put(ExtractorTestTags.EXCEPTION, new Object());
-//        exception = false;
-//        try {
-//            this.extractor.process(context, output);
-//        } catch (final LinkException exp) {
-//            exception = exp.getCause().getMessage()
-//                .contains("Can't extract for schema test.schema");
-//        }
-//        assert exception;
+        MatcherAssert.assertThat(
+            "Output has incorrect values",
+            output,
+            Matchers.both(
+                Matchers.<Record>iterableWithSize(1)
+            ).and(
+                Matchers.hasItem(KeeperMatchers.contain(ExtractorTestTags.OUTPUT_VALUE))
+            )
+        );
+        context.put(ExtractorTestTags.EXCEPTION, new Object());
+        MatcherAssert.assertThat(
+            "Should raise an exception because didn't init a schema",
+            () -> this.extractor.process(context, output),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    1, Matchers.containsString("Can't extract for schema test.schema")
+                )
+            )
+        );
     }
 
     /**
@@ -164,6 +138,7 @@ class ExtractorTest {
      * 1. Exception.
      * 2. Output should contain 1 record with COUNT tag.
      * 3. Exception.
+     *
      * @throws LinkException Should raise.
      */
     @Test

@@ -71,7 +71,13 @@ public class MapperEntity extends AbstractMapper<Long, Entity> {
 
     @Override
     protected final Long toRecord(final Entity value, final Descriptor descriptor) {
-        return value.getId();
+        final Long id;
+        if (value == null) {
+            id = null;
+        } else {
+            id = value.getId();
+        }
+        return id;
     }
 
     @Override

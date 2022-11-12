@@ -21,49 +21,110 @@ package insideworld.engine.entities.converter;
 
 import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.test.KeeperMatchers;
+import insideworld.engine.entities.mock.MockTags;
+import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
-import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test for import entity link.
+ * @since 0.14.0
+ */
 @QuarkusTest
-public class ImportEntityTest {
+class ImportEntityTest {
 
+    /**
+     * Object factory.
+     */
     private final ObjectFactory factory;
 
+    /**
+     * Default constructor.
+     * @param factory Object factory.
+     */
     @Inject
     ImportEntityTest(final ObjectFactory factory) {
         this.factory = factory;
     }
 
+    /**
+     * TC: Execute link with different parameters.
+     * ER:
+     * If link is not init should raise exception.
+     * Link should pass validation that entity tag not contain in record.
+     * Link should create a new value with entity tag in record.
+     */
     @Test
     final void testExceptions() {
         final ImportEntityLink link = this.factory.createObject(ImportEntityLink.class);
-        final var both = Assertions.assertThrows(
-            LinkException.class,
-            () -> link.process(null, null),
-            "Should be an exception with empty tags"
-        );
         MatcherAssert.assertThat(
-            "Message not about init link",
-            both.getMessage(),
-            Matchers.endsWith("Link is not init: tag null type null")
-        );
-        final var tag = Assertions.assertThrows(
-            LinkException.class,
+            "Wrong exception for both empty arguments.",
             () -> link.process(null, null),
-            "Should be an exception"
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Link is not init:")
+                )
+            )
         );
-
+        link.setTag(null, MockEntity.class);
+        MatcherAssert.assertThat(
+            "Wrong exception for empty tag.",
+            () -> link.process(null, null),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Link is not init:")
+                )
+            )
+        );
+        link.setTag(MockTags.ONE, null);
+        MatcherAssert.assertThat(
+            "Wrong exception for empty type.",
+            () -> link.process(null, null),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Link is not init:")
+                )
+            )
+        );
     }
 
     @Test
-    final void testImport() {
+    final void testImport() throws LinkException {
         final Context context = this.factory.createObject(Context.class);
-//        this.link
+        final ImportEntityLink link = this.factory.createObject(ImportEntityLink.class);
+        link.setTag(MockTags.PRIMARY, MockEntity.class);
+        MatcherAssert.assertThat(
+            "Link can't process but should",
+            link.can(context),
+            Matchers.is(true)
+        );
+        link.process(context, null);
+        MatcherAssert.assertThat(
+            "Context doesn't have entity",
+            context,
+            KeeperMatchers.contain(MockTags.PRIMARY)
+        );
+        MatcherAssert.assertThat(
+            "Context doesn't have entity",
+            context.get(MockTags.PRIMARY).getId(),
+            Matchers.is(0L)
+        );
+        MatcherAssert.assertThat(
+            "Link can process but shouldn't",
+            link.can(context),
+            Matchers.is(false)
+        );
     }
 }

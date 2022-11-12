@@ -32,7 +32,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>test-data</module>
-    <module>quarkus-tests</module>
+<!--    <module>quarkus-tests</module>-->
   </modules>
 
 </project>

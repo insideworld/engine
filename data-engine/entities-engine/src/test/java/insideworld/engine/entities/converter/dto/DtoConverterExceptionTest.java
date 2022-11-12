@@ -150,8 +150,7 @@ class DtoConverterExceptionTest {
                 StorageException.class,
                 ExceptionMatchers.messageMatcher(
                     0,
-                    Matchers.containsString(("Can't parse date")
-                    )
+                    Matchers.containsString("Can't parse date")
                 )
             )
         );
@@ -164,8 +163,7 @@ class DtoConverterExceptionTest {
                 StorageException.class,
                 ExceptionMatchers.messageMatcher(
                     0,
-                    Matchers.containsString(("Can't parse date")
-                    )
+                    Matchers.containsString("Can't parse date")
                 )
             )
         );

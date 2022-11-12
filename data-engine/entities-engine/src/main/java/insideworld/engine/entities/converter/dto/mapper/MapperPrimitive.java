@@ -29,6 +29,9 @@ import javax.inject.Singleton;
  * Map primitives to record from entity and vice versa.
  * Using for single primitive.
  * Logic is easy - the same in record, the same in entity.
+ * In case if convert primitive with null value to entity - use default value.
+ * In case if convert primitive with default value to record - set null.
+ *
  * @since 0.0.1
  */
 @Singleton
@@ -54,7 +57,15 @@ public class MapperPrimitive extends AbstractMapper<Object, Object> {
 
     @Override
     protected final Object toRecord(final Object value, final Descriptor descriptor) {
-        return value;
+        final Object result;
+        if (descriptor.type().isPrimitive()
+            && Defaults.defaultValue(descriptor.type()).equals(value)
+        ) {
+            result = null;
+        } else {
+            result = value;
+        }
+        return result;
     }
 
     @Override
