@@ -21,13 +21,13 @@ package insideworld.engine.entities.actions;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.actions.links.WriteEntityLink;
 import insideworld.engine.entities.converter.ExportEntityLink;
 import insideworld.engine.entities.converter.ImportEntityLink;
 import insideworld.engine.entities.tags.EntityTag;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
@@ -56,7 +56,8 @@ public abstract class AbstractWriteAction<T extends Entity> extends AbstractChai
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder)
+        throws CommonException {
         builder.addLink(ImportEntityLink.class, link -> link.setTag(this.getTag(), this.getType()));
         this.afterImport(builder);
         builder.addLink(

@@ -24,7 +24,9 @@ import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.keeper.test.KeeperMatchers;
+import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.tags.StorageTags;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
@@ -89,10 +91,10 @@ class ExtractorTest {
      * 2. Output should contain 1 record with OUTPUT_VALUE tag.
      * 3. Exception.
      *
-     * @throws LinkException Should raise.
+     * @throws CommonException Should raise.
      */
     @Test
-    final void testExtractor() throws LinkException {
+    final void testExtractor() throws CommonException {
         final Context context = this.factory.createObject(Context.class);
         final Output output = this.factory.createObject(Output.class);
         MatcherAssert.assertThat(
@@ -121,9 +123,9 @@ class ExtractorTest {
             "Should raise an exception because didn't init a schema",
             () -> this.extractor.process(context, output),
             ExceptionMatchers.catchException(
-                LinkException.class,
+                StorageException.class,
                 ExceptionMatchers.messageMatcher(
-                    1, Matchers.containsString("Can't extract for schema test.schema")
+                    0, Matchers.containsString("Can't extract for schema test.schema")
                 )
             )
         );
@@ -139,31 +141,44 @@ class ExtractorTest {
      * 2. Output should contain 1 record with COUNT tag.
      * 3. Exception.
      *
-     * @throws LinkException Should raise.
+     * @throws CommonException Should raise.
      */
     @Test
-    final void testExecutor() throws LinkException {
+    final void testExecutor() throws CommonException {
         final Context context = this.factory.createObject(Context.class);
         final Output output = this.factory.createObject(Output.class);
-        boolean exception = false;
-        try {
-            this.executor.process(context, output);
-        } catch (final LinkException exp) {
-            exception = exp.getMessage().contains("You didn't init a schema!");
-        }
-        assert exception;
+        MatcherAssert.assertThat(
+            "Should be exception",
+            () -> this.executor.process(context, output),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("You didn't init a schema!")
+                )
+            )
+        );
         this.executor.setSchema(ExtractorTest.SCHEMA);
         this.executor.process(context, output);
-        assert output.getRecords().size() == 1;
-        assert output.getRecords().iterator().next().contains(StorageTags.COUNT);
+        MatcherAssert.assertThat(
+            "Output has wrong record",
+            output,
+            Matchers.allOf(
+                Matchers.iterableWithSize(1),
+                Matchers.hasItem(KeeperMatchers.contain(StorageTags.COUNT))
+            )
+        );
         context.put(ExtractorTestTags.EXCEPTION, new Object());
-        exception = false;
-        try {
-            this.executor.process(context, output);
-        } catch (final LinkException exp) {
-            exception = exp.getCause().getMessage()
-                .contains("Can't extract for schema test.schema");
-        }
-        assert exception;
+        MatcherAssert.assertThat(
+            "Should be exception",
+            () -> this.executor.process(context, output),
+            ExceptionMatchers.catchException(
+                StorageException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Can't extract for schema test.schema")
+                )
+            )
+        );
     }
 }

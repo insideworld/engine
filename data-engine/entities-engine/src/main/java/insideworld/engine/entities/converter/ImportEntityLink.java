@@ -32,6 +32,7 @@ import javax.inject.Inject;
 /**
  * Import context to entity representation.
  * If entity already present in context with setup tag - this link will skip.
+ *
  * @since 0.6.0
  */
 @Dependent
@@ -54,6 +55,7 @@ public class ImportEntityLink implements Link {
 
     /**
      * Default constructor.
+     *
      * @param converter Entity converter.
      */
     @Inject
@@ -62,18 +64,15 @@ public class ImportEntityLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
         if (this.tag == null || this.type == null) {
             throw new LinkException(
                 this.getClass(), "Link is not init: tag %s type %s", this.tag, this.type
             );
         }
-        try {
-            final Entity entity = this.converter.convert(context, this.type);
-            context.put(this.tag.getTag(), entity);
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
-        }
+        final Entity entity = this.converter.convert(context, this.type);
+        context.put(this.tag.getTag(), entity);
     }
 
     @Override
@@ -83,11 +82,12 @@ public class ImportEntityLink implements Link {
 
     /**
      * Set tag and type to import.
+     *
      * @param ptag Entity tag.
      * @param ptype Entity type.
      * @param <T> Entity type.
      */
-    public final  <T extends Entity> void setTag(final EntityTag<T> ptag, final Class<T> ptype) {
+    public final <T extends Entity> void setTag(final EntityTag<T> ptag, final Class<T> ptype) {
         this.tag = ptag;
         this.type = ptype;
     }

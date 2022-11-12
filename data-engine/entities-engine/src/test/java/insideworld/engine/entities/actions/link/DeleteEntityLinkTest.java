@@ -30,6 +30,7 @@ import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.exclude.MockExcludeEntity;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.storages.Storage;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
@@ -85,10 +86,10 @@ class DeleteEntityLinkTest {
      * Check that link throw exception if tag to write not set.
      * ER:
      * Exception.
-     * @throws LinkException Shouldn't raise.
+     * @throws CommonException Shouldn't raise.
      */
     @Test
-    final void testException() throws LinkException {
+    final void testException() throws CommonException {
         final DeleteEntityLink<MockEntity> link = this.factory.createObject(
             new TypeLiteral<>() {
             }
@@ -116,6 +117,23 @@ class DeleteEntityLinkTest {
                 )
             )
         );
+        final DeleteEntityLink<MockEntity> both = this.factory.createObject(
+            new TypeLiteral<>() {
+            }
+        );
+        both.setTag(MockTags.PRIMARY);
+        both.setTags(MockTags.PRIMARIES);
+        MatcherAssert.assertThat(
+            "Should be exception because storage not found for this.",
+            () -> both.process(null, null),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Link was not init")
+                )
+            )
+        );
         final DeleteEntityLink<MockExcludeEntity> wrong = this.factory.createObject(
             new TypeLiteral<>() {
             }
@@ -124,10 +142,10 @@ class DeleteEntityLinkTest {
             "Should be exception because storage not found for this.",
             () -> wrong.setType(MockExcludeEntity.class),
             ExceptionMatchers.catchException(
-                LinkException.class,
+                StorageException.class,
                 ExceptionMatchers.messageMatcher(
                     0,
-                    Matchers.endsWith("Link was not init")
+                    Matchers.containsString("Storage not found")
                 )
             )
         );

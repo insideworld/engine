@@ -34,6 +34,7 @@ import javax.inject.Inject;
 
 /**
  * Export entity or entities to output.
+ *
  * @since 0.0.6
  */
 @Dependent
@@ -56,6 +57,7 @@ public class ExportEntityLink implements Link {
 
     /**
      * Default constructor.
+     *
      * @param converter Entity converter.
      */
     @Inject
@@ -64,7 +66,8 @@ public class ExportEntityLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
         if (this.single == null && this.multiple == null) {
             throw new LinkException(this.getClass(), "Link is not init!");
         }
@@ -72,17 +75,14 @@ public class ExportEntityLink implements Link {
         context.getOptional(this.single).ifPresent(entities::add);
         context.getOptional(this.multiple).ifPresent(entities::addAll);
         for (final Entity entity : entities) {
-            try {
-                output.add(this.converter.convert(entity));
-            } catch (final StorageException exp) {
-                throw this.exception(exp);
-            }
+            output.add(this.converter.convert(entity));
         }
     }
 
     /**
      * Set single tag to export.
      * Make single record in output.
+     *
      * @param tag Entity tag.
      * @return The same instance.
      */
@@ -94,6 +94,7 @@ public class ExportEntityLink implements Link {
     /**
      * Set multiple tag to export.
      * Make as many records in output than exists in collection under the tag.
+     *
      * @param tag Multiple tag.
      * @return The same instance.
      */

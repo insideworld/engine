@@ -24,6 +24,7 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.entities.mock.MockTags;
 import insideworld.engine.entities.mock.entities.positive.MockEntity;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
@@ -100,8 +101,12 @@ class ImportEntityTest {
         );
     }
 
+    /**
+     * TC.
+     * @throws CommonException Shouldn't raise.
+     */
     @Test
-    final void testImport() throws LinkException {
+    final void testImport() throws CommonException {
         final Context context = this.factory.createObject(Context.class);
         final ImportEntityLink link = this.factory.createObject(ImportEntityLink.class);
         link.setTag(MockTags.PRIMARY, MockEntity.class);

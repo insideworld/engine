@@ -83,7 +83,8 @@ public class ReadEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
         if (this.single == null && this.multiple == null) {
             throw new LinkException(this.getClass(), "Link was not init");
         }
@@ -134,14 +135,10 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param type Entity type.
      * @return The same instance
-     * @throws LinkException Can't find storage.
+     * @throws StorageException Can't find storage.
      */
-    public ReadEntityLink<T> setType(final Class<T> type) throws LinkException {
-        try {
-            this.storage = this.storages.getStorage(type);
-        } catch (final StorageException exp) {
-            throw new LinkException(exp, this.getClass());
-        }
+    public ReadEntityLink<T> setType(final Class<T> type) throws StorageException {
+        this.storage = this.storages.getStorage(type);
         return this;
     }
 
@@ -150,14 +147,10 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param id ID of entity.
      * @return Entity.
-     * @throws LinkException Wrapped storage exception about read fail.
+     * @throws StorageException Wrapped storage exception about read fail.
      */
-    private T processSingle(final Long id) throws LinkException {
-        try {
-            return this.storage.read(id);
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
-        }
+    private T processSingle(final Long id) throws StorageException {
+        return this.storage.read(id);
     }
 
     /**
@@ -166,18 +159,14 @@ public class ReadEntityLink<T extends Entity> implements Link {
      *
      * @param ids Ids of entities.
      * @return Collection of entities.
-     * @throws LinkException Can't read an entity.
+     * @throws StorageException Can't read an entity.
      */
-    private Collection<T> processMultiple(final Collection<Long> ids) throws LinkException {
+    private Collection<T> processMultiple(final Collection<Long> ids) throws StorageException {
         final Collection<T> collection;
-        try {
-            if (CollectionUtils.isEmpty(ids)) {
-                collection = this.storage.readAll();
-            } else {
-                collection = this.storage.read(ids);
-            }
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
+        if (CollectionUtils.isEmpty(ids)) {
+            collection = this.storage.readAll();
+        } else {
+            collection = this.storage.read(ids);
         }
         return collection;
     }

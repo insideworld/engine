@@ -75,19 +75,16 @@ public class DeleteEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
-        if (this.single == null && this.multiple == null && this.storage == null) {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
+        if (this.single == null && this.multiple == null || this.storage == null) {
             throw new LinkException(this.getClass(), "Link was not init");
         }
-        try {
-            if (context.contains(this.single)) {
-                this.storage.delete(Collections.singleton(context.get(this.single)));
-            }
-            if (context.contains(this.multiple)) {
-                this.storage.delete(context.get(this.multiple));
-            }
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
+        if (context.contains(this.single)) {
+            this.storage.delete(Collections.singleton(context.get(this.single)));
+        }
+        if (context.contains(this.multiple)) {
+            this.storage.delete(context.get(this.multiple));
         }
     }
 
@@ -121,14 +118,10 @@ public class DeleteEntityLink<T extends Entity> implements Link {
      *
      * @param type Entity type.
      * @return The same instance
-     * @throws LinkException If storage can't find for provided type.
+     * @throws StorageException If storage can't find for provided type.
      */
-    public final DeleteEntityLink<T> setType(final Class<T> type) throws LinkException {
-        try {
-            this.storage = this.storages.getStorage(type);
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
-        }
+    public final DeleteEntityLink<T> setType(final Class<T> type) throws StorageException {
+        this.storage = this.storages.getStorage(type);
         return this;
     }
 }

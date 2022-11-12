@@ -78,7 +78,8 @@ public class WriteEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
         if (this.single == null && this.multiple == null) {
             throw new LinkException(this.getClass(), "Link was not init");
         }
@@ -128,20 +129,15 @@ public class WriteEntityLink<T extends Entity> implements Link {
      * @param entity Entity.
      * @param output Output.
      * @return Persisted entity or null.
-     * @throws LinkException Can't write entity.
+     * @throws StorageException Can't write entity.
      */
-    private T writeSingle(final T entity, final Output output) throws LinkException {
+    private T writeSingle(final T entity, final Output output) throws StorageException {
         final T result;
         if (entity == null) {
             result = null;
         } else {
-            try {
-                final Storage<T> storage =
-                    (Storage<T>) this.storages.getStorage(entity.getClass());
-                result = storage.write(entity);
-            } catch (final StorageException exp) {
-                throw this.exception(exp);
-            }
+            final Storage<T> storage = (Storage<T>) this.storages.getStorage(entity.getClass());
+            result = storage.write(entity);
             if (this.count) {
                 final Record record = output.createRecord();
                 record.put("type", this.single.getTag());
@@ -157,22 +153,18 @@ public class WriteEntityLink<T extends Entity> implements Link {
      * @param collection Collection of entities.
      * @param output Output.
      * @return Persisted entities or empty collection.
-     * @throws LinkException Can't write entities.
+     * @throws StorageException Can't write entities.
      */
     private Collection<T> writeMultiple(final Collection<T> collection, final Output output)
-        throws LinkException {
+        throws StorageException {
         final Collection<T> result;
         if (CollectionUtils.isEmpty(collection)) {
             result = null;
         } else {
-            try {
-                final Storage<T> storage = (Storage<T>) this.storages.getStorage(
-                    collection.iterator().next().getClass()
-                );
-                result = storage.writeAll(collection);
-            } catch (final StorageException exp) {
-                throw this.exception(exp);
-            }
+            final Storage<T> storage = (Storage<T>) this.storages.getStorage(
+                collection.iterator().next().getClass()
+            );
+            result = storage.writeAll(collection);
             if (this.count) {
                 final Record record = output.createRecord();
                 record.put("type", this.multiple.getTag());

@@ -58,18 +58,15 @@ public class ExecutorLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
         if (this.schema == null) {
             throw new LinkException(this.getClass(), "You didn't init a schema!");
         }
-        try {
-            output.createRecord(this.schema).put(
-                StorageTags.COUNT,
-                this.extractor.execute(context, this.schema)
-            );
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
-        }
+        output.createRecord(this.schema).put(
+            StorageTags.COUNT,
+            this.extractor.execute(context, this.schema)
+        );
     }
 
     /**

@@ -30,6 +30,7 @@ import javax.inject.Inject;
 /**
  * Link to call extractor from chain action.
  * Need to set schema at init.
+ *
  * @since 0.0.1
  */
 @Dependent
@@ -47,6 +48,7 @@ public class ExtractorLink implements Link {
 
     /**
      * Default constructor.
+     *
      * @param extractor Extractor.
      */
     @Inject
@@ -55,20 +57,18 @@ public class ExtractorLink implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output)
+        throws LinkException, StorageException {
         if (this.schema == null) {
             throw new LinkException(this.getClass(), "You didn't init a schema!");
         }
-        try {
-            final Output result = this.extractor.extract(context, this.schema);
-            output.merge(result);
-        } catch (final StorageException exp) {
-            throw this.exception(exp);
-        }
+        final Output result = this.extractor.extract(context, this.schema);
+        output.merge(result);
     }
 
     /**
      * Schema to call.
+     *
      * @param pschema Schema.
      */
     public final void setSchema(final String pschema) {
