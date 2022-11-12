@@ -21,7 +21,6 @@ package insideworld.engine.actions.chain.sequence;
 
 import insideworld.engine.actions.chain.ChainTags;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import javax.inject.Singleton;
@@ -34,7 +33,7 @@ import javax.inject.Singleton;
 public class LinkBreakChain implements Link {
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output) {
         context.put(ChainTags.BREAK_CHAIN, new Object());
     }
 }

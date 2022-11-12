@@ -20,11 +20,15 @@
 package insideworld.engine.actions.startup;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
+import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
+import java.util.Collections;
 import javax.inject.Inject;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -32,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test startup.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -44,6 +49,7 @@ class TestStartup {
 
     /**
      * Default constructor.
+     *
      * @param executor Class action executor.
      */
     @Inject
@@ -56,6 +62,7 @@ class TestStartup {
      * was executed before.
      * ER:
      * Should present inited tag with true value.
+     *
      * @throws CommonException Exception.
      */
     @Test
@@ -65,6 +72,50 @@ class TestStartup {
         MatcherAssert.assertThat(
             context,
             KeeperMatchers.match("inited", Matchers.is(true))
+        );
+    }
+
+    /**
+     * TC:
+     * Try to raise handled and unhandled exception trough init.
+     * ER:
+     * Should be right exceptions type and messages.
+     * @checkstyle NonStaticMethodCheck (10 lines)
+     */
+    @Test
+    final void testException() {
+        MatcherAssert.assertThat(
+            "Unhandled exception",
+            () -> new ActionsInit(
+                Collections.singletonList(new InitExceptionAction()), null
+            ).startUp(),
+            ExceptionMatchers.catchException(
+                StartUpException.class,
+                Matchers.allOf(
+                    ExceptionMatchers.classMatcher(1, ActionException.class),
+                    ExceptionMatchers.classMatcher(2, IllegalArgumentException.class),
+                    ExceptionMatchers.messageMatcher(
+                        2,
+                        Matchers.containsString("Unhandled")
+                    )
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            "Handled exception",
+            () -> new ActionsInit(
+                Collections.singletonList(new InitActionExceptionAction()), null
+            ).startUp(),
+            ExceptionMatchers.catchException(
+                StartUpException.class,
+                Matchers.allOf(
+                    ExceptionMatchers.classMatcher(1, ActionException.class),
+                    ExceptionMatchers.messageMatcher(
+                        1,
+                        Matchers.containsString("Handled")
+                    )
+                )
+            )
         );
     }
 }

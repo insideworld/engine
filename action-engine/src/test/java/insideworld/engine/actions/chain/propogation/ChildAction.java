@@ -20,7 +20,6 @@
 package insideworld.engine.actions.chain.propogation;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
@@ -35,7 +34,7 @@ import javax.inject.Singleton;
 class ChildAction implements Action {
 
     @Override
-    public final void execute(final Context context, final Output output) throws ActionException {
+    public final void execute(final Context context, final Output output) {
         final Record record = output.createRecord();
         context.values().forEach(record::put);
     }

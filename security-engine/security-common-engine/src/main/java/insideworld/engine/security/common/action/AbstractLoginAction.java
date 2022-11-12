@@ -23,6 +23,7 @@ import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.converter.ExportEntityLink;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.security.common.UserTags;
 import java.util.Collection;
 
@@ -33,7 +34,7 @@ public abstract class AbstractLoginAction extends AbstractChainAction implements
     }
 
     @Override
-    protected Collection<Link> attachLinks(LinksBuilder builder) {
+    protected Collection<Link> attachLinks(LinksBuilder builder) throws CommonException {
         return builder
             .addLink(ExportEntityLink.class, link -> link.setTag(UserTags.USER))
             .build();

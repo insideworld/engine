@@ -24,6 +24,7 @@ import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**
@@ -33,14 +34,14 @@ import javax.inject.Singleton;
 @Singleton
 public class LinkWithException implements Link {
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output) throws CommonException {
         switch (context.get(TestChainTags.EXCEPTION)) {
             case 1:
                 throw new LinkException(this.getClass(), "Exception!");
             case 2:
                 throw new IllegalArgumentException("Unhandled");
             case 3:
-                throw this.exception(new TestCommonException("Handled"));
+                throw new TestCommonException("Handled");
             default:
                 throw new IllegalArgumentException("And what I should do?");
         }

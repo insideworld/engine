@@ -19,6 +19,8 @@
 
 package insideworld.engine.actions.chain;
 
+import insideworld.engine.exception.CommonException;
+
 /**
  * Link consumer for preinit.
  * @param <T> Link type.
@@ -29,8 +31,8 @@ public interface LinkConsumer<T extends Link> {
     /**
      * Init link.
      * @param link Link.
-     * @throws LinkException Can't init link.
+     * @throws CommonException Can't init link.
      */
-    void init(T link) throws LinkException;
+    void init(T link) throws CommonException;
 
 }

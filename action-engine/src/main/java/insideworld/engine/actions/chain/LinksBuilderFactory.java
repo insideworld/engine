@@ -20,6 +20,7 @@
 package insideworld.engine.actions.chain;
 
 import com.google.common.collect.ImmutableList;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
@@ -63,7 +64,7 @@ public class LinksBuilderFactory implements LinksBuilder {
 
     @Override
     public final  <T extends Link> LinksBuilder addLink(
-        final Class<T> type, final LinkConsumer<T> init) throws LinkException {
+        final Class<T> type, final LinkConsumer<T> init) throws CommonException {
         final T link = this.factory.createObject(type);
         init.init(link);
         this.links.add(link);
@@ -80,7 +81,7 @@ public class LinksBuilderFactory implements LinksBuilder {
     @Override
     public final <T extends Link> LinksBuilder addLink(
         final TypeLiteral<T> type, final LinkConsumer<T> init)
-        throws LinkException {
+        throws CommonException {
         final T link = this.factory.createObject(type);
         init.init(link);
         this.links.add(link);

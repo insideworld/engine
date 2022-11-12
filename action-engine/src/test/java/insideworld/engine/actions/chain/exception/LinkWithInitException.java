@@ -33,7 +33,7 @@ import javax.inject.Singleton;
 public class LinkWithInitException implements Link {
 
     @Override
-    public final void process(final Context context, final Output output) throws LinkException {
+    public final void process(final Context context, final Output output) {
         //Nothing to do.
     }
 

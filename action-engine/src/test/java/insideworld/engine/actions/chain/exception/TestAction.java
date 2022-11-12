@@ -21,8 +21,8 @@ package insideworld.engine.actions.chain.exception;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.LinksBuilder;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.inject.Singleton;
 
@@ -48,7 +48,8 @@ class TestAction extends AbstractChainAction {
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
+    protected final Collection<Link> attachLinks(final LinksBuilder builder)
+        throws CommonException {
         return builder.addLink(LinkWithException.class).build();
     }
 }

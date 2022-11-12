@@ -59,12 +59,16 @@ public class ActionsInit implements OnStartUp {
     }
 
     @Override
+    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void startUp() throws StartUpException {
         for (final Action action : this.actions) {
+            //@checkstyle IllegalCatchCheck (10 lines)
             try {
                 action.init();
             } catch (final ActionException exp) {
                 throw new StartUpException(exp);
+            } catch (final Exception exp) {
+                throw new StartUpException(new ActionException(exp, action.getClass()));
             }
         }
         for (final ActionChanger changer : this.changers) {

@@ -20,7 +20,6 @@
 package insideworld.engine.actions.chain.execute;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.chain.TestChainTags;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.context.Context;
@@ -36,7 +35,7 @@ import javax.inject.Singleton;
 class ChildAction implements Action {
 
     @Override
-    public final void execute(final Context context, final Output output) throws ActionException {
+    public final void execute(final Context context, final Output output) {
         final Record uuid = output.createRecord();
         uuid.put(TestChainTags.UUID, context.get(TestChainTags.UUID));
         final Record some = output.createRecord();

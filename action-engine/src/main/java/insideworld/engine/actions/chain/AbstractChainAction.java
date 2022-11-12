@@ -23,6 +23,7 @@ import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 
 /**
@@ -55,8 +56,8 @@ public abstract class AbstractChainAction implements Action {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public final void execute(final Context context, final Output output) throws ActionException {
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidRethrowingException"})
+    public final void execute(final Context context, final Output output) throws CommonException {
         for (final Link link : this.links) {
             if (context.contains(ChainTags.BREAK_CHAIN)) {
                 break;
@@ -66,25 +67,18 @@ public abstract class AbstractChainAction implements Action {
                 try {
                     link.process(context, output);
                 } catch (final LinkException exp) {
-                    throw new ActionException(exp, this.getClass());
+                    throw exp;
                 } catch (final Exception exp) {
-                    throw new ActionException(
-                        new LinkException(exp, link.getClass()),
-                        this.getClass()
-                    );
+                    throw new LinkException(exp, link.getClass());
                 }
             }
         }
     }
 
     @Override
-    public final void init() throws ActionException {
+    public final void init() throws CommonException {
         if (this.links == null) {
-            try {
-                this.links = this.attachLinks(this.builder);
-            } catch (final LinkException exp) {
-                throw new ActionException(exp, this.getClass());
-            }
+            this.links = this.attachLinks(this.builder);
         } else {
             throw new ActionException(this.getClass(), "Chain action already init!");
         }
@@ -97,10 +91,10 @@ public abstract class AbstractChainAction implements Action {
      *
      * @param builder LinksBuilder instance.
      * @return Collection of links.
-     * @throws LinkException Exception at link init.
+     * @throws CommonException Exception at link init.
      * @see LinksBuilder
      * @checkstyle HiddenFieldCheck (2 lines)
      */
-    protected abstract Collection<Link> attachLinks(LinksBuilder builder) throws LinkException;
+    protected abstract Collection<Link> attachLinks(LinksBuilder builder) throws CommonException;
 
 }

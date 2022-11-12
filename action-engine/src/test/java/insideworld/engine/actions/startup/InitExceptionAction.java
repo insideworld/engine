@@ -17,35 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.chain;
+package insideworld.engine.actions.startup;
 
+import insideworld.engine.actions.Action;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.exception.CommonException;
 
 /**
- * Link of chain.
- * Use separate functionality of actions and reuse code.
- *
- * @since 0.0.1
+ * Action to raise unhandled exception on init.
+ * @since 0.14.0
  */
-public interface Link {
+public class InitExceptionAction implements Action {
 
-    /**
-     * Execute logic of link.
-     * @param context Context.
-     * @param output Output.
-     * @throws CommonException Common exception during process action.
-     */
-    void process(Context context, Output output) throws CommonException;
-
-    /**
-     * Can execute this link.
-     * @param context Context.
-     * @return If return true - link will executed, if false - skip this link.
-     */
-    default boolean can(Context context) {
-        return true;
+    @Override
+    public final void execute(final Context context, final Output output) throws CommonException {
+        //Nothing to do.
     }
 
+    @Override
+    public final void init() throws CommonException {
+        throw new IllegalArgumentException("Unhandled");
+    }
+
+    @Override
+    public final String key() {
+        return "insideworld.engine.actions.startup.InitExceptionAction";
+    }
 }
