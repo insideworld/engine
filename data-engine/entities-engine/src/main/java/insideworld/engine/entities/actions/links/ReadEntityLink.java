@@ -91,13 +91,15 @@ public class ReadEntityLink<T extends Entity> implements Link {
         if (this.single != null && context.contains(this.single.getLeft())) {
             context.put(
                 this.single.getRight(),
-                this.processSingle(context.get(this.single.getLeft()))
+                this.processSingle(context.get(this.single.getLeft())),
+                true
             );
         }
         if (this.multiple != null) {
             context.put(
                 this.multiple.getRight(),
-                this.processMultiple(context.get(this.multiple.getLeft()))
+                this.processMultiple(context.get(this.multiple.getLeft())),
+                true
             );
         }
     }
@@ -109,10 +111,12 @@ public class ReadEntityLink<T extends Entity> implements Link {
      * @param put Entity tag to put in context.
      * @return The same instance.
      */
-    public ReadEntityLink<T> setTag(final SingleTag<Long> read, final EntityTag<T> put) {
-        if (read != null && put != null) {
-            this.single = Pair.of(read, put);
+    public ReadEntityLink<T> setTag(final SingleTag<Long> read, final EntityTag<T> put)
+        throws LinkException {
+        if (read == null || put == null) {
+            throw new LinkException(this.getClass(), "One or both arguments is null");
         }
+        this.single = Pair.of(read, put);
         return this;
     }
 
@@ -123,10 +127,12 @@ public class ReadEntityLink<T extends Entity> implements Link {
      * @param put Entities tag to put in context.
      * @return The same instance.
      */
-    public ReadEntityLink<T> setTags(final MultipleTag<Long> read, final EntitiesTag<T> put) {
-        if (read != null && put != null) {
-            this.multiple = Pair.of(read, put);
+    public ReadEntityLink<T> setTags(final MultipleTag<Long> read, final EntitiesTag<T> put)
+        throws LinkException {
+        if (read == null || put == null) {
+            throw new LinkException(this.getClass(), "One or both arguments is null");
         }
+        this.multiple = Pair.of(read, put);
         return this;
     }
 

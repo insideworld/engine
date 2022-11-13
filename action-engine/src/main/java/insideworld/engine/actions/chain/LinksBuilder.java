@@ -19,7 +19,6 @@
 
 package insideworld.engine.actions.chain;
 
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
@@ -48,10 +47,10 @@ public interface LinksBuilder {
      * @param init Init predicate which execute once at action init.
      * @param <T> Link type.
      * @return The same instance.
-     * @throws CommonException Can't init link.
+     * @throws LinkException Can't init link.
      */
     <T extends Link> LinksBuilder addLink(Class<T> type, LinkConsumer<T> init)
-        throws CommonException;
+        throws LinkException;
 
     /**
      * Add specific link with generic parameters.
@@ -68,10 +67,10 @@ public interface LinksBuilder {
      * @param init Init predicate which execute once at action init.
      * @param <T> Link type.
      * @return The same instance.
-     * @throws CommonException Can't init link.
+     * @throws LinkException Can't init link.
      */
     <T extends Link> LinksBuilder addLink(TypeLiteral<T> type, LinkConsumer<T> init)
-        throws CommonException;
+        throws LinkException;
 
     /**
      * Build links collections.

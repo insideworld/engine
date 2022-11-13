@@ -44,46 +44,10 @@ import org.jboss.jandex.Type;
 
 public class ListExtension {
 
-//    @BuildStep
-//    InjectionPointTransformerBuildItem addAnnotation() {
-//        return new InjectionPointTransformerBuildItem(new InjectionPointsTransformer() {
-//
-//            public boolean appliesTo(final Type type) {
-//                return type.name().equals(DotNames.LIST);
-//            }
-//
-//            public void transform(final TransformationContext context) {
-//                final AnnotationTarget target = context.getTarget();
-//                final Transformation transform = context.transform();
-//                final List<Type> parameters = target.asMethod().parameterTypes();
-//                for (int i = 0; i < parameters.size(); i++) {
-//                    Type parameter = parameters.get(i);
-//                    if (parameter.name().equals(DotNames.LIST)) {
-//                        transform.add(AnnotationInstance.create(
-//                            DotNames.ALL,
-//                            MethodParameterInfo.create(target.asMethod(), (short) i),
-//                            Collections.emptyList()
-//                        ));
-//                    }
-//                }
-//                transform.done();
-//            }
-//        });
-//    }
-
     @BuildStep
     AnnotationsTransformerBuildItem beanTransformer(
         final BeanArchiveIndexBuildItem beanArchiveIndexBuildItem,
         final BuildProducer<StereotypeRegistrarBuildItem> stereotypeRegistrarProducer) {
-//        final IndexView index = beanArchiveIndexBuildItem.getIndex();
-//        final Collection<AnnotationInstance> annotations = index.getAnnotations(DotNames.INJECT);
-//        for (AnnotationInstance annotation : annotations) {
-//            annotation.target().asMethod();
-//        }
-//        return null;
-//        final Map<DotName, Set<DotName>> stereotypeScopes = getStereotypeScopes(index);
-//        final Set<DotName> stereotypeAnnotations = new HashSet<>();
-
         return new AnnotationsTransformerBuildItem(new AnnotationsTransformer() {
 
             public boolean appliesTo(org.jboss.jandex.AnnotationTarget.Kind kind) {

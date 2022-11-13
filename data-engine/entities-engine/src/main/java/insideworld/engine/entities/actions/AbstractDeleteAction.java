@@ -21,6 +21,7 @@ package insideworld.engine.entities.actions;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.actions.links.DeleteEntityLink;
@@ -28,7 +29,6 @@ import insideworld.engine.entities.actions.links.ReadEntityLink;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
 import insideworld.engine.entities.tags.StorageTags;
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
@@ -54,7 +54,7 @@ public abstract class AbstractDeleteAction<T extends Entity> extends AbstractCha
 
     @Override
     protected final Collection<Link> attachLinks(final LinksBuilder builder)
-        throws CommonException {
+        throws LinkException {
         return builder
             .addLink(
                 new TypeLiteral<ReadEntityLink<T>>() {

@@ -91,10 +91,10 @@ public abstract class AbstractChainAction implements Action {
      *
      * @param builder LinksBuilder instance.
      * @return Collection of links.
-     * @throws CommonException Exception at link init.
+     * @throws LinkException Exception at link init.
      * @see LinksBuilder
      * @checkstyle HiddenFieldCheck (2 lines)
      */
-    protected abstract Collection<Link> attachLinks(LinksBuilder builder) throws CommonException;
+    protected abstract Collection<Link> attachLinks(LinksBuilder builder) throws LinkException;
 
 }

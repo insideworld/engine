@@ -19,47 +19,39 @@
 
 package insideworld.engine.matchers.exception;
 
-import java.lang.reflect.Executable;
+import java.util.Collection;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
-public final class ExceptionMatchers {
+public class ExceptionsCatchMatcher extends TypeSafeMatcher<ExecutableException[]> {
+    private final ExceptionCatchMatcher catcher;
 
-    /**
-     * Private constructor.
-     */
-    private ExceptionMatchers() {
-        //Nothing to do.
+    public ExceptionsCatchMatcher(final Class<? extends Throwable> throwable) {
+        this(throwable, null);
     }
 
-    public static ExceptionClassMatcher classMatcher(
-        final int level,
-        final Class<? extends Throwable> exception
-    ) {
-        return new ExceptionClassMatcher(level,exception);
-    }
-
-    public static ExceptionMessageMatcher messageMatcher(
-        final int level,
-        final Matcher<String> matcher
-    ) {
-        return new ExceptionMessageMatcher(level, matcher);
-    }
-
-    public static ExceptionCatchMatcher catchException(final Class<? extends Throwable> throwable) {
-        return new ExceptionCatchMatcher(throwable);
-    }
-
-    public static ExceptionCatchMatcher catchException(
+    public ExceptionsCatchMatcher(
         final Class<? extends Throwable> throwable,
         final Matcher<? extends Throwable> matcher
     ) {
-        return new ExceptionCatchMatcher(throwable, matcher);
+        this.catcher = new ExceptionCatchMatcher(throwable, matcher);
     }
 
-    public static ExceptionsCatchMatcher catchExceptions(
-        final Class<? extends Throwable> throwable,
-        final Matcher<? extends Throwable> matcher
-    ) {
-        return new ExceptionsCatchMatcher(throwable, matcher);
+    @Override
+    protected boolean matchesSafely(final ExecutableException[] items) {
+        boolean result = false;
+        for (final ExecutableException item : items) {
+            result = this.catcher.matchesSafely(item);
+            if (!result) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+
     }
 }

@@ -30,7 +30,6 @@ import insideworld.engine.security.common.entities.Role;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 public abstract class AbstractReadRolesAction extends AbstractChainAction implements RoleAction {
 

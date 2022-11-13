@@ -20,7 +20,6 @@
 package insideworld.engine.actions.chain;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
@@ -47,6 +46,7 @@ public class LinksBuilderFactory implements LinksBuilder {
 
     /**
      * Default constructor.
+     *
      * @param factory Object factory.
      */
     @Inject
@@ -63,10 +63,10 @@ public class LinksBuilderFactory implements LinksBuilder {
     }
 
     @Override
-    public final  <T extends Link> LinksBuilder addLink(
-        final Class<T> type, final LinkConsumer<T> init) throws CommonException {
+    public final <T extends Link> LinksBuilder addLink(
+        final Class<T> type, final LinkConsumer<T> init) throws LinkException {
         final T link = this.factory.createObject(type);
-        init.init(link);
+        LinksBuilderFactory.initLink(link, init);
         this.links.add(link);
         return this;
     }
@@ -80,10 +80,9 @@ public class LinksBuilderFactory implements LinksBuilder {
 
     @Override
     public final <T extends Link> LinksBuilder addLink(
-        final TypeLiteral<T> type, final LinkConsumer<T> init)
-        throws CommonException {
+        final TypeLiteral<T> type, final LinkConsumer<T> init) throws LinkException {
         final T link = this.factory.createObject(type);
-        init.init(link);
+        LinksBuilderFactory.initLink(link, init);
         this.links.add(link);
         return this;
     }
@@ -91,5 +90,25 @@ public class LinksBuilderFactory implements LinksBuilder {
     @Override
     public final Collection<Link> build() {
         return this.links.build();
+    }
+
+    /**
+     * Init link and catch exception to init.
+     * @param link Link.
+     * @param init Init consumer.
+     * @param <T> Type of link.
+     * @throws LinkException Exception at init.
+     */
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidRethrowingException"})
+    private static <T extends Link> void initLink(final T link, final LinkConsumer<T> init)
+        throws LinkException {
+        //@checkstyle IllegalCatchCheck (10 lines)
+        try {
+            init.init(link);
+        } catch (final LinkException exp) {
+            throw exp;
+        } catch (final Exception exp) {
+            throw new LinkException(exp, link.getClass());
+        }
     }
 }

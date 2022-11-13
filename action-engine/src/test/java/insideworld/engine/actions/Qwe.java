@@ -17,39 +17,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.chain.exception;
+package insideworld.engine.actions;
 
-import insideworld.engine.actions.chain.AbstractChainAction;
-import insideworld.engine.actions.chain.Link;
-import insideworld.engine.actions.chain.LinkException;
-import insideworld.engine.actions.chain.LinksBuilder;
-import java.util.Collection;
-import javax.inject.Singleton;
+import insideworld.engine.actions.executor.KeyActionExecutor;
+import org.junit.jupiter.api.Test;
 
-/**
- * Test action to test link exception.
- * @since 0.14.0
- */
-@Singleton
-class TestAction extends AbstractChainAction {
+public class Qwe {
 
-    /**
-     * Default constructor.
-     *
-     * @param builder Links builder instance.
-     */
-    TestAction(final LinksBuilder builder) {
-        super(builder);
-    }
-
-    @Override
-    public final String key() {
-        return "insideworld.engine.actions.chain.exception.TestAction";
-    }
-
-    @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder)
-        throws LinkException {
-        return builder.addLink(LinkWithException.class).build();
+    @Test
+    public void test() {
+        System.out.println("qwe");
     }
 }

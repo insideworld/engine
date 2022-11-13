@@ -22,8 +22,8 @@ package insideworld.engine.actions.chain.execute;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.LinksBuilder;
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Singleton;
@@ -51,7 +51,7 @@ public class ParentExceptionAction extends AbstractChainAction {
 
     @Override
     protected final Collection<Link> attachLinks(final LinksBuilder builder)
-        throws CommonException {
+        throws LinkException {
         return builder
             .addLink(
                 new TypeLiteral<ExecuteActionLink<Class<? extends Action>>>() { },
