@@ -11,7 +11,7 @@
 
     <packaging>pom</packaging>
 
-    <artifactId>database-quarkus-engine</artifactId>
+    <artifactId>quakrus-extension-engine</artifactId>
 
     <modules>
         <module>quarkus-deployment-engine</module>
