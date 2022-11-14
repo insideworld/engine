@@ -21,6 +21,7 @@ package insideworld.engine.entities.actions;
 
 import insideworld.engine.actions.chain.AbstractChainAction;
 import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
 import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.actions.links.ReadEntityLink;
@@ -28,7 +29,6 @@ import insideworld.engine.entities.converter.ExportEntityLink;
 import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.entities.tags.EntityTag;
 import insideworld.engine.entities.tags.StorageTags;
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
@@ -58,13 +58,20 @@ public abstract class AbstractReadAction<T extends Entity> extends AbstractChain
 
     @Override
     protected final Collection<Link> attachLinks(final LinksBuilder builder)
-        throws CommonException {
+        throws LinkException {
         builder
             .addLink(
-                new TypeLiteral<ReadEntityLink<T>>() { },
-                link -> link.setType(this.getType())
-                    .setTag(StorageTags.ID, this.getTag())
-                    .setTags(StorageTags.IDS, this.getTags()))
+                new TypeLiteral<ReadEntityLink<T>>() {
+                },
+                link -> {
+                    link.setType(this.getType());
+                    if (this.getTag() != null) {
+                        link.setTag(StorageTags.ID, this.getTag());
+                    }
+                    if (this.getTags() != null) {
+                        link.setTags(StorageTags.IDS, this.getTags());
+                    }
+                })
             .addLink(
                 ExportEntityLink.class,
                 link -> link
@@ -93,14 +100,17 @@ public abstract class AbstractReadAction<T extends Entity> extends AbstractChain
     /**
      * Type of entity.
      * Using to define storage.
+     *
      * @return Type of entity.
      */
     protected abstract Class<T> getType();
 
     /**
      * Some operations which need to make after export entities.
+     *
      * @param builder Link builder.
+     * @throws LinkException Link init exception.
      */
-    protected abstract void afterExport(LinksBuilder builder);
+    protected abstract void afterExport(LinksBuilder builder) throws LinkException;
 
 }

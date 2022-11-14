@@ -110,6 +110,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
      * @param read ID tag with entity ID.
      * @param put Entity tag to put in context.
      * @return The same instance.
+     * @throws LinkException Null arguments.
      */
     public ReadEntityLink<T> setTag(final SingleTag<Long> read, final EntityTag<T> put)
         throws LinkException {
@@ -126,6 +127,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
      * @param read ID's tag with entity ID's.
      * @param put Entities tag to put in context.
      * @return The same instance.
+     * @throws LinkException Null arguments.
      */
     public ReadEntityLink<T> setTags(final MultipleTag<Long> read, final EntitiesTag<T> put)
         throws LinkException {

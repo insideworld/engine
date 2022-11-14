@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 public interface PropertiesProvider {
     
-    <OUT> OUT provide(String key, Class<OUT> type);
+    <OUT> OUT provide(String key, Class<OUT> type) throws PropertiesException;
 
     <OUT> boolean exists(String key, Class<OUT> type);
     

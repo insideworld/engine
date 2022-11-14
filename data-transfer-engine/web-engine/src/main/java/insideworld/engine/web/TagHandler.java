@@ -22,12 +22,13 @@ package insideworld.engine.web;
 
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.exception.CommonException;
 
 /**
  * Tags handler for redefine.
  */
 public interface TagHandler {
 
-    void perform(Context context) throws ActionException;
+    void perform(Context context) throws CommonException;
 
 }

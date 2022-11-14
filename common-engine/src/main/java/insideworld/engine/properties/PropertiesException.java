@@ -20,9 +20,10 @@
 package insideworld.engine.properties;
 
 
-public class PropertiesException extends Exception {
+import insideworld.engine.exception.CommonException;
 
-    private static final String EXCEPTION_MESSAGE = "Exception during execute action %s";
+public class PropertiesException extends CommonException {
+
 
     public PropertiesException(final String message) {
         super(message);
@@ -33,5 +34,8 @@ public class PropertiesException extends Exception {
     }
 
 
-
+    @Override
+    protected String module() {
+        return "common-engine";
+    }
 }

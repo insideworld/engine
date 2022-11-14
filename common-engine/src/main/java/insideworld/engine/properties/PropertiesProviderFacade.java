@@ -46,14 +46,14 @@ public class PropertiesProviderFacade implements PropertiesProvider {
     }
     
     @Override
-    public <OUT> OUT provide(final String key, Class<OUT> type) {
+    public <OUT> OUT provide(final String key, final Class<OUT> type) throws PropertiesException {
         //TODO: Make cachable.
         for (final Properties provider : this.providers) {
             if (provider.exists(key, type)) {
                 return provider.provide(key, type);
             }
         }
-        throw new IllegalArgumentException(String.format("Key %s is not exists.", key));
+        throw new PropertiesException(String.format("Key %s is not exists.", key));
     }
 
     @Override

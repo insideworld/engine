@@ -24,7 +24,11 @@ import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.arc.InjectableBean;
 import io.quarkus.arc.impl.InstanceImpl;
 import io.quarkus.arc.impl.Instances;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +43,12 @@ public class CDIObjectFactory implements ObjectFactory {
 
     @Override
     public <T> T createObject(final Class<T> type, final Object... args) {
-        return CDI.current().select(type).get();
+        final Instance<T> select = CDI.current().select(type);
+        if (select.isResolvable()) {
+            return select.get();
+        } else {
+            return this.createNative(type, args);
+        }
     }
 
     @Override
@@ -58,5 +67,30 @@ public class CDIObjectFactory implements ObjectFactory {
             result = (Class<? extends T>) object.getClass();
         }
         return result;
+    }
+
+    private <T> T createNative(final Class<T> type, final Object... args) {
+        final Constructor<?> constructor = type.getDeclaredConstructors()[0];
+        final Object[] input;
+        final int count = constructor.getParameterCount();
+        final Parameter[] parameters = constructor.getParameters();
+        if (count == args.length) {
+            input = args;
+        } else {
+            input = new Object[count];
+            int custom = count - args.length - 1;
+            for (int i = 0; i < input.length; i++) {
+                if (i > custom) {
+                    input[i] = args[i - custom - 1];
+                } else {
+                    input[i] = this.createObject(parameters[i].getType());
+                }
+            }
+        }
+        try {
+            return (T) constructor.newInstance(input);
+        } catch (final Exception exp) {
+            throw new RuntimeException(exp);
+        }
     }
 }

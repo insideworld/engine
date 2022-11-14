@@ -23,12 +23,31 @@ import insideworld.engine.entities.Entity;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public abstract class  AbstractCrudGenericStorage<T extends Entity, C extends T>
+/**
+ * Additional implementation of AbstractCrudStorage with implemented type methods.
+ * This types takes from signature, so you need to implement class
+ * without delegate generic definitions
+ * @param <T> Entity type.
+ * @param <C> Crud type.
+ * @since 0.0.1
+ */
+public abstract class AbstractCrudGenericStorage<T extends Entity, C extends T>
     extends AbstractCrudStorage<T, C> {
 
+    /**
+     * Crud type.
+     */
     private final Class<C> crud;
+
+    /**
+     * Entity type.
+     */
     private final Class<T> entity;
 
+    /**
+     * Default constructor.
+     */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public AbstractCrudGenericStorage() {
         final ParameterizedType generics =
             (ParameterizedType) this.getClass().getGenericSuperclass();
@@ -38,13 +57,13 @@ public abstract class  AbstractCrudGenericStorage<T extends Entity, C extends T>
     }
 
     @Override
-    protected final Class<C> forCrud() {
-        return this.crud;
+    public final Class<T> forEntity() {
+        return this.entity;
     }
 
     @Override
-    public final Class<T> forEntity() {
-        return this.entity;
+    protected final Class<C> forCrud() {
+        return this.crud;
     }
 
 }

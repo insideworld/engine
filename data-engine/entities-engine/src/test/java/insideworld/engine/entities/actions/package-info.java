@@ -21,3 +21,4 @@
  * Tests for abstract entities actions.
  */
 package insideworld.engine.entities.actions;
+

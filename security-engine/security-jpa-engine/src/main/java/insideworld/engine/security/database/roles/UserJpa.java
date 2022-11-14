@@ -20,7 +20,7 @@
 package insideworld.engine.security.database.roles;
 
 import com.google.common.collect.Sets;
-import insideworld.engine.data.jpa.AbstractEntity;
+import insideworld.engine.data.jpa.AbstractJpaEntity;
 import insideworld.engine.security.common.entities.Role;
 import insideworld.engine.security.common.entities.User;
 import java.util.Collection;
@@ -39,7 +39,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(schema = "users", name = "users")
 @Dependent
 @Cacheable
-public class UserJpa extends AbstractEntity implements User {
+public class UserJpa extends AbstractJpaEntity implements User {
 
     @Column(name = "token", unique = true, nullable = false)
     private String token;

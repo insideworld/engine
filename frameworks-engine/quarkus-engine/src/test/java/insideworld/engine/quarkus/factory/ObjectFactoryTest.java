@@ -36,9 +36,11 @@ public class ObjectFactoryTest {
 
     @Test
     final void test() {
+        final Clean qwe = this.factory.createObject(Clean.class, "qwe");
         final var has = this.factory.implementation(Inter.class);
         assert has.equals(Impl.class);
         final var not = this.factory.implementation(DummyInterface.class);
         assert not == null;
+
     }
 }

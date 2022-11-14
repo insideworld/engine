@@ -41,13 +41,6 @@ public final class ActionsTags {
         new SingleTag<>("engine.action.from-action");
 
     /**
-     * Use exists transaction when execute a new action.
-     * Default will use the same TX.
-     */
-    public static final SingleTag<Object> USE_EXIST_TX =
-        new SingleTag<>("engine.action.use-exist-tx");
-
-    /**
      * Private constructor.
      */
     private ActionsTags() {

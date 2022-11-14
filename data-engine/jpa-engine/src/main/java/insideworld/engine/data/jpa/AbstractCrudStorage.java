@@ -26,28 +26,33 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract class to implement CRUD storage types.
+ * @param <T> Base entity type.
+ * @param <C> CRUD entity type.
+ * @since 0.0.1
+ */
 public abstract class AbstractCrudStorage<T extends Entity, C extends T>
     implements Storage<T>, PanacheRepository<C> {
 
     @Override
-    public Collection<T> readAll() {
+    public final Collection<T> readAll() {
         return this.castUpper(findAll().list());
     }
 
     @Override
-    public T read(final long id) throws StorageException {
+    public final T read(final long id) throws StorageException {
         return findByIdOptional(id)
-            .orElseThrow(() ->
-                new StorageException(String.format("%s not found by ID %s", this.forEntity(), id)));
+            .orElseThrow(() -> new StorageException("Can't find ", this.forEntity(), id));
     }
 
     @Override
-    public Collection<T> read(final Collection<Long> ids) {
+    public final Collection<T> read(final Collection<Long> ids) {
         return this.castUpper(find("id in (?1)", ids).list());
     }
 
     @Override
-    public T write(final T entity) {
+    public final T write(final T entity) {
         final C crud = this.forCrud().cast(entity);
         final C merged;
         if (isPersistent(crud)) {
@@ -60,26 +65,29 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
     }
 
     @Override
-    public Collection<T> writeAll(final Collection<T> entity) {
+    public final Collection<T> writeAll(final Collection<T> entity) {
         persist(this.castLower(entity));
         return entity;
     }
 
     @Override
-    public void delete(final Collection<T> entities) {
+    public final void delete(final Collection<T> entities) {
         for (final C entity : this.castLower(entities)) {
-            delete(entity);
+            this.delete(entity);
         }
     }
 
     @Override
-    public boolean exists(long id) {
+    public final boolean exists(final long id) {
         return findByIdOptional(id).isPresent();
     }
 
-    protected abstract Class<C> forCrud();
-
-    protected Collection<C> castLower(final Collection<T> collection) {
+    /**
+     * Cast entities (more common) to crud type.
+     * @param collection Collection of base entities
+     * @return Collection of crud entities.
+     */
+    protected final Collection<C> castLower(final Collection<T> collection) {
         final Collection<C> result;
         if (collection == null) {
             result = null;
@@ -91,9 +99,20 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
         return result;
     }
 
-    protected Collection<T> castUpper(final Collection<C> collection) {
+    /**
+     * Cast CRUD's type to entities (more common).
+     * @param collection CRUD entities.
+     * @return Entities.
+     */
+    protected final Collection<T> castUpper(final Collection<C> collection) {
         return collection.stream()
             .map(item -> this.forEntity().cast(item))
             .collect(Collectors.toList());
     }
+
+    /**
+     * CRUD type of entity for this storage.
+     * @return CRUD type.
+     */
+    protected abstract Class<C> forCrud();
 }

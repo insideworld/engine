@@ -52,7 +52,7 @@ class ReadEntityLinkTest {
     /**
      * Object factory.
      */
-    private ObjectFactory factory;
+    private final ObjectFactory factory;
 
     /**
      * Init mock.
@@ -66,14 +66,17 @@ class ReadEntityLinkTest {
 
     /**
      * Constructor.
+     *
      * @param factory Object factory.
      * @param init Init mock.
      * @param storage Storage.
      */
     @Inject
-    ReadEntityLinkTest(final ObjectFactory factory,
-                       final InitMock init,
-                       final Storage<MockEntity> storage) {
+    ReadEntityLinkTest(
+        final ObjectFactory factory,
+        final InitMock init,
+        final Storage<MockEntity> storage
+    ) {
         this.factory = factory;
         this.init = init;
         this.storage = storage;
@@ -118,6 +121,7 @@ class ReadEntityLinkTest {
 
     /**
      * TC: Test that entity will read with set ID and doesn't read without.
+     *
      * @throws StorageException Shouldn't raise.
      * @throws LinkException Shouldn't raise.
      */
@@ -151,6 +155,7 @@ class ReadEntityLinkTest {
 
     /**
      * TC: Test that will read all entities if IDS is not set and read only specific if set.
+     *
      * @throws StorageException Shouldn't raise.
      * @throws LinkException Shouldn't raise.
      */
@@ -188,6 +193,7 @@ class ReadEntityLinkTest {
 
     /**
      * TC: Test both cases with single and multiple together.
+     *
      * @throws StorageException Shouldn't raise.
      * @throws LinkException Shouldn't raise.
      */

@@ -19,7 +19,7 @@
 
 package insideworld.engine.tests.data;
 
-import insideworld.engine.data.jpa.AbstractEntity;
+import insideworld.engine.data.jpa.AbstractJpaEntity;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ import javax.persistence.Table;
     name = "some_entity",
     schema = "transactions"
 )
-public class SomeEntityJPA extends AbstractEntity implements SomeEntity {
+public class SomeEntityJPA extends AbstractJpaEntity implements SomeEntity {
 
     @Column(
         name = "value"

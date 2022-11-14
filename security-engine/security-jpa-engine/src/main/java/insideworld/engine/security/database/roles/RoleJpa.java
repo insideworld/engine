@@ -20,7 +20,7 @@
 package insideworld.engine.security.database.roles;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import insideworld.engine.data.jpa.AbstractEntity;
+import insideworld.engine.data.jpa.AbstractJpaEntity;
 import insideworld.engine.security.common.entities.Role;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Cacheable;
@@ -36,7 +36,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(schema = "users", name = "roles")
 @Dependent
 @Cacheable
-public class RoleJpa extends AbstractEntity implements Role {
+public class RoleJpa extends AbstractJpaEntity implements Role {
 
     @Column(name = "name")
     private String name;

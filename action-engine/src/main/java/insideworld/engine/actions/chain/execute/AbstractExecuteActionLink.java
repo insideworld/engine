@@ -135,6 +135,7 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
         return this;
     }
 
+    @SafeVarargs
     @Override
     public final ExecuteActionLink<T> addPreExecute(final Class<? extends PreExecute>... executes) {
         final PreExecute[] array = Arrays.stream(executes)

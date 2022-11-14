@@ -22,6 +22,10 @@ package insideworld.engine.data.jpa.properties;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import javax.inject.Singleton;
 
+/**
+ * Property storage implementation based on panache repository.
+ * @since 0.0.1
+ */
 @Singleton
-public class PropertyStorage implements PanacheRepositoryBase<JpaProperties, String> {
+public class PropertyStorage implements PanacheRepositoryBase<PropertyJpaEntity, String> {
 }
