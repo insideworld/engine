@@ -19,9 +19,10 @@
 
 package insideworld.engine.amqp.connection.message;
 
+import java.util.Map;
+
 public interface Message {
 
-    String getBody();
-
+    Map<String, Object>[] getArray();
 
 }

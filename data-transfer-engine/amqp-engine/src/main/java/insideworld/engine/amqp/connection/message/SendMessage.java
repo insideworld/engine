@@ -17,32 +17,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.vertex;
+package insideworld.engine.amqp.connection.message;
 
-import insideworld.engine.amqp.connection.Sender;
-import insideworld.engine.amqp.connection.message.Message;
-import io.vertx.core.json.JsonArray;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
-import io.vertx.mutiny.amqp.AmqpSender;
-import java.util.List;
-import javax.enterprise.context.Dependent;
+import java.util.Map;
 
-@Dependent
-public class VertexSender implements Sender {
+public class SendMessage implements Message {
 
-    private AmqpSender sender;
+    private final Map<String, Object>[] maps;
 
-    public VertexSender init(final String channel, final AmqpConnection connection) {
-        this.sender = connection.createSenderAndAwait(channel);
-        return this;
+    public SendMessage(final Map<String, Object>[] maps) {
+        this.maps = maps;
     }
+
 
     @Override
-    public void send(final Message message) {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        builder.withJsonArrayAsBody(new JsonArray(List.of(message.getArray())));
-        this.sender.send(builder.build());
+    public Map<String, Object>[] getArray() {
+        return this.maps;
     }
+
+
 }

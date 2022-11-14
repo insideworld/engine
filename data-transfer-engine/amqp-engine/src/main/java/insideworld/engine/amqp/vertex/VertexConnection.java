@@ -19,6 +19,9 @@
 
 package insideworld.engine.amqp.vertex;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.Receiver;
 import insideworld.engine.amqp.connection.Sender;
@@ -28,6 +31,7 @@ import insideworld.engine.startup.StartUpException;
 import io.vertx.amqp.AmqpClientOptions;
 import io.vertx.mutiny.amqp.AmqpClient;
 import io.vertx.mutiny.amqp.AmqpConnection;
+import java.util.Map;
 import javax.inject.Singleton;
 
 public class VertexConnection implements Connection, OnStartUp {

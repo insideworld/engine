@@ -19,6 +19,7 @@
 
 package insideworld.engine.amqp;
 
+import com.google.common.collect.ImmutableMap;
 import com.rabbitmq.client.ConnectionFactory;
 import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.Receiver;
@@ -35,8 +36,10 @@ import io.vertx.mutiny.amqp.AmqpReceiver;
 import io.vertx.proton.ProtonClient;
 import io.vertx.proton.ProtonConnection;
 import io.vertx.proton.ProtonSender;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 //import org.apache.qpid.server.Broker;
@@ -74,9 +77,18 @@ public class TestAmqp {
 
     @Test
     final void test() throws Exception {
-        this.connection.createReceiver("test", (message) -> System.out.println(message.getBody()));
+        this.connection.createReceiver("test",
+            (message) -> System.out.println(message.getArray())
+        );
         final Sender test = this.connection.createSender("test");
-        test.send(() -> "Nu privet");
+        Map<String,Object>[] one = new Map[]{
+            Map.of("one", 1, "two", "1"),
+            Map.of("one", 2, "two", "2"),
+            Map.of("one", 3, "two", "3"),
+            Map.of("one", 3L, "two", "3"),
+            Map.of("one", 111111111111L, "two", "3")
+        };
+        test.send(() -> one);
 
 //
 //        final AmqpConnection amqpConnection = AmqpClient.create(

@@ -21,6 +21,7 @@ package insideworld.engine.amqp.vertex;
 
 import insideworld.engine.amqp.connection.message.Message;
 import io.vertx.mutiny.amqp.AmqpMessage;
+import java.util.Map;
 
 public class VertexMessage implements Message {
 
@@ -31,7 +32,11 @@ public class VertexMessage implements Message {
     }
 
     @Override
-    public String getBody() {
-        return this.message.bodyAsString();
+    public Map<String, Object>[] getArray() {
+        return (Map<String, Object>[]) this.message
+            .bodyAsJsonArray()
+            .getList()
+            .stream().toArray(Map[]::new);
     }
+
 }

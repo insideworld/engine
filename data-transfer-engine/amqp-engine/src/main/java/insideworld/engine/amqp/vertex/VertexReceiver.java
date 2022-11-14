@@ -19,6 +19,7 @@
 
 package insideworld.engine.amqp.vertex;
 
+import com.fasterxml.jackson.databind.ObjectReader;
 import insideworld.engine.amqp.connection.Receiver;
 import insideworld.engine.amqp.connection.message.Message;
 import insideworld.engine.injection.ObjectFactory;
@@ -30,11 +31,15 @@ import javax.inject.Inject;
 
 
 public class VertexReceiver {
+    private final ObjectFactory factory;
     private final AmqpConnection connection;
 
-    public VertexReceiver(final AmqpConnection connection) {
+    public VertexReceiver(
+        final ObjectFactory factory,
+        final AmqpConnection connection
+    ) {
+        this.factory = factory;
         this.connection = connection;
-
     }
 
     public VertexReceiver init(final String channel, final Receiver receiver) {
@@ -46,7 +51,7 @@ public class VertexReceiver {
 
 
     private Message convert(final AmqpMessage message) {
-        return message::bodyAsString;
+        return this.factory.createObject(VertexMessage.class, message);
     }
 
 }
