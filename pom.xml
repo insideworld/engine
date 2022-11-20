@@ -80,6 +80,8 @@
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     <hamcrest.version>2.2</hamcrest.version>
+    <rabbitmq.version>5.16.0</rabbitmq.version>
+    <qpid.version>8.0.6</qpid.version>
   </properties>
 
   <dependencies>

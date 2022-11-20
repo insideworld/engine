@@ -23,6 +23,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+/**
+ * Deprecated.
+ * Use TaskBuilder instead.
+ * @since 0.4.0
+ */
+@Deprecated(since = "0.14.0")
 public interface ThreadService {
 
     <T> Future<T> newThread(Callable<T> callable, ExecutorService executor);

@@ -17,13 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.amqp.connection;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.send.Receiver;
-import javax.ws.rs.Path;
+import insideworld.engine.amqp.connection.message.Message;
 
-@Path("/bulk/actions")
-public class RestActionsReceiver implements Receiver<Output> {
+public interface AmqpSender {
+
+    void send(Message message);
+
 }

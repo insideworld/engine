@@ -22,6 +22,12 @@ package insideworld.engine.threads;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+/**
+ * Deprecated.
+ * Use TaskBuilder instead.
+ * @since 0.4.0
+ */
+@Deprecated(since = "0.14.0")
 public interface ThreadPool {
 
     <T> Future<T> execute(Callable<T> callable);

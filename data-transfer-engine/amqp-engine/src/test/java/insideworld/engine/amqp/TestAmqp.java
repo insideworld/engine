@@ -19,68 +19,39 @@
 
 package insideworld.engine.amqp;
 
-import com.google.common.collect.ImmutableMap;
-import com.rabbitmq.client.ConnectionFactory;
+import insideworld.engine.amqp.connection.AmqpSender;
 import insideworld.engine.amqp.connection.Connection;
-import insideworld.engine.amqp.connection.Receiver;
-import insideworld.engine.amqp.connection.Sender;
-import insideworld.engine.properties.Properties;
-import io.quarkus.test.common.QuarkusTestResource;
+import insideworld.engine.amqp.connection.message.Message;
+import insideworld.engine.amqp.connection.message.SendMessage;
+import insideworld.engine.injection.ObjectFactory;
 import io.quarkus.test.junit.QuarkusTest;
-import io.smallrye.mutiny.Multi;
-import io.vertx.amqp.AmqpClientOptions;
-import io.vertx.core.Vertx;
-import io.vertx.mutiny.amqp.AmqpClient;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpReceiver;
-import io.vertx.proton.ProtonClient;
-import io.vertx.proton.ProtonConnection;
-import io.vertx.proton.ProtonSender;
-import java.io.Serializable;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
+import io.smallrye.reactive.messaging.annotations.Blocking;
+import java.util.Collections;
 import java.util.Map;
 import javax.inject.Inject;
-//import org.apache.qpid.server.Broker;
-//import org.apache.qpid.server.BrokerOptions;
-import org.apache.qpid.proton.amqp.messaging.AmqpValue;
-import org.apache.qpid.server.SystemLauncher;
-import org.apache.qpid.server.configuration.IllegalConfigurationException;
-import org.apache.qpid.server.model.Broker;
-import org.apache.qpid.server.model.SystemConfig;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
-import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.eclipse.microprofile.reactive.messaging.Message;
-import org.eclipse.microprofile.reactive.messaging.OnOverflow;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class TestAmqp {
 
-//    @Inject
-//    Vertx vertx;
+    private final Connection connection;
+    private final ObjectFactory factory;
 
     @Inject
-    Connection connection;
-
-//    private final Properties properties;
-//    private final AmqpSender sender;
-//
-//        @Inject
-//    public TestAmqp(Properties properties, final AmqpSender sender) {
-//        this.properties = properties;
-//        this.sender = sender;
-//    }
-
+    public TestAmqp(
+        final Connection connection,
+        final ObjectFactory factory
+    ) {
+        this.connection = connection;
+        this.factory = factory;
+    }
 
     @Test
     final void test() throws Exception {
         this.connection.createReceiver("test",
-            (message) -> System.out.println(message.getArray())
+            this::receive
         );
-        final Sender test = this.connection.createSender("test");
+        final AmqpSender test = this.connection.createSender("test");
         Map<String,Object>[] one = new Map[]{
             Map.of("one", 1, "two", "1"),
             Map.of("one", 2, "two", "2"),
@@ -88,16 +59,22 @@ public class TestAmqp {
             Map.of("one", 3L, "two", "3"),
             Map.of("one", 111111111111L, "two", "3")
         };
-        test.send(() -> one);
-
-//
-//        final AmqpConnection amqpConnection = AmqpClient.create(
-//
-//        ).connectAndAwait();
-//
-//        final AmqpReceiver qwerty = amqpConnection.createReceiverAndAwait("test");
-
+        final SendMessage message =
+            this.factory.createObject(SendMessage.class, one, Collections.emptyMap(), "qwe");
+        test.send(message);
+        test.send(message);
+        test.send(message);
+        test.send(message);
+        test.send(message);
+        test.send(message);
+        test.send(message);
+        test.send(message);
+        test.send(message);
         System.out.println("qwe");
+    }
+
+    private void receive(Message message) {
+        System.out.println(message.getArray());
     }
 
 }

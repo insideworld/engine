@@ -19,5 +19,9 @@
 
 package insideworld.engine.amqp.rabbit;
 
+/**
+ * Template class for rabbit connection implementation.
+ * @since 0.14.0
+ */
 public class RabbitConnection {
 }

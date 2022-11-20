@@ -17,10 +17,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.quarkus.thread;
 
-import insideworld.engine.actions.keeper.context.Context;
-import javax.ws.rs.core.HttpHeaders;
+import insideworld.engine.threads.AbstractThreadPool;
+import insideworld.engine.threads.ThreadService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import javax.inject.Singleton;
 
-public record RestReceiveParameters(Context context, HttpHeaders headers) {
-}
+//@Singleton
+//public class TestThreadPool extends AbstractThreadPool {
+//
+//    public TestThreadPool(final ThreadService service) {
+//        super(service);
+//    }
+//
+//    @Override
+//    protected ExecutorService createPool() {
+//        return Executors.newFixedThreadPool(10);
+//    }
+//}

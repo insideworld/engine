@@ -17,17 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint.send;
+package insideworld.engine.amqp.connection;
 
-import insideworld.engine.actions.Action;
-import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.amqp.connection.message.Message;
 
-/**
- * Interfase to receive different messages from external systems.
- * @since 0.14.0
- */
-public interface Receiver {
+public interface AmqpReceiver {
 
-    void receive(String action, Output parameters);
+    void receive(Message message);
 
 }

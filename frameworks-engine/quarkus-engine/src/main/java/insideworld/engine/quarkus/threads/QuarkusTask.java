@@ -17,21 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.quarkus.threads;
 
-import insideworld.engine.actions.keeper.output.Output;
-import java.util.Map;
-import javax.naming.AuthenticationException;
-import javax.ws.rs.core.HttpHeaders;
+import insideworld.engine.threads.Task;
+import io.smallrye.mutiny.Uni;
+import java.util.function.Consumer;
 
-/**
- * Interface for interact with actions.
- *
- * @since 0.0.5
- */
-public interface ActionsEndpoint {
+public class QuarkusTask<T> implements Task<T> {
 
-    Output executeAction(String action, HttpHeaders token, Map<String, Object> body)
-        throws Exception;
+    private final Uni<T> uni;
 
+    public QuarkusTask(final Uni<T> uni) {
+        this.uni = uni;
+    }
+
+    @Override
+    public T result() {
+        return this.uni.await().indefinitely();
+    }
+
+    @Override
+    public void subscribe(final Consumer<T> callback) {
+        this.uni.subscribe().with(callback);
+    }
+
+    public Uni<T> getUni() {
+        return this.uni;
+    }
 }

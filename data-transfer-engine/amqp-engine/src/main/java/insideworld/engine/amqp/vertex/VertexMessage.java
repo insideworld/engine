@@ -39,4 +39,14 @@ public class VertexMessage implements Message {
             .stream().toArray(Map[]::new);
     }
 
+    @Override
+    public String getSubject() {
+        return this.message.subject();
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.message.applicationProperties().getMap();
+    }
+
 }

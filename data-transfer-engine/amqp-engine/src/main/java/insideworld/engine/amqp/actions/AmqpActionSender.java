@@ -17,33 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.amqp.actions;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.exception.CommonException;
-import java.util.List;
-import javax.inject.Singleton;
-
-@Singleton
-public class TagPreExecute implements PreExecute<ReceiveParameters> {
-
-    private final List<TagHandler> handlers;
-
-    public TagPreExecute(final List<TagHandler> handlers) {
-        this.handlers = handlers;
-    }
-
-
-    @Override
-    public void preExecute(Context context, ReceiveParameters parameter) throws CommonException {
-        for (final TagHandler handler : this.handlers) {
-            handler.perform(context);
-        }
-    }
-
-    @Override
-    public int order() {
-        return 10_000;
-    }
+public class AmqpActionSender {
 }

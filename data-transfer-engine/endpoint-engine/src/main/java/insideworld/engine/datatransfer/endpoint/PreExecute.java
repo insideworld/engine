@@ -25,7 +25,7 @@ import insideworld.engine.exception.CommonException;
 
 public interface PreExecute<T> {
 
-    void preExecute(T parameter) throws CommonException;
+    void preExecute(Context context, T parameter) throws CommonException;
 
     int order();
 

@@ -57,6 +57,11 @@
       <version>${quarkus.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-vertx</artifactId>
+      <version>${quarkus.version}</version>
+    </dependency>
+    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>${commons-codec.version}</version>
@@ -67,16 +72,6 @@
       <version>${microprofile-context-propagation-api.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-core-deployment</artifactId>
-      <version>${quarkus.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus.arc</groupId>
-      <artifactId>arc</artifactId>
-      <version>${quarkus.version}</version>
-    </dependency>
 
     <!--  Tests  -->
     <dependency>

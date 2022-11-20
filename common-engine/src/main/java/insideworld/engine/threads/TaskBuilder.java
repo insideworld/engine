@@ -17,33 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.threads;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.exception.CommonException;
 import java.util.List;
-import javax.inject.Singleton;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-@Singleton
-public class TagPreExecute implements PreExecute<ReceiveParameters> {
+public interface TaskBuilder<T, O> {
+    TaskBuilder<T, O> add(Supplier<T> supplier);
 
-    private final List<TagHandler> handlers;
+    TaskBuilder<T, O> combine(Function<List<T>, O> function, Class<T> type);
 
-    public TagPreExecute(final List<TagHandler> handlers) {
-        this.handlers = handlers;
-    }
+    TaskBuilder<T, O> concurrencyLevel(int level);
 
+    Task<O> build();
 
-    @Override
-    public void preExecute(Context context, ReceiveParameters parameter) throws CommonException {
-        for (final TagHandler handler : this.handlers) {
-            handler.perform(context);
-        }
-    }
-
-    @Override
-    public int order() {
-        return 10_000;
-    }
 }

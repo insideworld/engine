@@ -17,50 +17,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.vertex;
+package insideworld.engine.amqp.actions;
 
+import com.google.common.collect.Lists;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.AmqpReceiver;
-import insideworld.engine.amqp.connection.AmqpSender;
+import insideworld.engine.amqp.connection.message.Message;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
-import io.vertx.amqp.AmqpClientOptions;
-import io.vertx.mutiny.amqp.AmqpClient;
-import io.vertx.mutiny.amqp.AmqpConnection;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.Future;
 
-public class VertexConnection implements Connection, OnStartUp {
+public class AmqpActionReceiver implements OnStartUp {
 
-    private final AmqpClientOptions options;
-    private final ObjectFactory factory;
-    private AmqpConnection connection;
+    private final Connection connection;
+    private final String channel;
+    private final AmqpExecuteFacade executor;
 
-    public VertexConnection(final AmqpClientOptions options,
-                            final ObjectFactory factory) {
-        this.options = options;
-        this.factory = factory;
+    public AmqpActionReceiver(
+        final Connection connection,
+        final String channel,
+        final ObjectFactory factory
+        ) {
+        this.connection = connection;
+        this.channel = channel;
+        this.executor = executor;
     }
 
     @Override
-    public void createReceiver(final String channel, final AmqpReceiver amqpReceiver) {
-        this.factory
-            .createObject(VertexReceiver.class, this.connection)
-            .init(channel, amqpReceiver);
+    public void receive(final Message message) {
+        final Map<String, Object>[] inputs = message.getArray();
+        final Collection<Future<Output>> result = Lists.newArrayListWithCapacity(inputs.length);
+        for (final Map<String, Object> input : inputs) {
+            result.add(this.executor.execute(message.getSubject(), input));
+        }
+        for (final Future<Output> future : result) {
+
+        }
     }
 
-    @Override
-    public AmqpSender createSender(final String channel) {
-        return this.factory
-            .createObject(VertexAmqpSender.class)
-            .init(channel, this.connection);
-    }
+
 
     @Override
     public void startUp() {
-        this.connection = AmqpClient.create(this.options).connectAndAwait();
+        this.connection.createReceiver(this.channel, this);
     }
+
 
     @Override
     public int order() {
-        return 50_000;
+        return 70_000;
     }
+
 }

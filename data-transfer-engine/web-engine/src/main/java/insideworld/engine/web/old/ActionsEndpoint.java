@@ -17,33 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.web.old;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.exception.CommonException;
-import java.util.List;
-import javax.inject.Singleton;
+import insideworld.engine.actions.keeper.output.Output;
+import java.util.Map;
+import javax.naming.AuthenticationException;
+import javax.ws.rs.core.HttpHeaders;
 
-@Singleton
-public class TagPreExecute implements PreExecute<ReceiveParameters> {
+/**
+ * Interface for interact with actions.
+ *
+ * @since 0.0.5
+ */
+public interface ActionsEndpoint {
 
-    private final List<TagHandler> handlers;
+    Output executeAction(String action, HttpHeaders token, Map<String, Object> body)
+        throws Exception;
 
-    public TagPreExecute(final List<TagHandler> handlers) {
-        this.handlers = handlers;
-    }
-
-
-    @Override
-    public void preExecute(Context context, ReceiveParameters parameter) throws CommonException {
-        for (final TagHandler handler : this.handlers) {
-            handler.perform(context);
-        }
-    }
-
-    @Override
-    public int order() {
-        return 10_000;
-    }
 }

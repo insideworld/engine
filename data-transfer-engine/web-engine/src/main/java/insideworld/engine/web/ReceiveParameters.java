@@ -19,31 +19,10 @@
 
 package insideworld.engine.web;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.exception.CommonException;
-import java.util.List;
-import javax.inject.Singleton;
+import javax.ws.rs.core.HttpHeaders;
 
-@Singleton
-public class TagPreExecute implements PreExecute<ReceiveParameters> {
+public interface ReceiveParameters {
 
-    private final List<TagHandler> handlers;
+    HttpHeaders headers();
 
-    public TagPreExecute(final List<TagHandler> handlers) {
-        this.handlers = handlers;
-    }
-
-
-    @Override
-    public void preExecute(Context context, ReceiveParameters parameter) throws CommonException {
-        for (final TagHandler handler : this.handlers) {
-            handler.perform(context);
-        }
-    }
-
-    @Override
-    public int order() {
-        return 10_000;
-    }
 }

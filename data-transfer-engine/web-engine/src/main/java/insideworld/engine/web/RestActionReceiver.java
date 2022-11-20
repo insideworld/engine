@@ -19,16 +19,23 @@
 
 package insideworld.engine.web;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.datatransfer.endpoint.send.Receiver;
-import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.exception.CommonException;
+import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.threads.ThreadPool;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.util.TypeLiteral;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -36,20 +43,23 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 
-@Path("/actions")
-public class RestActionReceiver implements Receiver<Context> {
+@Singleton
+public class RestActionReceiver {
 
-    private final List<PreExecute<RestReceiveParameters>> executes;
-    private final ActionExecutor<String> executor;
+    private final ObjectReader reader;
 
-    public RestActionReceiver(
-        final List<PreExecute<RestReceiveParameters>> executes,
-        final ActionExecutor<String> executor) {
-        this.executes = executes
-            .stream()
-            .sorted(Comparator.comparingInt(PreExecute::order))
-            .toList();
-        this.executor = executor;
+    private final;
+
+    private final ObjectFactory factory;
+
+    @Inject
+    public RestActionReceiver(final ObjectFactory factory,
+                              final ActionR eceiver<ReceiveParameters> receiver) {
+        this.factory = factory;
+        this.reader = new ObjectMapper()
+            .readerFor(Map.class)
+            .with(DeserializationFeature.USE_LONG_FOR_INTS);
+        this.receiver = this.factory.createObject(new TypeLiteral<>() { });
     }
 
     @POST
@@ -58,29 +68,12 @@ public class RestActionReceiver implements Receiver<Context> {
     @Produces("application/json")
     public Output executeAction(
         @PathParam("action") final String action,
-        @javax.ws.rs.core.Context HttpHeaders headers,
+        @javax.ws.rs.core.Context final HttpHeaders headers,
         final InputStream rawbody
-    ) {
-        final Context context = this.executor.createContext();
-        body.forEach(context::put);
-        final RestReceiveParameters params = new RestReceiveParameters(context, headers);
-        for (final var execute : this.executes) {
-            execute.preExecute(params);
-        }
-
-        return this.executor.execute(action, context);
-
+    ) throws IOException, CommonException {
+        final var map = (Map<String, Object>) this.reader.readValue(rawbody);
+        final var parameter = this.factory.createObject(ReceiveParameters.class, headers);
+        return this.receiver.executeSingle(action, parameter, map);
     }
 
-    @Override
-    public Output executeAction(final String action,
-                                final HttpHeaders headers,
-                                final Map<String, Object> body) throws Exception {
-
-    }
-
-    @Override
-    public void receive(Context parameters) {
-
-    }
 }

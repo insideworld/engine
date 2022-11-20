@@ -17,12 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.threads;
 
-import insideworld.engine.amqp.connection.message.Message;
+import java.util.function.Consumer;
 
-public interface Sender {
+public interface Task<T> {
 
-    void send(Message message);
+    T result();
+
+    void subscribe(Consumer<T> callback);
 
 }

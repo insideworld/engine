@@ -56,6 +56,11 @@
       <artifactId>quarkus-smallrye-reactive-messaging-amqp-deployment</artifactId>
       <version>${quarkus.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.rabbitmq</groupId>
+      <artifactId>amqp-client</artifactId>
+      <version>${rabbitmq.version}</version>
+    </dependency>
     <!--  Tests  -->
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -74,47 +79,30 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-
-
     <dependency>
       <groupId>org.apache.qpid</groupId>
       <artifactId>qpid-broker-core</artifactId>
-      <version>8.0.6</version>
+      <version>${qpid.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.qpid</groupId>
       <artifactId>qpid-broker-plugins-amqp-1-0-protocol</artifactId>
-      <version>8.0.6</version>
+      <version>${qpid.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.qpid</groupId>
       <artifactId>qpid-broker-plugins-amqp-0-8-protocol</artifactId>
-      <version>8.0.6</version>
+      <version>${qpid.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.qpid</groupId>
       <artifactId>qpid-broker-plugins-memory-store</artifactId>
-      <version>8.0.6</version>
+      <version>${qpid.version}</version>
+      <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-proton</artifactId>
-      <version>4.3.5-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.rabbitmq</groupId>
-      <artifactId>amqp-client</artifactId>
-      <version>5.16.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-amqp-client</artifactId>
-      <version>4.3.4</version>
-    </dependency>
-
   </dependencies>
 
   <build>

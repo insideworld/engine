@@ -17,17 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint.send;
+package insideworld.engine.datatransfer.endpoint.actions;
 
-import insideworld.engine.actions.Action;
-import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.keeper.Table;
 
 /**
  * Interface is using to send call to another subsystem and receive an answer.
  * @since 0.14.0
  */
-public interface Sender {
+public interface ActionSender {
 
-    void send(Output output, Class<? extends Action> response);
+    /**
+     * Send execute action to another subsystem.
+     * @param action
+     * @param table
+     */
+    void send(String action, Table table);
 
 }

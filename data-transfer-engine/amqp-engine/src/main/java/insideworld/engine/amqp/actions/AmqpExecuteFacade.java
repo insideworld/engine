@@ -17,33 +17,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.amqp.actions;
 
+import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.exception.CommonException;
-import java.util.List;
-import javax.inject.Singleton;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.amqp.connection.AmqpSender;
+import insideworld.engine.threads.ThreadPool;
+import java.util.Map;
+import java.util.concurrent.Future;
 
-@Singleton
-public class TagPreExecute implements PreExecute<ReceiveParameters> {
+public class AmqpExecuteFacade {
 
-    private final List<TagHandler> handlers;
+    private final ThreadPool pool;
+    private final ActionExecutor<String> executor;
+    private final AmqpSender amqpSender;
 
-    public TagPreExecute(final List<TagHandler> handlers) {
-        this.handlers = handlers;
+    public AmqpExecuteFacade(final ThreadPool pool,
+                             final ActionExecutor<String> executor,
+                             final AmqpSender amqpSender) {
+
+        this.pool = pool;
+        this.executor = executor;
+        this.amqpSender = amqpSender;
     }
 
-
-    @Override
-    public void preExecute(Context context, ReceiveParameters parameter) throws CommonException {
-        for (final TagHandler handler : this.handlers) {
-            handler.perform(context);
-        }
+    public Future<Output> execute(final String action, final Map<String, Object> map) {
+        return this.pool.execute(() -> {
+            final Context context = this.executor.createContext();
+            map.forEach(context::put);
+            return this.executor.execute(action, context);
+        });
     }
 
-    @Override
-    public int order() {
-        return 10_000;
+    public void send(final String action, final Output output) {
+
     }
+
 }

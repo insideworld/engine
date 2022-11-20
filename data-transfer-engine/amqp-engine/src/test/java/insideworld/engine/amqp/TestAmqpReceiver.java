@@ -21,7 +21,7 @@
 //
 //import insideworld.engine.amqp.connection.Connection;
 //import insideworld.engine.amqp.receiver.AbstractAmqpReceiver;
-//import insideworld.engine.datatransfer.endpoint.send.Sender;
+//import insideworld.engine.datatransfer.endpoint.actions.Sender;
 //import javax.inject.Singleton;
 //
 //@Singleton

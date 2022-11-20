@@ -25,4 +25,8 @@ public interface Message {
 
     Map<String, Object>[] getArray();
 
+    String getSubject();
+
+    Map<String, Object> getProperties();
+
 }

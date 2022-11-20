@@ -19,15 +19,13 @@
 
 package insideworld.engine.amqp.connection;
 
-import io.vertx.mutiny.amqp.AmqpConnection;
-
 /**
  * Interface to create connection to AMQP server.
  * @since 0.14.0
  */
 public interface Connection {
 
-    void createReceiver(String name, Receiver receiver);
+    void createReceiver(String name, AmqpReceiver amqpReceiver);
 
-    Sender createSender(String name);
+    AmqpSender createSender(String name);
 }

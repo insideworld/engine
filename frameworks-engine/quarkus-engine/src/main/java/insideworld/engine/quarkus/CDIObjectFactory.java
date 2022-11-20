@@ -53,7 +53,12 @@ public class CDIObjectFactory implements ObjectFactory {
 
     @Override
     public <T> T createObject(final TypeLiteral<T> type, final Object... args) {
-        return CDI.current().select(type).get();
+        final Instance<T> select = CDI.current().select(type);
+        if (select.isResolvable()) {
+            return select.get();
+        } else {
+            return this.createNative(type.getRawType(), args);
+        }
     }
 
     @Override

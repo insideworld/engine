@@ -17,32 +17,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.vertex;
+package insideworld.engine.web;
 
-import insideworld.engine.amqp.connection.Sender;
-import insideworld.engine.amqp.connection.message.Message;
-import io.vertx.core.json.JsonArray;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
-import io.vertx.mutiny.amqp.AmqpSender;
-import java.util.List;
-import javax.enterprise.context.Dependent;
+import javax.ws.rs.core.HttpHeaders;
 
-@Dependent
-public class VertexSender implements Sender {
-
-    private AmqpSender sender;
-
-    public VertexSender init(final String channel, final AmqpConnection connection) {
-        this.sender = connection.createSenderAndAwait(channel);
-        return this;
-    }
-
-    @Override
-    public void send(final Message message) {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        builder.withJsonArrayAsBody(new JsonArray(List.of(message.getArray())));
-        this.sender.send(builder.build());
-    }
+public record ReceiveParametersImpl(HttpHeaders headers) implements ReceiveParameters {
 }

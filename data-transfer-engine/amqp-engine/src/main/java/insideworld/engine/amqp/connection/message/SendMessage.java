@@ -24,16 +24,29 @@ import java.util.Map;
 public class SendMessage implements Message {
 
     private final Map<String, Object>[] maps;
+    private final Map<String, Object> properties;
+    private final String subject;
 
-    public SendMessage(final Map<String, Object>[] maps) {
+    public SendMessage(final Map<String, Object>[] maps,
+                       final Map<String, Object> properties,
+                       final String subject) {
         this.maps = maps;
+        this.properties = properties;
+        this.subject = subject;
     }
-
 
     @Override
     public Map<String, Object>[] getArray() {
         return this.maps;
     }
 
+    @Override
+    public String getSubject() {
+        return this.subject;
+    }
 
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
 }

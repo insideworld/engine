@@ -19,36 +19,39 @@
 
 package insideworld.engine.amqp.vertex;
 
-import com.fasterxml.jackson.databind.ObjectReader;
-import insideworld.engine.amqp.connection.Receiver;
+import insideworld.engine.amqp.connection.AmqpReceiver;
 import insideworld.engine.amqp.connection.message.Message;
 import insideworld.engine.injection.ObjectFactory;
+import io.vertx.core.Vertx;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;
-import java.util.function.Consumer;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
 
 public class VertexReceiver {
     private final ObjectFactory factory;
+    private final Vertx vertx;
     private final AmqpConnection connection;
 
     public VertexReceiver(
         final ObjectFactory factory,
+        final Vertx vertx,
         final AmqpConnection connection
     ) {
         this.factory = factory;
+        this.vertx = vertx;
         this.connection = connection;
     }
 
-    public VertexReceiver init(final String channel, final Receiver receiver) {
+    public VertexReceiver init(final String channel, final AmqpReceiver amqpReceiver) {
         this.connection
             .createReceiverAndAwait(channel)
-            .handler(message -> receiver.receive(this.convert(message)));
+            .handler(message ->
+                this.vertx.executeBlocking(
+                    promise -> amqpReceiver.receive(this.convert(message))
+                )
+            );
         return this;
     }
-
 
     private Message convert(final AmqpMessage message) {
         return this.factory.createObject(VertexMessage.class, message);
