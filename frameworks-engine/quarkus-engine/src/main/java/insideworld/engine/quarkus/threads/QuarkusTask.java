@@ -19,17 +19,18 @@
 
 package insideworld.engine.quarkus.threads;
 
+import com.google.common.collect.Lists;
 import insideworld.engine.threads.Task;
+import insideworld.engine.threads.TaskException;
 import io.smallrye.mutiny.Uni;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 public class QuarkusTask<T> implements Task<T> {
 
-    private final Uni<T> uni;
+    private Uni<T> uni;
 
-    public QuarkusTask(final Uni<T> uni) {
-        this.uni = uni;
-    }
+    private final Collection<Throwable> throwables = Lists.newLinkedList();
 
     @Override
     public T result() {
@@ -41,7 +42,16 @@ public class QuarkusTask<T> implements Task<T> {
         this.uni.subscribe().with(callback);
     }
 
-    public Uni<T> getUni() {
-        return this.uni;
+    @Override
+    public final Collection<Throwable> exceptions() {
+        return this.throwables;
+    }
+
+    public void addThrowable(Throwable throwable) {
+        this.throwables.add(throwable);
+    }
+
+    public void setUni(final Uni<T> puni) {
+        this.uni = puni;
     }
 }

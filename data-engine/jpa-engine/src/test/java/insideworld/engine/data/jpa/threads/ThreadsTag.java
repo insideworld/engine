@@ -17,12 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.data.jpa.threads;
 
-import javax.ws.rs.core.HttpHeaders;
+import insideworld.engine.actions.keeper.tags.SingleTag;
 
-public interface ReceiveParameters {
+class ThreadsTag {
 
-    HttpHeaders headers();
+    public static final SingleTag<Object> EXCEPTION =
+        new SingleTag<>("insideworld.engine.data.jpa.threads.ThreadsTag.EXCEPTION");
 
+    public static final SingleTag<Object> ANOTHER_EXCEPTION =
+        new SingleTag<>("insideworld.engine.data.jpa.threads.ThreadsTag.ANOTHER_EXCEPTION");
+
+    private ThreadsTag() {
+
+    }
 }

@@ -20,19 +20,18 @@
 package insideworld.engine.startup;
 
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.exception.Diagnostic;
+import java.util.Collection;
+import java.util.Collections;
 
 public class StartUpException extends CommonException {
 
     public StartUpException(final Throwable exception, final String message, final Object... args) {
-        super(exception, message, args);
+        super(Collections.emptyList(), exception, message, args);
     }
 
     public StartUpException(final Throwable exception) {
-        super(exception);
+        super(Collections.emptyList(), exception);
     }
 
-    @Override
-    protected String module() {
-        return "common-engine";
-    }
 }

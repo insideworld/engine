@@ -20,56 +20,44 @@
 package insideworld.engine.actions;
 
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.exception.Diagnostic;
+import java.util.Collections;
 
 /**
  * Action exception.
  * Should be thrown at action processing.
+ *
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.OnlyOneConstructorShouldDoInitialization")
 public class ActionException extends CommonException {
 
     /**
-     * Default exception message.
-     */
-    private static final String EXCEPTION_MESSAGE =
-        "Exception during process action %s with reason %s";
-
-    /**
      * Constructor to create an exception with message.
-     * @param action Action class.
+     *
+     * @param action Action instance.
      * @param message Message.
      * @param args String format arguments.
      */
-    public ActionException(
-        final Class<? extends Action> action, final String message, final Object... args) {
+    public ActionException(final Action action, final String message, final Object... args) {
         super(
-            String.format(
-                ActionException.EXCEPTION_MESSAGE,
-                action.getName(),
-                message
-            ),
+            Collections.singleton(new Diagnostic("action", action.key())),
+            message,
             args
         );
     }
 
     /**
      * Constructor to create an exception with message.
+     *
+     * @param action Action instance.
      * @param exception Exception.
-     * @param action Action class.
      */
-    public ActionException(
-        final Throwable exception, final Class<? extends Action> action) {
+    public ActionException(final Action action, final Throwable exception) {
         super(
-            exception,
-            ActionException.EXCEPTION_MESSAGE,
-            action.getName(),
-            "without description"
+            Collections.singleton(new Diagnostic("action", action.key())),
+            exception
         );
-    }
-
-    @Override
-    protected final String module() {
-        return "action-engine";
     }
 
 }

@@ -17,9 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.quarkus.thread;
 
-import javax.ws.rs.core.HttpHeaders;
+import insideworld.engine.exception.CommonException;
 
-public record ReceiveParametersImpl(HttpHeaders headers) implements ReceiveParameters {
-}
+//public class ThreadTestException extends CommonException {
+//
+//    public ThreadTestException(String message) {
+//        super(message);
+//    }
+//
+//    @Override
+//    protected String module() {
+//        return "quarkus-engine-threads-test";
+//    }
+//}

@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Linked list implementation of Table class.
+ *
  * @since 0.1.0
  */
 public abstract class ListTable implements Table {
@@ -45,6 +46,7 @@ public abstract class ListTable implements Table {
 
     /**
      * Default constructor.
+     *
      * @param factory Object factory.
      */
     @Inject
@@ -90,6 +92,7 @@ public abstract class ListTable implements Table {
 
     /**
      * Record type which need to use for create a new record.
+     *
      * @return Type of record.
      */
     protected abstract Class<? extends Record> recordType();

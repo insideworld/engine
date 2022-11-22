@@ -86,7 +86,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
     public final void process(final Context context, final Output output)
         throws LinkException, StorageException {
         if (this.single == null && this.multiple == null) {
-            throw new LinkException(this.getClass(), "Link was not init");
+            throw new LinkException(this, "Link was not init");
         }
         if (this.single != null && context.contains(this.single.getLeft())) {
             context.put(
@@ -115,7 +115,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
     public ReadEntityLink<T> setTag(final SingleTag<Long> read, final EntityTag<T> put)
         throws LinkException {
         if (read == null || put == null) {
-            throw new LinkException(this.getClass(), "One or both arguments is null");
+            throw new LinkException(this, "One or both arguments is null");
         }
         this.single = Pair.of(read, put);
         return this;
@@ -132,7 +132,7 @@ public class ReadEntityLink<T extends Entity> implements Link {
     public ReadEntityLink<T> setTags(final MultipleTag<Long> read, final EntitiesTag<T> put)
         throws LinkException {
         if (read == null || put == null) {
-            throw new LinkException(this.getClass(), "One or both arguments is null");
+            throw new LinkException(this, "One or both arguments is null");
         }
         this.multiple = Pair.of(read, put);
         return this;

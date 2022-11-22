@@ -81,7 +81,6 @@ public abstract class MapRecord implements Record {
         return tag != null && this.map.containsKey(tag.getTag());
     }
 
-    @JsonAnyGetter
     @Override
     public final Map<String, ? super Object> values() {
         return this.map;

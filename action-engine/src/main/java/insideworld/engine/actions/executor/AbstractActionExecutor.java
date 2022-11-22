@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,7 +103,7 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
         } catch (final ActionException exp) {
             throw exp;
         } catch (final Exception exp) {
-            throw new ActionException(exp, action.getClass());
+            throw new ActionException(action, exp);
         }
         return output;
     }
@@ -137,10 +136,17 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
      *
      * @param parameter Action key.
      * @return Action bound to the key.
+     * @throws ActionException Can't find action.
      */
-    private Action provide(final T parameter) {
+    private Action provide(final T parameter) throws ActionException {
         final var action = this.actions.get(parameter);
-        Validate.notNull(action, "Can't find an action with parameter: %s", parameter);
+        if (action == null) {
+            throw new ActionException(
+                new NotFoundAction(),
+                "Can't find an action with parameter: %s",
+                parameter
+            );
+        }
         return action;
     }
 }

@@ -24,7 +24,7 @@
   <parent>
     <artifactId>data-engine</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>0.13.0</version>
+    <version>0.14.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -47,22 +47,6 @@
       <artifactId>jakarta.persistence-api</artifactId>
       <version>${jakarta.persistence-api.version}</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.hibernate</groupId>-->
-<!--      <artifactId>hibernate-core</artifactId>-->
-<!--      <version>${hibernate-core.version}</version>-->
-<!--      <exclusions>-->
-<!--        <exclusion>-->
-<!--          <groupId>javax.persistence</groupId>-->
-<!--          <artifactId>javax.persistence-api</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <groupId>org.jboss.spec.javax.transaction</groupId>-->
-<!--          <artifactId>jboss-transaction-api_1.2_spec</artifactId>-->
-<!--        </exclusion>-->
-<!--      </exclusions>-->
-<!--      <scope>compile</scope>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-orm-panache</artifactId>

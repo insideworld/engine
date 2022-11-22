@@ -37,7 +37,7 @@ class ExceptionAction implements Action {
     public final void execute(final Context context, final Output output) throws ActionException {
         switch (context.get(TestExecutorTags.EXCEPTION)) {
             case 1:
-                throw new ActionException(this.getClass(), "Exception!");
+                throw new ActionException(this, "Exception!");
             case 2:
                 throw new IllegalArgumentException("Unhandled");
             default:

@@ -108,7 +108,7 @@ public class LinksBuilderFactory implements LinksBuilder {
         } catch (final LinkException exp) {
             throw exp;
         } catch (final Exception exp) {
-            throw new LinkException(exp, link.getClass());
+            throw new LinkException(link, exp);
         }
     }
 }

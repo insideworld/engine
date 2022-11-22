@@ -20,24 +20,23 @@
 package insideworld.engine.actions.chain.exception;
 
 import insideworld.engine.exception.CommonException;
+import java.util.Collections;
 
 /**
  * Test exception for wrapper.
+ *
  * @since 0.14.0
  */
 public class TestCommonException extends CommonException {
 
     /**
      * Default.
+     *
      * @param message Message.
      * @param args Args.
      */
     public TestCommonException(final String message, final Object... args) {
-        super(message, args);
+        super(Collections.emptyList(), message, args);
     }
 
-    @Override
-    protected final String module() {
-        return "action-engine-test";
-    }
 }

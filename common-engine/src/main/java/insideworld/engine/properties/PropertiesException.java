@@ -21,21 +21,16 @@ package insideworld.engine.properties;
 
 
 import insideworld.engine.exception.CommonException;
+import java.util.Collections;
 
 public class PropertiesException extends CommonException {
 
-
     public PropertiesException(final String message) {
-        super(message);
+        super(Collections.emptyList(), message);
     }
 
     public PropertiesException(final String message, final Exception exp) {
-        super(message, exp);
+        super(Collections.emptyList(), message, exp);
     }
 
-
-    @Override
-    protected String module() {
-        return "common-engine";
-    }
 }

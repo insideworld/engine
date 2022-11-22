@@ -20,6 +20,9 @@
 package insideworld.engine.actions.chain;
 
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.exception.Diagnostic;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Exception during link execute.
@@ -29,26 +32,36 @@ public class LinkException extends CommonException {
 
     /**
      * Process with link instance.
-     * @param exception Exception.
      * @param link Link type.
+     * @param exception Exception.
      */
-    public LinkException(final Throwable exception, final Class<? extends Link> link) {
-        super(exception, "Exception in link %s", link.getName());
+    public LinkException(final Link link, final Throwable exception) {
+        super(
+            LinkException.diagnostic(link),
+            exception
+        );
     }
 
     /**
      * Process with link instance.
-     * @param link Exception.
+     * @param link Link instance.
      * @param message Message with string format.
      * @param args String format args.
      */
-    public LinkException(
-        final Class<? extends Link> link, final String message, final Object... args) {
-        super(String.format("Exception in link %s with reason %s", link.getName(), message), args);
+    public LinkException(final Link link, final String message, final Object... args) {
+        super(
+            LinkException.diagnostic(link),
+            message,
+            args
+        );
     }
 
-    @Override
-    protected final String module() {
-        return "action-engine-chain";
+    /**
+     * Get diagnostic information about failed link.
+     * @param link Link.
+     * @return Diagnostic info.
+     */
+    private static Collection<Diagnostic> diagnostic(final Link link) {
+        return Collections.singleton(new Diagnostic("link", link.getClass().getName()));
     }
 }

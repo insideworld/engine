@@ -103,9 +103,6 @@ class TestLinkException {
                 Matchers.allOf(
                     ExceptionMatchers.classMatcher(1, ActionException.class),
                     ExceptionMatchers.classMatcher(2, LinkException.class),
-                    ExceptionMatchers.messageMatcher(
-                        2, Matchers.containsString("Exception in link")
-                    ),
                     ExceptionMatchers.classMatcher(3, IllegalArgumentException.class),
                     ExceptionMatchers.messageMatcher(
                         3, Matchers.equalTo("Exception at link init")

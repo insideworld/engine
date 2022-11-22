@@ -43,8 +43,8 @@ public class LinkWithInitException implements Link {
      */
     public final void init() throws LinkException {
         throw new LinkException(
-            new IllegalArgumentException("Exception at link init"),
-            this.getClass()
+            this,
+            new IllegalArgumentException("Exception at link init")
         );
     }
 }

@@ -22,18 +22,15 @@ package insideworld.engine.web;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import insideworld.engine.actions.executor.ActionExecutor;
+import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
 import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.threads.ThreadPool;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
-import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -43,23 +40,23 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 
+@Path("/actions")
 @Singleton
 public class RestActionReceiver {
 
     private final ObjectReader reader;
 
-    private final;
-
     private final ObjectFactory factory;
+    private final ActionReceiver<Map<String, Object>> receiver;
 
     @Inject
     public RestActionReceiver(final ObjectFactory factory,
-                              final ActionR eceiver<ReceiveParameters> receiver) {
+                              final ActionReceiver<Map<String, Object>> receiver) {
         this.factory = factory;
+        this.receiver = receiver;
         this.reader = new ObjectMapper()
             .readerFor(Map.class)
             .with(DeserializationFeature.USE_LONG_FOR_INTS);
-        this.receiver = this.factory.createObject(new TypeLiteral<>() { });
     }
 
     @POST
@@ -72,8 +69,9 @@ public class RestActionReceiver {
         final InputStream rawbody
     ) throws IOException, CommonException {
         final var map = (Map<String, Object>) this.reader.readValue(rawbody);
-        final var parameter = this.factory.createObject(ReceiveParameters.class, headers);
-        return this.receiver.executeSingle(action, parameter, map);
+        return this.receiver.execute(
+            action, DefaultExecuteProfile.class, Collections.singleton(map)
+        ).result();
     }
 
 }

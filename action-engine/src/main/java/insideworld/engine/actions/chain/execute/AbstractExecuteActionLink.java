@@ -99,13 +99,13 @@ public abstract class AbstractExecuteActionLink<T> implements Link, ExecuteActio
         }
         if (this.pres.isEmpty() || this.pres.stream().allMatch(pre -> pre.apply(parent, child))) {
             if (this.key == null) {
-                throw new LinkException(this.getClass(), "Action is not set!");
+                throw new LinkException(this, "Action is not set!");
             }
             final Output results;
             try {
                 results = this.executor.execute(this.key, child);
             } catch (final ActionException exp) {
-                throw new LinkException(exp, this.getClass());
+                throw new LinkException(this, exp);
             }
             if (this.posts.isEmpty()) {
                 output.merge(results);

@@ -69,7 +69,7 @@ public abstract class AbstractChainAction implements Action {
                 } catch (final LinkException exp) {
                     throw exp;
                 } catch (final Exception exp) {
-                    throw new LinkException(exp, link.getClass());
+                    throw new LinkException(link, exp);
                 }
             }
         }
@@ -80,7 +80,7 @@ public abstract class AbstractChainAction implements Action {
         if (this.links == null) {
             this.links = this.attachLinks(this.builder);
         } else {
-            throw new ActionException(this.getClass(), "Chain action already init!");
+            throw new ActionException(this, "Chain action already init!");
         }
     }
 

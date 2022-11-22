@@ -57,6 +57,11 @@ public interface Table extends Iterable<Record> {
 
     /**
      * Return collection of records.
+     *
+     * Don't use it as getter because jackson try to parse it as bean with fields.
+     * If they don't use
+     *
+     *
      * @return Collection of records.
      */
     Collection<Record> getRecords();

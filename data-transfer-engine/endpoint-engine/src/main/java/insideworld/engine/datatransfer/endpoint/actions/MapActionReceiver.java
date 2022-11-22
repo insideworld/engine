@@ -17,23 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.quarkus.thread;
+package insideworld.engine.datatransfer.endpoint.actions;
 
-import insideworld.engine.threads.AbstractThreadPool;
-import insideworld.engine.threads.ThreadService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import insideworld.engine.actions.executor.ActionExecutor;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.threads.Task;
+import java.util.Map;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-//@Singleton
-//public class TestThreadPool extends AbstractThreadPool {
-//
-//    public TestThreadPool(final ThreadService service) {
-//        super(service);
-//    }
-//
-//    @Override
-//    protected ExecutorService createPool() {
-//        return Executors.newFixedThreadPool(10);
-//    }
-//}
+@Singleton
+public class MapActionReceiver extends AbstractActionReceiver<Map<String, Object>> {
+
+    private final ActionExecutor<String> executor;
+
+    @Inject
+    public MapActionReceiver(final ActionExecutor<String> executor,
+                             final OutputTask task) {
+        super(executor, task);
+        this.executor = executor;
+    }
+
+    @Override
+    protected Context convert(final Map<String, Object> input) {
+        final Context context = this.executor.createContext();
+        input.forEach(context::put);
+        return context;
+    }
+}

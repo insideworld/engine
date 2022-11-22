@@ -32,6 +32,7 @@ import javax.inject.Singleton;
 /**
  * Startup class.
  * Using to fill all actions in the system.
+ *
  * @since 0.14.0
  */
 @Singleton
@@ -49,6 +50,7 @@ public class ActionsInit implements OnStartUp {
 
     /**
      * Default constructor.
+     *
      * @param actions List of actions.
      * @param changers List of changers.
      */
@@ -68,7 +70,7 @@ public class ActionsInit implements OnStartUp {
             } catch (final ActionException exp) {
                 throw new StartUpException(exp);
             } catch (final Exception exp) {
-                throw new StartUpException(new ActionException(exp, action.getClass()));
+                throw new StartUpException(new ActionException(action, exp));
             }
         }
         for (final ActionChanger changer : this.changers) {

@@ -19,6 +19,8 @@
 
 package insideworld.engine.actions.keeper.output;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import insideworld.engine.actions.keeper.ListTable;
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.injection.ObjectFactory;
@@ -28,13 +30,18 @@ import javax.inject.Inject;
 
 /**
  * Implementation of Output based in ListTable.
+ * Using iterable serializer because Jackson by default parse it as a bean because records fields
+ * is property (has getter).
+ *
  * @since 0.0.1
  */
 @Dependent
+@JsonSerialize(as = Iterable.class)
 public final class OutputTable extends ListTable implements Output, Serializable {
 
     /**
      * Default constructor.
+     *
      * @param factory Object factory.
      */
     @Inject

@@ -19,7 +19,11 @@
 
 package insideworld.engine.entities;
 
+import insideworld.engine.entities.tags.StorageTags;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.exception.Diagnostic;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Storage exception.
@@ -32,9 +36,13 @@ public class StorageException extends CommonException {
      * @param message Error message.
      * @param type Entity type.
      */
-    public StorageException(
-        final String message, final Class<? extends Entity> type) {
-        super("%s for entity %s", message, type.getName());
+    public StorageException(final String message, final Class<? extends Entity> type) {
+        super(
+            Collections.singleton(new Diagnostic("entity", type.getName())),
+            "%s for entity %s",
+            message,
+            type.getName()
+        );
     }
 
     /**
@@ -45,7 +53,16 @@ public class StorageException extends CommonException {
      */
     public StorageException(
         final String message, final Class<? extends Entity> type, final Long id) {
-        super("%s for entity %s with id %d", message, type.getName(), id);
+        super(
+            List.of(
+                new Diagnostic("entity", type.getName()),
+                new Diagnostic(StorageTags.ID.getTag(), id)
+            ),
+            "%s for entity %s with id %d",
+            message,
+            type.getName(),
+            id
+        );
     }
 
     /**
@@ -55,11 +72,12 @@ public class StorageException extends CommonException {
      * @param args String format arguments.
      */
     public StorageException(final Throwable exp, final String message, final Object... args) {
-        super(exp, message, args);
+        super(
+            Collections.emptyList(),
+            exp,
+            message,
+            args
+        );
     }
 
-    @Override
-    protected final String module() {
-        return "entities-engine";
-    }
 }

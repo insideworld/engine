@@ -68,7 +68,7 @@ public class ImportEntityLink implements Link {
         throws LinkException, StorageException {
         if (this.tag == null || this.type == null) {
             throw new LinkException(
-                this.getClass(), "Link is not init: tag %s type %s", this.tag, this.type
+                this, "Link is not init: tag %s type %s", this.tag, this.type
             );
         }
         final Entity entity = this.converter.convert(context, this.type);

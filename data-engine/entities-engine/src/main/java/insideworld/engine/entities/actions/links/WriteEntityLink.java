@@ -81,7 +81,7 @@ public class WriteEntityLink<T extends Entity> implements Link {
     public final void process(final Context context, final Output output)
         throws LinkException, StorageException {
         if (this.single == null && this.multiple == null) {
-            throw new LinkException(this.getClass(), "Link was not init");
+            throw new LinkException(this, "Link was not init");
         }
         context.put(
             this.single, this.writeSingle(context.get(this.single), output), true

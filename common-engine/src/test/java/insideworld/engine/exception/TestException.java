@@ -20,6 +20,8 @@
 package insideworld.engine.exception;
 
 import io.quarkus.test.junit.QuarkusTest;
+import java.util.Collection;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -27,8 +29,25 @@ public class TestException {
 
     @Test
     public void test() {
-//        final CommonException qwe = new CommonException("Qwe");
-//        assert qwe != null;
+        try {
+            this.causeOne();
+        } catch (OneException e) {
+            final Collection<Index> indexes = e.getIndexes();
+            System.out.println("qwe");
+//            throw new RuntimeException(e);
+        }
+    }
+
+    private void causeOne() throws OneException {
+        try {
+            this.causeTwo();
+        } catch (TwoException exp) {
+            throw new OneException(exp);
+        }
+    }
+
+    private void causeTwo() throws TwoException {
+        throw new TwoException(new IllegalArgumentException("Some"));
     }
 
 }

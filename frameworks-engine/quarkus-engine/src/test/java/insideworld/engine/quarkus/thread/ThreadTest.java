@@ -20,13 +20,19 @@
 package insideworld.engine.quarkus.thread;
 
 import com.google.common.collect.Lists;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import insideworld.engine.quarkus.threads.QuarkusTaskBuilder;
+import insideworld.engine.threads.Task;
+import insideworld.engine.threads.TaskException;
 import insideworld.engine.threads.ThreadPool;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
+import io.smallrye.mutiny.unchecked.Unchecked;
 import io.vertx.mutiny.core.Vertx;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +41,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import javax.enterprise.util.TypeLiteral;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -43,35 +52,32 @@ public class ThreadTest {
 
     private final ObjectFactory factory;
 
-    public ThreadTest(final ObjectFactory factory) {
+    private final AtomicInteger integer = new AtomicInteger();
 
+    public ThreadTest(final ObjectFactory factory) {
         this.factory = factory;
     }
 
-    private volatile AtomicInteger integer = new AtomicInteger();
+//    @Test
+//    final void testTaskException() throws CommonException {
+//        final QuarkusTaskBuilder<UUID, UUID> builder =
+//            this.factory.createObject(new TypeLiteral<>() { });
+//        builder.add(() -> { throw new ThreadTestException("Some exception"); });
+//        builder.combine(uuid -> uuid.stream().findAny().get(), UUID.class);
+//        final UUID result = builder.build().result();
+////        MatcherAssert.assertThat(
+////            "Should be exception",
+////            () -> builder.build().result(),
+////            ExceptionMatchers.catchException(TaskException.class)
+////        );
+//        System.out.println();
+//    }
 
     @Test
-    final void test() throws ExecutionException, InterruptedException {
-
-//        Collection<Future<String>> results = Lists.newArrayListWithCapacity(100);
-//        for (int i = 0; i < 100; i++) {
-//            final Future<String> execute = this.pool.execute(() -> {
-//                Thread.sleep(1000);
-//                System.out.println(Thread.currentThread().getName() + " " + this.integer.incrementAndGet());
-//                return "Hello";
-//            });
-//            results.add(execute);
-//        }
-//        System.out.println(Thread.currentThread().getName());
-//        for (Future<String> result : results) {
-//            System.out.println(result.get());
-//        }
-    }
-
-    @Test
-    final void testTaskBuilder() {
+    final void testTaskBuilder() throws CommonException {
         final QuarkusTaskBuilder<UUID, List<UUID>> builder =
-            this.factory.createObject(new TypeLiteral<>() { } );
+            this.factory.createObject(new TypeLiteral<>() {
+            });
         for (int i = 0; i < 1000; i++) {
             builder.add(this::getRandomUUID);
         }
@@ -85,40 +91,6 @@ public class ThreadTest {
         System.out.println(build);
     }
 
-    @Test
-    final void testUni() {
-        Uni.createFrom().item(this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool());
-        final ExecutorService service = Executors.newFixedThreadPool(10);
-        Uni.combine().all().unis(
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool()),
-            Uni.createFrom().item( this::getRandomUUID).runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
-
-        ).combinedWith(qwe -> {
-            System.out.println(Thread.currentThread() + " " + "combine");
-            List<UUID> strings = Lists.newArrayListWithCapacity(5);
-            for (Object o : qwe) {
-                strings.add((UUID) o);
-            }
-            return strings;
-        }).subscribe().with(list ->
-        {
-            System.out.println(Thread.currentThread() + " " + "subscribe");
-            for (UUID s : list) {
-                System.out.println(s);
-            }
-        });
-        System.out.println(Thread.currentThread() + " " + "Current");
-        System.out.println("qwe");
-    }
 
     private UUID getRandomUUID() {
         System.out.println(Thread.currentThread() + " " + "random");

@@ -19,6 +19,7 @@
 
 package insideworld.engine.actions.keeper;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import insideworld.engine.actions.keeper.tags.Tag;
 import java.io.Serializable;
 import java.util.Map;
@@ -113,6 +114,7 @@ public interface Record extends Serializable {
      * Map representation of record.
      * @return Map with all values.
      */
+    @JsonAnyGetter
     Map<String, ? super Object> values();
 
     /**

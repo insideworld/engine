@@ -38,7 +38,7 @@ public class InitActionExceptionAction implements Action {
 
     @Override
     public final void init() throws CommonException {
-        throw new ActionException(this.getClass(), "Handled");
+        throw new ActionException(this, "Handled");
     }
 
     @Override

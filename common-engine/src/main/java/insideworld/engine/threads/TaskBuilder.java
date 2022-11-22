@@ -25,9 +25,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface TaskBuilder<T, O> {
-    TaskBuilder<T, O> add(Supplier<T> supplier);
+    TaskBuilder<T, O> add(TaskPredicate<T> supplier);
 
     TaskBuilder<T, O> combine(Function<List<T>, O> function, Class<T> type);
+
+    TaskBuilder<T, O> exception(final Function<? super Throwable, ? extends T> exception);
 
     TaskBuilder<T, O> concurrencyLevel(int level);
 

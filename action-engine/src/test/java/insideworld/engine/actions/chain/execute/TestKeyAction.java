@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Execute action by specific key without additional arguments.
  * See test method comments.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -50,6 +51,7 @@ class TestKeyAction {
 
     /**
      * Default constructor.
+     *
      * @param executor Class action executor.
      */
     @Inject
@@ -61,6 +63,7 @@ class TestKeyAction {
      * TC: Execute action from chain action and add only action parameter using class key.
      * ER: In child action should add to output UUID from parent context and add one more record
      * to test merge.
+     *
      * @throws CommonException Exception.
      */
     @Test
@@ -72,6 +75,7 @@ class TestKeyAction {
      * TC: Execute action from chain action and add only action parameter using string key.
      * ER: In child action should add to output UUID from parent context and add one more record
      * to test merge.
+     *
      * @throws CommonException Exception.
      */
     @Test
@@ -87,7 +91,7 @@ class TestKeyAction {
     final void testNull() {
         final var exception = Assertions.assertThrows(
             ActionException.class,
-            () ->  this.executeAction(ParentNullAction.class),
+            () -> this.executeAction(ParentNullAction.class),
             "Expected exception at init"
         );
         MatcherAssert.assertThat(
@@ -105,22 +109,24 @@ class TestKeyAction {
      */
     @Test
     final void testException() {
-        final var exception = Assertions.assertThrows(
-            ActionException.class,
-            () ->  this.executeAction(ParentExceptionAction.class),
-            "Expected exception at init"
-        );
         MatcherAssert.assertThat(
             "Exception message wrong",
-            exception,
-            ExceptionMatchers.messageMatcher(
-                3, Matchers.containsString("Unhandled")
+            () -> this.executeAction(ParentExceptionAction.class),
+            ExceptionMatchers.catchException(
+                ActionException.class,
+                Matchers.allOf(
+                    ExceptionMatchers.messageMatcher(
+                        3, Matchers.containsString("Unhandled")
+                    ),
+                    Matchers.hasProperty("indexes", Matchers.iterableWithSize(5))
+                )
             )
         );
     }
 
     /**
      * Just execute action and make compare by UUID and Additional tag.
+     *
      * @param action Test action to execute.
      * @throws ActionException Exception.
      */

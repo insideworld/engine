@@ -19,9 +19,13 @@
 
 package insideworld.engine.threads;
 
+import insideworld.engine.exception.CommonException;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 public interface Task<T> {
+
+    Collection<Throwable> exceptions();
 
     T result();
 

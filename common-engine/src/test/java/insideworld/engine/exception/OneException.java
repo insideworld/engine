@@ -17,16 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint;
+package insideworld.engine.exception;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.exception.CommonException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
-public interface PreExecute<T> {
+public class OneException extends CommonException {
 
-    void preExecute(Context context, T parameter) throws CommonException;
-
-    int order();
+    public OneException(final CommonException exception) {
+        super(
+            List.of(
+                new Diagnostic("One", "Some exception in one")
+            ),
+            exception
+        );
+    }
 
 }

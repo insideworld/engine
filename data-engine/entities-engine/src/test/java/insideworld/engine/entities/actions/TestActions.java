@@ -98,7 +98,12 @@ class TestActions {
             this.executor.execute(ReadMockAction.class, context),
             Matchers.allOf(
                 Matchers.iterableWithSize(3),
-                Matchers.hasItem(KeeperMatchers.match(StorageTags.ID, Matchers.is(entity.getId())))
+                Matchers.hasItem(
+                    Matchers.allOf(
+                        KeeperMatchers.match(StorageTags.ID, Matchers.is(entity.getId())),
+                        KeeperMatchers.match(MockTags.STRPRIM, Matchers.is("7331"))
+                    )
+                )
             )
         );
     }

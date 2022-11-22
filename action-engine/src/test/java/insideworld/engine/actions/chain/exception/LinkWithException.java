@@ -37,7 +37,7 @@ public class LinkWithException implements Link {
     public final void process(final Context context, final Output output) throws CommonException {
         switch (context.get(TestChainTags.EXCEPTION)) {
             case 1:
-                throw new LinkException(this.getClass(), "Exception!");
+                throw new LinkException(this, "Exception!");
             case 2:
                 throw new IllegalArgumentException("Unhandled");
             case 3:
