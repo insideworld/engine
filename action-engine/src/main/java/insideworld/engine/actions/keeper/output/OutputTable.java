@@ -19,7 +19,6 @@
 
 package insideworld.engine.actions.keeper.output;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import insideworld.engine.actions.keeper.ListTable;
 import insideworld.engine.actions.keeper.Record;

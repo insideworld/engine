@@ -19,15 +19,16 @@
 
 package insideworld.engine.amqp.connection.message;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class SendMessage implements Message {
 
-    private final Map<String, Object>[] maps;
+    private final Collection<Map<String, Object>> maps;
     private final Map<String, Object> properties;
     private final String subject;
 
-    public SendMessage(final Map<String, Object>[] maps,
+    public SendMessage(final Collection<Map<String, Object>> maps,
                        final Map<String, Object> properties,
                        final String subject) {
         this.maps = maps;
@@ -36,7 +37,7 @@ public class SendMessage implements Message {
     }
 
     @Override
-    public Map<String, Object>[] getArray() {
+    public Collection<Map<String, Object>> getArray() {
         return this.maps;
     }
 

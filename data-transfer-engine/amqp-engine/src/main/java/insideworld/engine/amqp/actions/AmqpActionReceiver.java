@@ -19,57 +19,88 @@
 
 package insideworld.engine.amqp.actions;
 
-import com.google.common.collect.Lists;
-import insideworld.engine.actions.keeper.context.Context;
+import com.google.common.collect.Maps;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.amqp.connection.Connection;
+import insideworld.engine.amqp.actions.tags.AmqpTags;
 import insideworld.engine.amqp.connection.AmqpReceiver;
+import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.message.Message;
+import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.threads.Task;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.function.Consumer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import org.apache.commons.collections4.CollectionUtils;
 
-public class AmqpActionReceiver implements OnStartUp {
+@Singleton
+public class AmqpActionReceiver implements OnStartUp, AmqpReceiver {
+
+    private final static Consumer<Output> EMPTY_CONSUMER = output -> {};
 
     private final Connection connection;
     private final String channel;
-    private final AmqpExecuteFacade executor;
+    private final ActionReceiver<Map<String, Object>> receiver;
+    private final ActionSender sender;
+    private final ObjectFactory factory;
 
+    @Inject
     public AmqpActionReceiver(
         final Connection connection,
         final String channel,
+        final ActionReceiver<Map<String, Object>> receiver,
+        final ActionSender sender,
         final ObjectFactory factory
         ) {
         this.connection = connection;
         this.channel = channel;
-        this.executor = executor;
+        this.receiver = receiver;
+        this.sender = sender;
+        this.factory = factory;
     }
 
     @Override
     public void receive(final Message message) {
-        final Map<String, Object>[] inputs = message.getArray();
-        final Collection<Future<Output>> result = Lists.newArrayListWithCapacity(inputs.length);
-        for (final Map<String, Object> input : inputs) {
-            result.add(this.executor.execute(message.getSubject(), input));
+        final Collection<Map<String, Object>> inputs = message.getArray();
+        final Map<String, Object> properties = message.getProperties();
+        inputs.forEach(input -> input.put(AmqpTags.AMQP_PROPERTIES.getTag(), properties));
+        final Task<Output> task = this.receiver.execute(
+            message.getSubject(),
+            AmqpReceiveProfile.class,
+            inputs
+        );
+        final Consumer<Output> consumer;
+        if (properties.containsKey(AmqpTags.CALLBACK_ACTION.getTag()) && this.sender != null) {
+            consumer = output -> AmqpActionReceiver.callback(properties, output);
+        } else {
+            consumer = AmqpActionReceiver.EMPTY_CONSUMER;
         }
-        for (final Future<Output> future : result) {
-
-        }
+        task.subscribe(consumer);
     }
-
-
 
     @Override
     public void startUp() {
         this.connection.createReceiver(this.channel, this);
     }
 
-
     @Override
     public int order() {
         return 70_000;
+    }
+
+    private static void callback(final Map<String, Object> properties, final Output output) {
+        if (CollectionUtils.isNotEmpty(output.getRecords())) {
+            if (properties.containsKey(AmqpTags.BULK.getTag())) {
+                Collections.singletonMap("bulk", output);
+            } else {
+
+            }
+        }
     }
 
 }

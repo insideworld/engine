@@ -28,7 +28,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>quarkus-web-engine</artifactId>
+  <artifactId>imperative-web-engine</artifactId>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
@@ -39,48 +39,15 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>action-engine</artifactId>
+      <artifactId>web-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>endpoint-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>${javax.ws.rs-api.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-<!--      <groupId>io.quarkus</groupId>-->
-<!--      <artifactId>quarkus-resteasy-mutiny</artifactId>-->
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
-    </dependency>
-
     <!--  Tests  -->
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
       <version>${hamcrest.version}</version>
     </dependency>
-
     <dependency>
       <groupId>insideworld.engine</groupId>
       <artifactId>quarkus-runtime-engine</artifactId>

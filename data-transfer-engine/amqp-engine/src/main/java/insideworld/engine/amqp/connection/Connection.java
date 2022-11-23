@@ -25,7 +25,7 @@ package insideworld.engine.amqp.connection;
  */
 public interface Connection {
 
-    void createReceiver(String name, AmqpReceiver amqpReceiver);
+    void createReceiver(String channel, AmqpReceiver amqpReceiver);
 
-    AmqpSender createSender(String name);
+    AmqpSender createSender(String channel);
 }

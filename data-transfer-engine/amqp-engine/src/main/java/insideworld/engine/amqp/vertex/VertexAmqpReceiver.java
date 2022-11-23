@@ -20,36 +20,30 @@
 package insideworld.engine.amqp.vertex;
 
 import insideworld.engine.amqp.connection.AmqpReceiver;
+import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.message.Message;
 import insideworld.engine.injection.ObjectFactory;
-import io.vertx.core.Vertx;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;
 
 
-public class VertexReceiver {
+public class VertexAmqpReceiver {
     private final ObjectFactory factory;
-    private final Vertx vertx;
-    private final AmqpConnection connection;
 
-    public VertexReceiver(
+    final io.vertx.mutiny.amqp.AmqpReceiver receiver;
+
+    public VertexAmqpReceiver(
         final ObjectFactory factory,
-        final Vertx vertx,
-        final AmqpConnection connection
+        final AmqpConnection connection,
+        final String channel
     ) {
         this.factory = factory;
-        this.vertx = vertx;
-        this.connection = connection;
+        this.receiver = connection.createReceiverAndAwait(channel)
+            .handler(message -> amqpReceiver.receive(this.convert(message)));
     }
 
-    public VertexReceiver init(final String channel, final AmqpReceiver amqpReceiver) {
-        this.connection
-            .createReceiverAndAwait(channel)
-            .handler(message ->
-                this.vertx.executeBlocking(
-                    promise -> amqpReceiver.receive(this.convert(message))
-                )
-            );
+    public VertexAmqpReceiver init(final String channel, final AmqpReceiver amqpReceiver) {
+        final io.vertx.mutiny.amqp.AmqpReceiver receiver =
         return this;
     }
 

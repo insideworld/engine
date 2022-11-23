@@ -19,12 +19,10 @@
 
 package insideworld.engine.web.quarkus.beans;
 
-import com.google.common.collect.ImmutableList;
 import insideworld.engine.datatransfer.endpoint.PreExecute;
 import insideworld.engine.quarkus.AbstractBeans;
-import insideworld.engine.web.TagHandler;
+import insideworld.engine.datatransfer.endpoint.tags.TagHandler;
 import java.util.Collection;
-import java.util.Collections;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.ws.rs.core.HttpHeaders;

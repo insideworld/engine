@@ -19,13 +19,8 @@
 
 package insideworld.engine.actions.executor.profiles;
 
-import insideworld.engine.actions.Action;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.startup.OnStartUp;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,55 +28,23 @@ import javax.inject.Singleton;
 /**
  * Default execute profile.
  * Using by default to execute an action.
- * On start up will create a chain.
  * @since 0.1.0
  */
 @Singleton
-public class DefaultExecuteProfile implements ExecuteProfile, OnStartUp {
-
-    /**
-     * Wrappers collection.
-     */
-    private final List<ExecuteWrapper> executors;
-
-    /**
-     * Collection of PreExecutor.
-     */
-    private ExecuteWrapper first;
+public class DefaultExecuteProfile extends AbstractExecuteProfile {
 
     /**
      * Default constructor.
-     * Sort executors and filter by profile.
-     * @param executors All executors in the system.
+     *
+     * @param executors Collection of all executors in the system.
      */
     @Inject
     public DefaultExecuteProfile(final List<ExecuteWrapper> executors) {
-        this.executors = executors.stream()
-            .filter(executor -> executor.forProfile().contains(DefaultExecuteProfile.class))
-            .sorted(Comparator.comparingInt(ExecuteWrapper::order).reversed())
-            .toList();
+        super(executors);
     }
 
     @Override
-    public final void execute(final Action action, final Context context, final Output output)
-        throws CommonException {
-        this.first.execute(action, context, output);
-    }
-
-    @Override
-    public final void startUp() {
-        final Iterator<ExecuteWrapper> iterator = this.executors.iterator();
-        ExecuteWrapper last = iterator.next();
-        this.first = last;
-        while (iterator.hasNext()) {
-            final ExecuteWrapper next = iterator.next();
-            last.setNext(next);
-            last = next;
-        }
-    }
-
-    @Override
-    public final int order() {
-        return 20_000;
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
+        return Collections.singleton(this.getClass());
     }
 }

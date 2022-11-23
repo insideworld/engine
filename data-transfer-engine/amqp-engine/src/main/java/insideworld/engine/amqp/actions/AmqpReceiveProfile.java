@@ -19,39 +19,37 @@
 
 package insideworld.engine.amqp.actions;
 
-import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.amqp.connection.AmqpSender;
-import insideworld.engine.threads.ThreadPool;
-import java.util.Map;
-import java.util.concurrent.Future;
+import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
+import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
+import java.util.Collection;
+import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class AmqpExecuteFacade {
+/**
+ * Profile which will use for AMQP received messages.
+ * @since 0.14.0
+ */
+@Singleton
+public class AmqpReceiveProfile extends AbstractExecuteProfile {
 
-    private final ThreadPool pool;
-    private final ActionExecutor<String> executor;
-    private final AmqpSender amqpSender;
-
-    public AmqpExecuteFacade(final ThreadPool pool,
-                             final ActionExecutor<String> executor,
-                             final AmqpSender amqpSender) {
-
-        this.pool = pool;
-        this.executor = executor;
-        this.amqpSender = amqpSender;
+    /**
+     * Default constructor.
+     *
+     * @param executors Collection of all executors in the system.
+     */
+    @Inject
+    public AmqpReceiveProfile(final List<ExecuteWrapper> executors) {
+        super(executors);
     }
 
-    public Future<Output> execute(final String action, final Map<String, Object> map) {
-        return this.pool.execute(() -> {
-            final Context context = this.executor.createContext();
-            map.forEach(context::put);
-            return this.executor.execute(action, context);
-        });
+    @Override
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
+        return List.of(
+            DefaultExecuteProfile.class,
+            this.getClass()
+        );
     }
-
-    public void send(final String action, final Output output) {
-
-    }
-
 }

@@ -19,7 +19,6 @@
 
 package insideworld.engine.actions.keeper;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.google.common.collect.Maps;
 import insideworld.engine.actions.keeper.tags.Tag;
 import java.util.Map;

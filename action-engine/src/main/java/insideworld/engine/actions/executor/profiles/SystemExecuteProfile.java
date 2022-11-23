@@ -19,17 +19,8 @@
 
 package insideworld.engine.actions.executor.profiles;
 
-import com.google.common.collect.ImmutableSet;
-import insideworld.engine.actions.Action;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.startup.OnStartUp;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -41,59 +32,23 @@ import javax.inject.Singleton;
  * @since 0.1.0
  */
 @Singleton
-public class SystemExecuteProfile implements ExecuteProfile, OnStartUp {
-
-    /**
-     * Type of profiles which need to use.
-     */
-    private final Set<Class<? extends ExecuteProfile>> profiles;
-
-    /**
-     * Filtered wrappers for System and Default profile.
-     */
-    private final List<ExecuteWrapper> wrappers;
-
-    /**
-     * First wrapper in the chain.
-     */
-    private ExecuteWrapper first;
+public class SystemExecuteProfile extends AbstractExecuteProfile {
 
     /**
      * Default constructor.
+     *
      * @param executors Collection of all executors in the system.
      */
     @Inject
     public SystemExecuteProfile(final List<ExecuteWrapper> executors) {
-        this.profiles = ImmutableSet.of(
-            SystemExecuteProfile.class,
-            DefaultExecuteProfile.class
+        super(executors);
+    }
+
+    @Override
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
+        return List.of(
+            DefaultExecuteProfile.class,
+            this.getClass()
         );
-        this.wrappers = executors.stream()
-            .filter(executor -> !Collections.disjoint(executor.forProfile(), this.profiles))
-            .sorted(Comparator.comparingInt(ExecuteWrapper::order).reversed())
-            .toList();
-    }
-
-    @Override
-    public final void execute(final Action action, final Context context, final Output output)
-        throws CommonException {
-        this.first.execute(action, context, output);
-    }
-
-    @Override
-    public final void startUp() {
-        final Iterator<ExecuteWrapper> iterator = this.wrappers.iterator();
-        ExecuteWrapper last = iterator.next();
-        this.first = last;
-        while (iterator.hasNext()) {
-            final ExecuteWrapper next = iterator.next();
-            last.setNext(next);
-            last = next;
-        }
-    }
-
-    @Override
-    public final int order() {
-        return 20_000;
     }
 }

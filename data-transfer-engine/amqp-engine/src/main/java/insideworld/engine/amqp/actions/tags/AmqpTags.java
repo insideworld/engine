@@ -17,34 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.vertex;
+package insideworld.engine.amqp.actions.tags;
 
-import insideworld.engine.amqp.connection.message.Message;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import java.util.Collection;
+import insideworld.engine.actions.keeper.tags.SingleTag;
 import java.util.Map;
 
-public class VertexMessage implements Message {
+/**
+ * Tags for AMQP engine.
+ * @since 0.14.0
+ */
+public final class AmqpTags {
 
-    private final AmqpMessage message;
+    public static final SingleTag<Map<String, Object>> AMQP_PROPERTIES = new SingleTag<>(
+        "insideworld.engine.amqp.actions.tags.AmqpTags.AMQP_PROPERTIES"
+    );
 
-    public VertexMessage(final AmqpMessage message) {
-        this.message = message;
-    }
+    public static final SingleTag<String> CALLBACK_ACTION = new SingleTag<>(
+        "insideworld.engine.amqp.actions.tags.AmqpTags.CALLBACK_ACTION"
+    );
 
-    @Override
-    public Collection<Map<String, Object>> getArray() {
-        return this.message.bodyAsJsonArray().getList();
-    }
+    public static final SingleTag<Object> BULK = new SingleTag<>(
+        "insideworld.engine.amqp.actions.tags.AmqpTags.BULK"
+    );
 
-    @Override
-    public String getSubject() {
-        return this.message.subject();
-    }
-
-    @Override
-    public Map<String, Object> getProperties() {
-        return this.message.applicationProperties().getMap();
+    /**
+     * Private constructor.
+     */
+    private AmqpTags() {
+        //Nothing to do.
     }
 
 }

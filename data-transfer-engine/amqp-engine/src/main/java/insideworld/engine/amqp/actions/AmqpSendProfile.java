@@ -17,18 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.web;
+package insideworld.engine.amqp.actions;
 
-
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.exception.CommonException;
+import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
+import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
+import java.util.Collection;
+import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
- * Tags handler for redefine.
+ * Profile which will use for AMQP calls.
+ * @since 0.14.0
  */
-public interface TagHandler {
+@Singleton
+public class AmqpSendProfile extends AbstractExecuteProfile {
 
-    void perform(Context context) throws CommonException;
+    /**
+     * Default constructor.
+     *
+     * @param executors Collection of all executors in the system.
+     */
+    @Inject
+    public AmqpSendProfile(final List<ExecuteWrapper> executors) {
+        super(executors);
+    }
 
+    @Override
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
+        return List.of(
+            DefaultExecuteProfile.class,
+            this.getClass()
+        );
+    }
 }

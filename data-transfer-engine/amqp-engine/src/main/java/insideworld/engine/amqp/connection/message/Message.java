@@ -19,11 +19,12 @@
 
 package insideworld.engine.amqp.connection.message;
 
+import java.util.Collection;
 import java.util.Map;
 
 public interface Message {
 
-    Map<String, Object>[] getArray();
+    Collection<Map<String, Object>> getArray();
 
     String getSubject();
 

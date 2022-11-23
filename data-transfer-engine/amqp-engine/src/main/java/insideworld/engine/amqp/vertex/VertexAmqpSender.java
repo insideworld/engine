@@ -29,14 +29,12 @@ import io.vertx.mutiny.amqp.AmqpMessageBuilder;
 import java.util.List;
 import javax.enterprise.context.Dependent;
 
-@Dependent
 public class VertexAmqpSender implements AmqpSender {
 
-    private io.vertx.mutiny.amqp.AmqpSender amqpSender;
+    private final io.vertx.mutiny.amqp.AmqpSender amqpSender;
 
-    public VertexAmqpSender init(final String channel, final AmqpConnection connection) {
+    public VertexAmqpSender(final String channel, final AmqpConnection connection) {
         this.amqpSender = connection.createSenderAndAwait(channel);
-        return this;
     }
 
     @Override

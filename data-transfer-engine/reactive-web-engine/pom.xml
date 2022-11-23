@@ -28,31 +28,23 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>web-engine</artifactId>
+  <artifactId>reactive-web-engine</artifactId>
 
   <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>action-engine</artifactId>
+      <artifactId>web-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>endpoint-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>${javax.ws.rs-api.version}</version>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
     </dependency>
 
     <!--  Tests  -->
@@ -63,12 +55,6 @@
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-engine</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
       <artifactId>quarkus-runtime-engine</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -76,16 +62,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jackson</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
