@@ -40,6 +40,10 @@ public final class AmqpTags {
         "insideworld.engine.amqp.actions.tags.AmqpTags.BULK"
     );
 
+    public static final SingleTag<Object> BULK_OUTPUT = new SingleTag<>(
+        "insideworld.engine.amqp.actions.tags.AmqpTags.BULK_OUTPUT"
+    );
+
     /**
      * Private constructor.
      */

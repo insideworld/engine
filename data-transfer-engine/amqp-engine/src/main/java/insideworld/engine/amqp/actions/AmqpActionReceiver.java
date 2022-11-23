@@ -96,7 +96,8 @@ public class AmqpActionReceiver implements OnStartUp, AmqpReceiver {
     private static void callback(final Map<String, Object> properties, final Output output) {
         if (CollectionUtils.isNotEmpty(output.getRecords())) {
             if (properties.containsKey(AmqpTags.BULK.getTag())) {
-                Collections.singletonMap("bulk", output);
+                final Map<String, Output> result =
+                    Collections.singletonMap(AmqpTags.BULK_OUTPUT.getTag(), output);
             } else {
 
             }
