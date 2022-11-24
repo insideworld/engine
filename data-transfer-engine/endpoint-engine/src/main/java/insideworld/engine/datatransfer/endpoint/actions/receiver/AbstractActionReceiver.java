@@ -17,13 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint.actions;
+package insideworld.engine.datatransfer.endpoint.actions.receiver;
 
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
 import insideworld.engine.threads.Task;
 import insideworld.engine.threads.TaskPredicate;
 import java.util.Collection;
@@ -36,15 +37,15 @@ import javax.inject.Inject;
 public abstract class AbstractActionReceiver<T> implements ActionReceiver<T> {
 
     private final ActionExecutor<String> executor;
-    private final OutputTask task;
+    private final OutputTaskBuilder builder;
 
     @Inject
     public AbstractActionReceiver(
         final ActionExecutor<String> executor,
-        final OutputTask task
+        final OutputTaskBuilder builder
     ) {
         this.executor = executor;
-        this.task = task;
+        this.builder = builder;
     }
 
     public final Task<Output> execute(
@@ -56,7 +57,7 @@ public abstract class AbstractActionReceiver<T> implements ActionReceiver<T> {
             input -> (TaskPredicate<Output>)
                 () -> executeAction(action, profile, convert(input))
         ).toList();
-        return this.task.createTask(predicates);
+        return this.builder.createTask(predicates);
     }
 
     protected abstract Context convert(T input);

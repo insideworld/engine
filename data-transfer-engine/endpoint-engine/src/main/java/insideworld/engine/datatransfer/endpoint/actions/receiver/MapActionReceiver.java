@@ -17,23 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint.actions;
+package insideworld.engine.datatransfer.endpoint.actions.receiver;
 
-import insideworld.engine.actions.executor.profiles.ExecuteProfile;
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.threads.Task;
-import java.util.Collection;
+import insideworld.engine.actions.executor.ActionExecutor;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-/**
- * Interface to
- */
-public interface ActionReceiver<T> {
+@Singleton
+public class MapActionReceiver extends AbstractActionReceiver<Map<String, Object>> {
 
-    Task<Output> execute(
-        final String action,
-        Class<? extends ExecuteProfile> profile,
-        final Collection<T> input
-    );
+    private final ActionExecutor<String> executor;
 
+    @Inject
+    public MapActionReceiver(final ActionExecutor<String> executor,
+                             final OutputTaskBuilder task) {
+        super(executor, task);
+        this.executor = executor;
+    }
+
+    @Override
+    protected Context convert(final Map<String, Object> input) {
+        final Context context = this.executor.createContext();
+        input.forEach(context::put);
+        return context;
+    }
 }

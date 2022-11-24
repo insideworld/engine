@@ -33,12 +33,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class OutputTaskImpl implements OutputTask {
+public class OutputTaskBuilderImpl implements OutputTaskBuilder {
 
     private final ObjectFactory factory;
 
     @Inject
-    public OutputTaskImpl(final ObjectFactory factory) {
+    public OutputTaskBuilderImpl(final ObjectFactory factory) {
         this.factory = factory;
     }
 

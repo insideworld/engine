@@ -24,6 +24,6 @@ import insideworld.engine.threads.Task;
 import insideworld.engine.threads.TaskPredicate;
 import java.util.Collection;
 
-public interface OutputTask {
+public interface OutputTaskBuilder {
     Task<Output> createTask(Collection<TaskPredicate<Output>> predicates);
 }

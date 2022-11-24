@@ -20,18 +20,19 @@
 package insideworld.engine.datatransfer.endpoint.actions;
 
 import insideworld.engine.actions.keeper.Table;
+import java.util.Map;
 
 /**
  * Interface is using to send call to another subsystem and receive an answer.
  * @since 0.14.0
  */
-public interface ActionSender {
+public interface ActionSender<T> {
 
     /**
      * Send execute action to another subsystem.
      * @param action
      * @param table
      */
-    void send(String action, Table table);
+    void send(String action, T data);
 
 }

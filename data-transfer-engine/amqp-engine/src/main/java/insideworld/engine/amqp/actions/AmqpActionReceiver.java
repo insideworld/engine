@@ -19,13 +19,12 @@
 
 package insideworld.engine.amqp.actions;
 
-import com.google.common.collect.Maps;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.amqp.actions.tags.AmqpTags;
 import insideworld.engine.amqp.connection.AmqpReceiver;
 import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.message.Message;
-import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.receiver.ActionReceiver;
 import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
@@ -34,14 +33,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.apache.commons.collections4.CollectionUtils;
 
-@Singleton
 public class AmqpActionReceiver implements OnStartUp, AmqpReceiver {
 
-    private final static Consumer<Output> EMPTY_CONSUMER = output -> {};
+    private final static Consumer<Output> EMPTY_CONSUMER = output -> {
+    };
 
     private final Connection connection;
     private final String channel;
@@ -49,14 +46,13 @@ public class AmqpActionReceiver implements OnStartUp, AmqpReceiver {
     private final ActionSender sender;
     private final ObjectFactory factory;
 
-    @Inject
     public AmqpActionReceiver(
         final Connection connection,
         final String channel,
         final ActionReceiver<Map<String, Object>> receiver,
         final ActionSender sender,
         final ObjectFactory factory
-        ) {
+    ) {
         this.connection = connection;
         this.channel = channel;
         this.receiver = receiver;
@@ -93,15 +89,22 @@ public class AmqpActionReceiver implements OnStartUp, AmqpReceiver {
         return 70_000;
     }
 
-    private static void callback(final Map<String, Object> properties, final Output output) {
-        if (CollectionUtils.isNotEmpty(output.getRecords())) {
-            if (properties.containsKey(AmqpTags.BULK.getTag())) {
-                final Map<String, Output> result =
-                    Collections.singletonMap(AmqpTags.BULK_OUTPUT.getTag(), output);
-            } else {
-
-            }
+    private void callback(final Map<String, Object> properties, final Output output) {
+        if (CollectionUtils.isEmpty(output.getRecords())) {
+            return;
         }
+        final String action = (String) properties.get(AmqpTags.CALLBACK_ACTION.getTag());
+        if (properties.containsKey(AmqpTags.BULK.getTag())) {
+            final Map<String, Output> result =
+                Collections.singletonMap(AmqpTags.BULK_OUTPUT.getTag(), output);
+            this.sender.send(
+          ,
+
+            );
+        } else {
+
+        }
+
     }
 
 }

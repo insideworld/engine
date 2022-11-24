@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.receiver.ActionReceiver;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import io.smallrye.mutiny.Uni;

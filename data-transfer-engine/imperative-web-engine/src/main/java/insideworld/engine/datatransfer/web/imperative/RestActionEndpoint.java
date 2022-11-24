@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.receiver.ActionReceiver;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 @Path("/actions")
 @Singleton
-public class RestActionReceiver {
+public class RestActionEndpoint {
 
     private final ObjectReader reader;
 
@@ -50,7 +50,7 @@ public class RestActionReceiver {
     private final ActionReceiver<Map<String, Object>> receiver;
 
     @Inject
-    public RestActionReceiver(final ObjectFactory factory,
+    public RestActionEndpoint(final ObjectFactory factory,
                               final ActionReceiver<Map<String, Object>> receiver) {
         this.factory = factory;
         this.receiver = receiver;
