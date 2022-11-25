@@ -17,13 +17,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.web.tags;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import insideworld.engine.actions.keeper.tags.SingleTag;
+import java.util.Map;
+import javax.ws.rs.core.HttpHeaders;
 
-public interface AmqpReceiver {
+/**
+ * Tags for Rest endpoint engine.
+ * @since 0.14.0
+ */
+public final class RestTags {
 
-    void receive(Consumer<Message> consumer);
+    public static final SingleTag<HttpHeaders> HEADERS = new SingleTag<>(
+        "insideworld.engine.web.tags.RestTags.HEADERS"
+    );
+
+    /**
+     * Private constructor.
+     */
+    private RestTags() {
+        //Nothing to do.
+    }
 
 }

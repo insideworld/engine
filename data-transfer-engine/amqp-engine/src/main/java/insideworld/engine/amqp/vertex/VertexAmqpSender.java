@@ -19,6 +19,7 @@
 
 package insideworld.engine.amqp.vertex;
 
+import com.google.common.collect.Lists;
 import insideworld.engine.amqp.connection.AmqpSender;
 import insideworld.engine.amqp.connection.message.Message;
 import io.vertx.core.json.JsonArray;
@@ -33,14 +34,14 @@ public class VertexAmqpSender implements AmqpSender {
 
     private final io.vertx.mutiny.amqp.AmqpSender amqpSender;
 
-    public VertexAmqpSender(final String channel, final AmqpConnection connection) {
+    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
         this.amqpSender = connection.createSenderAndAwait(channel);
     }
 
     @Override
     public void send(final Message message) {
         final AmqpMessageBuilder builder = AmqpMessage.create();
-        builder.withJsonArrayAsBody(new JsonArray(List.of(message.getArray())));
+        builder.withJsonArrayAsBody(new JsonArray(Lists.newArrayList(message.getArray())));
         builder.subject(message.getSubject());
         builder.applicationProperties(new JsonObject(message.getProperties()));
         this.amqpSender.send(builder.build());

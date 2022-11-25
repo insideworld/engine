@@ -19,18 +19,10 @@
 
 package insideworld.engine.datatransfer.web.imperative;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.actions.receiver.ActionReceiver;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.injection.ObjectFactory;
-import java.io.IOException;
+import insideworld.engine.datatransfer.endpoint.actions.facade.ActionFacade;
+import insideworld.engine.web.RestParameter;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -42,21 +34,13 @@ import javax.ws.rs.core.HttpHeaders;
 
 @Path("/actions")
 @Singleton
-public class RestActionEndpoint {
+public class RestActionFacade {
 
-    private final ObjectReader reader;
-
-    private final ObjectFactory factory;
-    private final ActionReceiver<Map<String, Object>> receiver;
+    private final ActionFacade<RestParameter> facade;
 
     @Inject
-    public RestActionEndpoint(final ObjectFactory factory,
-                              final ActionReceiver<Map<String, Object>> receiver) {
-        this.factory = factory;
-        this.receiver = receiver;
-        this.reader = new ObjectMapper()
-            .readerFor(Map.class)
-            .with(DeserializationFeature.USE_LONG_FOR_INTS);
+    public RestActionFacade(final ActionFacade<RestParameter> facade) {
+        this.facade = facade;
     }
 
     @POST
@@ -67,11 +51,8 @@ public class RestActionEndpoint {
         @PathParam("action") final String action,
         @javax.ws.rs.core.Context final HttpHeaders headers,
         final InputStream rawbody
-    ) throws IOException, CommonException {
-        final var map = (Map<String, Object>) this.reader.readValue(rawbody);
-        return this.receiver.execute(
-            action, DefaultExecuteProfile.class, Collections.singleton(map)
-        ).result();
+    ) {
+        return this.facade.execute(action, new RestParameter(headers, rawbody)).result();
     }
 
 }

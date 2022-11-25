@@ -17,13 +17,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.amqp.actions;
 
+import insideworld.engine.actions.keeper.Record;
+import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import insideworld.engine.amqp.connection.message.SendMessage;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public interface AmqpReceiver {
+public class OutputMessage implements Message {
 
-    void receive(Consumer<Message> consumer);
+    private final Output output;
+    private final String action;
+    private final Map<String, Object> properties;
 
+    public OutputMessage(
+        final Output output,
+        final String action,
+        final Map<String, Object> properties
+    ) {
+        this.output = output;
+        this.action = action;
+        this.properties = properties;
+    }
+
+    @Override
+    public Collection<Map<String, Object>> getArray() {
+        return this.output.getRecords().stream().map(Record::values).toList();
+    }
+
+    @Override
+    public String getSubject() {
+        return this.action;
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return this.properties;
+    }
 }

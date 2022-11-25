@@ -17,65 +17,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp;
+package insideworld.engine.amqp.actions;
 
+import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.amqp.actions.tags.AmqpTags;
-import insideworld.engine.amqp.connection.AmqpSender;
-import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.message.Message;
-import insideworld.engine.amqp.connection.message.SendMessage;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
+import insideworld.engine.datatransfer.endpoint.actions.facade.AbstractActionFacade;
 import insideworld.engine.datatransfer.endpoint.actions.facade.ContextPredicate;
-import insideworld.engine.injection.ObjectFactory;
-import io.quarkus.test.junit.QuarkusTest;
-import io.smallrye.reactive.messaging.annotations.Blocking;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.junit.jupiter.api.Test;
+import javax.inject.Singleton;
 
-@QuarkusTest
-public class TestAmqp {
-
-
-    private final TestSender sender;
-    private final ObjectFactory factory;
+@Singleton
+public class AmqpActionFacade extends AbstractActionFacade<Message> {
 
     @Inject
-    public TestAmqp(
-        final TestSender sender,
-        final ObjectFactory factory
-    ) {
-        this.sender = sender;
-        this.factory = factory;
+    public AmqpActionFacade(
+        OutputTaskBuilder builder,
+        ActionExecutor<String> executor) {
+        super(builder, executor, AmqpReceiveProfile.class);
     }
 
-    @Test
-    final void test() throws Exception {
-        final Output output = this.factory.createObject(Output.class);
-        output.createRecord().put("testValue", "My value!");
-        this.sender.send("insideworld.engine.amqp.TestAction",
-            "insideworld.engine.amqp.TestAction",
-            output
-        );
-        System.out.println("qwe");
+    @Override
+    protected Collection<ContextPredicate> contexts(final Message parameter) {
+        return parameter
+            .getArray()
+            .stream()
+            .map(map -> this.predicate(map, parameter))
+            .collect(Collectors.toList());
     }
 
-    @Test
-    final void testQwe() {
-
-        final List<Map<String, String>> some = List.of(
-            Map.of("some", "qwe")
-        );
-        final List<ContextPredicate> contexts = some.stream().map(map -> (ContextPredicate) () -> {
-            final Context context = this.factory.createObject(Context.class);
+    private ContextPredicate predicate(final Map<String, Object> map, final Message parameter) {
+        return () -> {
+            final Context context = this.createContext();
+            context.put(AmqpTags.AMQP_PROPERTIES, parameter.getProperties());
             map.forEach(context::put);
             return context;
-        }).toList();
-        System.out.println("qwe");
+        };
     }
-
 }

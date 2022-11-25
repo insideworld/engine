@@ -25,12 +25,14 @@ import insideworld.engine.amqp.connection.message.Message;
 import insideworld.engine.injection.ObjectFactory;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;
+import java.util.function.Consumer;
 
 
-public class VertexAmqpReceiver {
+public class VertexAmqpReceiver implements AmqpReceiver {
+
     private final ObjectFactory factory;
-
-    final io.vertx.mutiny.amqp.AmqpReceiver receiver;
+    private final AmqpConnection connection;
+    private final String channel;
 
     public VertexAmqpReceiver(
         final ObjectFactory factory,
@@ -38,13 +40,14 @@ public class VertexAmqpReceiver {
         final String channel
     ) {
         this.factory = factory;
-        this.receiver = connection.createReceiverAndAwait(channel)
-            .handler(message -> amqpReceiver.receive(this.convert(message)));
+        this.connection = connection;
+        this.channel = channel;
     }
 
-    public VertexAmqpReceiver init(final String channel, final AmqpReceiver amqpReceiver) {
-        final io.vertx.mutiny.amqp.AmqpReceiver receiver =
-        return this;
+    @Override
+    public void receive(final Consumer<Message> consumer) {
+        connection.createReceiverAndAwait(this.channel)
+            .handler(message -> consumer.accept(this.convert(message)));
     }
 
     private Message convert(final AmqpMessage message) {

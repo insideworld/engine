@@ -17,13 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.web;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
+import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
+import java.util.Collection;
+import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public interface AmqpReceiver {
+@Singleton
+public class RestProfile extends AbstractExecuteProfile {
 
-    void receive(Consumer<Message> consumer);
+    /**
+     * Default constructor.
+     *
+     * @param executors Collection of all executors in the system.
+     */
+    @Inject
+    public RestProfile(final List<ExecuteWrapper> executors) {
+        super(executors);
+    }
 
+    @Override
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
+        return List.of(
+            DefaultExecuteProfile.class,
+            this.getClass()
+        );
+    }
 }

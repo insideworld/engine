@@ -19,19 +19,14 @@
 
 package insideworld.engine.datatransfer.web.reactive;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
+import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.actions.receiver.ActionReceiver;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
+import insideworld.engine.web.RestActionFacade;
+import insideworld.engine.web.RestParameter;
 import io.smallrye.mutiny.Uni;
-import java.io.IOException;
+import io.smallrye.mutiny.unchecked.Unchecked;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -45,19 +40,11 @@ import javax.ws.rs.core.HttpHeaders;
 @Singleton
 public class RestActionReceiver {
 
-    private final ObjectReader reader;
-
-    private final ObjectFactory factory;
-    private final ActionReceiver<Map<String, Object>> receiver;
+    private final RestActionFacade facade;
 
     @Inject
-    public RestActionReceiver(final ObjectFactory factory,
-                              final ActionReceiver<Map<String, Object>> receiver) {
-        this.factory = factory;
-        this.receiver = receiver;
-        this.reader = new ObjectMapper()
-            .readerFor(Map.class)
-            .with(DeserializationFeature.USE_LONG_FOR_INTS);
+    public RestActionReceiver(final RestActionFacade facade) {
+        this.facade = facade;
     }
 
     @POST
@@ -68,12 +55,12 @@ public class RestActionReceiver {
         @PathParam("action") final String action,
         @javax.ws.rs.core.Context final HttpHeaders headers,
         final InputStream rawbody
-    ) throws IOException, CommonException {
-        final var map = (Map<String, Object>) this.reader.readValue(rawbody);
-        return Uni.createFrom().emitter(emitter -> {
-            this.receiver.execute(action, DefaultExecuteProfile.class, Collections.singleton(map))
-                .subscribe(emitter::complete);
-        });
+    ) {
+        return Uni.createFrom().emitter(
+            emitter -> this.facade
+                .execute(action, new RestParameter(headers, rawbody))
+                .subscribe(emitter::complete)
+        );
     }
 
 }

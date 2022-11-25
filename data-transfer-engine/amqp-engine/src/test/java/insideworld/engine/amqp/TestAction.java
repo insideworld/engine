@@ -17,13 +17,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.amqp;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
+import javax.inject.Singleton;
 
-public interface AmqpReceiver {
+@Singleton
+public class TestAction implements Action {
+    @Override
+    public void execute(Context context, Output output) throws CommonException {
+        System.out.println(context.get("testValue") + " " + Thread.currentThread().getName());
+        output.createRecord().put("testValue", "One more");
+        output.createRecord().put("testValue", "Second");
+        output.createRecord().put("testValue", "And one more else");
+    }
 
-    void receive(Consumer<Message> consumer);
-
+    @Override
+    public String key() {
+        return "insideworld.engine.amqp.TestAction";
+    }
 }

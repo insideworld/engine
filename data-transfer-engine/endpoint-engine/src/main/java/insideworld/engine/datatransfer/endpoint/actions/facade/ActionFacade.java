@@ -17,13 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.datatransfer.endpoint.actions.facade;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.threads.Task;
 
-public interface AmqpReceiver {
+public interface ActionFacade<T> {
 
-    void receive(Consumer<Message> consumer);
-
+    Task<Output> execute(final String action, final T parameter);
 }

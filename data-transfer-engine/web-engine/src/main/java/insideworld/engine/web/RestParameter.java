@@ -17,13 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.web;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import java.io.InputStream;
+import javax.ws.rs.core.HttpHeaders;
 
-public interface AmqpReceiver {
 
-    void receive(Consumer<Message> consumer);
-
+public record RestParameter(HttpHeaders headers, InputStream body) {
 }

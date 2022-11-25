@@ -41,15 +41,13 @@ public class VertexConnection implements Connection, OnStartUp {
     }
 
     @Override
-    public void createReceiver(final String channel, final AmqpReceiver amqpReceiver) {
-        this.factory
-            .createObject(VertexAmqpReceiver.class, this.connection)
-            .init(channel, amqpReceiver);
+    public AmqpReceiver createReceiver(final String channel) {
+        return this.factory.createObject(VertexAmqpReceiver.class, this.connection, channel);
     }
 
     @Override
     public AmqpSender createSender(final String channel) {
-        return this.factory.createObject(VertexAmqpSender.class, channel, this.connection);
+        return this.factory.createObject(VertexAmqpSender.class, this.connection, channel);
     }
 
     @Override

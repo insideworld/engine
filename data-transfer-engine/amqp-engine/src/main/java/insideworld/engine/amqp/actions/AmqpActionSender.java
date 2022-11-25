@@ -19,5 +19,56 @@
 
 package insideworld.engine.amqp.actions;
 
-public class AmqpActionSender {
+import com.google.common.collect.Maps;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.amqp.actions.tags.AmqpTags;
+import insideworld.engine.amqp.connection.AmqpSender;
+import insideworld.engine.amqp.connection.Connection;
+import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
+import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.startup.StartUpException;
+import java.util.Collections;
+import java.util.Map;
+
+public class AmqpActionSender implements ActionSender, OnStartUp {
+
+    private final ObjectFactory factory;
+    private final Connection connection;
+    private final String channel;
+    private AmqpSender sender;
+
+    public AmqpActionSender(
+        final ObjectFactory factory,
+        final Connection connection,
+        final String channel
+    ) {
+        this.factory = factory;
+        this.connection = connection;
+        this.channel = channel;
+    }
+
+    public void send(final String action, final String callback, final Output output) {
+        final Map<String, Object> properties;
+        if (callback == null) {
+            properties = Collections.emptyMap();
+        } else {
+            properties = Map.of(AmqpTags.CALLBACK_ACTION.getTag(), callback);
+        }
+        this.sender.send(
+            this.factory.createObject(
+                OutputMessage.class, output, action, properties
+            )
+        );
+    }
+
+    @Override
+    public void startUp() throws StartUpException {
+        this.sender = this.connection.createSender(this.channel);
+    }
+
+    @Override
+    public int order() {
+        return 70_000;
+    }
 }

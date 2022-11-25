@@ -107,31 +107,31 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.qulice</groupId>
-        <artifactId>qulice-maven-plugin</artifactId>
-        <version>0.22.0</version>
-        <configuration>
-          <license>LICENSE.txt</license>
-          <excludes>
-            <exclude>dependencies:.*</exclude>
-          </excludes>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>insideworld.engine</groupId>
-            <artifactId>qulice</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>com.qulice</groupId>-->
+<!--        <artifactId>qulice-maven-plugin</artifactId>-->
+<!--        <version>0.22.0</version>-->
+<!--        <configuration>-->
+<!--          <license>LICENSE.txt</license>-->
+<!--          <excludes>-->
+<!--            <exclude>dependencies:.*</exclude>-->
+<!--          </excludes>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>check</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--        <dependencies>-->
+<!--          <dependency>-->
+<!--            <groupId>insideworld.engine</groupId>-->
+<!--            <artifactId>qulice</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--          </dependency>-->
+<!--        </dependencies>-->
+<!--      </plugin>-->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

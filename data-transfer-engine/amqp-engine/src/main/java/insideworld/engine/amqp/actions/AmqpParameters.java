@@ -17,13 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.amqp.actions;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
-
-public interface AmqpReceiver {
-
-    void receive(Consumer<Message> consumer);
-
+public class AmqpParameters {
 }

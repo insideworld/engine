@@ -17,13 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection;
+package insideworld.engine.amqp;
 
-import insideworld.engine.amqp.connection.message.Message;
-import java.util.function.Consumer;
+import insideworld.engine.amqp.actions.AmqpActionSender;
+import insideworld.engine.injection.ObjectFactory;
+import javax.inject.Singleton;
 
-public interface AmqpReceiver {
+@Singleton
+public class TestSender extends AmqpActionSender {
 
-    void receive(Consumer<Message> consumer);
-
+    public TestSender(
+        final ObjectFactory factory,
+        final TestVertexConnection connection
+    ) {
+        super(factory, connection, "test");
+    }
 }

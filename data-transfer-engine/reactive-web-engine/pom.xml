@@ -49,6 +49,12 @@
 
     <!--  Tests  -->
     <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-engine</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
       <version>${hamcrest.version}</version>
