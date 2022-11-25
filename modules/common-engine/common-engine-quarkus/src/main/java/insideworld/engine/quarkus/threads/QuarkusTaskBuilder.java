@@ -88,7 +88,7 @@ public class QuarkusTaskBuilder<T, O> implements TaskBuilder<T, O> {
                             .onFailure()
                             .recoverWithItem(exp -> {
                                 task.addThrowable(exp.getCause());
-                                return this.exception.apply(exp);
+                                return this.exception.apply(exp.getCause());
                             })
                     )
                     .toList()

@@ -88,10 +88,7 @@ class ThreadsTest {
             .add(() -> this.executor.execute(WriteEntityAction.class, twoctx))
             .add(() -> this.executor.execute(WriteEntityAction.class, expctx))
             .combine(outputs -> null, Output.class)
-            .exception(exp -> {
-                exceptions.add(exp.getCause());
-                return null;
-            })
+            .exception(exp -> null)
             .build();
         task.result();
         MatcherAssert.assertThat(
