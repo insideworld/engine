@@ -28,11 +28,16 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>tests</artifactId>
+  <artifactId>utils</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>test-data</module>
-<!--    <module>quarkus-tests</module>-->
+    <module>crypt-my-data</module>
+    <module>qulice</module>
   </modules>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
 
 </project>

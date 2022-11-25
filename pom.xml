@@ -25,22 +25,14 @@
 
   <groupId>insideworld.engine</groupId>
   <artifactId>engine</artifactId>
-  <version>0.14.0</version>
+  <version>1.0.0</version>
 
   <packaging>pom</packaging>
 
   <modules>
-    <module>data-transfer-engine</module>
-    <module>data-engine</module>
-    <module>utils-engine</module>
-    <module>security-engine</module>
-    <module>frameworks-engine</module>
-    <module>common-engine</module>
-    <module>action-engine</module>
+    <module>modules</module>
     <module>tests</module>
-    <module>qulice</module>
-    <module>plugins-engine</module>
-    <module>jobs-engine</module>
+    <module>utils</module>
   </modules>
 
   <properties>

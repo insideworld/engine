@@ -22,17 +22,38 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>engine</artifactId>
+    <artifactId>data-engine</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>tests</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>test-data</module>
-<!--    <module>quarkus-tests</module>-->
-  </modules>
+  <artifactId>data-engine-core</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>common-engine-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>action-engine-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <!--  Tests  -->
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>test-engine-quarkus-common</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
 
 </project>

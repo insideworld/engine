@@ -22,17 +22,27 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>engine</artifactId>
+    <artifactId>security-engine</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>tests</artifactId>
+  <artifactId>security-engine-token</artifactId>
+
   <packaging>pom</packaging>
+
   <modules>
-    <module>test-data</module>
-<!--    <module>quarkus-tests</module>-->
+    <module>security-engine-token-amqp</module>
+    <module>security-engine-token-core</module>
+    <module>security-engine-token-jpa</module>
+    <module>security-engine-token-rest</module>
   </modules>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
 </project>
