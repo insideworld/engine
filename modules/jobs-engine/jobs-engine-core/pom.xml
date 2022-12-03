@@ -38,12 +38,12 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>common-engine</artifactId>
+      <artifactId>common-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>entities-engine</artifactId>
+      <artifactId>data-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

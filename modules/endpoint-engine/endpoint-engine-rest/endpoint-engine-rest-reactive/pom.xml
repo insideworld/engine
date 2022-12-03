@@ -39,7 +39,7 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>web-engine</artifactId>
+      <artifactId>endpoint-engine-rest-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -50,121 +50,11 @@
     <!--  Tests  -->
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-engine</artifactId>
+      <artifactId>test-engine-quarkus-rest</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
-      <version>${hamcrest.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-runtime-engine</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <scope>test</scope>
-    </dependency>
+
   </dependencies>
-
-  <build>
-    <plugins>
-      <!--      <plugin>-->
-      <!--        <groupId>com.qulice</groupId>-->
-      <!--        <artifactId>qulice-maven-plugin</artifactId>-->
-      <!--        <version>0.22.0</version>-->
-      <!--        <configuration>-->
-      <!--          <license>LICENSE.txt</license>-->
-      <!--          <excludes>-->
-      <!--            <exclude>dependencies:.*</exclude>-->
-      <!--          </excludes>-->
-      <!--        </configuration>-->
-      <!--        <executions>-->
-      <!--          <execution>-->
-      <!--            <goals>-->
-      <!--              <goal>check</goal>-->
-      <!--            </goals>-->
-      <!--          </execution>-->
-      <!--        </executions>-->
-      <!--        <dependencies>-->
-      <!--          <dependency>-->
-      <!--            <groupId>insideworld.engine</groupId>-->
-      <!--            <artifactId>qulice</artifactId>-->
-      <!--            <version>${project.version}</version>-->
-      <!--          </dependency>-->
-      <!--        </dependencies>-->
-      <!--      </plugin>-->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${jacoco-maven-plugin.version}</version>
-        <configuration>
-          <output>file</output>
-        </configuration>
-        <executions>
-          <execution>
-            <id>jacoco-initialize</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>jacoco-check</id>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <rule>
-                  <element>BUNDLE</element>
-                </rule>
-              </rules>
-            </configuration>
-          </execution>
-          <execution>
-            <id>jacoco-report</id>
-            <phase>install</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire-plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bom</artifactId>
-        <version>${quarkus.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
 </project>

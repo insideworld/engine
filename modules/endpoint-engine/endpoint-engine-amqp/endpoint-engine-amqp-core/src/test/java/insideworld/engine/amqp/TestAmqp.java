@@ -23,6 +23,8 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.datatransfer.endpoint.actions.ContextPredicate;
 import insideworld.engine.injection.ObjectFactory;
+import insideworld.engine.test.quarkus.amqp.QpidTestResource;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
+@QuarkusTestResource(QpidTestResource.class)
 public class TestAmqp {
 
 

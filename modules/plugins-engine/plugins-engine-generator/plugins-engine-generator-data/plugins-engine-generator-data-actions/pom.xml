@@ -28,7 +28,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>entity-action-generator-engine</artifactId>
+  <artifactId>plugins-engine-generator-data-actions</artifactId>
   <packaging>maven-plugin</packaging>
 
   <properties>

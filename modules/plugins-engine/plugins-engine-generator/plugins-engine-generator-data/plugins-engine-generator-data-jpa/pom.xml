@@ -28,7 +28,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>entity-jpa-generator-engine</artifactId>
+  <artifactId>plugins-engine-generator-data-jpa</artifactId>
   <packaging>maven-plugin</packaging>
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
@@ -38,17 +38,12 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>entity-generator-engine</artifactId>
+      <artifactId>plugins-engine-generator-data-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>generator-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>jpa-engine</artifactId>
+      <artifactId>data-engine-jpa</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

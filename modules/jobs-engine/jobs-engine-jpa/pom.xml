@@ -38,12 +38,12 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>jobs-common-engine</artifactId>
+      <artifactId>jobs-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>entity-jpa-generator-engine</artifactId>
+      <artifactId>plugins-engine-generator-data-jpa</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -52,7 +52,7 @@
     <plugins>
       <plugin>
         <groupId>insideworld.engine</groupId>
-        <artifactId>entity-jpa-generator-engine</artifactId>
+        <artifactId>plugins-engine-generator-data-jpa</artifactId>
         <version>${project.version}</version>
         <executions>
           <execution>

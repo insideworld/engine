@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.resouces;
+package insideworld.engine.test.quarkus.amqp;
 
 import com.rabbitmq.client.ConnectionFactory;
 import io.quarkus.test.common.QuarkusTestResource;

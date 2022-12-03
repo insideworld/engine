@@ -56,7 +56,7 @@ public class OutputTaskBuilderImpl implements OutputTaskBuilder {
         }, Output.class);
         builder.exception(exp -> {
             final Output output = this.factory.createObject(Output.class);
-            final CommonException common = (CommonException) exp.getCause();
+            final CommonException common = (CommonException) exp;
             common.getIndexes().forEach(index -> {
                 final Record record = output.createRecord();
                 record.put("index", index.index());

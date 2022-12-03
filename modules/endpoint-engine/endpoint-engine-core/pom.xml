@@ -24,7 +24,7 @@
   <parent>
     <artifactId>endpoint-engine</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>0.14.0</version>
+    <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -33,12 +33,12 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>common-engine</artifactId>
+      <artifactId>common-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>action-engine</artifactId>
+      <artifactId>action-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

@@ -28,7 +28,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>entity-generator-engine</artifactId>
+  <artifactId>plugins-engine-generator-data-core</artifactId>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
