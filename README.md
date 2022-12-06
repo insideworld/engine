@@ -1,4 +1,23 @@
+# InsideWorld engine
 
+## Architecture
+
+This project divide on several sections:
+
+[Core](./core/README.md) - Core functionality of the engine.
+
+[Framework](./frameworks/README.md) - Addition implementation to support different frameworks.
+
+[Plugins](./plugins/README.md) - Maven plugins module.
+
+[Utils](./utils/README.md) - Different usefull utiles.
+
+Please read according README.md file. 
+
+## How to use
+
+
+## Info
 
 Update version of maven - mvn versions:set -DnewVersion="0.7.0"
 
