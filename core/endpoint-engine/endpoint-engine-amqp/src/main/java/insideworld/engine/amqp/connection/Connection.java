@@ -25,7 +25,17 @@ package insideworld.engine.amqp.connection;
  */
 public interface Connection {
 
+    /**
+     * Create receiver for messages.
+     * @param channel Channel name.
+     * @return Receiver instance.
+     */
     AmqpReceiver createReceiver(String channel);
 
+    /**
+     * Create sender for messages.
+     * @param channel Channel name.
+     * @return Sender instance.
+     */
     AmqpSender createSender(String channel);
 }

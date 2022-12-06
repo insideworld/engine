@@ -25,11 +25,19 @@ import io.vertx.amqp.AmqpClientOptions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Vertx connections for tests.
+ * @since 1.0.0
+ */
 @Singleton
 public class TestVertexConnection extends VertexConnection {
 
+    /**
+     * Connect to test AQMP server.
+     * @param factory Object factory.
+     */
     @Inject
-    public TestVertexConnection(ObjectFactory factory) {
+    public TestVertexConnection(final ObjectFactory factory) {
         super(new AmqpClientOptions()
             .setHost("localhost")
             .setPort(12345)

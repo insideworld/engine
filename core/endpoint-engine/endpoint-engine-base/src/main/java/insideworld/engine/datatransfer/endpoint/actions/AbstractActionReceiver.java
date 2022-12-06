@@ -29,16 +29,33 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Provide functionality to execute an action with specific profiler and contexts consumers.
+ * Provide some implementation to execute an action with specific profiler and contexts consumers.
  * @since 0.14.0
  */
-public abstract class AbstractActionEndpoint<T> implements ActionEndpoint<T> {
+public abstract class AbstractActionReceiver<T> implements ActionReceiver<T> {
 
+    /**
+     * Output task builder.
+     */
     private final OutputTaskBuilder builder;
+
+    /**
+     * Action executor.
+     */
     private final ActionExecutor<String> executor;
+
+    /**
+     * Execute profile for given endpoint.
+     */
     private final Class<? extends ExecuteProfile> profile;
 
-    public AbstractActionEndpoint(
+    /**
+     * Default constructor.
+     * @param builder Output task builder.
+     * @param executor Action executor.
+     * @param profile Execute profile for given endpoint.
+     */
+    public AbstractActionReceiver(
         final OutputTaskBuilder builder,
         final ActionExecutor<String> executor,
         final Class<? extends ExecuteProfile> profile
@@ -48,25 +65,31 @@ public abstract class AbstractActionEndpoint<T> implements ActionEndpoint<T> {
         this.profile = profile;
     }
 
-    public final Task<Output> execute(
-        final String action,
-        final T parameter
-    ) {
-        final List<TaskPredicate<Output>> predicates = this.contexts(parameter).stream().map(
+    public final Task<Output> execute(final String action, final T message) {
+        final List<TaskPredicate<Output>> predicates = this.contextBuilders(message).stream().map(
             context -> (TaskPredicate<Output>)
                 () -> this.executor.execute(
                     action,
-                    context.initContext(),
+                    context.build(),
                     this.profile
                 )
         ).toList();
         return this.builder.createTask(predicates);
     }
 
+    /**
+     * Just create context propagation from executor.
+     * @return New context.
+     */
     protected final Context createContext() {
         return this.executor.createContext();
     }
 
-    protected abstract Collection<ContextPredicate> contexts(T parameter);
+    /**
+     * Create context builders from received message.
+     * @param message Input parameter.
+     * @return Collection of builders contexts.
+     */
+    protected abstract Collection<ContextBuilder> contextBuilders(T message);
 
 }

@@ -17,12 +17,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint.actions;
+package insideworld.engine.amqp;
 
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.threads.Task;
+import insideworld.engine.exception.CommonException;
+import java.util.Map;
+import java.util.Set;
+import javax.inject.Singleton;
+import org.testcontainers.shaded.com.google.common.collect.Sets;
 
-public interface ActionEndpoint<T> {
+/**
+ * Action to test received information.
+ * @since 1.0.0
+ */
+@Singleton
+public class TestCallbackAction implements Action {
 
-    Task<Output> execute(final String action, final T parameter);
+    /**
+     * Concurent map to keep result from callback.
+     */
+    private final Set<String> set = Sets.newConcurrentHashSet();
+
+    @Override
+    public final void execute(final Context context, final Output output) throws CommonException {
+        this.set.add(context.get("testValue"));
+    }
+
+    /**
+     * Get received values.
+     * @return Map with values.
+     */
+    public final Set<String> values() {
+        return this.set;
+    }
+
+    @Override
+    public final String key() {
+        return "insideworld.engine.amqp.TestCallbackAction";
+    }
 }

@@ -19,18 +19,15 @@
 
 package insideworld.engine.amqp.connection;
 
-import java.util.function.Consumer;
+import java.util.Collection;
+import java.util.Map;
 
-/**
- * Receiver for AMQP messages.
- * @since 1.0.0
- */
-public interface AmqpReceiver {
+public interface Message {
 
-    /**
-     * Add consumer to call at receive message.
-     * @param consumer Consumer object.
-     */
-    void receive(Consumer<Message> consumer);
+    Collection<Map<String, Object>> getArray();
+
+    String getSubject();
+
+    Map<String, Object> getProperties();
 
 }

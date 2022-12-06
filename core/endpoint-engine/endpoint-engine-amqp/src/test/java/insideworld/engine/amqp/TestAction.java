@@ -25,18 +25,23 @@ import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
+/**
+ * Test action for AMQP.
+ * Just create 3 records in output.
+ * @since 0.14.0
+ */
 @Singleton
 public class TestAction implements Action {
+
     @Override
-    public void execute(Context context, Output output) throws CommonException {
-        System.out.println(context.get("testValue") + " " + Thread.currentThread().getName());
+    public final void execute(final Context context, final Output output) {
         output.createRecord().put("testValue", "One more");
         output.createRecord().put("testValue", "Second");
         output.createRecord().put("testValue", "And one more else");
     }
 
     @Override
-    public String key() {
+    public final String key() {
         return "insideworld.engine.amqp.TestAction";
     }
 }

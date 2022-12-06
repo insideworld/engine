@@ -21,11 +21,9 @@ package insideworld.engine.amqp.actions;
 
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.amqp.connection.message.Message;
-import insideworld.engine.amqp.connection.message.SendMessage;
+import insideworld.engine.amqp.connection.Message;
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class OutputMessage implements Message {
 

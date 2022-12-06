@@ -17,17 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection.message;
+package insideworld.engine.datatransfer.endpoint.actions;
 
-import java.util.Collection;
-import java.util.Map;
+import insideworld.engine.actions.keeper.context.Context;
 
-public interface Message {
+public interface ContextBuilder {
 
-    Collection<Map<String, Object>> getArray();
-
-    String getSubject();
-
-    Map<String, Object> getProperties();
+    Context build();
 
 }

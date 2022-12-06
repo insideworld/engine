@@ -23,51 +23,89 @@ import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.amqp.actions.tags.AmqpTags;
 import insideworld.engine.amqp.connection.AmqpSender;
 import insideworld.engine.amqp.connection.Connection;
+import insideworld.engine.amqp.connection.Message;
 import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
+import insideworld.engine.datatransfer.endpoint.actions.PreSend;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
 import insideworld.engine.startup.StartUpException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * AMQP action sender. Using to send message to channel.
+ * @since 0.14.0
+ */
 public class AmqpActionSender implements ActionSender, OnStartUp {
 
+    /**
+     * Object factory.
+     */
     private final ObjectFactory factory;
+
+    /**
+     * Connection.
+     */
     private final Connection connection;
+
+    /**
+     * Channel to send.
+     */
     private final String channel;
+
+    /**
+     * Pre sends.
+     */
+    private final Collection<PreSend<Message>> pres;
+
+    /**
+     * AMQP sender.
+     */
     private AmqpSender sender;
 
+    /**
+     * Default constructor.
+     * @param connection Connection instance.
+     * @param channel Channel name.
+     * @param pres Pre send objects.
+     * @param factory Object factory.
+     */
     public AmqpActionSender(
         final ObjectFactory factory,
         final Connection connection,
-        final String channel
+        final String channel,
+        final Collection<PreSend<Message>> pres
     ) {
         this.factory = factory;
         this.connection = connection;
         this.channel = channel;
+        this.pres = pres;
     }
 
-    public void send(final String action, final String callback, final Output output) {
+    @Override
+    public final void send(final String action, final String callback, final Output output) {
         final Map<String, Object> properties;
         if (callback == null) {
             properties = Collections.emptyMap();
         } else {
             properties = Map.of(AmqpTags.CALLBACK_ACTION.getTag(), callback);
         }
-        this.sender.send(
-            this.factory.createObject(
-                OutputMessage.class, output, action, properties
-            )
-        );
+        final Message message =
+            this.factory.createObject(OutputMessage.class, output, action, properties);
+        for (final PreSend<Message> pre : this.pres) {
+            pre.execute(message);
+        }
+        this.sender.send(message);
     }
 
     @Override
-    public void startUp() throws StartUpException {
+    public final void startUp() {
         this.sender = this.connection.createSender(this.channel);
     }
 
     @Override
-    public int order() {
+    public final int order() {
         return 70_000;
     }
 }

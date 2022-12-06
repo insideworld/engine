@@ -17,7 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.actions;
+package insideworld.engine.datatransfer.endpoint.actions;
 
-public class AmqpParameters {
+/**
+ * This interface using to call some code before message will send.
+ * @param <T> Parameter type.
+ */
+public interface PreSend<T> {
+
+    /**
+     * Execute some code before send.
+     * @param parameter Parameter.
+     */
+    void execute(T parameter);
+
 }

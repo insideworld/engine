@@ -19,7 +19,7 @@
 
 package insideworld.engine.amqp.vertex;
 
-import insideworld.engine.amqp.connection.message.Message;
+import insideworld.engine.amqp.connection.Message;
 import io.vertx.mutiny.amqp.AmqpMessage;
 import java.util.Collection;
 import java.util.Map;

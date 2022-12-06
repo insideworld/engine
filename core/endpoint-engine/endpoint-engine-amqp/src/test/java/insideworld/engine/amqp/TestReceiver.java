@@ -19,19 +19,36 @@
 
 package insideworld.engine.amqp;
 
+import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.amqp.actions.AmqpActionReceiver;
-import insideworld.engine.amqp.connection.message.Message;
-import insideworld.engine.datatransfer.endpoint.actions.ActionEndpoint;
+import insideworld.engine.amqp.connection.Connection;
+import insideworld.engine.amqp.connection.Message;
+import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Test receiver.
+ * @since 0.14.0
+ */
 @Singleton
 public class TestReceiver extends AmqpActionReceiver {
 
-    @Inject
-    public TestReceiver(final TestVertexConnection connection,
-                        final TestSender sender,
-                        final ActionEndpoint<Message> facade) {
-        super(connection, "test", sender, facade);
+    /**
+     * Default constructor.
+     *
+     * @param builder Task builder for output.
+     * @param executor Action executor.
+     * @param connection AMQP connection.
+     * @param sender Action sender for callback (can be null if you want to disable callbacks).
+     */
+    public TestReceiver(final OutputTaskBuilder builder,
+                        final ActionExecutor<String> executor,
+                        final TestVertexConnection connection,
+                        final TestSender sender
+    ) {
+        super(builder, executor, connection, "test", sender);
     }
 }

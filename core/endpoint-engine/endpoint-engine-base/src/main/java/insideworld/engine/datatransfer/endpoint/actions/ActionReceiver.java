@@ -17,37 +17,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.amqp.connection.message;
+package insideworld.engine.datatransfer.endpoint.actions;
 
-import java.util.Collection;
-import java.util.Map;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.threads.Task;
 
-public class SendMessage implements Message {
+/**
+ * Action receiver interface.
+ * Using to integrate different endpoints to action engine.
+ * @param <T> Type of incoming message.
+ */
+public interface ActionReceiver<T> {
 
-    private final Collection<Map<String, Object>> maps;
-    private final Map<String, Object> properties;
-    private final String subject;
-
-    public SendMessage(final Collection<Map<String, Object>> maps,
-                       final Map<String, Object> properties,
-                       final String subject) {
-        this.maps = maps;
-        this.properties = properties;
-        this.subject = subject;
-    }
-
-    @Override
-    public Collection<Map<String, Object>> getArray() {
-        return this.maps;
-    }
-
-    @Override
-    public String getSubject() {
-        return this.subject;
-    }
-
-    @Override
-    public Map<String, Object> getProperties() {
-        return this.properties;
-    }
+    /**
+     * Execute action.
+     * @param action Action key.
+     * @param parameter Incoming message.
+     * @return Async result with output.
+     */
+    Task<Output> execute(final String action, final T message);
 }

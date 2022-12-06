@@ -19,5 +19,6 @@
 
 /**
  * This package is using for work with AMQP protocol and integrate it in action engine.
+ *
  */
 package insideworld.engine.amqp;

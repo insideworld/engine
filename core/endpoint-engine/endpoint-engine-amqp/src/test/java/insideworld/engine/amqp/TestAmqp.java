@@ -19,58 +19,88 @@
 
 package insideworld.engine.amqp;
 
-import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.actions.ContextPredicate;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.test.quarkus.amqp.QpidTestResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.IntStream;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.shaded.org.hamcrest.MatcherAssert;
+import org.testcontainers.shaded.org.hamcrest.Matchers;
 
+/**
+ * Test for AMQP.
+ * @since 0.14.0
+ */
 @QuarkusTest
 @QuarkusTestResource(QpidTestResource.class)
 public class TestAmqp {
 
-
+    /**
+     * Test sender instance.
+     */
     private final TestSender sender;
+
+    /**
+     * Object factory.
+     */
     private final ObjectFactory factory;
 
+    /**
+     * Callback action.
+     */
+    private TestCallbackAction callback;
+
+    /**
+     * Constructor.
+     * @param sender Test sender.
+     * @param factory Object factory.
+     * @param callback Callback action.
+     */
     @Inject
     public TestAmqp(
         final TestSender sender,
-        final ObjectFactory factory
+        final ObjectFactory factory,
+        final TestCallbackAction callback
     ) {
         this.sender = sender;
         this.factory = factory;
+        this.callback = callback;
     }
 
+    /**
+     * TC: Execute action which return 3 record using amqp.
+     * ER: After send an action expected that callback action receive 3 values in separate threads.
+     * Because operation is async just wait some time and after that check received values.
+     */
     @Test
-    final void test() throws Exception {
+    final void testSendReceive() throws InterruptedException {
         final Output output = this.factory.createObject(Output.class);
         output.createRecord().put("testValue", "My value!");
-        this.sender.send("insideworld.engine.amqp.TestAction",
+        this.sender.send(
             "insideworld.engine.amqp.TestAction",
+            "insideworld.engine.amqp.TestCallbackAction",
             output
         );
-        System.out.println("qwe");
-    }
-
-    @Test
-    final void testQwe() {
-
-        final List<Map<String, String>> some = List.of(
-            Map.of("some", "qwe")
+        Thread.sleep(100);
+        MatcherAssert.assertThat(
+            "Callback action doesn't contains necessary values",
+            this.callback.values(),
+            Matchers.allOf(
+                Matchers.iterableWithSize(3),
+                Matchers.hasItems(
+                    "One more",
+                    "Second",
+                    "And one more else"
+                )
+            )
         );
-        final List<ContextPredicate> contexts = some.stream().map(map -> (ContextPredicate) () -> {
-            final Context context = this.factory.createObject(Context.class);
-            map.forEach(context::put);
-            return context;
-        }).toList();
-        System.out.println("qwe");
     }
 
 }

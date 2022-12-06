@@ -20,8 +20,7 @@
 package insideworld.engine.amqp.vertex;
 
 import insideworld.engine.amqp.connection.AmqpReceiver;
-import insideworld.engine.amqp.connection.Connection;
-import insideworld.engine.amqp.connection.message.Message;
+import insideworld.engine.amqp.connection.Message;
 import insideworld.engine.injection.ObjectFactory;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;

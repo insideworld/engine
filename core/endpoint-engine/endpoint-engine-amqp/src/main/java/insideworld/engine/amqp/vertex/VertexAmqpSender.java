@@ -21,14 +21,12 @@ package insideworld.engine.amqp.vertex;
 
 import com.google.common.collect.Lists;
 import insideworld.engine.amqp.connection.AmqpSender;
-import insideworld.engine.amqp.connection.message.Message;
+import insideworld.engine.amqp.connection.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;
 import io.vertx.mutiny.amqp.AmqpMessageBuilder;
-import java.util.List;
-import javax.enterprise.context.Dependent;
 
 public class VertexAmqpSender implements AmqpSender {
 

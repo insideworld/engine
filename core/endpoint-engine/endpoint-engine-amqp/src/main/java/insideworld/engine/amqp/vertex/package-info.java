@@ -17,12 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.datatransfer.endpoint.actions;
-
-import insideworld.engine.actions.keeper.context.Context;
-
-public interface ContextPredicate {
-
-    Context initContext();
-
-}
+/**
+ * Vertx implementation of AMQP message interaction.
+ */
+package insideworld.engine.amqp.vertex;

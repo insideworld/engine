@@ -19,10 +19,16 @@
 
 package insideworld.engine.amqp.connection;
 
-import insideworld.engine.amqp.connection.message.Message;
-
+/**
+ * Send message to AMQP.
+ * @since 1.0.0
+ */
 public interface AmqpSender {
 
+    /**
+     * Send.
+     * @param message Message.
+     */
     void send(Message message);
 
 }

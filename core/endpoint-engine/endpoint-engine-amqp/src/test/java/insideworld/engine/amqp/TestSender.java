@@ -20,16 +20,29 @@
 package insideworld.engine.amqp;
 
 import insideworld.engine.amqp.actions.AmqpActionSender;
+import insideworld.engine.amqp.connection.Connection;
+import insideworld.engine.amqp.connection.Message;
+import insideworld.engine.datatransfer.endpoint.actions.PreSend;
 import insideworld.engine.injection.ObjectFactory;
+import java.util.Collection;
+import java.util.List;
 import javax.inject.Singleton;
 
 @Singleton
 public class TestSender extends AmqpActionSender {
-
+    /**
+     * Default constructor.
+     *
+     * @param factory Object factory.
+     * @param connection Connection instance.
+     * @param pres Pre send objects.
+     */
     public TestSender(
-        final ObjectFactory factory,
-        final TestVertexConnection connection
+       final ObjectFactory factory,
+       final Connection connection,
+       final List<PreSend<Message>> pres
     ) {
-        super(factory, connection, "test");
+        super(factory, connection, "test", pres);
     }
+
 }

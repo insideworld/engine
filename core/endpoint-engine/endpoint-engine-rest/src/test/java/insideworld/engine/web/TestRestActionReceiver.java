@@ -19,8 +19,10 @@
 
 package insideworld.engine.web;
 
+import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.datatransfer.endpoint.actions.ActionEndpoint;
+import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
 import java.io.InputStream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,13 +35,19 @@ import javax.ws.rs.core.HttpHeaders;
 
 @Path("/actions")
 @Singleton
-public class RestActionReceiver {
+public class TestRestActionReceiver {
 
-    private final ActionEndpoint<RestParameter> facade;
+    private RestActionReceiver receiver;
 
+    /**
+     * Default constructor.
+     *
+     * @param builder Output task builder.
+     * @param executor Action executor.
+     */
     @Inject
-    public RestActionReceiver(final ActionEndpoint<RestParameter> facade) {
-        this.facade = facade;
+    public TestRestActionReceiver(final RestActionReceiver receiver) {
+        this.receiver = receiver;
     }
 
     @POST
@@ -51,7 +59,7 @@ public class RestActionReceiver {
         @javax.ws.rs.core.Context final HttpHeaders headers,
         final InputStream rawbody
     ) {
-        return this.facade.execute(action, new RestParameter(headers, rawbody)).result();
+        return this.receiver.execute(action, new RestParameter(headers, rawbody)).result();
     }
 
 //    @POST

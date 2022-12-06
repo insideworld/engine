@@ -28,12 +28,32 @@ import io.vertx.amqp.AmqpClientOptions;
 import io.vertx.mutiny.amqp.AmqpClient;
 import io.vertx.mutiny.amqp.AmqpConnection;
 
+/**
+ * Connection implementation based on Vertx.
+ * @since 0.14.0
+ */
 public class VertexConnection implements Connection, OnStartUp {
 
+    /**
+     * Amqp client options.
+     */
     private final AmqpClientOptions options;
+
+    /**
+     * Object factory.
+     */
     private final ObjectFactory factory;
+
+    /**
+     * Vertx connection.
+     */
     private AmqpConnection connection;
 
+    /**
+     * Default constructor.
+     * @param options Client options.
+     * @param factory Object factory.
+     */
     public VertexConnection(final AmqpClientOptions options,
                             final ObjectFactory factory) {
         this.options = options;
@@ -41,22 +61,22 @@ public class VertexConnection implements Connection, OnStartUp {
     }
 
     @Override
-    public AmqpReceiver createReceiver(final String channel) {
+    public final AmqpReceiver createReceiver(final String channel) {
         return this.factory.createObject(VertexAmqpReceiver.class, this.connection, channel);
     }
 
     @Override
-    public AmqpSender createSender(final String channel) {
+    public final AmqpSender createSender(final String channel) {
         return this.factory.createObject(VertexAmqpSender.class, this.connection, channel);
     }
 
     @Override
-    public void startUp() {
+    public final void startUp() {
         this.connection = AmqpClient.create(this.options).connectAndAwait();
     }
 
     @Override
-    public int order() {
+    public final int order() {
         return 50_000;
     }
 }
