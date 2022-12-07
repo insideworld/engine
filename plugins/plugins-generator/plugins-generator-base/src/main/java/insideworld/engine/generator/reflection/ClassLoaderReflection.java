@@ -31,15 +31,6 @@ public class ClassLoaderReflection implements Reflection {
 
     private final Reflections reflections;
 
-//    @Inject
-//    public ClassLoaderReflection(final PropertiesProvider provider) throws PropertiesException {
-//        this(
-//            Thread.currentThread().getContextClassLoader(),
-//            provider.provide("engine.package", String.class),
-//            "insideworld.engine"
-//        );
-//    }
-
     public ClassLoaderReflection(final ClassLoader loader, final String... packages) {
         final ConfigurationBuilder builder = new ConfigurationBuilder().addClassLoaders(loader);
         for (final String pack : packages) {

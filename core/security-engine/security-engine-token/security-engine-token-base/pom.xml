@@ -41,6 +41,42 @@
       <artifactId>data-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!--  Tests  -->
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-test-common</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>plugins-generator-data-inmemory</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>insideworld.engine</groupId>
+        <artifactId>plugins-generator-data-inmemory</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <scan>insideworld</scan>
+            </configuration>
+            <phase>process-test-classes</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

@@ -17,33 +17,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.auth;
+package insideworld.engine.security.common;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.security.common.UserTags;
-import insideworld.engine.security.common.storages.UserStorage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.naming.AuthenticationException;
-import javax.transaction.Transactional;
+import insideworld.engine.exception.CommonException;
+import insideworld.engine.exception.Diagnostic;
+import java.util.Collection;
+import java.util.Collections;
 
-@Singleton
-public class TokenAuth implements Auth<TokenContainer> {
+/**
+ * Role exception.
+ * @since 1.0.0
+ */
+public class RoleException extends CommonException {
 
-    private final UserStorage users;
-
-    @Inject
-    public TokenAuth(final UserStorage users) {
-        this.users = users;
-    }
-
-    @Override
-    public void performAuth(final Record context, final TokenContainer token)
-        throws AuthenticationException {
-        if (context.contains(UserTags.USER)) {
-            throw new AuthenticationException("You are so smart, isn't?");
-        }
-        context.put(UserTags.USER, this.users.getByToken(token.getToken()));
+    /**
+     * Constructor.
+     * @param message Message about exception.
+     * @param args Arguments.
+     */
+    public RoleException(final String message, final Object... args) {
+        super(Collections.emptyList(), message, args);
     }
 }

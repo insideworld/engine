@@ -19,32 +19,58 @@
 
 package insideworld.engine.security.common.action;
 
-//
-//@Singleton
-//public class RoleExecuteWrapper implements ExecuteWrapper {
-//
-//    private static final Logger LOGGER = LoggerFactory.getLogger(RoleExecuteWrapper.class);
-//
-//    @Override
-//    public void execute(final Context context) throws ActionException {
-//        final User user = context.get(UserTags.USER);
-//        final RoleAction action;
-//        try {
-//            action = (RoleAction) context.get(ActionsTags.ACTION);
-//        } catch (final ClassCastException exp) {
-//            throw new ActionException("Role engine include to your app. Simple actions is prohibit. Please use RoleAction class", exp);
-//        }
-//        if (user == null) {
-//            throw new RoleException("Can't find who execute this action");
-//        }
-//        LOGGER.trace("User {}", user.getName());
-//        if (user.getAvailableRoles().stream().noneMatch(action.role(context)::contains)) {
-//            throw new RoleException("Sorry dude, but you can't execute this action...");
-//        }
-//    }
-//
-//    @Override
-//    public Collection<Class<? extends ExecuteProfile>> forProfile() {
-//        return Collections.singleton(DefaultExecuteProfile.class);
-//    }
-//}
+
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
+import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.actions.tags.ActionsTags;
+import insideworld.engine.exception.CommonException;
+import insideworld.engine.security.common.RoleException;
+import insideworld.engine.security.common.UserTags;
+import insideworld.engine.security.common.entities.User;
+import java.util.Collection;
+import java.util.Collections;
+import javax.inject.Singleton;
+
+/**
+ * Role execution wrapper.
+ * Check that in context exists user, and it's role is available.
+ * @since 0.7.0
+ */
+@Singleton
+public class RoleExecuteWrapper extends AbstractExecuteWrapper {
+
+    @Override
+    public final void execute(final Action action, final Context context, final Output output)
+        throws CommonException {
+        final User user = context.get(UserTags.USER);
+        final RoleAction casted;
+        try {
+            casted = (RoleAction) context.get(ActionsTags.ACTION);
+        } catch (final ClassCastException exp) {
+            throw new RoleException(
+                "Role engine include to your app. Simple actions is prohibit. Please use RoleAction class"
+            );
+        }
+        if (user == null) {
+            throw new RoleException("Can't find who execute this action");
+        }
+        if (user.getAvailableRoles().stream().noneMatch(casted.role(context)::contains)) {
+            throw new RoleException("Sorry dude, but you can't execute this action...");
+        }
+    }
+
+    @Override
+    public final int order() {
+        return 200_000;
+    }
+
+    @Override
+    public final Collection<Class<? extends ExecuteProfile>> forProfile() {
+        return Collections.singleton(DefaultExecuteProfile.class);
+    }
+
+}

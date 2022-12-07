@@ -19,11 +19,15 @@
 
 package insideworld.engine.security.common.system;
 
+import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
 import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.properties.PropertiesException;
 import insideworld.engine.properties.PropertiesProvider;
 import insideworld.engine.security.common.UserTags;
@@ -34,29 +38,46 @@ import java.util.Collections;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-///**
-// * Using for preauth with system user to launch system action.
-// */
-//@Singleton
-//public class SystemPreExecuteWrapper implements ExecuteWrapper {
-//
-//    private final User user;
-//
-//    @Inject
-//    public SystemPreExecuteWrapper(final PropertiesProvider properties,
-//                                   final UserStorage storage) throws PropertiesException {
-//        final String username = properties.provide("engine.system.username", String.class);
-//        this.user = storage.getByName(username)
-//            .orElseThrow(() -> new PropertiesException("Can't find system user"));
-//    }
-//
-//    @Override
-//    public void execute(final Context context) throws ActionException {
-//        context.put(UserTags.USER, this.user);
-//    }
-//
-//    @Override
-//    public Collection<Class<? extends ExecuteProfile>> forProfile() {
-//        return Collections.singleton(SystemExecuteProfile.class);
-//    }
-//}
+/**
+ * Using to set system user in context for internal calls.
+ * @since 1.0.0
+ */
+@Singleton
+public class SystemTokenExecuteWrapper extends AbstractExecuteWrapper {
+
+    /**
+     * System user.
+     */
+    private final User user;
+
+    /**
+     * Constructor.
+     * @param properties Properties provider.
+     * @param storage User storage.
+     * @throws PropertiesException Property of system user is not set.
+     */
+    @Inject
+    public SystemTokenExecuteWrapper(final PropertiesProvider properties,
+                                     final UserStorage storage) throws PropertiesException {
+        this.user = storage.getByName(
+                properties.provide("engine.system.username", String.class)
+            ).orElseThrow(() -> new PropertiesException("Can't find system user"));
+    }
+
+    @Override
+    public final void execute(final Action action, final Context context, final Output output)
+        throws CommonException {
+        context.put(UserTags.USER, this.user);
+        super.execute(action, context, output);
+    }
+
+    @Override
+    public final int order() {
+        return 500_000;
+    }
+
+    @Override
+    public final Collection<Class<? extends ExecuteProfile>> forProfile() {
+        return Collections.singleton(SystemExecuteProfile.class);
+    }
+}

@@ -17,33 +17,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.auth;
+package insideworld.engine.security.common;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.security.common.UserTags;
-import insideworld.engine.security.common.storages.UserStorage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.naming.AuthenticationException;
-import javax.transaction.Transactional;
+import insideworld.engine.data.generator.inmemory.entity.annotations.GenerateInMemoryEntity;
+import insideworld.engine.data.generator.inmemory.storage.annotations.GenerateInMemoryCrud;
+import insideworld.engine.generator.GenerateMixin;
+import insideworld.engine.security.common.entities.Role;
+import insideworld.engine.security.common.entities.User;
 
-@Singleton
-public class TokenAuth implements Auth<TokenContainer> {
-
-    private final UserStorage users;
-
-    @Inject
-    public TokenAuth(final UserStorage users) {
-        this.users = users;
-    }
-
-    @Override
-    public void performAuth(final Record context, final TokenContainer token)
-        throws AuthenticationException {
-        if (context.contains(UserTags.USER)) {
-            throw new AuthenticationException("You are so smart, isn't?");
-        }
-        context.put(UserTags.USER, this.users.getByToken(token.getToken()));
-    }
+@GenerateInMemoryEntity(entity = Role.class)
+@GenerateInMemoryCrud(entity = Role.class)
+@GenerateInMemoryEntity(entity = User.class)
+@GenerateInMemoryCrud(entity = User.class)
+public interface Mixin extends GenerateMixin {
 }

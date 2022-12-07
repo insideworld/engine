@@ -26,6 +26,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -42,7 +43,12 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException {
         try {
-            final ClassOutput output = new ClassWriter(this.project.getBuild().getOutputDirectory());
+            final ClassOutput output;
+            if (this.project.hasLifecyclePhase("process-test-resources")) {
+                output = new ClassWriter(this.project.getBuild().getTestOutputDirectory());
+            } else {
+                output = new ClassWriter(this.project.getBuild().getOutputDirectory());
+            }
             final Reflection reflection = new ClassLoaderReflection(
                 this.getClassLoader(this.project), this.scan);
             this.generate(reflection, output);
@@ -53,9 +59,14 @@ public abstract class AbstractGeneratorMojo extends AbstractMojo {
 
     protected abstract void generate(final Reflection reflection, final ClassOutput output);
 
-    private ClassLoader getClassLoader(MavenProject project)
+    private ClassLoader getClassLoader(final MavenProject project)
         throws DependencyResolutionRequiredException, MalformedURLException {
-        final var classpathElements = project.getCompileClasspathElements();
+        final List<String> classpathElements;
+        if (project.hasLifecyclePhase("process-test-resources")) {
+            classpathElements = project.getTestClasspathElements();
+        } else {
+            classpathElements = project.getCompileClasspathElements();
+        }
         classpathElements.add(project.getBuild().getOutputDirectory());
         classpathElements.add(project.getBuild().getTestOutputDirectory());
         final URL[] urls = new URL[classpathElements.size()];
