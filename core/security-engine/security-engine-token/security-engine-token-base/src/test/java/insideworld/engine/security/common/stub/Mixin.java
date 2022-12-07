@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common;
+package insideworld.engine.security.common.stub;
 
 import insideworld.engine.data.generator.inmemory.entity.annotations.GenerateInMemoryEntity;
 import insideworld.engine.data.generator.inmemory.storage.annotations.GenerateInMemoryCrud;
