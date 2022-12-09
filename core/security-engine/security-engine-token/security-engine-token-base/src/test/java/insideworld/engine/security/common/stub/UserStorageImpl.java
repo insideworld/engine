@@ -17,22 +17,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.storages;
+package insideworld.engine.security.common.stub;
 
+import insideworld.engine.data.generator.inmemory.storage.AbstractInMemoryStorageDecorator;
+import insideworld.engine.data.generator.inmemory.storage.abstracts.AbstractMemoryStorage;
 import insideworld.engine.entities.StorageException;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.security.common.AuthenticationException;
 import insideworld.engine.security.common.entities.User;
+import insideworld.engine.security.common.storages.UserStorage;
 import java.util.Collection;
 import java.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public interface UserStorage extends Storage<User> {
+@Singleton
+public class UserStorageImpl extends AbstractInMemoryStorageDecorator<User> implements UserStorage {
 
-    User getByToken(String token) throws CommonException;
+    @Inject
+    public UserStorageImpl(final AbstractMemoryStorage<User> storage) {
+        super(storage);
+    }
 
-    Optional<User> getByName(String name) throws StorageException;
+    @Override
+    public User getByToken(final String token) throws CommonException {
+        return this.storage
+            .readAll()
+            .stream()
+            .filter(user -> token.equals(user.getToken()))
+            .findFirst()
+            .orElseThrow(() -> new AuthenticationException("Token not found"));
+    }
 
-    Collection<User> getByNames(Collection<String> name) throws StorageException;
+    @Override
+    public Optional<User> getByName(final String name) throws StorageException {
+        return this.storage
+            .readAll()
+            .stream()
+            .filter(user -> name.equals(user.getName()))
+            .findFirst();
+    }
 
+    @Override
+    public Collection<User> getByNames(final Collection<String> names) throws StorageException {
+        return this.storage.readAll()
+            .stream().filter(user -> names.contains(user.getName())).toList();
+    }
 }

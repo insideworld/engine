@@ -83,7 +83,7 @@ public class TxActionWrapper extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final int order() {
+    public final long wrapperOrder() {
         return 1_000_000;
     }
 

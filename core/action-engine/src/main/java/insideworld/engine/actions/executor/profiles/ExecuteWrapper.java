@@ -53,7 +53,7 @@ public interface ExecuteWrapper {
      * Zero is reserved for execute action and set up this value will be unpredictably order.
      * @return Order.
      */
-    int order();
+    long wrapperOrder();
 
     /**
      * For which profile need to perform the implementation.

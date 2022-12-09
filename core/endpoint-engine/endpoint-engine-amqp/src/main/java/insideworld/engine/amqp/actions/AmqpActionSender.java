@@ -105,7 +105,7 @@ public class AmqpActionSender implements ActionSender, OnStartUp {
     }
 
     @Override
-    public final int order() {
+    public final int startOrder() {
         return 70_000;
     }
 }

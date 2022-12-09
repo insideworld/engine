@@ -21,17 +21,27 @@ package insideworld.engine.quarkus.startup;
 
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.startup.StartUpException;
 import io.quarkus.runtime.Startup;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Process startup implemented objects after launch application.
+ * @see OnStartUp
+ * @since 0.14.0
+ */
 @Startup(3000)
 @Singleton
 public class ProcessOnStartUp {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProcessOnStartUp.class);
     private final List<OnStartUp> startups;
 
     @Inject
@@ -40,11 +50,32 @@ public class ProcessOnStartUp {
     }
 
     @PostConstruct
-    public void init() throws CommonException {
+    public void init() throws StartUpException {
         final List<OnStartUp> sorted = this.startups.stream()
-            .sorted(Comparator.comparingInt(OnStartUp::order)).toList();
+            .sorted(Comparator.comparingLong(OnStartUp::startOrder).reversed())
+            .toList();
+        this.logOrder(sorted);
         for (final OnStartUp start : sorted) {
-            start.startUp();
+            try {
+                start.startUp();
+            } catch (final Exception exp) {
+                throw wrap(exp, () -> new StartUpException(exp, start.getClass()), StartUpException.class);
+            }
+        }
+    }
+
+
+
+    /**
+     * Log order of startup objects.
+     * @param sorted Sorted startups objects.
+     */
+    private void logOrder(final List<OnStartUp> sorted) {
+        if (ProcessOnStartUp.LOGGER.isDebugEnabled()) {
+            ProcessOnStartUp.LOGGER.debug("Startup objects:");
+            for (final OnStartUp start : sorted) {
+                ProcessOnStartUp.LOGGER.debug("{} {}", start.startOrder(), start.getClass().getName());
+            }
         }
     }
 

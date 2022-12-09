@@ -76,7 +76,7 @@ public class VertexConnection implements Connection, OnStartUp {
     }
 
     @Override
-    public final int order() {
+    public final int startOrder() {
         return 50_000;
     }
 }

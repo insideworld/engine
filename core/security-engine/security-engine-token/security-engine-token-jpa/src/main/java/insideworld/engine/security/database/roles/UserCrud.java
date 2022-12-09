@@ -20,12 +20,12 @@
 package insideworld.engine.security.database.roles;
 
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
+import insideworld.engine.security.common.AuthenticationException;
 import insideworld.engine.security.common.entities.User;
 import insideworld.engine.security.common.storages.UserStorage;
 import java.util.Collection;
 import java.util.Optional;
 import javax.inject.Singleton;
-import javax.naming.AuthenticationException;
 
 @Singleton
 public class UserCrud extends AbstractCrudGenericStorage<User, UserJpa> implements UserStorage {

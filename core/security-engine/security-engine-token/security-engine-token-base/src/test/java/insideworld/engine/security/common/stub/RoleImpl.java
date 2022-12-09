@@ -17,63 +17,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common;
+package insideworld.engine.security.common.stub;
 
+import insideworld.engine.data.generator.inmemory.entity.abstracts.MemoryEntity;
 import insideworld.engine.security.common.entities.Role;
+import javax.enterprise.context.Dependent;
 
-/**
- * Role implementation to hardcode into the code.
- * @since 0.6.0
- */
-public class RoleConst implements Role {
+@Dependent
+public class RoleImpl implements Role, MemoryEntity {
 
-    private final String name;
+    private long id;
 
-    public RoleConst(final String name) {
-        this.name = name;
+    private String name;
+
+    private Role append;
+
+    @Override
+    public long getId() {
+        return this.id;
     }
 
     @Override
-    public final long getId() {
-        return 0;
+    public void setId(long pid) {
+        this.id = pid;
     }
 
     @Override
-    public final String getName() {
+    public String getName() {
         return this.name;
     }
 
     @Override
-    public final void setName(final String name) {
-        throw new UnsupportedOperationException("Read only object.");
+    public void setName(final String pname) {
+        this.name = pname;
     }
 
     @Override
-    public final Role getAppend() {
-        throw new UnsupportedOperationException("For constant roles this not available.");
+    public Role getAppend() {
+        return this.append;
     }
 
     @Override
-    public final void setAppend(final Role append) {
-        throw new UnsupportedOperationException("For constant roles this not available.");
+    public void setAppend(final Role pappend) {
+        this.append = pappend;
     }
-
-    @Override
-    public final int hashCode() {
-        return this.name.hashCode();
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        final boolean result;
-        if (obj instanceof Role) {
-            result = this.name.equals(((Role) obj).getName());
-        } else {
-            result = false;
-        }
-        return result;
-    }
-
 
 
 }

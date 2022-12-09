@@ -19,23 +19,51 @@
 
 package insideworld.engine.exception;
 
+import insideworld.engine.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collection;
 import java.util.Map;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class TestException {
 
     @Test
-    public void test() {
-        try {
-            this.causeOne();
-        } catch (OneException e) {
-            final Collection<Index> indexes = e.getIndexes();
-            System.out.println("qwe");
-//            throw new RuntimeException(e);
-        }
+    public void test() throws CommonException {
+        MatcherAssert.assertThat(
+            "Exception is not wrapped",
+            () -> {
+                try {
+                    this.causeOne();
+                } catch (final Exception exp) {
+                    throw CommonException.wrap(exp, () -> new TwoException(exp), TwoException.class);
+                }
+            },
+            ExceptionMatchers.catchException(
+                TwoException.class,
+                Matchers.allOf(
+                    ExceptionMatchers.classMatcher(1, OneException.class),
+                    ExceptionMatchers.classMatcher(2, TwoException.class),
+                    ExceptionMatchers.classMatcher(3, IllegalArgumentException.class)
+                )
+            )
+        );
+        MatcherAssert.assertThat(
+            "Exception is wrapped",
+            () -> {
+                try {
+                    this.causeTwo();
+                } catch (final Exception exp) {
+                    throw CommonException.wrap(exp, () -> new TwoException(exp), TwoException.class);
+                }
+            },
+            ExceptionMatchers.catchException(
+                TwoException.class,
+                ExceptionMatchers.classMatcher(1, IllegalArgumentException.class)
+            )
+        );
     }
 
     private void causeOne() throws OneException {

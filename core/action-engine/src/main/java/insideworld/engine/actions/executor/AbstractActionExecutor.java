@@ -27,6 +27,7 @@ import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.tags.ActionsTags;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import java.util.List;
@@ -89,7 +90,7 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
     }
 
     @Override
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidRethrowingException"})
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
     public final Output execute(
         final T parameter, final Context context, final Class<? extends ExecuteProfile> profile)
         throws ActionException {
@@ -100,10 +101,12 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
         //@checkstyle IllegalCatchCheck (7 lines)
         try {
             this.profiles.get(profile).execute(action, context, output);
-        } catch (final ActionException exp) {
-            throw exp;
         } catch (final Exception exp) {
-            throw new ActionException(action, exp);
+            throw CommonException.wrap(
+                exp,
+                () -> new ActionException(action, exp),
+                ActionException.class
+            );
         }
         return output;
     }

@@ -17,11 +17,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.storages;
+package insideworld.engine.security.common.stub;
 
-import insideworld.engine.entities.storages.Storage;
+import insideworld.engine.security.common.RoleConst;
 import insideworld.engine.security.common.entities.Role;
 
-public interface RoleStorage extends Storage<Role> {
+public class Roles {
+
+    public static final Role TEST = new RoleConst("testrole");
 
 }

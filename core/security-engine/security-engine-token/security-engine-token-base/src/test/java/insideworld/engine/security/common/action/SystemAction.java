@@ -17,18 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.entities;
+package insideworld.engine.security.common.action;
 
-import insideworld.engine.entities.Entity;
-
-public interface Role extends Entity {
-
-    String getName();
-
-    void setName(String name);
-
-    Role getAppend();
-
-    void setAppend(Role append);
-
+public class SystemAction {
 }

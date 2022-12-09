@@ -101,8 +101,8 @@ public class HashStorageKeeper implements StorageKeeper, OnStartUp {
     }
 
     @Override
-    public final int order() {
-        return 5000;
+    public final long startOrder() {
+        return 1_000_000;
     }
 
     /**

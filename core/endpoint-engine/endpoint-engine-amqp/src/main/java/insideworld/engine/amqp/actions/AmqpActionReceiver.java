@@ -90,7 +90,7 @@ public class AmqpActionReceiver extends AbstractActionReceiver<Message> implemen
     }
 
     @Override
-    public final int order() {
+    public final int startOrder() {
         return 70_000;
     }
 

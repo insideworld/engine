@@ -17,18 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.entities;
+package insideworld.engine.security.common.action;
 
-import insideworld.engine.entities.Entity;
+import insideworld.engine.actions.Action;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.executor.ActionExecutor;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import io.quarkus.test.junit.QuarkusTest;
+import javax.inject.Inject;
+import org.junit.jupiter.api.Test;
 
-public interface Role extends Entity {
+@QuarkusTest
+class TokenTest {
 
-    String getName();
+    private ActionExecutor<Class<? extends Action>> executor;
 
-    void setName(String name);
+    @Inject
+    public TokenTest(final ActionExecutor<Class<? extends Action>> executor) {
+        this.executor = executor;
+    }
 
-    Role getAppend();
-
-    void setAppend(Role append);
+    @Test
+    final void test() throws ActionException {
+        final Context context = this.executor.createContext();
+        final Output output = this.executor.execute(UserAction.class, context);
+        System.out.println("Qwe");
+    }
 
 }

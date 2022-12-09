@@ -47,7 +47,7 @@ class SystemWrapper extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final int order() {
+    public final long wrapperOrder() {
         return 10;
     }
 

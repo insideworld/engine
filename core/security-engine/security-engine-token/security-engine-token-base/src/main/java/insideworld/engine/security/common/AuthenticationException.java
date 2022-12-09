@@ -17,18 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.entities;
+package insideworld.engine.security.common;
 
-import insideworld.engine.entities.Entity;
+import insideworld.engine.exception.CommonException;
+import java.util.Collections;
 
-public interface Role extends Entity {
+public class AuthenticationException extends CommonException {
+    public AuthenticationException(Throwable exception) {
+        super(Collections.emptyList(), exception);
+    }
 
-    String getName();
+    public AuthenticationException(String message, Object... args) {
+        super(Collections.emptyList(), message, args);
+    }
 
-    void setName(String name);
-
-    Role getAppend();
-
-    void setAppend(Role append);
-
+    public AuthenticationException(Throwable exception, String message, Object... args) {
+        super(Collections.emptyList(), exception, message, args);
+    }
 }

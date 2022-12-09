@@ -20,6 +20,7 @@
 package insideworld.engine.actions.chain;
 
 import com.google.common.collect.ImmutableList;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
@@ -99,16 +100,18 @@ public class LinksBuilderFactory implements LinksBuilder {
      * @param <T> Type of link.
      * @throws LinkException Exception at init.
      */
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidRethrowingException"})
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
     private static <T extends Link> void initLink(final T link, final LinkConsumer<T> init)
         throws LinkException {
         //@checkstyle IllegalCatchCheck (10 lines)
         try {
             init.init(link);
-        } catch (final LinkException exp) {
-            throw exp;
         } catch (final Exception exp) {
-            throw new LinkException(link, exp);
+            throw CommonException.wrap(
+                exp,
+                () -> new LinkException(link, exp),
+                LinkException.class
+            );
         }
     }
 }

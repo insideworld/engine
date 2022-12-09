@@ -30,8 +30,13 @@ public class StartUpException extends CommonException {
         super(Collections.emptyList(), exception, message, args);
     }
 
-    public StartUpException(final Throwable exception) {
-        super(Collections.emptyList(), exception);
+    public StartUpException(final Throwable exception, final Class<? extends OnStartUp> clazz) {
+        super(
+            Collections.emptyList(),
+            exception,
+            "Failed on startup for class {}",
+            clazz.getName()
+        );
     }
 
 }

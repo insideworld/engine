@@ -25,9 +25,7 @@ import insideworld.engine.generator.GenerateMixin;
 import insideworld.engine.security.common.entities.Role;
 import insideworld.engine.security.common.entities.User;
 
-@GenerateInMemoryEntity(entity = Role.class)
 @GenerateInMemoryCrud(entity = Role.class)
-@GenerateInMemoryEntity(entity = User.class)
-@GenerateInMemoryCrud(entity = User.class)
+@GenerateInMemoryCrud(entity = User.class, override = true)
 public interface Mixin extends GenerateMixin {
 }

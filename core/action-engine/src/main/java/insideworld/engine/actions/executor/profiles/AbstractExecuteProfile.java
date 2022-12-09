@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class for executor profile.
@@ -37,6 +39,11 @@ import javax.inject.Inject;
  * @since 0.14.0
  */
 public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartUp {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExecuteProfile.class);
 
     /**
      * Filtered wrappers for giving profiles.
@@ -56,7 +63,7 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
     public AbstractExecuteProfile(final List<ExecuteWrapper> executors) {
         this.wrappers = executors.stream()
             .filter(executor -> !Collections.disjoint(executor.forProfile(), this.profiles()))
-            .sorted(Comparator.comparingInt(ExecuteWrapper::order).reversed())
+            .sorted(Comparator.comparingLong(ExecuteWrapper::wrapperOrder).reversed())
             .toList();
     }
 
@@ -68,6 +75,7 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
 
     @Override
     public final void startUp() {
+        this.logOrder();
         final Iterator<ExecuteWrapper> iterator = this.wrappers.iterator();
         ExecuteWrapper last = iterator.next();
         this.first = last;
@@ -79,8 +87,8 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
     }
 
     @Override
-    public final int order() {
-        return 20_000;
+    public final long startOrder() {
+        return 600_000;
     }
 
     /**
@@ -89,5 +97,22 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
      * @return Profiles collection.
      */
     protected abstract Collection<Class<? extends ExecuteProfile>> profiles();
+
+    /**
+     * Log order of wrappers.
+     */
+    private void logOrder() {
+        if (AbstractExecuteProfile.LOGGER.isDebugEnabled()) {
+            AbstractExecuteProfile.LOGGER.debug(
+                "Wrappers order for profile {}",
+                this.getClass().getName()
+            );
+            for (final ExecuteWrapper wrapper : this.wrappers) {
+                AbstractExecuteProfile.LOGGER.debug(
+                    "{} {}", wrapper.wrapperOrder(), wrapper.getClass().getName()
+                );
+            }
+        }
+    }
 
 }

@@ -56,7 +56,7 @@ public abstract class AbstractChainAction implements Action {
     }
 
     @Override
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.AvoidRethrowingException"})
+    @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
     public final void execute(final Context context, final Output output) throws CommonException {
         for (final Link link : this.links) {
             if (context.contains(ChainTags.BREAK_CHAIN)) {
@@ -66,10 +66,12 @@ public abstract class AbstractChainAction implements Action {
                 //@checkstyle IllegalCatchCheck (10 lines)
                 try {
                     link.process(context, output);
-                } catch (final LinkException exp) {
-                    throw exp;
                 } catch (final Exception exp) {
-                    throw new LinkException(link, exp);
+                    throw CommonException.wrap(
+                        exp,
+                        () -> new LinkException(link, exp),
+                        LinkException.class
+                    );
                 }
             }
         }

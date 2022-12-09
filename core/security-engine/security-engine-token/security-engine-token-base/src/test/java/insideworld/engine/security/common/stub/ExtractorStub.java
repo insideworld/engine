@@ -17,18 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.common.entities;
+package insideworld.engine.security.common.stub;
 
-import insideworld.engine.entities.Entity;
+import insideworld.engine.actions.keeper.Record;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.extractor.Extractor;
+import java.util.Map;
+import javax.inject.Singleton;
 
-public interface Role extends Entity {
+@Singleton
+public class ExtractorStub implements Extractor {
+    @Override
+    public Output extract(Map<String, ?> context, String schema) throws StorageException {
+        return null;
+    }
 
-    String getName();
+    @Override
+    public Output extract(Record record, String schema) throws StorageException {
+        return null;
+    }
 
-    void setName(String name);
+    @Override
+    public int execute(Map<String, ?> context, String schema) throws StorageException {
+        return 0;
+    }
 
-    Role getAppend();
-
-    void setAppend(Role append);
-
+    @Override
+    public int execute(Record record, String schema) throws StorageException {
+        return 0;
+    }
 }

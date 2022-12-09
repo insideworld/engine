@@ -33,6 +33,8 @@ import insideworld.engine.properties.PropertiesProvider;
 import insideworld.engine.security.common.UserTags;
 import insideworld.engine.security.common.entities.User;
 import insideworld.engine.security.common.storages.UserStorage;
+import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
 import java.util.Collections;
 import javax.inject.Inject;
@@ -43,12 +45,15 @@ import javax.inject.Singleton;
  * @since 1.0.0
  */
 @Singleton
-public class SystemTokenExecuteWrapper extends AbstractExecuteWrapper {
+public class SystemTokenExecuteWrapper extends AbstractExecuteWrapper implements OnStartUp {
 
     /**
      * System user.
      */
-    private final User user;
+    private User user;
+    private final PropertiesProvider properties;
+    private final UserStorage storage;
+
 
     /**
      * Constructor.
@@ -58,10 +63,9 @@ public class SystemTokenExecuteWrapper extends AbstractExecuteWrapper {
      */
     @Inject
     public SystemTokenExecuteWrapper(final PropertiesProvider properties,
-                                     final UserStorage storage) throws PropertiesException {
-        this.user = storage.getByName(
-                properties.provide("engine.system.username", String.class)
-            ).orElseThrow(() -> new PropertiesException("Can't find system user"));
+                                     final UserStorage storage)  {
+        this.properties = properties;
+        this.storage = storage;
     }
 
     @Override
@@ -72,8 +76,20 @@ public class SystemTokenExecuteWrapper extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final int order() {
+    public long wrapperOrder() {
         return 500_000;
+    }
+
+    @Override
+    public void startUp() throws CommonException {
+        this.user = this.storage
+            .getByName(properties.provide("engine.system.username", String.class))
+            .orElseThrow(() -> new PropertiesException("Can't find system user"));
+    }
+
+    @Override
+    public final long startOrder() {
+        return 1_500_000;
     }
 
     @Override

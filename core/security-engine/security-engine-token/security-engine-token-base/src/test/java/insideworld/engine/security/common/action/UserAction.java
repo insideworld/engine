@@ -17,52 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.actions.executors.profile;
+package insideworld.engine.security.common.action;
 
-import insideworld.engine.actions.Action;
-import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
-import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
-import insideworld.engine.actions.executor.profiles.ExecuteProfile;
-import insideworld.engine.actions.executors.TestExecutorTags;
+import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.security.common.entities.Role;
+import insideworld.engine.security.common.stub.Roles;
 import java.util.Collection;
 import java.util.Collections;
-import javax.enterprise.context.Dependent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Singleton;
 
-/**
- * Wrapper one.
- * Just add -1 to the Sequence list.
- * @since 0.14.0
- */
-@Dependent
-class WrapperNegative extends AbstractExecuteWrapper {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WrapperNegative.class);
+@Singleton
+public class UserAction implements RoleAction {
 
     @Override
-    public final void execute(final Action action, final Context context, final Output output)
-        throws CommonException {
-        if (context.contains(TestExecutorTags.SEQUENCE)) {
-            WrapperNegative.LOGGER.debug("Wrapper -1");
-            context.get(TestExecutorTags.SEQUENCE).add(-1);
-        }
-        super.execute(action, context, output);
+    public void execute(Context context, Output output) throws CommonException {
+        output.createRecord().put("test", "test");
     }
 
     @Override
-    public final long wrapperOrder() {
-        return -1;
+    public String key() {
+        return "insideworld.engine.security.common.action.UserAction";
     }
 
     @Override
-    public final Collection<Class<? extends ExecuteProfile>> forProfile() {
-        return Collections.singleton(DefaultExecuteProfile.class);
+    public Collection<Role> role(final Context context) throws ActionException {
+        return Collections.singleton(Roles.TEST);
     }
 }

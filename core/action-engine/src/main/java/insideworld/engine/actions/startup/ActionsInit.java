@@ -22,6 +22,7 @@ package insideworld.engine.actions.startup;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionChanger;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
 import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
@@ -62,15 +63,17 @@ public class ActionsInit implements OnStartUp {
 
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public final void startUp() throws StartUpException {
+    public final void startUp() throws CommonException {
         for (final Action action : this.actions) {
             //@checkstyle IllegalCatchCheck (10 lines)
             try {
                 action.init();
-            } catch (final ActionException exp) {
-                throw new StartUpException(exp);
             } catch (final Exception exp) {
-                throw new StartUpException(new ActionException(action, exp));
+                throw CommonException.wrap(
+                    exp,
+                    () -> new ActionException(action, exp),
+                    ActionException.class
+                );
             }
         }
         for (final ActionChanger changer : this.changers) {
@@ -79,7 +82,7 @@ public class ActionsInit implements OnStartUp {
     }
 
     @Override
-    public final int order() {
-        return 10_000;
+    public final long startOrder() {
+        return 800_000;
     }
 }

@@ -30,6 +30,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Execute some actions after startup.
@@ -81,7 +83,7 @@ public class StartUpActions implements OnStartUp {
     }
 
     @Override
-    public final int order() {
-        return 30_000;
+    public final long startOrder() {
+        return 200_000;
     }
 }

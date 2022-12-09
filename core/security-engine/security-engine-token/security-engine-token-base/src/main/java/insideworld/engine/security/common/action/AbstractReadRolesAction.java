@@ -44,8 +44,10 @@ public abstract class AbstractReadRolesAction extends AbstractChainAction implem
         return builder
                 .addLink(
                         new TypeLiteral<ReadEntityLink<Role>>() {},
-                        link -> link.setType(Role.class).setTags(
-                                StorageTags.IDS, UserTags.ROLES))
+                        link -> link
+                            .setType(Role.class)
+                            .setTags(StorageTags.IDS, UserTags.ROLES)
+                )
                 .addLink(ExportEntityLink.class, link -> link.setTag(UserTags.ROLES))
                 .build();
     }

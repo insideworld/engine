@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -84,6 +85,27 @@ public abstract class CommonException extends Exception {
             .addAll(diagnostics).build();
     }
 
+    /**
+     * Wrap exception to necessary. In case if exception was raised with the same type - return it.
+     * @param exception Raised exception.
+     * @param predicate Predicate to create a new exception.
+     * @param clazz Class of necessary exception.
+     * @return If raised exception is assignamble to provided - return the same.
+     *  Else execute predicate to wrap.
+     * @param <T> Type of exception.
+     */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
+    public static <T extends CommonException> T wrap(
+        final Exception exception,
+        final Supplier<T> predicate,
+        final Class<T> clazz) {
+        if (exception.getClass().isAssignableFrom(clazz)) {
+            return (T) exception;
+        } else {
+            return predicate.get();
+        }
+    }
+
     public final Collection<Index> getIndexes() {
         final List<Throwable> throwables = ExceptionUtils.getThrowableList(this);
         final Collection<Index> results = Lists.newLinkedList();
@@ -108,13 +130,14 @@ public abstract class CommonException extends Exception {
         return results;
     }
 
-    private Collection<Diagnostic> getDiagnostics() {
-        return this.diagnostics;
-    }
-
     @Override
     public final String toString() {
         return getLocalizedMessage();
     }
+
+    private Collection<Diagnostic> getDiagnostics() {
+        return this.diagnostics;
+    }
+
 
 }
