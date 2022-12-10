@@ -33,6 +33,11 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
+      <artifactId>security-engine-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
       <artifactId>endpoint-engine-base</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -17,30 +17,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.common.stubs.data;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.data.generator.inmemory.entity.abstracts.MemoryEntity;
+import insideworld.engine.security.core.entities.Role;
+import javax.enterprise.context.Dependent;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
 
-    private final Auth<TokenContainer> auth;
+@Dependent
+public class RoleImpl implements Role, MemoryEntity {
 
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+    private long id;
+
+    private String name;
+
+    private Role append;
+
+    @Override
+    public long getId() {
+        return this.id;
     }
 
     @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
+    public void setId(long pid) {
+        this.id = pid;
     }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void setName(final String pname) {
+        this.name = pname;
+    }
+
+    @Override
+    public Role getAppend() {
+        return this.append;
+    }
+
+    @Override
+    public void setAppend(final Role pappend) {
+        this.append = pappend;
+    }
+
+
 }

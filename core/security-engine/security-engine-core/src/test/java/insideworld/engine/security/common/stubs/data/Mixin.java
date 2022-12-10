@@ -17,30 +17,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.common.stubs.data;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.data.generator.inmemory.storage.annotations.GenerateInMemoryCrud;
+import insideworld.engine.generator.GenerateMixin;
+import insideworld.engine.security.core.entities.Role;
+import insideworld.engine.security.core.entities.User;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
 
-    private final Auth<TokenContainer> auth;
-
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
-    }
-
-    @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
-    }
+@GenerateInMemoryCrud(entity = Role.class)
+@GenerateInMemoryCrud(entity = User.class, override = true)
+public interface Mixin extends GenerateMixin {
 }

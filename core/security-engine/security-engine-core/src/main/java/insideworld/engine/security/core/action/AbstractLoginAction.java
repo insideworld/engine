@@ -17,30 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.core.action;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.actions.chain.AbstractChainAction;
+import insideworld.engine.actions.chain.Link;
+import insideworld.engine.actions.chain.LinkException;
+import insideworld.engine.actions.chain.LinksBuilder;
+import insideworld.engine.entities.converter.ExportEntityLink;
+import insideworld.engine.security.core.UserTags;
+import java.util.Collection;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
+public abstract class AbstractLoginAction extends AbstractChainAction implements RoleAction {
 
-    private final Auth<TokenContainer> auth;
-
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+    public AbstractLoginAction(final LinksBuilder builder) {
+        super(builder);
     }
 
     @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
+    protected Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
+        return builder
+            .addLink(ExportEntityLink.class, link -> link.setTag(UserTags.USER))
+            .build();
     }
+
+    @Override
+    public String key() {
+        return "login";
+    }
+
 }

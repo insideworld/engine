@@ -17,30 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.core.storages;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
+import insideworld.engine.exception.CommonException;
+import insideworld.engine.security.core.entities.User;
+import java.util.Collection;
+import java.util.Optional;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
+public interface UserStorage<T extends User> extends Storage<T> {
 
-    private final Auth<TokenContainer> auth;
+    Optional<T> getByName(String name) throws StorageException;
 
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
-    }
+    Collection<T> getByNames(Collection<String> name) throws StorageException;
 
-    @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
-    }
 }

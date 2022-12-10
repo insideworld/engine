@@ -21,8 +21,7 @@ package insideworld.engine.security.web.auth;
 
 import insideworld.engine.actions.keeper.Record;
 import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.security.common.auth.Auth;
-import insideworld.engine.security.common.auth.TokenContainer;
+import insideworld.engine.security.common.action.TokenContainer;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.HttpHeaders;

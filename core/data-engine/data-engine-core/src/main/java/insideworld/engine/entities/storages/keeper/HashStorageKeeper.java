@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import insideworld.engine.entities.Entity;
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.storages.Storage;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
 import insideworld.engine.startup.StartUpException;
@@ -89,13 +90,9 @@ public class HashStorageKeeper implements StorageKeeper, OnStartUp {
     }
 
     @Override
-    public final void startUp() throws StartUpException {
+    public final void startUp() throws StorageException {
         for (final Storage<?> storage : this.all) {
-            try {
-                this.storages.put(this.findImplementation(storage), storage);
-            } catch (final StorageException exp) {
-                throw new StartUpException(exp);
-            }
+            this.storages.put(this.findImplementation(storage), storage);
             this.storages.put(storage.forEntity(), storage);
         }
     }

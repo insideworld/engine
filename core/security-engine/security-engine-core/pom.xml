@@ -22,19 +22,62 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>modules</artifactId>
+    <artifactId>security-engine</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>security-engine</artifactId>
+  <artifactId>security-engine-core</artifactId>
 
-  <packaging>pom</packaging>
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-  <modules>
-    <module>security-engine-token</module>
-    <module>security-engine-core</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>data-engine-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--  Tests  -->
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-test-common</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>plugins-generator-data-inmemory</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>insideworld.engine</groupId>
+        <artifactId>plugins-generator-data-inmemory</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <scan>insideworld</scan>
+            </configuration>
+            <phase>process-test-classes</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

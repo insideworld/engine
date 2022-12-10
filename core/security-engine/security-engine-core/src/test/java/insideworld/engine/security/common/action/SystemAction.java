@@ -17,30 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.common.action;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
+import insideworld.engine.actions.ActionException;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.security.common.stubs.Roles;
+import insideworld.engine.security.core.action.RoleAction;
+import insideworld.engine.security.core.entities.Role;
+import java.util.Collection;
+import java.util.Collections;
 import javax.inject.Singleton;
 
 @Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
-
-    private final Auth<TokenContainer> auth;
-
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+public class SystemAction implements RoleAction {
+    @Override
+    public void execute(final Context context, final Output output) {
+        //Nothing to do.
     }
 
     @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
+    public String key() {
+        return "insideworld.engine.security.common.action.SystemAction";
+    }
+
+    @Override
+    public Collection<Role> role(final Context context) {
+        return Collections.singleton(Roles.SYSTEM);
     }
 }

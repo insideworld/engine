@@ -17,30 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.common.stubs;
 
 import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
+import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.extractor.Extractor;
+import java.util.Map;
 import javax.inject.Singleton;
 
 @Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
-
-    private final Auth<TokenContainer> auth;
-
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+public class ExtractorStub implements Extractor {
+    @Override
+    public Output extract(Map<String, ?> context, String schema) throws StorageException {
+        return null;
     }
 
     @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
+    public Output extract(Record record, String schema) throws StorageException {
+        return null;
+    }
+
+    @Override
+    public int execute(Map<String, ?> context, String schema) throws StorageException {
+        return 0;
+    }
+
+    @Override
+    public int execute(Record record, String schema) throws StorageException {
+        return 0;
     }
 }

@@ -17,30 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.core;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.exception.CommonException;
+import java.util.Collections;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
-
-    private final Auth<TokenContainer> auth;
-
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+public class SecurityException extends CommonException {
+    public SecurityException(Throwable exception) {
+        super(Collections.emptyList(), exception);
     }
 
-    @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
+    public SecurityException(String message, Object... args) {
+        super(Collections.emptyList(), message, args);
+    }
+
+    public SecurityException(Throwable exception, String message, Object... args) {
+        super(Collections.emptyList(), exception, message, args);
     }
 }

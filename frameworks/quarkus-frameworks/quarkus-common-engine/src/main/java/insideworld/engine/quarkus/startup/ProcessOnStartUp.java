@@ -59,7 +59,11 @@ public class ProcessOnStartUp {
             try {
                 start.startUp();
             } catch (final Exception exp) {
-                throw wrap(exp, () -> new StartUpException(exp, start.getClass()), StartUpException.class);
+                throw CommonException.wrap(
+                    exp,
+                    () -> new StartUpException(exp, start.getClass()),
+                    StartUpException.class
+                );
             }
         }
     }

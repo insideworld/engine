@@ -17,30 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.common.stubs.data;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
+import insideworld.engine.data.generator.inmemory.storage.AbstractInMemoryStorageDecorator;
+import insideworld.engine.data.generator.inmemory.storage.abstracts.AbstractMemoryStorage;
+import insideworld.engine.entities.StorageException;
+import insideworld.engine.exception.CommonException;
+import insideworld.engine.security.core.entities.User;
+import insideworld.engine.security.core.storages.UserStorage;
+import java.util.Collection;
+import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
-
-    private final Auth<TokenContainer> auth;
-
+public class UserStorageImpl
+    extends AbstractInMemoryStorageDecorator<User> implements UserStorage<User> {
     @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+    public UserStorageImpl(final AbstractMemoryStorage<User> storage) {
+        super(storage);
     }
 
     @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
+    public Optional<User> getByName(final String name) throws StorageException {
+        return this.storage
+            .readAll()
+            .stream()
+            .filter(user -> name.equals(user.getName()))
+            .findFirst();
+    }
+
+    @Override
+    public Collection<User> getByNames(final Collection<String> names) throws StorageException {
+        return this.storage.readAll()
+            .stream().filter(user -> names.contains(user.getName())).toList();
     }
 }

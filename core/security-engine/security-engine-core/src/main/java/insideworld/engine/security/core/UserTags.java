@@ -17,30 +17,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.core;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.entities.tags.EntitiesTag;
+import insideworld.engine.entities.tags.EntityTag;
+import insideworld.engine.security.core.entities.Role;
+import insideworld.engine.security.core.entities.User;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
+public class UserTags {
 
-    private final Auth<TokenContainer> auth;
-
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
+    private UserTags() {
     }
 
-    @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
-    }
+    public static final EntityTag<User> USER = new EntityTag<>("user");
+
+    public static final EntityTag<User> USER_EXT = new EntityTag<>("userExt");
+
+    public final static EntitiesTag<Role> ROLES = new EntitiesTag<>("roles");
+
+    public final static EntitiesTag<User> USERS_EXT = new EntitiesTag<>("usersExt");
+
 }

@@ -34,7 +34,7 @@ public class StartUpException extends CommonException {
         super(
             Collections.emptyList(),
             exception,
-            "Failed on startup for class {}",
+            "Failed on startup for class %s",
             clazz.getName()
         );
     }

@@ -20,7 +20,6 @@
 package insideworld.engine.security.database.roles;
 
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
-import insideworld.engine.security.common.AuthenticationException;
 import insideworld.engine.security.common.entities.User;
 import insideworld.engine.security.common.storages.UserStorage;
 import java.util.Collection;

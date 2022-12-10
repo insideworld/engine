@@ -17,30 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.amqp.auth;
+package insideworld.engine.security.common.stubs;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.security.common.action.TokenContainer;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.security.core.RoleConst;
+import insideworld.engine.security.core.entities.Role;
 
-@Singleton
-public class AmqpReceiveAuth implements PreExecute<AmqpMessage> {
+public class Roles {
 
-    private final Auth<TokenContainer> auth;
+    public static final Role SYSTEM = new RoleConst("systemtestrole");
 
-    @Inject
-    public AmqpReceiveAuth(final Auth<TokenContainer> auth) {
-        this.auth = auth;
-    }
+    public static final Role ONE = new RoleConst("onerole");
 
-    @Override
-    public void preExecute(final Record context, final AmqpMessage parameter)
-        throws Exception {
-        this.auth.performAuth(
-            context,
-            () -> parameter.applicationProperties().getString("token")
-        );
-    }
+    public static final Role TWO = new RoleConst("tworole");
+
+    public static final Role THREE = new RoleConst("threerole");
+
 }
