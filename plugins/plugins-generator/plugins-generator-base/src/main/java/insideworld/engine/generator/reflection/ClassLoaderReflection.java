@@ -19,11 +19,7 @@
 
 package insideworld.engine.generator.reflection;
 
-import insideworld.engine.properties.PropertiesException;
-import insideworld.engine.properties.PropertiesProvider;
 import java.util.Collection;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 

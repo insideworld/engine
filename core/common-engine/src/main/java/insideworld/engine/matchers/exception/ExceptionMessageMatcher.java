@@ -46,7 +46,15 @@ public class ExceptionMessageMatcher extends TypeSafeMatcher<Throwable> {
     }
 
     @Override
-    public void describeTo(Description description) {
-        //Later when will write tests.
+    public void describeTo(final Description description) {
+        description.appendText(String.format("Exception message at level %d ", this.level));
+        this.matcher.describeTo(description);
+    }
+
+    @Override
+    protected final void describeMismatchSafely(
+        final Throwable item, final Description description) {
+        description.appendText(String.format("Exception message at level %d ", this.level));
+        this.matcher.describeMismatch(item, description);
     }
 }

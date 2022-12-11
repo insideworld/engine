@@ -19,36 +19,45 @@
 
 package insideworld.engine.security.amqp.auth;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.datatransfer.endpoint.PreExecute;
-import insideworld.engine.properties.PropertiesException;
+import insideworld.engine.amqp.connection.Message;
+import insideworld.engine.datatransfer.endpoint.actions.PreSend;
+import insideworld.engine.exception.CommonException;
 import insideworld.engine.properties.PropertiesProvider;
-import insideworld.engine.security.common.entities.User;
-import insideworld.engine.security.common.storages.UserStorage;
-import io.vertx.core.json.JsonObject;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import insideworld.engine.security.token.base.TokenUserStorage;
+import insideworld.engine.startup.OnStartUp;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.naming.AuthenticationException;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Singleton
-public class AmqpSendAuth implements PreExecute<AmqpMessageBuilder> {
+public class AmqpSendAuth implements PreSend<Message>, OnStartUp {
 
-    private final User user;
+    private final PropertiesProvider properties;
+    private final TokenUserStorage storage;
+
+    private String token;
 
     @Inject
     public AmqpSendAuth(final PropertiesProvider properties,
-                        final UserStorage storage)
-        throws AuthenticationException, PropertiesException {
-        final String username = properties.provide("engine.amqp.username", String.class);
-        this.user = storage.getByName(username).orElseThrow(
-            () -> new AuthenticationException("User for AMQP auth is not found")
-        );
+                        final TokenUserStorage storage) {
+        this.properties = properties;
+        this.storage = storage;
     }
 
     @Override
-    public void preExecute(final Record context, final AmqpMessageBuilder parameter) throws Exception {
-        parameter.applicationProperties(new JsonObject().put("token", this.user.getToken()));
+    public void execute(final Message parameter) {
+        parameter.getProperties().put("token", this.token);
+    }
+
+    @Override
+    public void startUp() throws CommonException {
+        final String username = properties.provide("engine.amqp.username", String.class);
+        this.token = storage.getByName(username).orElseThrow(
+            () -> new SecurityException("User for AMQP auth is not found")
+        ).getToken();
+    }
+
+    @Override
+    public long startOrder() {
+        return 100_000;
     }
 }

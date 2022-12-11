@@ -26,7 +26,6 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.test.KeeperMatchers;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.matchers.exception.ExceptionMatchers;
-import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import javax.inject.Inject;
@@ -90,12 +89,11 @@ class TestStartup {
                 Collections.singletonList(new InitExceptionAction()), null
             ).startUp(),
             ExceptionMatchers.catchException(
-                StartUpException.class,
+                ActionException.class,
                 Matchers.allOf(
-                    ExceptionMatchers.classMatcher(1, ActionException.class),
-                    ExceptionMatchers.classMatcher(2, IllegalArgumentException.class),
+                    ExceptionMatchers.classMatcher(1, IllegalArgumentException.class),
                     ExceptionMatchers.messageMatcher(
-                        2,
+                        1,
                         Matchers.containsString("Unhandled")
                     )
                 )
@@ -107,13 +105,9 @@ class TestStartup {
                 Collections.singletonList(new InitActionExceptionAction()), null
             ).startUp(),
             ExceptionMatchers.catchException(
-                StartUpException.class,
-                Matchers.allOf(
-                    ExceptionMatchers.classMatcher(1, ActionException.class),
-                    ExceptionMatchers.messageMatcher(
-                        1,
-                        Matchers.containsString("Handled")
-                    )
+                ActionException.class,
+                ExceptionMatchers.messageMatcher(
+                    0, Matchers.containsString("Handled")
                 )
             )
         );

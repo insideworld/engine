@@ -24,7 +24,6 @@ import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.Message;
 import insideworld.engine.datatransfer.endpoint.actions.PreSend;
 import insideworld.engine.injection.ObjectFactory;
-import java.util.Collection;
 import java.util.List;
 import javax.inject.Singleton;
 

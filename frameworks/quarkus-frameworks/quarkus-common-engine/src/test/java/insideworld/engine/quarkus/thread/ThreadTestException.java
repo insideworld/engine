@@ -19,8 +19,6 @@
 
 package insideworld.engine.quarkus.thread;
 
-import insideworld.engine.exception.CommonException;
-
 //public class ThreadTestException extends CommonException {
 //
 //    public ThreadTestException(String message) {

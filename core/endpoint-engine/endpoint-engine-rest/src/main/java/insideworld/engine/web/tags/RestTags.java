@@ -20,7 +20,6 @@
 package insideworld.engine.web.tags;
 
 import insideworld.engine.actions.keeper.tags.SingleTag;
-import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 
 /**

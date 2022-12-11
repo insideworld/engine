@@ -26,6 +26,9 @@ import insideworld.engine.security.core.entities.Role;
 import insideworld.engine.security.core.entities.User;
 import insideworld.engine.security.core.storages.UserStorage;
 import insideworld.engine.startup.OnStartUp;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -68,17 +71,17 @@ public class CreateTestData implements OnStartUp {
 
     @Override
     public final void startUp() throws CommonException {
-        final Role system = this.createRole(Roles.SYSTEM.getName(), null);
+        final Role one = this.createRole(Roles.ONE.getName(), Collections.emptyList());
+        final Role two = this.createRole(Roles.TWO.getName(), Collections.emptyList());
+        final Role three = this.createRole(Roles.THREE.getName(), Collections.emptyList());
+        this.createUser("one", one);
+        this.createUser("two", two);
+        this.createUser("three", three);
+        final Role system = this.createRole(
+            Roles.SYSTEM.getName(),
+            List.of(one, two, three)
+        );
         this.createUser("testsystem", system);
-        this.createUser(
-            "one", this.createRole(Roles.ONE.getName(), system)
-        );
-        this.createUser(
-            "two", this.createRole(Roles.TWO.getName(), system)
-        );
-        this.createUser(
-            "three", this.createRole(Roles.THREE.getName(), system)
-        );
     }
 
     private User createUser(final String name, final Role role)
@@ -89,10 +92,12 @@ public class CreateTestData implements OnStartUp {
         return this.users.write(user);
     }
 
-    private Role createRole(final String name, final Role append) throws StorageException {
+    private Role createRole(final String name, final Collection<Role> children) throws StorageException {
         final Role role = this.roles.read(this.rolesids++);
         role.setName(name);
-        role.setAppend(append);
+        for (final Role child : children) {
+            role.addChildren(child);
+        }
         return this.roles.write(role);
     }
 

@@ -20,8 +20,6 @@
 package insideworld.engine.data.jpa.threads;
 
 import insideworld.engine.exception.CommonException;
-import insideworld.engine.exception.Diagnostic;
-import java.util.Collection;
 import java.util.Collections;
 
 public class TestException extends CommonException {

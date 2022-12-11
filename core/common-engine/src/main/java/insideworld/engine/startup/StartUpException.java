@@ -20,8 +20,6 @@
 package insideworld.engine.startup;
 
 import insideworld.engine.exception.CommonException;
-import insideworld.engine.exception.Diagnostic;
-import java.util.Collection;
 import java.util.Collections;
 
 public class StartUpException extends CommonException {

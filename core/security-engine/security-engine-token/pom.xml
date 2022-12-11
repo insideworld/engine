@@ -34,7 +34,7 @@
 
   <modules>
     <module>security-engine-token-amqp</module>
-    <module>security-engine-token-base</module>
+    <module>security-engine-token-core</module>
     <module>security-engine-token-jpa</module>
     <module>security-engine-token-rest</module>
   </modules>

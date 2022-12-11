@@ -27,15 +27,11 @@ import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.data.jpa.entities.SomeEntity;
 import insideworld.engine.data.jpa.entities.TestTags;
 import insideworld.engine.entities.StorageException;
-import insideworld.engine.entities.actions.StorageActionsTags;
 import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.injection.ObjectFactory;
-import insideworld.engine.matchers.exception.ExceptionCatchMatcher;
-import insideworld.engine.matchers.exception.ExceptionMatchers;
 import insideworld.engine.test.quarkus.database.DatabaseResource;
 import insideworld.engine.threads.Task;
 import insideworld.engine.threads.TaskBuilder;
-import insideworld.engine.threads.TaskException;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collection;
@@ -82,7 +78,6 @@ class ThreadsTest {
         final SomeEntity expent = this.createEntity();
         expctx.put(TestTags.SOME_ENTITY, expent);
         expctx.put(ThreadsTag.EXCEPTION, new Object());
-        final Collection<Throwable> exceptions = Lists.newLinkedList();
         final Task<Output> task = builder
             .add(() -> this.executor.execute(WriteEntityAction.class, onectx))
             .add(() -> this.executor.execute(WriteEntityAction.class, twoctx))

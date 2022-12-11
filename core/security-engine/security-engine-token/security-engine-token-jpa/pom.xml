@@ -33,7 +33,7 @@
   <dependencies>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>security-engine-token-base</artifactId>
+      <artifactId>security-engine-token-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

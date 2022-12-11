@@ -19,9 +19,9 @@
 
 package insideworld.engine.amqp.vertex;
 
-import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.AmqpReceiver;
 import insideworld.engine.amqp.connection.AmqpSender;
+import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
 import io.vertx.amqp.AmqpClientOptions;
@@ -76,7 +76,7 @@ public class VertexConnection implements Connection, OnStartUp {
     }
 
     @Override
-    public final int startOrder() {
-        return 50_000;
+    public final long startOrder() {
+        return 1_000_000;
     }
 }

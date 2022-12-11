@@ -73,8 +73,8 @@ public class UserImpl implements MemoryEntity, User {
     private static Collection<Role> fetchRole(final Role role) {
         final Collection<Role> roles = Sets.newHashSet();
         roles.add(role);
-        if (role.getAppend() != null) {
-            roles.addAll(UserImpl.fetchRole(role.getAppend()));
+        for (final Role child : role.getChildren()) {
+            roles.addAll(fetchRole(child));
         }
         return roles;
     }

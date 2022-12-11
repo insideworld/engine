@@ -42,7 +42,25 @@ public class ExceptionClassMatcher extends TypeSafeMatcher<Throwable> {
     }
 
     @Override
-    public void describeTo(Description description) {
-        //Later when will write tests.
+    public void describeTo(final Description description) {
+        description.appendText(
+            String.format(
+                "Exception at level %d is %s ",
+                this.level,
+                this.throwable.getName()
+            )
+        );
+    }
+
+    @Override
+    protected final void describeMismatchSafely(
+        final Throwable item, final Description description) {
+        description.appendText(
+            String.format(
+                "Exception at level %d is %s ",
+                this.level,
+                item.getClass().getName()
+            )
+        );
     }
 }

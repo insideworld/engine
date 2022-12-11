@@ -17,41 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.matchers.exception;
+package insideworld.engine.security.token.base;
 
-import java.util.Collection;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import insideworld.engine.exception.CommonException;
+import insideworld.engine.security.core.storages.UserStorage;
+import java.util.Optional;
 
-public class ExceptionsCatchMatcher extends TypeSafeMatcher<ExecutableException[]> {
-    private final ExceptionCatchMatcher catcher;
+public interface TokenUserStorage extends UserStorage<TokenUser> {
 
-    public ExceptionsCatchMatcher(final Class<? extends Throwable> throwable) {
-        this(throwable, null);
-    }
+    Optional<TokenUser> getByToken(String token) throws CommonException;
 
-    public ExceptionsCatchMatcher(
-        final Class<? extends Throwable> throwable,
-        final Matcher<? extends Throwable> matcher
-    ) {
-        this.catcher = new ExceptionCatchMatcher(throwable, matcher);
-    }
-
-    @Override
-    protected boolean matchesSafely(final ExecutableException[] items) {
-        boolean result = false;
-        for (final ExecutableException item : items) {
-            result = this.catcher.matchesSafely(item);
-            if (!result) {
-                break;
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public void describeTo(Description description) {
-
-    }
 }

@@ -19,8 +19,10 @@
 
 package insideworld.engine.security.common.stubs.data;
 
+import com.google.common.collect.Lists;
 import insideworld.engine.data.generator.inmemory.entity.abstracts.MemoryEntity;
 import insideworld.engine.security.core.entities.Role;
+import java.util.Collection;
 import javax.enterprise.context.Dependent;
 
 
@@ -31,7 +33,7 @@ public class RoleImpl implements Role, MemoryEntity {
 
     private String name;
 
-    private Role append;
+    private final Collection<Role> children = Lists.newLinkedList();
 
     @Override
     public long getId() {
@@ -54,14 +56,29 @@ public class RoleImpl implements Role, MemoryEntity {
     }
 
     @Override
-    public Role getAppend() {
-        return this.append;
+    public Collection<Role> getChildren() {
+        return this.children;
     }
 
     @Override
-    public void setAppend(final Role pappend) {
-        this.append = pappend;
+    public void addChildren(final Role child) {
+        this.children.add(child);
     }
 
+    @Override
+    public final int hashCode() {
+        return this.name.hashCode();
+    }
+
+    @Override
+    public final boolean equals(final Object obj) {
+        final boolean result;
+        if (obj instanceof Role) {
+            result = this.name.equals(((Role) obj).getName());
+        } else {
+            result = false;
+        }
+        return result;
+    }
 
 }

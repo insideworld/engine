@@ -19,8 +19,6 @@
 
 package insideworld.engine.properties;
 
-import java.util.Optional;
-
 /**
  * Stupid CDI can't work with multiple beans because it's a full copy of Properties Provider
  */

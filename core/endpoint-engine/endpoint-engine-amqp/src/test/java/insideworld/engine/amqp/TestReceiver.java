@@ -21,12 +21,7 @@ package insideworld.engine.amqp;
 
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.amqp.actions.AmqpActionReceiver;
-import insideworld.engine.amqp.connection.Connection;
-import insideworld.engine.amqp.connection.Message;
-import insideworld.engine.datatransfer.endpoint.actions.ActionReceiver;
-import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
 import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**

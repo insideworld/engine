@@ -20,11 +20,11 @@
 package insideworld.engine.generator.entities.actions.write;
 
 import com.google.common.collect.ImmutableList;
+import insideworld.engine.entities.actions.AbstractWriteAction;
 import insideworld.engine.generator.entities.actions.abstracts.AbstractActionTagGenerator;
 import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagInfo;
 import insideworld.engine.generator.entities.actions.write.search.SearchWriteAction;
 import insideworld.engine.generator.entities.actions.write.search.SearchWriteMixin;
-import insideworld.engine.entities.actions.AbstractWriteAction;
 import insideworld.engine.generator.reflection.Reflection;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;

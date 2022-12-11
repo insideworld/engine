@@ -21,8 +21,8 @@ package insideworld.engine.data.generator.jpa.storage;
 
 import insideworld.engine.data.jpa.AbstractCrudStorage;
 import insideworld.engine.entities.Entity;
-import insideworld.engine.entities.storages.Storage;
 import insideworld.engine.entities.StorageException;
+import insideworld.engine.entities.storages.Storage;
 import java.util.Collection;
 
 /**

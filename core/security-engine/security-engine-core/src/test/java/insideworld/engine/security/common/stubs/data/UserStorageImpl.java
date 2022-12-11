@@ -22,7 +22,6 @@ package insideworld.engine.security.common.stubs.data;
 import insideworld.engine.data.generator.inmemory.storage.AbstractInMemoryStorageDecorator;
 import insideworld.engine.data.generator.inmemory.storage.abstracts.AbstractMemoryStorage;
 import insideworld.engine.entities.StorageException;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.security.core.entities.User;
 import insideworld.engine.security.core.storages.UserStorage;
 import java.util.Collection;

@@ -29,7 +29,6 @@ import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.startup.ActionsInit;
 import insideworld.engine.matchers.exception.ExceptionMatchers;
-import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import java.util.List;
@@ -99,13 +98,12 @@ class TestLinkException {
             TestLinkException.MESSAGE,
             init::startUp,
             ExceptionMatchers.catchException(
-                StartUpException.class,
+                ActionException.class,
                 Matchers.allOf(
-                    ExceptionMatchers.classMatcher(1, ActionException.class),
-                    ExceptionMatchers.classMatcher(2, LinkException.class),
-                    ExceptionMatchers.classMatcher(3, IllegalArgumentException.class),
+                    ExceptionMatchers.classMatcher(1, LinkException.class),
+                    ExceptionMatchers.classMatcher(2, IllegalArgumentException.class),
                     ExceptionMatchers.messageMatcher(
-                        3, Matchers.equalTo("Exception at link init")
+                        2, Matchers.equalTo("Exception at link init")
                     )
                 )
             )

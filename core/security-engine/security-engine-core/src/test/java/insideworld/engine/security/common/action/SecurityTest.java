@@ -43,7 +43,7 @@ class SecurityTest {
     private final UserStorage<User> users;
 
     @Inject
-    public SecurityTest(
+    SecurityTest(
         final ActionExecutor<Class<? extends Action>> executor,
         final UserStorage<User> users
     ) {
@@ -74,12 +74,12 @@ class SecurityTest {
         MatcherAssert.assertThat(
             "Exception wasn't raised",
             () -> this.executor.execute(SystemAction.class, context.cloneContext()),
-            Matchers.not(ExceptionMatchers.catchException(ActionException.class))
+           ExceptionMatchers.catchException(ActionException.class)
         );
         MatcherAssert.assertThat(
             "Exception wasn't raised",
             () -> this.executor.execute(TwoAction.class, context.cloneContext()),
-            Matchers.not(ExceptionMatchers.catchException(ActionException.class))
+            ExceptionMatchers.catchException(ActionException.class)
         );
     }
 

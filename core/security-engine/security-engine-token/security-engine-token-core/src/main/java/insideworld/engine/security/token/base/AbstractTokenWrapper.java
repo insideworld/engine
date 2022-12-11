@@ -21,18 +21,13 @@ package insideworld.engine.security.token.base;
 
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
-import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.actions.keeper.tags.Tag;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.security.core.SecurityException;
 import insideworld.engine.security.core.UserTags;
-import insideworld.engine.security.core.entities.User;
-import java.util.Collection;
-import java.util.Optional;
 
-public abstract class AbstractTokenWrapper<T> extends AbstractExecuteWrapper {
+public abstract class AbstractTokenWrapper extends AbstractExecuteWrapper {
 
     private final TokenUserStorage users;
 

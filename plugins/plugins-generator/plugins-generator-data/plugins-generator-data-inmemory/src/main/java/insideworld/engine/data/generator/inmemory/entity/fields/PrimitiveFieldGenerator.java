@@ -19,7 +19,6 @@
 
 package insideworld.engine.data.generator.inmemory.entity.fields;
 
-import com.google.common.base.CaseFormat;
 import com.google.common.primitives.Primitives;
 import insideworld.engine.data.generator.AbstractFieldGenerator;
 import insideworld.engine.data.generator.inmemory.entity.search.InMemoryInfo;

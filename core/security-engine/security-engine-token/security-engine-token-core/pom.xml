@@ -28,7 +28,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>security-engine-token-base</artifactId>
+  <artifactId>security-engine-token-core</artifactId>
 
   <dependencies>
     <dependency>

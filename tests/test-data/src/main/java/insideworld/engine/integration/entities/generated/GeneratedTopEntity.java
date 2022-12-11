@@ -20,7 +20,6 @@
 package insideworld.engine.integration.entities.generated;
 
 import insideworld.engine.entities.Entity;
-import java.util.Collection;
 
 public interface GeneratedTopEntity extends Entity {
 

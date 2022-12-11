@@ -24,7 +24,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.eclipse.microprofile.context.ThreadContext;
 
 /**

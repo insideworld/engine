@@ -26,10 +26,10 @@ import insideworld.engine.amqp.actions.tags.AmqpTags;
 import insideworld.engine.amqp.connection.AmqpReceiver;
 import insideworld.engine.amqp.connection.Connection;
 import insideworld.engine.amqp.connection.Message;
-import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
-import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
 import insideworld.engine.datatransfer.endpoint.actions.AbstractActionReceiver;
+import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
 import insideworld.engine.datatransfer.endpoint.actions.ContextBuilder;
+import insideworld.engine.datatransfer.endpoint.actions.OutputTaskBuilder;
 import insideworld.engine.startup.OnStartUp;
 import insideworld.engine.threads.Task;
 import java.util.Collection;
@@ -90,8 +90,8 @@ public class AmqpActionReceiver extends AbstractActionReceiver<Message> implemen
     }
 
     @Override
-    public final int startOrder() {
-        return 70_000;
+    public final long startOrder() {
+        return 900_000;
     }
 
     @Override
@@ -136,6 +136,5 @@ public class AmqpActionReceiver extends AbstractActionReceiver<Message> implemen
             return context;
         };
     }
-
 
 }

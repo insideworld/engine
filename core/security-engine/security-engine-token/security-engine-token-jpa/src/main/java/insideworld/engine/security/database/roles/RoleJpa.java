@@ -20,14 +20,16 @@
 package insideworld.engine.security.database.roles;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import insideworld.engine.data.jpa.AbstractJpaEntity;
-import insideworld.engine.security.common.entities.Role;
+import insideworld.engine.security.core.entities.Role;
+import java.util.Collection;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,11 +43,11 @@ public class RoleJpa extends AbstractJpaEntity implements Role {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne()
-    @JoinColumn(name = "append_id")
+    @OneToMany()
+    @JoinColumn(name = "parent_id")
     @JsonIgnore
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private RoleJpa append;
+    private Collection<RoleJpa> children;
 
     @Override
     public String getName() {
@@ -53,9 +55,21 @@ public class RoleJpa extends AbstractJpaEntity implements Role {
     }
 
     @Override
-    public Role getAppend() {
-        return this.append;
+    public void setName(final String name) {
+        this.name = name;
     }
 
+    @Override
+    public Collection<RoleJpa> getChildren() {
+        return this.children;
+    }
+
+    @Override
+    public void addChildren(final Role child) {
+        if (this.children == null) {
+            this.children = Lists.newLinkedList();
+        }
+        this.children.add((RoleJpa) child);
+    }
 
 }

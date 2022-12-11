@@ -19,7 +19,6 @@
 
 package insideworld.engine.matchers.exception;
 
-import java.lang.reflect.Executable;
 import org.hamcrest.Matcher;
 
 public final class ExceptionMatchers {
@@ -54,12 +53,5 @@ public final class ExceptionMatchers {
         final Matcher<? extends Throwable> matcher
     ) {
         return new ExceptionCatchMatcher(throwable, matcher);
-    }
-
-    public static ExceptionsCatchMatcher catchExceptions(
-        final Class<? extends Throwable> throwable,
-        final Matcher<? extends Throwable> matcher
-    ) {
-        return new ExceptionsCatchMatcher(throwable, matcher);
     }
 }

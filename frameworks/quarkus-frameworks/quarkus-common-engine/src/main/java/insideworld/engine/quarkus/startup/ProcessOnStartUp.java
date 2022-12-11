@@ -25,7 +25,6 @@ import insideworld.engine.startup.StartUpException;
 import io.quarkus.runtime.Startup;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Supplier;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;

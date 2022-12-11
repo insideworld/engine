@@ -22,7 +22,6 @@ package insideworld.engine.amqp;
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.exception.CommonException;
 import javax.inject.Singleton;
 
 /**

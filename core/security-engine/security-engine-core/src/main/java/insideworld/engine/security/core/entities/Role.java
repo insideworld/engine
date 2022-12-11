@@ -20,6 +20,7 @@
 package insideworld.engine.security.core.entities;
 
 import insideworld.engine.entities.Entity;
+import java.util.Collection;
 
 public interface Role extends Entity {
 
@@ -27,8 +28,8 @@ public interface Role extends Entity {
 
     void setName(String name);
 
-    Role getAppend();
+    Collection<? extends Role> getChildren();
 
-    void setAppend(Role append);
+    void addChildren(Role child);
 
 }

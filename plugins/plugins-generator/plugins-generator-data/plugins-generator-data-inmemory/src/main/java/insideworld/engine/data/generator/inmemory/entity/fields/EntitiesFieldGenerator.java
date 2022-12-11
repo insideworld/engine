@@ -19,11 +19,9 @@
 
 package insideworld.engine.data.generator.inmemory.entity.fields;
 
-import com.google.common.base.CaseFormat;
 import insideworld.engine.data.generator.AbstractFieldGenerator;
 import insideworld.engine.data.generator.inmemory.entity.search.InMemoryInfo;
 import insideworld.engine.entities.Entity;
-import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.ParameterizedType;

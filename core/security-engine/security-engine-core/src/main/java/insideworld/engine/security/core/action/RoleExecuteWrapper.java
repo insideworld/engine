@@ -28,6 +28,7 @@ import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.actions.tags.ActionsTags;
 import insideworld.engine.exception.CommonException;
+import insideworld.engine.security.core.SecurityException;
 import insideworld.engine.security.core.UserTags;
 import insideworld.engine.security.core.entities.User;
 import java.util.Collection;

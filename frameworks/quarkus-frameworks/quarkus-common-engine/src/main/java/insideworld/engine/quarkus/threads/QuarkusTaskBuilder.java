@@ -20,7 +20,6 @@
 package insideworld.engine.quarkus.threads;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Queues;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.threads.Task;
 import insideworld.engine.threads.TaskBuilder;
@@ -31,7 +30,6 @@ import io.smallrye.mutiny.unchecked.Unchecked;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.util.TypeLiteral;
 

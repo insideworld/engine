@@ -27,7 +27,9 @@ public class ExceptionCatchMatcher extends TypeSafeMatcher<ExecutableException> 
 
     private final Class<? extends Throwable> throwable;
 
-    private Matcher<? extends Throwable> matcher;
+    private final Matcher<? extends Throwable> matcher;
+
+    private Throwable raised;
 
     public ExceptionCatchMatcher(final Class<? extends Throwable> throwable) {
         this(throwable, null);
@@ -47,6 +49,7 @@ public class ExceptionCatchMatcher extends TypeSafeMatcher<ExecutableException> 
         try {
             item.execute();
         } catch (final Throwable exp) {
+            this.raised = exp;
             result = this.throwable.equals(exp.getClass())
                 && (this.matcher == null || this.matcher.matches(exp));
         }
@@ -54,7 +57,27 @@ public class ExceptionCatchMatcher extends TypeSafeMatcher<ExecutableException> 
     }
 
     @Override
-    public void describeTo(Description description) {
+    public void describeTo(final Description description) {
+        description
+            .appendText("Exception is ")
+            .appendText(this.throwable.getName());
+        if (this.matcher != null) {
+            description.appendText(" and ");
+            this.matcher.describeTo(description);
+        }
+    }
 
+    @Override
+    protected final void describeMismatchSafely(
+        final ExecutableException item, final Description description) {
+        if (this.raised == null) {
+            description.appendText("Exception is not throw");
+        } else {
+            description.appendText("Exception is ").appendText(this.raised.getClass().getName());
+        }
+        if (this.matcher != null) {
+            description.appendText(" and ");
+            this.matcher.describeMismatch(item, description);
+        }
     }
 }

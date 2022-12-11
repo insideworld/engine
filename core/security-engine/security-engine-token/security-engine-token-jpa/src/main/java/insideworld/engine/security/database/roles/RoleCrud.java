@@ -21,7 +21,7 @@ package insideworld.engine.security.database.roles;
 
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.security.common.entities.Role;
+import insideworld.engine.security.core.entities.Role;
 import javax.inject.Singleton;
 
 @Singleton

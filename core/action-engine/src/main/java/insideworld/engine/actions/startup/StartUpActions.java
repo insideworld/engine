@@ -24,15 +24,11 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
 import insideworld.engine.actions.executor.OnStartupAction;
 import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
-import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Execute some actions after startup.

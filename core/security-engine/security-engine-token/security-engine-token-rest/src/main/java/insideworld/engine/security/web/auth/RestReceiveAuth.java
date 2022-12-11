@@ -17,18 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.security.token.base;
+package insideworld.engine.security.web.auth;
 
-import insideworld.engine.entities.StorageException;
-import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.security.core.entities.User;
-import insideworld.engine.security.core.storages.UserStorage;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.keeper.context.Context;
+import insideworld.engine.security.token.base.AbstractTokenWrapper;
+import insideworld.engine.security.token.base.TokenUserStorage;
+import insideworld.engine.web.RestProfile;
+import insideworld.engine.web.tags.RestTags;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Collections;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public interface TokenUserStorage extends UserStorage<TokenUser> {
+@Singleton
+public class RestReceiveAuth extends AbstractTokenWrapper {
 
-    Optional<TokenUser> getByToken(String token) throws CommonException;
+    @Inject
+    public RestReceiveAuth(final TokenUserStorage users) {
+        super(users);
+    }
 
+    @Override
+    public Collection<Class<? extends ExecuteProfile>> forProfile() {
+        return Collections.singleton(RestProfile.class);
+    }
+
+    @Override
+    protected String getToken(final Context context) {
+        return context.get(RestTags.HEADERS).getHeaderString("token");
+    }
 }

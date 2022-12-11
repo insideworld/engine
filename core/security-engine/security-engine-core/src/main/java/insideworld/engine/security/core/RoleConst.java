@@ -21,6 +21,7 @@ package insideworld.engine.security.core;
 
 
 import insideworld.engine.security.core.entities.Role;
+import java.util.Collection;
 
 /**
  * Role implementation to hardcode into the code.
@@ -50,12 +51,12 @@ public class RoleConst implements Role {
     }
 
     @Override
-    public final Role getAppend() {
+    public Collection<Role> getChildren() {
         throw new UnsupportedOperationException("For constant roles this not available.");
     }
 
     @Override
-    public final void setAppend(final Role append) {
+    public void addChildren(Role child) {
         throw new UnsupportedOperationException("For constant roles this not available.");
     }
 
@@ -74,7 +75,4 @@ public class RoleConst implements Role {
         }
         return result;
     }
-
-
-
 }

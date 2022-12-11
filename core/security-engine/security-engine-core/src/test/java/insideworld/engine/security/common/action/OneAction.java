@@ -19,7 +19,6 @@
 
 package insideworld.engine.security.common.action;
 
-import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.exception.CommonException;

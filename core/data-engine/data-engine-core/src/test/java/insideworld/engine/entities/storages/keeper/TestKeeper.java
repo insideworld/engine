@@ -24,7 +24,6 @@ import insideworld.engine.entities.mock.entities.positive.MockEntity;
 import insideworld.engine.entities.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.matchers.exception.ExceptionMatchers;
-import insideworld.engine.startup.StartUpException;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collections;
 import javax.inject.Inject;
@@ -91,7 +90,7 @@ class TestKeeper {
             "Expected exception at init",
             keeper::startUp,
             ExceptionMatchers.catchException(
-                StartUpException.class,
+                StorageException.class,
                 ExceptionMatchers.messageMatcher(
                     0,
                     Matchers.containsString("Can't init HashStorage keeper")

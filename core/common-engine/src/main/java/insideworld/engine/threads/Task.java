@@ -19,7 +19,6 @@
 
 package insideworld.engine.threads;
 
-import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import java.util.function.Consumer;
 

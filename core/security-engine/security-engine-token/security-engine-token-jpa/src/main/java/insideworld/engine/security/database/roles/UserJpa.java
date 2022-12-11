@@ -21,8 +21,8 @@ package insideworld.engine.security.database.roles;
 
 import com.google.common.collect.Sets;
 import insideworld.engine.data.jpa.AbstractJpaEntity;
-import insideworld.engine.security.common.entities.Role;
-import insideworld.engine.security.common.entities.User;
+import insideworld.engine.security.core.entities.Role;
+import insideworld.engine.security.token.base.TokenUser;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Cacheable;
@@ -39,7 +39,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(schema = "users", name = "users")
 @Dependent
 @Cacheable
-public class UserJpa extends AbstractJpaEntity implements User {
+public class UserJpa extends AbstractJpaEntity implements TokenUser {
 
     @Column(name = "token", unique = true, nullable = false)
     private String token;
@@ -98,8 +98,8 @@ public class UserJpa extends AbstractJpaEntity implements User {
     private Collection<Role> fetchRole(final Role role) {
         final Collection<Role> roles = Sets.newHashSet();
         roles.add(role);
-        if (role.getAppend() != null) {
-            roles.addAll(this.fetchRole(role.getAppend()));
+        for (final Role child : role.getChildren()) {
+            roles.addAll(fetchRole(child));
         }
         return roles;
     }

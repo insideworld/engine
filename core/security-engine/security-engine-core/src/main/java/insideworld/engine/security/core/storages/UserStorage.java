@@ -21,7 +21,6 @@ package insideworld.engine.security.core.storages;
 
 import insideworld.engine.entities.StorageException;
 import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.exception.CommonException;
 import insideworld.engine.security.core.entities.User;
 import java.util.Collection;
 import java.util.Optional;

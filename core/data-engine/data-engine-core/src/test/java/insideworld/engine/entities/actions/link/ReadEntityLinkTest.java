@@ -100,23 +100,26 @@ class ReadEntityLinkTest {
                 ExceptionMatchers.messageMatcher(0, Matchers.endsWith("Link was not init"))
             )
         );
-        MatcherAssert.assertThat(
-            "Should be exception because invalid arguments",
-            new ExecutableException[]{
-                () -> link.setTag(null, null),
-                () -> link.setTag(StorageTags.ID, null),
-                () -> link.setTag(null, MockTags.PRIMARY),
-                () -> link.setTags(null, null),
-                () -> link.setTags(StorageTags.IDS, null),
-                () -> link.setTags(null, MockTags.PRIMARIES),
-            },
-            ExceptionMatchers.catchExceptions(
-                LinkException.class,
-                ExceptionMatchers.messageMatcher(
-                    0, Matchers.endsWith("One or both arguments is null")
+        final ExecutableException[] executables = {
+            () -> link.setTag(null, null),
+            () -> link.setTag(StorageTags.ID, null),
+            () -> link.setTag(null, MockTags.PRIMARY),
+            () -> link.setTags(null, null),
+            () -> link.setTags(StorageTags.IDS, null),
+            () -> link.setTags(null, MockTags.PRIMARIES),
+        };
+        for (final ExecutableException executable : executables) {
+            MatcherAssert.assertThat(
+                "Should be exception because invalid arguments",
+                executable,
+                ExceptionMatchers.catchException(
+                    LinkException.class,
+                    ExceptionMatchers.messageMatcher(
+                        0, Matchers.endsWith("One or both arguments is null")
+                    )
                 )
-            )
-        );
+            );
+        }
     }
 
     /**

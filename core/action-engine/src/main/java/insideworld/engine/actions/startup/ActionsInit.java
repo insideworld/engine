@@ -24,7 +24,6 @@ import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionChanger;
 import insideworld.engine.exception.CommonException;
 import insideworld.engine.startup.OnStartUp;
-import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
@@ -63,7 +62,7 @@ public class ActionsInit implements OnStartUp {
 
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
-    public final void startUp() throws CommonException {
+    public final void startUp() throws ActionException {
         for (final Action action : this.actions) {
             //@checkstyle IllegalCatchCheck (10 lines)
             try {

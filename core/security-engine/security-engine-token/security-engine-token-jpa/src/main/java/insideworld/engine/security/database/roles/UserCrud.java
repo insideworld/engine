@@ -20,34 +20,40 @@
 package insideworld.engine.security.database.roles;
 
 import insideworld.engine.data.jpa.AbstractCrudGenericStorage;
-import insideworld.engine.security.common.entities.User;
-import insideworld.engine.security.common.storages.UserStorage;
+import insideworld.engine.security.token.base.TokenUser;
+import insideworld.engine.security.token.base.TokenUserStorage;
 import java.util.Collection;
 import java.util.Optional;
 import javax.inject.Singleton;
 
 @Singleton
-public class UserCrud extends AbstractCrudGenericStorage<User, UserJpa> implements UserStorage {
+public class UserCrud
+    extends AbstractCrudGenericStorage<TokenUser, UserJpa> implements TokenUserStorage {
 
     @Override
-    public User getByToken(final String token) throws AuthenticationException {
-        return find("token", token)
+    public Optional<TokenUser> getByToken(final String token) {
+        return Optional.ofNullable(
+            find("token", token)
             .withHint("org.hibernate.cacheable", Boolean.TRUE)
-            .firstResultOptional()
-            .orElseThrow(() -> new AuthenticationException("Token not found"));
+            .firstResult()
+        );
     }
 
     @Override
-    public Optional<User> getByName(final String name) {
-        return Optional.ofNullable(find("name", name)
+    public Optional<TokenUser> getByName(final String name) {
+        return Optional.ofNullable(
+            find("name", name)
             .withHint("org.hibernate.cacheable", Boolean.TRUE)
-            .firstResult());
+            .firstResult()
+        );
     }
 
     @Override
-    public Collection<User> getByNames(final Collection<String> names) {
-        return this.castUpper(find("name in (?1)", names)
+    public Collection<TokenUser> getByNames(final Collection<String> names) {
+        return this.castUpper(
+            find("name in (?1)", names)
             .withHint("org.hibernate.cacheable", Boolean.TRUE)
-            .list());
+            .list()
+        );
     }
 }

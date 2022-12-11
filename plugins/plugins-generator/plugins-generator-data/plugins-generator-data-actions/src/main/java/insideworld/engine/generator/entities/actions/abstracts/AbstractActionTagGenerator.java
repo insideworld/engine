@@ -21,8 +21,8 @@ package insideworld.engine.generator.entities.actions.abstracts;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.actions.chain.LinksBuilder;
-import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagInfo;
 import insideworld.engine.entities.tags.EntityTag;
+import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagInfo;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.gizmo.MethodCreator;

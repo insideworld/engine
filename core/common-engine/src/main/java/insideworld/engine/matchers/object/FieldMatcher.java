@@ -20,8 +20,6 @@
 package insideworld.engine.matchers.object;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Optional;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;

@@ -19,9 +19,7 @@
 
 package insideworld.engine.datatransfer.endpoint.actions;
 
-import insideworld.engine.actions.keeper.Table;
 import insideworld.engine.actions.keeper.output.Output;
-import java.util.Map;
 
 /**
  * Interface is using to send call to another subsystem and receive an answer.

@@ -28,7 +28,6 @@ import insideworld.engine.datatransfer.endpoint.actions.ActionSender;
 import insideworld.engine.datatransfer.endpoint.actions.PreSend;
 import insideworld.engine.injection.ObjectFactory;
 import insideworld.engine.startup.OnStartUp;
-import insideworld.engine.startup.StartUpException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -105,7 +104,7 @@ public class AmqpActionSender implements ActionSender, OnStartUp {
     }
 
     @Override
-    public final int startOrder() {
-        return 70_000;
+    public final long startOrder() {
+        return 900_000;
     }
 }
