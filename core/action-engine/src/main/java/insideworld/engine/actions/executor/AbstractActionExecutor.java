@@ -97,6 +97,7 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
         final Action action = this.provide(parameter);
         LOGGER.info("Start action {} with key {}", action.getClass().getSimpleName(), action.key());
         context.put(ActionsTags.ACTION, action);
+        context.put(ActionsTags.PROFILE, profile);
         final var output = this.factory.createObject(Output.class);
         //@checkstyle IllegalCatchCheck (7 lines)
         try {

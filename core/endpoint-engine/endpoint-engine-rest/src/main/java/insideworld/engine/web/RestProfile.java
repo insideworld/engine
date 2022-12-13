@@ -23,13 +23,15 @@ import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
+import insideworld.engine.actions.keeper.tags.SingleTag;
+import insideworld.engine.web.tags.RestTags;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class RestProfile extends AbstractExecuteProfile {
+public class RestProfile extends AbstractExecuteProfile implements ExecuteProfile {
 
     /**
      * Default constructor.

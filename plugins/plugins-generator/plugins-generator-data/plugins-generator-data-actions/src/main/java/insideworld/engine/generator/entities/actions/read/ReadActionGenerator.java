@@ -20,14 +20,19 @@
 package insideworld.engine.generator.entities.actions.read;
 
 import com.google.common.collect.ImmutableList;
+import insideworld.engine.actions.chain.LinksBuilder;
 import insideworld.engine.entities.actions.AbstractReadAction;
+import insideworld.engine.entities.tags.EntitiesTag;
 import insideworld.engine.generator.entities.actions.abstracts.AbstractActionTagsGenerator;
 import insideworld.engine.generator.entities.actions.abstracts.info.ActionTagsInfo;
 import insideworld.engine.generator.entities.actions.read.search.SearchReadAction;
 import insideworld.engine.generator.entities.actions.read.search.SearchReadActionMixin;
 import insideworld.engine.generator.reflection.Reflection;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
+import io.quarkus.gizmo.MethodCreator;
 import java.util.Collection;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class ReadActionGenerator extends AbstractActionTagsGenerator<ActionTagsInfo> {
@@ -54,4 +59,19 @@ public class ReadActionGenerator extends AbstractActionTagsGenerator<ActionTagsI
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
     }
+
+    @Override
+    protected final Collection<BiConsumer<ClassCreator, ActionTagsInfo>> methodPredicates() {
+        return ImmutableList.<BiConsumer<ClassCreator, ActionTagsInfo>>builder()
+            .addAll(super.methodPredicates())
+            .add(this::createAfterExport)
+            .build();
+    }
+
+    private void createAfterExport(final ClassCreator creator, final ActionTagsInfo info) {
+        creator
+            .getMethodCreator("afterExport", void.class, LinksBuilder.class)
+            .returnValue(null);
+    }
+
 }

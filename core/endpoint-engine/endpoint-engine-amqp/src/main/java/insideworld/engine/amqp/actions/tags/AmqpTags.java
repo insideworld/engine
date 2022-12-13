@@ -20,6 +20,7 @@
 package insideworld.engine.amqp.actions.tags;
 
 import insideworld.engine.actions.keeper.tags.SingleTag;
+import insideworld.engine.amqp.connection.Message;
 import java.util.Map;
 
 /**
@@ -28,8 +29,8 @@ import java.util.Map;
  */
 public final class AmqpTags {
 
-    public static final SingleTag<Map<String, Object>> AMQP_PROPERTIES = new SingleTag<>(
-        "insideworld.engine.amqp.actions.tags.AmqpTags.AMQP_PROPERTIES"
+    public static final SingleTag<Message> MESSAGE = new SingleTag<>(
+        "insideworld.engine.amqp.actions.tags.AmqpTags.MESSAGE"
     );
 
     public static final SingleTag<String> CALLBACK_ACTION = new SingleTag<>(

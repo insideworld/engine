@@ -56,23 +56,24 @@ public abstract class AbstractActionTagGenerator<T extends ActionTagInfo> {
         }
         final ClassCreator creator = builder.build();
         creator.addAnnotation(Singleton.class);
-        this.createConstructor(creator);
-        this.createKey(creator, info);
-        this.createType(creator, info);
         this.methodPredicates().forEach(method -> method.accept(creator, info));
         creator.close();
     }
 
     protected Collection<BiConsumer<ClassCreator, T>> methodPredicates() {
-        return ImmutableList.of(this::createTag);
+        return ImmutableList.of(
+            this::createConstructor,
+            this::createTag,
+            this::createKey,
+            this::createType
+        );
     }
 
     protected abstract Class<?> extended();
 
     protected abstract Collection<T> infos();
 
-
-    private void createConstructor(final ClassCreator creator) {
+    private void createConstructor(final ClassCreator creator, final T info) {
         final MethodCreator constructor =
             creator.getMethodCreator("<init>", void.class, LinksBuilder.class);
         constructor.addAnnotation(Inject.class);

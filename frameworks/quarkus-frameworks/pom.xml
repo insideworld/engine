@@ -14,7 +14,6 @@
   <artifactId>quarkus-frameworks</artifactId>
 
   <modules>
-    <module>quarkus-action-engine</module>
     <module>quarkus-common-engine</module>
     <module>quarkus-extension</module>
   </modules>

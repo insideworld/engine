@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2022 Anton Eliseev
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package insideworld.engine.example.quarkus.common;
+
+import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
+import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
+import insideworld.engine.example.quarkus.common.data.SomeData;
+import insideworld.engine.example.quarkus.common.roles.MemberRole;
+import insideworld.engine.generator.GenerateMixin;
+import insideworld.engine.generator.entities.actions.delete.annotations.GenerateDeleteAction;
+import insideworld.engine.generator.entities.actions.read.annotations.GenerateReadAction;
+import insideworld.engine.generator.entities.actions.write.annotations.GenerateWriteAction;
+
+/**
+ * Generate JPA entity, storage and actions for SomeData.
+ * @since 1.0.0
+ */
+@GenerateJpaEntity(entity = SomeData.class, schema = "test", table = "some_data")
+@GenerateCrud(entity = SomeData.class)
+@GenerateReadAction(entity = SomeData.class, tag = "somedata", tags = "somedatas", key = "somedata.read", interfaces = {MemberRole.class})
+@GenerateWriteAction(entity = SomeData.class, tag = "somedata", key = "somedata.write", interfaces = {MemberRole.class})
+@GenerateDeleteAction(entity = SomeData.class, tag = "somedata", tags = "somedatas", key = "somedata.delete", interfaces = {MemberRole.class})
+public interface Mixin extends GenerateMixin {
+}

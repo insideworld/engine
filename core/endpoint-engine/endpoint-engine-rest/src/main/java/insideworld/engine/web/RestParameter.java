@@ -20,6 +20,7 @@
 package insideworld.engine.web;
 
 import java.io.InputStream;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 
 

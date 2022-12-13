@@ -131,7 +131,7 @@ public class AmqpActionReceiver extends AbstractActionReceiver<Message> implemen
     private ContextBuilder predicate(final Map<String, Object> map, final Message parameter) {
         return () -> {
             final Context context = this.createContext();
-            context.put(AmqpTags.AMQP_PROPERTIES, parameter.getProperties());
+            context.put(AmqpTags.MESSAGE, parameter);
             map.forEach(context::put);
             return context;
         };

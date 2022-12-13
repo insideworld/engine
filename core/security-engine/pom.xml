@@ -22,7 +22,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>modules</artifactId>
+    <artifactId>core</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>1.0.0</version>
   </parent>
@@ -33,8 +33,10 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>security-engine-token</module>
-    <module>security-engine-core</module>
+    <module>security-engine-base</module>
+    <module>security-engine-endpoint</module>
+    <module>security-engine-jpa</module>
+    <module>security-engine-auth</module>
   </modules>
 
 </project>

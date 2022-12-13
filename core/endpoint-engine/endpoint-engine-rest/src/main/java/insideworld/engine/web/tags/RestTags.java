@@ -20,6 +20,8 @@
 package insideworld.engine.web.tags;
 
 import insideworld.engine.actions.keeper.tags.SingleTag;
+import insideworld.engine.web.RestParameter;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 
 /**
@@ -28,8 +30,8 @@ import javax.ws.rs.core.HttpHeaders;
  */
 public final class RestTags {
 
-    public static final SingleTag<HttpHeaders> HEADERS = new SingleTag<>(
-        "insideworld.engine.web.tags.RestTags.HEADERS"
+    public static final SingleTag<HttpHeaders> HTTP_HEADERS = new SingleTag<>(
+        "insideworld.engine.web.tags.RestTags.HTTP_HEADERS"
     );
 
     /**

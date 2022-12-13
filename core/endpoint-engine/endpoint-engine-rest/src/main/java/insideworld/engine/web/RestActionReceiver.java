@@ -66,7 +66,7 @@ public class RestActionReceiver extends AbstractActionReceiver<RestParameter> {
                 throw new RuntimeException(exp);
             }
             map.forEach(context::put);
-            context.put(RestTags.HEADERS, parameter.headers());
+            context.put(RestTags.HTTP_HEADERS, parameter.headers());
             return context;
         });
     }

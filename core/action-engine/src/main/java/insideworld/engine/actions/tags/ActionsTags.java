@@ -20,6 +20,7 @@
 package insideworld.engine.actions.tags;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.executor.profiles.ExecuteProfile;
 import insideworld.engine.actions.keeper.tags.SingleTag;
 
 /**
@@ -32,7 +33,10 @@ public final class ActionsTags {
      * Current action instance.
      */
     public static final SingleTag<Action> ACTION =
-        new SingleTag<>("engine.actions.action");
+        new SingleTag<>("insideworld.engine.actions.tags.ActionsTags.ACTION");
+
+    public static final SingleTag<Class<? extends ExecuteProfile>> PROFILE =
+        new SingleTag<>("insideworld.engine.actions.tags.ActionsTags.PROFILE");
 
     /**
      * Looks like need to remove it.
