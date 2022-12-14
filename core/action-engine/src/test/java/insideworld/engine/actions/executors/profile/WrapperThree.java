@@ -20,9 +20,10 @@
 package insideworld.engine.actions.executors.profile;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
+import insideworld.engine.actions.executor.profiles.wrapper.AbstractExecuteWrapper;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.profiles.wrapper.WrapperContext;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
@@ -47,13 +48,13 @@ class WrapperThree extends AbstractExecuteWrapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(WrapperThree.class);
 
     @Override
-    public final void execute(final Action action, final Context context, final Output output)
+    public final void execute(final WrapperContext context)
         throws CommonException {
-        if (context.contains(TestExecutorTags.SEQUENCE)) {
+        if (context.context().contains(TestExecutorTags.SEQUENCE)) {
             WrapperThree.LOGGER.debug("Wrapper 3");
-            context.get(TestExecutorTags.SEQUENCE).add(3);
+            context.context().get(TestExecutorTags.SEQUENCE).add(3);
         }
-        super.execute(action, context, output);
+        super.execute(context);
     }
 
     @Override

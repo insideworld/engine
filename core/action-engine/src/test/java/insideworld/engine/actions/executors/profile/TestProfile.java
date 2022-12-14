@@ -21,7 +21,6 @@ package insideworld.engine.actions.executors.profile;
 
 import insideworld.engine.actions.Action;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.test.KeeperMatchers;
@@ -83,7 +82,7 @@ class TestProfile {
         );
         final Context sys = this.executor.createContext();
         sys.put(TestExecutorTags.UUID, uuid);
-        this.executor.execute(DummyAction.class, sys, SystemExecuteProfile.class);
+        this.executor.execute(DummyAction.class, sys, AnotherExecuteProfile.class);
         MatcherAssert.assertThat(
             "COPY_UUID should present and DUMMY not",
             sys,

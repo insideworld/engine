@@ -77,6 +77,7 @@
     <hamcrest.version>2.2</hamcrest.version>
     <rabbitmq.version>5.16.0</rabbitmq.version>
     <qpid.version>8.0.6</qpid.version>
+    <compiler-plugin.version>3.8.1</compiler-plugin.version>
   </properties>
 
   <dependencies>

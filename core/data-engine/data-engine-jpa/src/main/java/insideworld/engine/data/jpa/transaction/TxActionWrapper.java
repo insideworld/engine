@@ -20,15 +20,17 @@
 package insideworld.engine.data.jpa.transaction;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
+import insideworld.engine.actions.executor.profiles.wrapper.AbstractExecuteWrapper;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.profiles.wrapper.WrapperContext;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.actions.StorageActionsTags;
 import insideworld.engine.exception.CommonException;
 import java.util.Collection;
 import java.util.Collections;
+import javax.enterprise.context.Dependent;
 import javax.inject.Singleton;
 import javax.transaction.Transactional;
 
@@ -39,47 +41,43 @@ import javax.transaction.Transactional;
  *
  * @since 0.14.0
  */
-@Singleton
+@Dependent
 public class TxActionWrapper extends AbstractExecuteWrapper {
 
     @Override
-    public final void execute(final Action action, final Context context, final Output output)
+    public final void execute(final WrapperContext context)
         throws CommonException {
-        if (context.contains(StorageActionsTags.USE_EXIST_TX)) {
-            this.executeSameTx(action, context, output);
+        if (context.context().contains(StorageActionsTags.USE_EXIST_TX)) {
+            this.executeSameTx(context);
         } else {
-            this.executeNewTx(action, context, output);
+            this.executeNewTx(context);
         }
     }
 
     /**
      * Use same transactions.
      *
-     * @param action Action.
-     * @param context Context.
-     * @param output Output.
+     * @param context Wrapper context.
      * @throws CommonException Common exception.
      * @checkstyle NonStaticMethodCheck (2 lines)
      */
     @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = Exception.class)
-    public final void executeSameTx(final Action action, final Context context, final Output output)
+    public final void executeSameTx(final WrapperContext context)
         throws CommonException {
-        super.execute(action, context, output);
+        super.execute(context);
     }
 
     /**
      * Create a new transaction.
      *
-     * @param action Action.
-     * @param context Context.
-     * @param output Output.
+     * @param context Wrapper context.
      * @throws CommonException Common exception.
      * @checkstyle NonStaticMethodCheck (2 lines)
      */
     @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = Exception.class)
-    public final void executeNewTx(final Action action, final Context context, final Output output)
+    public final void executeNewTx(final WrapperContext context)
         throws CommonException {
-        super.execute(action, context, output);
+        super.execute(context);
     }
 
     @Override

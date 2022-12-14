@@ -65,6 +65,12 @@
       <version>${quarkus.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-cache</artifactId>
+      <version>${quarkus.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>${commons-codec.version}</version>

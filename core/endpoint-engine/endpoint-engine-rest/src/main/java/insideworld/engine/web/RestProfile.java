@@ -22,16 +22,15 @@ package insideworld.engine.web;
 import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
-import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
-import insideworld.engine.actions.keeper.tags.SingleTag;
-import insideworld.engine.web.tags.RestTags;
+import insideworld.engine.actions.executor.profiles.wrapper.ExecuteWrapper;
+import insideworld.engine.datatransfer.endpoint.actions.EndpointProfile;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class RestProfile extends AbstractExecuteProfile implements ExecuteProfile {
+public class RestProfile extends AbstractExecuteProfile implements EndpointProfile {
 
     /**
      * Default constructor.

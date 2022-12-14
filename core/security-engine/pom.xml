@@ -33,10 +33,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>security-engine-base</module>
-    <module>security-engine-endpoint</module>
+    <module>security-engine-core</module>
     <module>security-engine-jpa</module>
-    <module>security-engine-auth</module>
+    <module>security-engine-cookie</module>
+    <module>security-engine-token</module>
+    <module>security-engine-basic</module>
   </modules>
 
 </project>

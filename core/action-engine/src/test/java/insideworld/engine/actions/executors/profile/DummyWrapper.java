@@ -20,8 +20,9 @@
 package insideworld.engine.actions.executors.profile;
 
 import insideworld.engine.actions.Action;
-import insideworld.engine.actions.executor.profiles.AbstractExecuteWrapper;
+import insideworld.engine.actions.executor.profiles.wrapper.AbstractExecuteWrapper;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
+import insideworld.engine.actions.executor.profiles.wrapper.WrapperContext;
 import insideworld.engine.actions.executors.TestExecutorTags;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
@@ -38,10 +39,10 @@ import javax.enterprise.context.Dependent;
 public class DummyWrapper extends AbstractExecuteWrapper {
 
     @Override
-    public final void execute(final Action action, final Context context, final Output output)
+    public final void execute(final WrapperContext context)
         throws CommonException {
-        context.put(TestExecutorTags.DUMMY, new Object());
-        super.execute(action, context, output);
+        context.context().put(TestExecutorTags.DUMMY, new Object());
+        super.execute(context);
     }
 
     @Override

@@ -78,7 +78,7 @@
     <!--  Security engine  -->
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>security-engine-base</artifactId>
+      <artifactId>security-engine-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -88,17 +88,12 @@
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>security-engine-endpoint-rest</artifactId>
+      <artifactId>security-engine-token-rest</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>security-engine-auth-token-rest</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>security-engine-auth-token-jpa</artifactId>
+      <artifactId>security-engine-token-jpa</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -121,29 +116,38 @@
 
     <!--  Quarkus  -->
     <!--  For imperative rest  -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jackson</artifactId>
-    </dependency>
-    <!--  For reactive -->
 <!--    <dependency>-->
 <!--      <groupId>io.quarkus</groupId>-->
-<!--      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>-->
+<!--      <artifactId>quarkus-resteasy-jackson</artifactId>-->
 <!--    </dependency>-->
+    <!--  For reactive -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+    </dependency>
+
+    <!--  Other dependencies  -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jdbc-h2</artifactId>
+    </dependency>
 
     <!--  For tests  -->
     <dependency>
       <groupId>insideworld.engine</groupId>
       <artifactId>quarkus-test-database</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
       <artifactId>quarkus-test-rest</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
+
 
   <build>
     <plugins>
@@ -193,8 +197,75 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler-plugin.version}</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+        <configuration>
+          <systemPropertyVariables>
+            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+            <maven.home>${maven.home}</maven.home>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-maven-plugin</artifactId>
+        <version>${quarkus.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+      <activation>
+        <property>
+          <name>native</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+                <configuration>
+                  <systemPropertyVariables>
+                    <native.image.path>
+                      ${project.build.directory}/${project.build.finalName}-runner
+                    </native.image.path>
+                    <java.util.logging.manager>org.jboss.logmanager.LogManager
+                    </java.util.logging.manager>
+                    <maven.home>${maven.home}</maven.home>
+                  </systemPropertyVariables>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <properties>
+        <quarkus.package.type>native</quarkus.package.type>
+      </properties>
+    </profile>
+  </profiles>
 
   <!-- For quarkus tests -->
   <dependencyManagement>

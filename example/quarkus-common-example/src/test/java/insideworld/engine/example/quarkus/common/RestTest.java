@@ -57,6 +57,27 @@ public class RestTest {
             });
         RestAssured.given()
             .relaxedHTTPSValidation()
+            .header("Authorization", "Bearer toke1n")
+            .body("{}")
+            .contentType(ContentType.JSON)
+            .when()
+            .post("/actions/somedata.read")
+            .then()
+            .statusCode(200)
+            .body(new BaseMatcher<Object>() {
+                @Override
+                public boolean matches(Object o) {
+                    System.out.println("Matching");
+                    return true;
+                }
+
+                @Override
+                public void describeTo(Description description) {
+
+                }
+            });
+        RestAssured.given()
+            .relaxedHTTPSValidation()
             .body("{}")
             .contentType(ContentType.JSON)
             .when()

@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.collect.Maps;
 import insideworld.engine.actions.ActionException;
 import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.executor.profiles.SystemExecuteProfile;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.entities.StorageException;
@@ -62,10 +61,7 @@ public class ActionJobExecutor implements Job {
         LOGGER.trace("Start execute job for alias {}", entity.getAlias());
         final Context context = getContext(entity).cloneContext();
         try {
-            final Output output = this.executor.execute(
-                entity.getKey(),
-                context,
-                SystemExecuteProfile.class);
+            final Output output = this.executor.execute(entity.getKey(), context);
         } catch (final ActionException exp) {
             throw new JobExecutionException(
                 String.format("Job for alias failed %s", entity.getAlias()),

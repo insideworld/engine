@@ -22,7 +22,8 @@ package insideworld.engine.amqp.actions;
 import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
 import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
 import insideworld.engine.actions.executor.profiles.ExecuteProfile;
-import insideworld.engine.actions.executor.profiles.ExecuteWrapper;
+import insideworld.engine.actions.executor.profiles.wrapper.ExecuteWrapper;
+import insideworld.engine.datatransfer.endpoint.actions.EndpointProfile;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-public class AmqpReceiveProfile extends AbstractExecuteProfile {
+public class AmqpReceiveProfile extends AbstractExecuteProfile implements EndpointProfile {
 
     /**
      * Default constructor.

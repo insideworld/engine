@@ -19,6 +19,7 @@
 
 package insideworld.engine.actions.executor.profiles;
 
+import insideworld.engine.actions.executor.profiles.wrapper.ExecuteWrapper;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

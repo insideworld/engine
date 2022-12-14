@@ -22,6 +22,7 @@ package insideworld.engine.example.quarkus.common.endpoint;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.web.RestActionReceiver;
 import insideworld.engine.web.RestParameter;
+import io.smallrye.mutiny.Uni;
 import java.io.InputStream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,32 +45,32 @@ public class RestEndpoint {
         this.receiver = receiver;
     }
 
-    @POST
-    @Path("/{action}")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Output executeAction(
-        @PathParam("action") final String action,
-        @javax.ws.rs.core.Context final HttpHeaders headers,
-        final InputStream rawbody
-    ) {
-        return this.receiver.execute(action, new RestParameter(headers, rawbody)).result();
-    }
-
 //    @POST
 //    @Path("/{action}")
 //    @Consumes("application/json")
 //    @Produces("application/json")
-//    public Uni<Output> executeAction(
+//    public Output executeAction(
 //        @PathParam("action") final String action,
 //        @javax.ws.rs.core.Context final HttpHeaders headers,
 //        final InputStream rawbody
 //    ) {
-//        return Uni.createFrom().emitter(
-//            emitter -> this.facade
-//                .execute(action, new RestParameter(headers, rawbody))
-//                .subscribe(emitter::complete)
-//        );
+//        return this.receiver.execute(action, new RestParameter(headers, rawbody)).result();
 //    }
+
+    @POST
+    @Path("/{action}")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Uni<Output> executeAction(
+        @PathParam("action") final String action,
+        @javax.ws.rs.core.Context final HttpHeaders headers,
+        final InputStream rawbody
+    ) {
+        return Uni.createFrom().emitter(
+            emitter -> this.receiver
+                .execute(action, new RestParameter(headers, rawbody))
+                .subscribe(emitter::complete)
+        );
+    }
 
 }

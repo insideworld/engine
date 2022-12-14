@@ -20,6 +20,8 @@
 package insideworld.engine.actions.executor.profiles;
 
 import insideworld.engine.actions.Action;
+import insideworld.engine.actions.executor.profiles.wrapper.ExecuteWrapper;
+import insideworld.engine.actions.executor.profiles.wrapper.WrapperContext;
 import insideworld.engine.actions.keeper.context.Context;
 import insideworld.engine.actions.keeper.output.Output;
 import insideworld.engine.exception.CommonException;
@@ -70,7 +72,7 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
     @Override
     public final void execute(final Action action, final Context context, final Output output)
         throws CommonException {
-        this.first.execute(action, context, output);
+        this.first.execute(new WrapperContext(action, context, output, this));
     }
 
     @Override
