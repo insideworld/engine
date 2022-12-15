@@ -30,8 +30,6 @@
 
   <artifactId>quarkus-test-base</artifactId>
 
-  <packaging>pom</packaging>
-
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -49,18 +47,12 @@
       <artifactId>quarkus-junit5</artifactId>
       <version>${quarkus.version}</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>insideworld.engine</groupId>-->
-<!--      <artifactId>quarkus-extension-runtime</artifactId>-->
-<!--      <version>${project.version}</version>-->
-<!--    </dependency>-->
+
     <dependency>
       <groupId>insideworld.engine</groupId>
       <artifactId>quarkus-extension-deployment</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-
-
 
 </project>
