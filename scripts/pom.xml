@@ -22,34 +22,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>quarkus-tests</artifactId>
+    <artifactId>engine</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>1.0.0-dev</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>quarkus-test-rest</artifactId>
-
+  <artifactId>scripts</artifactId>
   <packaging>pom</packaging>
+  <modules>
+    <module>scripts-database</module>
+  </modules>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-test-common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-    </dependency>
-  </dependencies>
 
 </project>

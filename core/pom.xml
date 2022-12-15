@@ -24,7 +24,7 @@
   <parent>
     <artifactId>engine</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>1.0.0</version>
+    <version>1.0.0-dev</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 

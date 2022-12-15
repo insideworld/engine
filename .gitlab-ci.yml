@@ -10,6 +10,7 @@ deploy:
     - 'mvn deploy'
   only:
     - master
+    - dev
 
 #cleanup:
 #  stage: cleanup

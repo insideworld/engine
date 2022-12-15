@@ -24,7 +24,7 @@
   <parent>
     <artifactId>example</artifactId>
     <groupId>insideworld.engine</groupId>
-    <version>1.0.0</version>
+    <version>1.0.0-dev</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -111,6 +111,13 @@
     <dependency>
       <groupId>insideworld.engine</groupId>
       <artifactId>plugins-generator-action-link</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--  Database scripts  -->
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>scripts-database-postgres</artifactId>
       <version>${project.version}</version>
     </dependency>
 

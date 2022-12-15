@@ -31,6 +31,9 @@ public class Main {
     private static final String CONNECTION_PARAM =
         "jdbc:h2:tcp://localhost/mem:test;"
         + "DB_CLOSE_DELAY=-1;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;INIT="
+        + "RUNSCRIPT FROM 'classpath:insideworld/engine/scripts/database/postgres/common.sql'\\;"
+        + "RUNSCRIPT FROM 'classpath:insideworld/engine/scripts/database/postgres/security-core.sql'\\;"
+        + "RUNSCRIPT FROM 'classpath:insideworld/engine/scripts/database/postgres/security-token.sql'\\;"
         + "RUNSCRIPT FROM 'classpath:custom.sql'\\;";
 
     /**
