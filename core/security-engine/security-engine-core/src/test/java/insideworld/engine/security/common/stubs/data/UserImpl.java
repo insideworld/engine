@@ -20,9 +20,9 @@
 package insideworld.engine.security.common.stubs.data;
 
 import com.google.common.collect.Sets;
-import insideworld.engine.data.generator.inmemory.entity.abstracts.MemoryEntity;
-import insideworld.engine.security.core.data.Role;
-import insideworld.engine.security.core.data.User;
+import insideworld.engine.plugins.generator.data.inmemory.entity.abstracts.MemoryEntity;
+import insideworld.engine.core.security.core.data.Role;
+import insideworld.engine.core.security.core.data.User;
 import java.util.Collection;
 import javax.enterprise.context.Dependent;
 

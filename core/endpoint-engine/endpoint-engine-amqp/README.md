@@ -5,22 +5,22 @@ action engine.
 
 # How to use:
 
-First you need to implement [Connection](./src/main/java/insideworld/engine/amqp/connection/Connection.java)
+First you need to implement [Connection](src/main/java/insideworld/engine/core/endpoint/amqp/connection/Connection.java)
 interface or take already implemented based on another frameworks (see section Implementation bellow)
 
 If you write your own implementation, need also implement next interfaces:
 
-* [AmqpReceiver](./src/main/java/insideworld/engine/amqp/connection/AmqpReceiver.java) -
+* [AmqpReceiver](src/main/java/insideworld/engine/core/endpoint/amqp/connection/AmqpReceiver.java) -
 using to receive incoming messages.
-* [AmqpSender](./src/main/java/insideworld/engine/amqp/connection/AmqpSender.java) - 
+* [AmqpSender](src/main/java/insideworld/engine/core/endpoint/amqp/connection/AmqpSender.java) - 
 using to send messages.
 * [Message](.src/main/java/insideworld/engine/amqp/connection/Message.java) - 
 using to keep message information and payload.
 
 Next need to integrate this connection to action engine:
 
-For it, you need to create an instance of [AmqpActionReceiver](./src/main/java/insideworld/engine/amqp/actions/AmqpActionReceiver.java)
-to receive message and also implement [AmqpActionSender](./src/main/java/insideworld/engine/amqp/actions/AmqpActionSender.java) 
+For it, you need to create an instance of [AmqpActionReceiver](src/main/java/insideworld/engine/core/endpoint/amqp/actions/AmqpActionReceiver.java)
+to receive message and also implement [AmqpActionSender](src/main/java/insideworld/engine/core/endpoint/amqp/actions/AmqpActionSender.java) 
 to send callbacks. If call back is not required just set null.
 
 You may use DI to create an instance of these classes. Just inheritance from it and all.

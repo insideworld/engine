@@ -19,10 +19,10 @@
 
 package insideworld.engine.security.common.stubs;
 
-import insideworld.engine.actions.keeper.Record;
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.entities.StorageException;
-import insideworld.engine.entities.extractor.Extractor;
+import insideworld.engine.core.action.keeper.Record;
+import insideworld.engine.core.action.keeper.output.Output;
+import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.data.core.extractor.Extractor;
 import java.util.Map;
 import javax.inject.Singleton;
 

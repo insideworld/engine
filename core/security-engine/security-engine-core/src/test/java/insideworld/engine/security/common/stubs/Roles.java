@@ -19,8 +19,8 @@
 
 package insideworld.engine.security.common.stubs;
 
-import insideworld.engine.security.core.RoleConst;
-import insideworld.engine.security.core.data.Role;
+import insideworld.engine.core.security.core.RoleConst;
+import insideworld.engine.core.security.core.data.Role;
 
 public class Roles {
 

@@ -162,7 +162,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <scan>insideworld</scan>
+              <scan>insideworld.engine.example.quarkus</scan>
             </configuration>
           </execution>
         </executions>
@@ -177,7 +177,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <scan>insideworld</scan>
+              <scan>insideworld.engine.example.quarkus</scan>
             </configuration>
           </execution>
         </executions>
@@ -192,7 +192,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <scan>insideworld</scan>
+              <scan>insideworld.engine.example.quarkus</scan>
             </configuration>
           </execution>
         </executions>

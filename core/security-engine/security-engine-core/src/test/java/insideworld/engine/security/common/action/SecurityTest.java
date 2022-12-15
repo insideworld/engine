@@ -19,16 +19,15 @@
 
 package insideworld.engine.security.common.action;
 
-import insideworld.engine.actions.Action;
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.executor.ActionExecutor;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.matchers.exception.ExceptionMatchers;
+import insideworld.engine.core.action.Action;
+import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.matchers.exception.ExceptionMatchers;
 import insideworld.engine.security.common.stubs.auth.TestProfile;
-import insideworld.engine.security.core.SecurityException;
-import insideworld.engine.security.core.UserTags;
-import insideworld.engine.security.core.data.UserStorage;
+import insideworld.engine.core.security.core.UserTags;
+import insideworld.engine.core.security.core.data.UserStorage;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import org.hamcrest.MatcherAssert;

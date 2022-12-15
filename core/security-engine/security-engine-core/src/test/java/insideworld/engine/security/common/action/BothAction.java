@@ -19,11 +19,11 @@
 
 package insideworld.engine.security.common.action;
 
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.actions.keeper.output.Output;
+import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.security.common.stubs.Roles;
-import insideworld.engine.security.core.action.RoleAction;
-import insideworld.engine.security.core.data.Role;
+import insideworld.engine.core.security.core.action.RoleAction;
+import insideworld.engine.core.security.core.data.Role;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Singleton;

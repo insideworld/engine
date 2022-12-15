@@ -19,13 +19,13 @@
 
 package insideworld.engine.security.common.stubs;
 
-import insideworld.engine.entities.StorageException;
-import insideworld.engine.entities.storages.Storage;
-import insideworld.engine.exception.CommonException;
-import insideworld.engine.security.core.data.Role;
-import insideworld.engine.security.core.data.User;
-import insideworld.engine.security.core.data.UserStorage;
-import insideworld.engine.startup.OnStartUp;
+import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.security.core.data.Role;
+import insideworld.engine.core.security.core.data.User;
+import insideworld.engine.core.security.core.data.UserStorage;
+import insideworld.engine.core.common.startup.OnStartUp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

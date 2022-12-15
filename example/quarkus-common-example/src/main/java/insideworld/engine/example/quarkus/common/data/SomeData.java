@@ -19,7 +19,7 @@
 
 package insideworld.engine.example.quarkus.common.data;
 
-import insideworld.engine.entities.Entity;
+import insideworld.engine.core.data.core.Entity;
 import java.util.Date;
 
 public interface SomeData extends Entity {

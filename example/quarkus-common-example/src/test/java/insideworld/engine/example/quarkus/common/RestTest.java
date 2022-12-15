@@ -19,7 +19,7 @@
 
 package insideworld.engine.example.quarkus.common;
 
-import insideworld.engine.test.quarkus.database.DatabaseResource;
+import insideworld.engine.frameworks.quarkus.test.database.DatabaseResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;

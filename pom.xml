@@ -33,7 +33,6 @@
     <module>frameworks</module>
     <module>plugins</module>
     <module>core</module>
-    <module>tests</module>
     <module>utils</module>
     <module>example</module>
   </modules>

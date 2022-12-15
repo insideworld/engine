@@ -19,11 +19,11 @@
 
 package insideworld.engine.security.common.stubs.auth;
 
-import insideworld.engine.actions.executor.profiles.AbstractExecuteProfile;
-import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
-import insideworld.engine.actions.executor.profiles.ExecuteProfile;
-import insideworld.engine.actions.executor.profiles.wrapper.ExecuteWrapper;
-import insideworld.engine.datatransfer.endpoint.actions.EndpointProfile;
+import insideworld.engine.core.action.executor.profiles.AbstractExecuteProfile;
+import insideworld.engine.core.action.executor.profiles.DefaultExecuteProfile;
+import insideworld.engine.core.action.executor.profiles.ExecuteProfile;
+import insideworld.engine.core.action.executor.profiles.wrapper.ExecuteWrapper;
+import insideworld.engine.core.endpoint.base.action.EndpointProfile;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Singleton;

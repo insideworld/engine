@@ -42,7 +42,11 @@
       <artifactId>common-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-extension-runtime</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>jakarta.enterprise</groupId>

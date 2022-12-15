@@ -20,10 +20,10 @@
 package insideworld.engine.example.quarkus.common.roles;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.actions.ActionException;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.security.core.action.RoleAction;
-import insideworld.engine.security.core.data.Role;
+import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.security.core.action.RoleAction;
+import insideworld.engine.core.security.core.data.Role;
 import java.util.Collection;
 
 public interface MemberRole extends RoleAction {

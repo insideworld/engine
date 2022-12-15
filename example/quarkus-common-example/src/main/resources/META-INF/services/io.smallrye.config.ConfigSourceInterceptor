@@ -1,1 +1,1 @@
-insideworld.engine.quarkus.config.CryptConfigInterceptor
+insideworld.engine.frameworks.quarkus.common.config.CryptConfigInterceptor

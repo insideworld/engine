@@ -19,9 +19,9 @@
 
 package insideworld.engine.example.quarkus.common.endpoint;
 
-import insideworld.engine.actions.keeper.output.Output;
-import insideworld.engine.web.RestActionReceiver;
-import insideworld.engine.web.RestParameter;
+import insideworld.engine.core.action.keeper.output.Output;
+import insideworld.engine.core.endpoint.rest.RestActionReceiver;
+import insideworld.engine.core.endpoint.rest.RestParameter;
 import io.smallrye.mutiny.Uni;
 import java.io.InputStream;
 import javax.inject.Inject;
@@ -31,7 +31,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 
 @Path("/actions")

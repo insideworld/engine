@@ -19,10 +19,10 @@
 
 package insideworld.engine.security.common.stubs.data;
 
-import insideworld.engine.data.generator.inmemory.storage.annotations.GenerateInMemoryCrud;
-import insideworld.engine.generator.GenerateMixin;
-import insideworld.engine.security.core.data.Role;
-import insideworld.engine.security.core.data.User;
+import insideworld.engine.plugins.generator.data.inmemory.storage.annotations.GenerateInMemoryCrud;
+import insideworld.engine.plugins.generator.base.GenerateMixin;
+import insideworld.engine.core.security.core.data.Role;
+import insideworld.engine.core.security.core.data.User;
 
 
 @GenerateInMemoryCrud(entity = Role.class)

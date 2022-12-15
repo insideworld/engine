@@ -19,11 +19,11 @@
 
 package insideworld.engine.security.common.stubs.data;
 
-import insideworld.engine.data.generator.inmemory.storage.AbstractInMemoryStorageDecorator;
-import insideworld.engine.data.generator.inmemory.storage.abstracts.AbstractMemoryStorage;
-import insideworld.engine.entities.StorageException;
-import insideworld.engine.security.core.data.User;
-import insideworld.engine.security.core.data.UserStorage;
+import insideworld.engine.plugins.generator.data.inmemory.storage.AbstractInMemoryStorageDecorator;
+import insideworld.engine.plugins.generator.data.inmemory.storage.abstracts.AbstractMemoryStorage;
+import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.security.core.data.User;
+import insideworld.engine.core.security.core.data.UserStorage;
 import java.util.Collection;
 import java.util.Optional;
 import javax.inject.Inject;

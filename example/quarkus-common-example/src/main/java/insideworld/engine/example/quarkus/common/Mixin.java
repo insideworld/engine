@@ -19,14 +19,14 @@
 
 package insideworld.engine.example.quarkus.common;
 
-import insideworld.engine.data.generator.jpa.entity.annotations.GenerateJpaEntity;
-import insideworld.engine.data.generator.jpa.storage.annotations.GenerateCrud;
+import insideworld.engine.plugins.generator.data.jpa.entity.annotations.GenerateJpaEntity;
+import insideworld.engine.plugins.generator.data.jpa.storage.annotations.GenerateCrud;
 import insideworld.engine.example.quarkus.common.data.SomeData;
 import insideworld.engine.example.quarkus.common.roles.MemberRole;
-import insideworld.engine.generator.GenerateMixin;
-import insideworld.engine.generator.entities.actions.delete.annotations.GenerateDeleteAction;
-import insideworld.engine.generator.entities.actions.read.annotations.GenerateReadAction;
-import insideworld.engine.generator.entities.actions.write.annotations.GenerateWriteAction;
+import insideworld.engine.plugins.generator.base.GenerateMixin;
+import insideworld.engine.plugins.generator.data.action.delete.annotations.GenerateDeleteAction;
+import insideworld.engine.plugins.generator.data.action.read.annotations.GenerateReadAction;
+import insideworld.engine.plugins.generator.data.action.write.annotations.GenerateWriteAction;
 
 /**
  * Generate JPA entity, storage and actions for SomeData.

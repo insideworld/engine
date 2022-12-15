@@ -19,13 +19,12 @@
 
 package insideworld.engine.security.common.stubs.auth;
 
-import insideworld.engine.actions.executor.profiles.DefaultExecuteProfile;
-import insideworld.engine.actions.keeper.context.Context;
-import insideworld.engine.datatransfer.endpoint.actions.EndpointProfile;
-import insideworld.engine.security.core.SecurityException;
-import insideworld.engine.security.core.UserTags;
-import insideworld.engine.security.core.auth.Auth;
-import insideworld.engine.security.core.data.User;
+import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.endpoint.base.action.EndpointProfile;
+import insideworld.engine.core.security.core.SecurityException;
+import insideworld.engine.core.security.core.UserTags;
+import insideworld.engine.core.security.core.auth.Auth;
+import insideworld.engine.core.security.core.data.User;
 import javax.inject.Singleton;
 
 @Singleton
