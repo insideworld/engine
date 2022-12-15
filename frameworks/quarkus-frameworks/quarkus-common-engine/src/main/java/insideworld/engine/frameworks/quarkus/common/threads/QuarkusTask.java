@@ -23,13 +23,16 @@ import com.google.common.collect.Lists;
 import insideworld.engine.core.common.threads.Task;
 import io.smallrye.mutiny.Uni;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class QuarkusTask<T> implements Task<T> {
 
     private Uni<T> uni;
 
-    private final Collection<Throwable> throwables = Lists.newLinkedList();
+    private final Collection<Throwable> throwable = Collections.synchronizedList(
+        Lists.newLinkedList()
+    );
 
     @Override
     public T result() {
@@ -43,11 +46,11 @@ public class QuarkusTask<T> implements Task<T> {
 
     @Override
     public final Collection<Throwable> exceptions() {
-        return this.throwables;
+        return this.throwable;
     }
 
-    public void addThrowable(Throwable throwable) {
-        this.throwables.add(throwable);
+    public void addThrowable(final Throwable throwable) {
+        this.throwable.add(throwable);
     }
 
     public void setUni(final Uni<T> puni) {
