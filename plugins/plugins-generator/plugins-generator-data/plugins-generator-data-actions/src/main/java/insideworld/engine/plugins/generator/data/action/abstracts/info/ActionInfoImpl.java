@@ -17,13 +17,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.abstracts.info;
 
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import java.util.Collection;
+import insideworld.engine.core.data.core.Entity;
 
-public interface SearchDeleteAction {
+public class ActionInfoImpl implements ActionInfo {
 
-    Collection<ActionInfo> search();
+    private final Class<? extends Entity> entity;
+    private final String key;
+    private final Class<?>[] interfaces;
+    private final String implementation;
+
+    public ActionInfoImpl(final Class<? extends Entity> entity,
+                          final String key,
+                          final Class<?>[] interfaces,
+                          final String implementation) {
+
+        this.entity = entity;
+        this.key = key;
+        this.interfaces = interfaces;
+        this.implementation = implementation;
+    }
+
+    @Override
+    public Class<? extends Entity> entity() {
+        return this.entity;
+    }
+
+    @Override
+    public String key() {
+        return this.key;
+    }
+
+    @Override
+    public Class<?>[] interfaces() {
+        return this.interfaces;
+    }
+
+    @Override
+    public String implementation() {
+        return this.implementation;
+    }
 
 }

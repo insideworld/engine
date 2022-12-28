@@ -17,13 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.read.specific.annotations;
 
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import java.util.Collection;
+import insideworld.engine.core.data.core.Entity;
+import insideworld.engine.core.data.core.storages.Storage;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.inject.Scope;
 
-public interface SearchDeleteAction {
+@Scope
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Repeatable(GenerateSpecificReadActions.class)
+public @interface GenerateSpecificReadAction {
 
-    Collection<ActionInfo> search();
+    Class<? extends Storage<?>> storage();
+
+    String[] parameters();
+
+    String key();
+
+    Class<?>[] interfaces() default {};
+
+    String method();
 
 }

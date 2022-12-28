@@ -19,11 +19,11 @@
 
 package insideworld.engine.plugins.generator.data.action.write.search;
 
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionTagInfo;
+import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import java.util.Collection;
 
 public interface SearchWriteAction {
 
-    Collection<ActionTagInfo> search();
+    Collection<ActionInfo> search();
 
 }

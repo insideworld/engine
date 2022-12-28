@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  smarthouse-native:
+    image: insideworld.asuscomm.com/engine/backend/dev:native
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    ports:
+      - 22011:443
+    environment:
+      SERVER_HOSTNAME: 0.0.0.0
+      SERVER_PORT_HTTP: 80
+      SERVER_PORT_HTTPS: 443
+      SERVER_SSL_PATH: localhost.p12
+      SERVER_SSL_PASSWORD: changeit
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: qqqq
+      DATABASE_PATH: jdbc:postgresql://engine-example-quarkus-db:5432/test
+
+  engine-example-quarkus-jvm:
+    image: insideworld.asuscomm.com/engine/backend/dev:jvm
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    ports:
+      - 22012:443
+    environment:
+      SERVER_HOSTNAME: 0.0.0.0
+      SERVER_PORT_HTTP: 80
+      SERVER_PORT_HTTPS: 443
+      SERVER_SSL_PATH: localhost.p12
+      SERVER_SSL_PASSWORD: changeit
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: qqqq
+      DATABASE_PATH: jdbc:postgresql://engine-example-quarkus-db:5432/test
+
+  engine-example-quarkus-db:
+    image: postgres:13.3
+    restart: always
+    ports:
+      - 22010:5432
+    volumes:
+      - engine-example-quarkus-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: qqqq
+
+volumes:
+    engine-example-quarkus-db:

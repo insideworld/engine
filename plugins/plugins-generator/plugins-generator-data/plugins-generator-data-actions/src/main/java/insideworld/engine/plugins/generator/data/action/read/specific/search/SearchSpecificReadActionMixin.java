@@ -17,44 +17,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.read.specific.search;
 
+import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.base.AbstractSearchMixin;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfoImpl;
-import insideworld.engine.plugins.generator.data.action.delete.annotations.GenerateDeleteAction;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
+import insideworld.engine.plugins.generator.data.action.read.specific.annotations.GenerateSpecificReadAction;
+import insideworld.engine.plugins.generator.data.action.read.specific.info.SpecificReadInfo;
+import insideworld.engine.plugins.generator.data.action.read.specific.info.SpecificReadInfoImpl;
+import org.apache.commons.lang3.StringUtils;
 
-public class SearchDeleteMixin
-    extends AbstractSearchMixin<ActionInfo, GenerateDeleteAction>
-    implements SearchDeleteAction {
+public class SearchSpecificReadActionMixin
+    extends AbstractSearchMixin<SpecificReadInfo, GenerateSpecificReadAction>
+    implements SearchSpecificReadAction {
 
-    public SearchDeleteMixin(final Reflection reflections) {
+    public SearchSpecificReadActionMixin(final Reflection reflections) {
         super(reflections);
     }
 
     @Override
-    protected ActionInfo createSearch(
-        final GenerateDeleteAction annotation, final Class<? extends GenerateMixin> mixin) {
-        return new ActionInfoImpl(
-            annotation.entity(),
+    protected SpecificReadInfo createSearch(GenerateSpecificReadAction annotation, Class<? extends GenerateMixin> mixin) {
+        return new SpecificReadInfoImpl(
+            annotation.storage(),
             annotation.key(),
             annotation.interfaces(),
-            this.name(annotation.entity(), mixin)
+            this.name(annotation.storage(), annotation.method(), mixin),
+            annotation.method(),
+            annotation.parameters()
         );
     }
 
-    private String name(final Class<?> entity, final Class<? extends GenerateMixin> mixin) {
+    private String name(
+        final Class<? extends Storage<?>> storage,
+        final String method,
+        final Class<? extends GenerateMixin> mixin
+    ) {
         return String.format(
-            mixin.getPackageName() + ".generated.actions.entity.Delete%sAction",
-            entity.getSimpleName().replace("Entity","")
+            mixin.getPackageName() + ".generated.actions.entity.Read%s%sAction",
+            storage.getSimpleName(),
+            StringUtils.capitalize(method)
         );
     }
 
     @Override
-    protected Class<GenerateDeleteAction> annotation() {
-        return GenerateDeleteAction.class;
+    protected Class<GenerateSpecificReadAction> annotation() {
+        return GenerateSpecificReadAction.class;
     }
-
 }

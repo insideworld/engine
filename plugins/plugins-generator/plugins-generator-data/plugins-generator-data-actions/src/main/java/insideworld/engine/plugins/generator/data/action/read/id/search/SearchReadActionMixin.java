@@ -17,26 +17,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.read.id.search;
 
 import insideworld.engine.plugins.generator.base.AbstractSearchMixin;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfoImpl;
-import insideworld.engine.plugins.generator.data.action.delete.annotations.GenerateDeleteAction;
+import insideworld.engine.plugins.generator.data.action.read.id.annotations.GenerateReadAction;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 
-public class SearchDeleteMixin
-    extends AbstractSearchMixin<ActionInfo, GenerateDeleteAction>
-    implements SearchDeleteAction {
+public class SearchReadActionMixin extends AbstractSearchMixin<ActionInfo, GenerateReadAction>
+    implements SearchReadAction {
 
-    public SearchDeleteMixin(final Reflection reflections) {
+    public SearchReadActionMixin(final Reflection reflections) {
         super(reflections);
     }
 
     @Override
-    protected ActionInfo createSearch(
-        final GenerateDeleteAction annotation, final Class<? extends GenerateMixin> mixin) {
+    protected ActionInfo createSearch(GenerateReadAction annotation, Class<? extends GenerateMixin> mixin) {
         return new ActionInfoImpl(
             annotation.entity(),
             annotation.key(),
@@ -47,14 +45,15 @@ public class SearchDeleteMixin
 
     private String name(final Class<?> entity, final Class<? extends GenerateMixin> mixin) {
         return String.format(
-            mixin.getPackageName() + ".generated.actions.entity.Delete%sAction",
+            mixin.getPackageName() + ".generated.actions.entity.Read%sAction",
             entity.getSimpleName().replace("Entity","")
         );
     }
 
     @Override
-    protected Class<GenerateDeleteAction> annotation() {
-        return GenerateDeleteAction.class;
+    protected Class<GenerateReadAction> annotation() {
+        return GenerateReadAction.class;
     }
+
 
 }

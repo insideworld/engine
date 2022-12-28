@@ -25,5 +25,5 @@ export default function () {
             'Authorization': 'Bearer token'
         }
     };
-    http.post('https://localhost:16546/api/actions/somedata.read', `{}`, headers);
+    http.post('https://inswrlserver:22011/api/actions/somedata.read', `{}`, headers);
 }

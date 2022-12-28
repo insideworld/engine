@@ -17,28 +17,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.write.annotations;
+package insideworld.engine.plugins.generator.data.action.read.specific;
 
+import insideworld.engine.core.action.Action;
+import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.action.keeper.output.Output;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import javax.inject.Scope;
+import insideworld.engine.core.data.core.converter.EntityConverter;
+import insideworld.engine.core.data.core.storages.Storage;
+import java.util.Collection;
 
-@Scope
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Repeatable(GenerateWriteActions.class)
-public @interface GenerateWriteAction {
+public abstract class AbstractSpecificReadAction<S extends Storage<? extends Entity>> implements Action {
 
-    Class<? extends Entity> entity();
+    private final EntityConverter converter;
 
-    String key();
+    protected final S storage;
 
-    Class<?>[] interfaces() default {};
+    public AbstractSpecificReadAction(
+        final EntityConverter converter,
+        final S storage
+    ) {
+        this.converter = converter;
+        this.storage = storage;
+    }
+
+    @Override
+    public void execute(final Context context, final Output output) throws CommonException {
+        for (final Entity t : this.read(context)) {
+            output.add(this.converter.convert(t));
+        }
+    }
+    protected abstract Collection<? extends Entity> read(Context context);
 
 }

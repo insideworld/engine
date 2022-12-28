@@ -136,23 +136,15 @@
     <!--  Other dependencies  -->
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-h2</artifactId>
+      <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
 
-    <!--  For tests  -->
+    <!--  For native compilation   -->
     <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-test-database</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
+      <groupId>org.jboss.weld.se</groupId>
+      <artifactId>weld-se-core</artifactId>
+      <version>4.0.2.Final</version>
     </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-test-rest</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
   </dependencies>
 
 

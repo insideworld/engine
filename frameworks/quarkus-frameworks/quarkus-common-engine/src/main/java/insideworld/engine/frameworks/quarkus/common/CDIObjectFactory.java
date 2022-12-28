@@ -65,6 +65,7 @@ public class CDIObjectFactory implements ObjectFactory {
     }
 
     private <T> T createNative(final Class<T> type, final Object... args) {
+        System.out.println("Native create " + type.getName());
         final Constructor<?> constructor = type.getDeclaredConstructors()[0];
         final Object[] input;
         final int count = constructor.getParameterCount();

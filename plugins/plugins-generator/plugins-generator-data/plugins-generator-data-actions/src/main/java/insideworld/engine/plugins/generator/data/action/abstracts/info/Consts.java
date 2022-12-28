@@ -17,13 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.abstracts.info;
 
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import java.util.Collection;
+import insideworld.engine.core.data.core.tags.EntityTag;
 
-public interface SearchDeleteAction {
+public final class Consts {
 
-    Collection<ActionInfo> search();
+    public static final String TAG =
+        "insideworld.engine.plugins.generator.data.action.abstracts.info.Consts.TAG";
 
+    public static final String TAGS =
+        "insideworld.engine.plugins.generator.data.action.abstracts.info.Consts.TAGS";
+
+    private Consts() {
+
+    }
 }

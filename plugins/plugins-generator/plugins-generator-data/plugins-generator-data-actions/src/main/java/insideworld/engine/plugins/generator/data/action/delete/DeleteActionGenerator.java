@@ -21,8 +21,8 @@ package insideworld.engine.plugins.generator.data.action.delete;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.data.core.action.AbstractDeleteAction;
-import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionTagsGenerator;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionTagsInfo;
+import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
+import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteAction;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteMixin;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
@@ -30,7 +30,7 @@ import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class DeleteActionGenerator extends AbstractActionTagsGenerator<ActionTagsInfo> {
+public class DeleteActionGenerator extends AbstractActionGenerator {
 
     private final Reflection reflection;
 
@@ -46,7 +46,7 @@ public class DeleteActionGenerator extends AbstractActionTagsGenerator<ActionTag
     }
 
     @Override
-    protected Collection<ActionTagsInfo> infos() {
+    protected Collection<ActionInfo> infos() {
         final Collection<SearchDeleteAction> searchers = ImmutableList.of(
             new SearchDeleteMixin(this.reflection)
         );

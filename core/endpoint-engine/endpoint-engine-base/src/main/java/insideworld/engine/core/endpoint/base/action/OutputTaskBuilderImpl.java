@@ -31,9 +31,13 @@ import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class OutputTaskBuilderImpl implements OutputTaskBuilder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OutputTaskBuilderImpl.class);
 
     private final ObjectFactory factory;
 
@@ -63,6 +67,7 @@ public class OutputTaskBuilderImpl implements OutputTaskBuilder {
                 record.put("key", index.diagnostic().key());
                 record.put("value", index.diagnostic().value());
             });
+            OutputTaskBuilderImpl.LOGGER.error("Exception in output", common);
             return output;
         });
         return builder.build();

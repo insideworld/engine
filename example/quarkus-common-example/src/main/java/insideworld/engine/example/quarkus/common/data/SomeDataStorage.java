@@ -17,13 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.example.quarkus.common.data;
 
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
+import insideworld.engine.core.data.core.storages.Storage;
 import java.util.Collection;
+import java.util.Date;
 
-public interface SearchDeleteAction {
+public interface SomeDataStorage extends Storage<SomeData> {
 
-    Collection<ActionInfo> search();
+    Collection<SomeData> readByValue(String value);
+
+    SomeData readByValueSingle(String value);
+
+    Collection<SomeData> readByDateAndValue(String value, Date date);
 
 }

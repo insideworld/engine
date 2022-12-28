@@ -19,13 +19,15 @@
 
 package insideworld.engine.example.quarkus.common;
 
+import insideworld.engine.example.quarkus.common.data.SomeDataStorage;
+import insideworld.engine.plugins.generator.data.action.read.specific.annotations.GenerateSpecificReadAction;
 import insideworld.engine.plugins.generator.data.jpa.entity.annotations.GenerateJpaEntity;
 import insideworld.engine.plugins.generator.data.jpa.storage.annotations.GenerateCrud;
 import insideworld.engine.example.quarkus.common.data.SomeData;
 import insideworld.engine.example.quarkus.common.roles.MemberRole;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
 import insideworld.engine.plugins.generator.data.action.delete.annotations.GenerateDeleteAction;
-import insideworld.engine.plugins.generator.data.action.read.annotations.GenerateReadAction;
+import insideworld.engine.plugins.generator.data.action.read.id.annotations.GenerateReadAction;
 import insideworld.engine.plugins.generator.data.action.write.annotations.GenerateWriteAction;
 
 /**
@@ -33,9 +35,30 @@ import insideworld.engine.plugins.generator.data.action.write.annotations.Genera
  * @since 1.0.0
  */
 @GenerateJpaEntity(entity = SomeData.class, schema = "test", table = "some_data")
-@GenerateCrud(entity = SomeData.class)
-@GenerateReadAction(entity = SomeData.class, tag = "somedata", tags = "somedatas", key = "somedata.read", interfaces = {MemberRole.class})
-@GenerateWriteAction(entity = SomeData.class, tag = "somedata", key = "somedata.write", interfaces = {MemberRole.class})
-@GenerateDeleteAction(entity = SomeData.class, tag = "somedata", tags = "somedatas", key = "somedata.delete", interfaces = {MemberRole.class})
+@GenerateCrud(entity = SomeData.class, override = true)
+@GenerateReadAction(entity = SomeData.class, key = "somedata.read", interfaces = {MemberRole.class})
+@GenerateWriteAction(entity = SomeData.class, key = "somedata.write", interfaces = {MemberRole.class})
+@GenerateDeleteAction(entity = SomeData.class, key = "somedata.delete", interfaces = {MemberRole.class})
+@GenerateSpecificReadAction(
+    storage = SomeDataStorage.class,
+    method = "readByValue",
+    key = "somedata.value",
+    interfaces = {MemberRole.class},
+    parameters = {"value"}
+)
+@GenerateSpecificReadAction(
+    storage = SomeDataStorage.class,
+    method = "readByValueSingle",
+    key = "somedata.valueSingle",
+    interfaces = {MemberRole.class},
+    parameters = {"value"}
+)
+@GenerateSpecificReadAction(
+    storage = SomeDataStorage.class,
+    method = "readByDateAndValue",
+    key = "somedata.valueDate",
+    interfaces = {MemberRole.class},
+    parameters = {"value", "date"}
+)
 public interface Mixin extends GenerateMixin {
 }

@@ -17,15 +17,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.write;
+package insideworld.engine.plugins.generator.data.action.read.id;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.action.AbstractWriteAction;
+import insideworld.engine.core.data.core.action.AbstractReadAction;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import insideworld.engine.plugins.generator.data.action.write.search.SearchWriteAction;
-import insideworld.engine.plugins.generator.data.action.write.search.SearchWriteMixin;
+import insideworld.engine.plugins.generator.data.action.read.id.search.SearchReadAction;
+import insideworld.engine.plugins.generator.data.action.read.id.search.SearchReadActionMixin;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
@@ -33,26 +33,27 @@ import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-public class WriteActionGenerator extends AbstractActionGenerator {
+public class ReadActionGenerator extends AbstractActionGenerator {
 
     private final Reflection reflection;
 
-    public WriteActionGenerator(final Reflection reflection, final ClassOutput output) {
+    public ReadActionGenerator(final Reflection reflection,
+                               final ClassOutput output) {
         super(output);
         this.reflection = reflection;
     }
 
     @Override
     protected Class<?> extended() {
-        return AbstractWriteAction.class;
+        return AbstractReadAction.class;
     }
 
     @Override
     protected Collection<ActionInfo> infos() {
-        final Collection<SearchWriteAction> searchers = ImmutableList.of(
-            new SearchWriteMixin(this.reflection)
+        final Collection<SearchReadAction> searchers = ImmutableList.of(
+            new SearchReadActionMixin(this.reflection)
         );
-        return searchers.stream().map(SearchWriteAction::search)
+        return searchers.stream().map(SearchReadAction::search)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
     }
@@ -61,14 +62,11 @@ public class WriteActionGenerator extends AbstractActionGenerator {
     protected final Collection<BiConsumer<ClassCreator, ActionInfo>> methodPredicates() {
         return ImmutableList.<BiConsumer<ClassCreator, ActionInfo>>builder()
             .addAll(super.methodPredicates())
-            .add(this::createAfterMethods)
+            .add(this::createAfterExport)
             .build();
     }
 
-    private void createAfterMethods(final ClassCreator creator, final ActionInfo info) {
-        creator
-            .getMethodCreator("afterImport", void.class, LinksBuilder.class)
-            .returnValue(null);
+    private void createAfterExport(final ClassCreator creator, final ActionInfo info) {
         creator
             .getMethodCreator("afterExport", void.class, LinksBuilder.class)
             .returnValue(null);

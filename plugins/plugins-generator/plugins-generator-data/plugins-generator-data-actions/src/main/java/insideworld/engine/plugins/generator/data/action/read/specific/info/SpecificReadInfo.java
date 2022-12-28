@@ -17,13 +17,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.read.specific.info;
 
+import insideworld.engine.core.data.core.Entity;
+import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import java.util.Collection;
 
-public interface SearchDeleteAction {
+public interface SpecificReadInfo {
 
-    Collection<ActionInfo> search();
+
+    Class<? extends Storage<? extends Entity>> storage();
+
+    String[] parameters();
+
+    String key();
+
+    Class<?>[] interfaces();
+
+    String implementation();
+
+    String method();
 
 }

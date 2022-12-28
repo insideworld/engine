@@ -76,7 +76,8 @@ public abstract class AbstractReadAction<T extends Entity> extends AbstractChain
                 ExportEntityLink.class,
                 link -> link
                     .setTag(this.getTag())
-                    .setTag(this.getTags()));
+                    .setTag(this.getTags())
+            );
         this.afterExport(builder);
         return builder.build();
     }

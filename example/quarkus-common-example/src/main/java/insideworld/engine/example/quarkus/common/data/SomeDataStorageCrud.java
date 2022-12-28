@@ -17,45 +17,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.frameworks.quarkus.common.threads;
+package insideworld.engine.example.quarkus.common.data;
 
-import com.google.common.collect.Lists;
-import insideworld.engine.core.common.threads.Task;
-import io.smallrye.mutiny.Uni;
+import insideworld.engine.core.data.jpa.AbstractCrudStorage;
+import insideworld.engine.plugins.generator.data.jpa.storage.AbstractCrudDecorator;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Consumer;
-import javax.enterprise.context.Dependent;
+import java.util.Date;
+import javax.inject.Singleton;
 
-@Dependent
-public class QuarkusTask<T> implements Task<T> {
+@Singleton
+public class SomeDataStorageCrud extends AbstractCrudDecorator<SomeData> implements SomeDataStorage {
 
-    private Uni<T> uni;
-
-    private final Collection<Throwable> throwable = Collections.synchronizedList(
-        Lists.newLinkedList()
-    );
-
-    @Override
-    public T result() {
-        return this.uni.await().indefinitely();
+    public SomeDataStorageCrud(AbstractCrudStorage<SomeData, ? extends SomeData> storage) {
+        super(storage);
     }
 
     @Override
-    public void subscribe(final Consumer<T> callback) {
-        this.uni.subscribe().with(callback);
+    public Collection<SomeData> readByValue(final String value) {
+        return (Collection<SomeData>) this.storage
+            .find("from SomeData c where c.value = ?1", value)
+            .list();
     }
 
     @Override
-    public final Collection<Throwable> exceptions() {
-        return this.throwable;
+    public SomeData readByValueSingle(final String value) {
+        return this.storage
+            .find("from SomeData c where c.value = ?1", value).firstResult();
     }
 
-    public void addThrowable(final Throwable throwable) {
-        this.throwable.add(throwable);
-    }
-
-    public void setUni(final Uni<T> puni) {
-        this.uni = puni;
+    @Override
+    public Collection<SomeData> readByDateAndValue(final String value, final Date date) {
+        return (Collection<SomeData>) this.storage
+            .find("from SomeData c where c.value = ?1 and c.date = ?2", value, date)
+            .list();
     }
 }

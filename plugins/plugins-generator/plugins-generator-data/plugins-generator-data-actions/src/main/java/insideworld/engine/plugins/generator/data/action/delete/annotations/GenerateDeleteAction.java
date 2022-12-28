@@ -37,10 +37,6 @@ public @interface GenerateDeleteAction {
 
     Class<? extends Entity> entity();
 
-    String tag();
-
-    String tags();
-
     String key();
 
     Class<?>[] interfaces() default {};

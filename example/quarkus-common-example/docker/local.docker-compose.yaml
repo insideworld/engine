@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  smarthouse-native:
+    image: engine-quarkus-example/dev:native
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    ports:
+      - 22101:443
+    environment:
+      SERVER_HOSTNAME: 0.0.0.0
+      SERVER_PORT_HTTP: 80
+      SERVER_PORT_HTTPS: 443
+      SERVER_SSL_PASSWORD:
+
+  engine-example-quarkus-jvm:
+    image: engine-quarkus-example/dev:jvm
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    ports:
+      - 22100:443
+    environment:
+      SERVER_HOSTNAME: 0.0.0.0
+      SERVER_PORT_HTTP: 80
+      SERVER_PORT_HTTPS: 443
+      SERVER_SSL_PATH: localhost.p12
+      SERVER_SSL_PASSWORD: changeit

@@ -21,13 +21,13 @@ package insideworld.engine.plugins.generator.data.action.write.search;
 
 import insideworld.engine.plugins.generator.base.AbstractSearchMixin;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionTagInfo;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionTagInfoImpl;
+import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
+import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfoImpl;
 import insideworld.engine.plugins.generator.data.action.write.annotations.GenerateWriteAction;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 
 public class SearchWriteMixin
-    extends AbstractSearchMixin<ActionTagInfo, GenerateWriteAction>
+    extends AbstractSearchMixin<ActionInfo, GenerateWriteAction>
     implements SearchWriteAction {
 
     public SearchWriteMixin(final Reflection reflections) {
@@ -35,15 +35,14 @@ public class SearchWriteMixin
     }
 
     @Override
-    protected ActionTagInfo createSearch(
+    protected ActionInfo createSearch(
         final GenerateWriteAction annotation, final Class<? extends GenerateMixin> mixin) {
-        return new ActionTagInfoImpl(
+        return new ActionInfoImpl(
             annotation.entity(),
             annotation.key(),
-            annotation.tag(),
             annotation.interfaces(),
             this.name(annotation.entity(), mixin)
-            );
+        );
     }
 
     @Override

@@ -17,12 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.delete.search;
+package insideworld.engine.plugins.generator.data.action.read.id.search;
 
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import java.util.Collection;
 
-public interface SearchDeleteAction {
+public interface SearchReadAction {
 
     Collection<ActionInfo> search();
 
