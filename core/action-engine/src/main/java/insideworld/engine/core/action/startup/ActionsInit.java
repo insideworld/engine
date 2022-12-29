@@ -41,7 +41,7 @@ public class ActionsInit implements OnStartUp {
     /**
      * Collection of actions.
      */
-    private final Collection<Action> actions;
+    private final Collection<Action<?,?>> actions;
 
     /**
      * Collection of action changers.
@@ -55,7 +55,7 @@ public class ActionsInit implements OnStartUp {
      * @param changers List of changers.
      */
     @Inject
-    public ActionsInit(final List<Action> actions, final List<ActionChanger> changers) {
+    public ActionsInit(final List<Action<?,?>> actions, final List<ActionChanger> changers) {
         this.actions = actions;
         this.changers = changers;
     }
@@ -63,7 +63,7 @@ public class ActionsInit implements OnStartUp {
     @Override
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public final void startUp() throws ActionException {
-        for (final Action action : this.actions) {
+        for (final Action<?,?> action : this.actions) {
             //@checkstyle IllegalCatchCheck (10 lines)
             try {
                 action.init();
@@ -75,9 +75,7 @@ public class ActionsInit implements OnStartUp {
                 );
             }
         }
-        for (final ActionChanger changer : this.changers) {
-            changer.addActions(this.actions);
-        }
+        this.changers.forEach(changer -> this.actions.forEach(changer::addAction));
     }
 
     @Override

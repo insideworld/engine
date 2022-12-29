@@ -17,35 +17,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.chain;
+package insideworld.engine.core.action.executor.profile;
 
+import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.core.common.exception.CommonException;
 
 /**
- * Link of chain.
- * Use separate functionality of actions and reuse code.
- *
- * @since 0.0.1
+ * Execute profile.
+ * Using to register some wrappers action for specific conditions.
+ * @since 0.1.0
  */
-public interface Link {
+public interface ExecuteProfile {
 
     /**
-     * Execute logic of link.
+     * Execute wrapper login for profile implementation.
+     * @param action Executed action.
      * @param context Context.
      * @param output Output.
-     * @throws CommonException Common exception during process action.
+     * @throws CommonException Action exception.
      */
-    void process(Context context, Output output) throws CommonException;
-
-    /**
-     * Can execute this link.
-     * @param context Context.
-     * @return If return true - link will executed, if false - skip this link.
-     */
-    default boolean can(Context context) {
-        return true;
-    }
+    void execute(Action<?,?> action) throws CommonException;
 
 }

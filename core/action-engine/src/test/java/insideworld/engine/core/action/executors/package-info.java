@@ -18,6 +18,6 @@
  */
 
 /**
- * Test of action executor with different profiles.
+ * Test different action executor by specific case.
  */
 package insideworld.engine.core.action.executors;

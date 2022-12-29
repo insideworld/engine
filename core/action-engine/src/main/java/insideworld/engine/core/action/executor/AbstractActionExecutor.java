@@ -19,89 +19,32 @@
 
 package insideworld.engine.core.action.executor;
 
-import com.google.common.collect.Maps;
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.executor.profiles.DefaultExecuteProfile;
-import insideworld.engine.core.action.executor.profiles.ExecuteProfile;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.core.action.tags.ActionsTags;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.injection.ObjectFactory;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Abstract class to execute different actions.
- * Need to extend from this class to support execute action from specific key.
- * The executed action will execute in process wrappers chain in default profile.
+ * Abstract action executor which provide a logic to execute an action.
  *
- * @param <T> Key of action.
- * @since 0.0.1
+ * @param <T>
  */
-public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, ActionChanger {
+public abstract class AbstractActionExecutor<T> implements ActionChanger {
 
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractActionExecutor.class);
+    private final ReentrantLock lock = new ReentrantLock();
 
-    /**
-     * Map of all actions in the system.
-     */
-    private final Map<T, Action> actions;
+    private final Map<T, Action<?, ?>> actions = new ConcurrentHashMap<>(16);
 
-    /**
-     * Object factory.
-     */
-    private final ObjectFactory factory;
-
-    /**
-     * All ExecuteProfiles in the system.
-     */
-    private final Map<Class<? extends ExecuteProfile>, ExecuteProfile> profiles;
-
-    /**
-     * Default constructor.
-     *
-     * @param factory Object factory.
-     * @param profiles Collection of all executor profiles.
-     */
-    public AbstractActionExecutor(
-        final ObjectFactory factory,
-        final List<ExecuteProfile> profiles) {
-        this.factory = factory;
-        this.profiles = profiles.stream().collect(
-            Collectors.toMap(ExecuteProfile::getClass, Function.identity())
-        );
-        this.actions = Maps.newHashMap();
-    }
-
-    @Override
-    public final Output execute(final T parameter, final Context context)
-        throws ActionException {
-        return this.execute(parameter, context, DefaultExecuteProfile.class);
-    }
-
-    @Override
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
-    public final Output execute(
-        final T parameter, final Context context, final Class<? extends ExecuteProfile> profile)
-        throws ActionException {
-        final Action action = this.provide(parameter);
-        LOGGER.info("Start action {} with key {}", action.getClass().getSimpleName(), action.key());
-        context.put(ActionsTags.ACTION, action);
-        context.put(ActionsTags.PROFILE, profile);
-        final var output = this.factory.createObject(Output.class);
-        //@checkstyle IllegalCatchCheck (7 lines)
+    public final <I, O> O execute(T key, I input) throws CommonException {
+        if (this.lock.isLocked()) {
+            //TODO: Add normal exception. It's just a stub and will fail with NPE.
+            throw new ActionException(null, "Actions under update");
+        }
+        @SuppressWarnings("unchecked") final Action<I, O> action = (Action<I, O>) this.actions.get(key);
         try {
-            this.profiles.get(profile).execute(action, context, output);
+            return action.execute(input);
         } catch (final Exception exp) {
             throw CommonException.wrap(
                 exp,
@@ -109,48 +52,15 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
                 ActionException.class
             );
         }
-        return output;
     }
+
+    protected abstract T calculateKey(Action<?, ?> action);
 
     @Override
-    public final Context createContext() {
-        return this.factory.createObject(Context.class);
+    public final void addAction(final Action<?, ?> action) {
+        this.lock.lock();
+        this.actions.put(this.calculateKey(action), action);
+        this.lock.unlock();
     }
 
-    @Override
-    public final void addAction(final Action action) {
-        this.actions.put(this.defineKey(action), action);
-    }
-
-    @Override
-    public final void addActions(final Collection<Action> pactions) {
-        pactions.forEach(this::addAction);
-    }
-
-    /**
-     * Abstract method to define key of each action.
-     *
-     * @param action Action,
-     * @return Key of action.
-     */
-    protected abstract T defineKey(Action action);
-
-    /**
-     * Find execution action by key.
-     *
-     * @param parameter Action key.
-     * @return Action bound to the key.
-     * @throws ActionException Can't find action.
-     */
-    private Action provide(final T parameter) throws ActionException {
-        final var action = this.actions.get(parameter);
-        if (action == null) {
-            throw new ActionException(
-                new NotFoundAction(),
-                "Can't find an action with parameter: %s",
-                parameter
-            );
-        }
-        return action;
-    }
 }

@@ -20,10 +20,6 @@
 package insideworld.engine.core.action;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import insideworld.engine.core.action.executor.ActionChanger;
-import insideworld.engine.core.action.executor.ActionExecutor;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.core.common.exception.CommonException;
 
 /**
@@ -32,19 +28,21 @@ import insideworld.engine.core.common.exception.CommonException;
  * To register action see ActionChanger.
  * @see ActionExecutor
  * @see ActionChanger
+ * @param <I> Input type.
+ * @param <O> Output type.
  * @since 0.0.1
  */
-public interface Action {
+public interface Action<I, O> {
 
     /**
      * Execute an action.
-     * @param context Context is using for input data.
-     * @param output Output is using for store result of the action.
+     * @param input Input data to action.
+     * @param output Output data.
      * @throws CommonException Exception during action execution.
      * @see Context
      * @see Output
      */
-    void execute(Context context, Output output) throws CommonException;
+    O execute(I input) throws CommonException;
 
     /**
      * Make some inits before call action.
@@ -60,4 +58,16 @@ public interface Action {
      */
     @JsonGetter
     String key();
+
+    /**
+     * Type of input data.
+     * @return Input data type.
+     */
+    Class<I> inputType();
+
+    /**
+     * Type of output data.
+     * @return Output data.
+     */
+    Class<O> outputType();
 }

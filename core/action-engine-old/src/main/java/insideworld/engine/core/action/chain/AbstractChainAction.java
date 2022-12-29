@@ -32,9 +32,12 @@ import java.util.Collection;
  * How to add you links see JavaDoc for attachLinks method.
  * You may break a chain add to context BREAK_CHAIN tag.
  *
+ * @param <I> Input data.
+ * @param <O> Output data.
+ * @param <A> Aux type using to move data between links.
  * @since 0.1.0
  */
-public abstract class AbstractChainAction implements Action {
+public abstract class AbstractChainAction<I, O, A> implements Action<I, O> {
 
     /**
      * Link builder.

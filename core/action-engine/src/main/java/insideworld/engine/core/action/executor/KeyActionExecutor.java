@@ -20,34 +20,23 @@
 package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.executor.profiles.ExecuteProfile;
-import insideworld.engine.core.common.injection.ObjectFactory;
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.core.common.exception.CommonException;
 
 /**
- * Executor to provide call an action by string key.
- * Each action should implement method key() for string identification of action.
- * @since 0.0.6
+ * Provide ability to execute action using key of action.
+ * @since 2.0.0
  */
-@Singleton
-public class KeyActionExecutor extends AbstractActionExecutor<String> {
+public interface KeyActionExecutor {
 
     /**
-     * Default constructor.
-     * @param factory Object factory.
-     * @param profiles Execute profiles.
+     * Execute action by a key.
+     * @param key Key of action.
+     * @param input Input.
+     * @return Output.
+     * @param <I> Input type.
+     * @param <O> Output type.
+     * @throws CommonException Exception during action execution.
      */
-    @Inject
-    public KeyActionExecutor(
-        final ObjectFactory factory,
-        final List<ExecuteProfile> profiles) {
-        super(factory, profiles);
-    }
+    <I,O> O execute(String key, I input) throws CommonException;
 
-    @Override
-    protected final String defineKey(final Action action) {
-        return action.key();
-    }
 }
