@@ -19,28 +19,33 @@
 
 package insideworld.engine.core.action.executor;
 
+import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import java.util.function.Supplier;
+import insideworld.engine.core.common.exception.CommonException;
 
-public class ExecuteBuilder<I, O> {
+public class ExecuteActionImpl<I, O> {
 
-    private final Supplier<O> action;
+    private final Action<I, O> action;
+
+    private I input;
 
     private Class<? extends ExecuteProfile> profile;
 
-//    private final
 
-    public ExecuteBuilder(final Supplier<O> action) {
+    public ExecuteActionImpl(final Action<I, O> action) {
         this.action = action;
     }
 
-
-//    public <T> ExecuteBuilder addAdditional(Tag<T> qwe, T value) {
-//
-//    }
-
-    public ExecuteBuilder<O> executeProfile(Class<? extends ExecuteProfile> profile) {
-
+    public final ExecuteActionImpl<I,O> input(final I input) {
+        this.input = input;
+        return this;
     }
+
+    public O execute() throws CommonException {
+        return this.action.execute(this.input);
+    }
+
+
+
 
 }
