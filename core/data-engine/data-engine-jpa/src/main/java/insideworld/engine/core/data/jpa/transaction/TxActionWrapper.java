@@ -19,11 +19,10 @@
 
 package insideworld.engine.core.data.jpa.transaction;
 
-import insideworld.engine.core.action.executor.profiles.wrapper.AbstractExecuteWrapper;
-import insideworld.engine.core.action.executor.profiles.DefaultExecuteProfile;
-import insideworld.engine.core.action.executor.profiles.ExecuteProfile;
-import insideworld.engine.core.action.executor.profiles.wrapper.WrapperContext;
-import insideworld.engine.core.data.core.action.StorageActionsTags;
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
 import insideworld.engine.core.common.exception.CommonException;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,9 +40,9 @@ import javax.transaction.Transactional;
 public class TxActionWrapper extends AbstractExecuteWrapper {
 
     @Override
-    public final void execute(final WrapperContext context)
+    public final void execute(final ExecuteContext context)
         throws CommonException {
-        if (context.context().contains(StorageActionsTags.USE_EXIST_TX)) {
+        if (Boolean.TRUE.equals(context.get(TransactionTags.USE_SAME_TX))) {
             this.executeSameTx(context);
         } else {
             this.executeNewTx(context);
@@ -58,7 +57,7 @@ public class TxActionWrapper extends AbstractExecuteWrapper {
      * @checkstyle NonStaticMethodCheck (2 lines)
      */
     @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = Exception.class)
-    public final void executeSameTx(final WrapperContext context)
+    public final void executeSameTx(final ExecuteContext context)
         throws CommonException {
         super.execute(context);
     }
@@ -71,7 +70,7 @@ public class TxActionWrapper extends AbstractExecuteWrapper {
      * @checkstyle NonStaticMethodCheck (2 lines)
      */
     @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = Exception.class)
-    public final void executeNewTx(final WrapperContext context)
+    public final void executeNewTx(final ExecuteContext context)
         throws CommonException {
         super.execute(context);
     }
@@ -82,7 +81,53 @@ public class TxActionWrapper extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final Collection<Class<? extends ExecuteProfile>> forProfile() {
+    public Collection<Class<? extends ExecuteProfile>> forProfile() {
         return Collections.singleton(DefaultExecuteProfile.class);
     }
+
+//    @Override
+//    public final void execute(final WrapperContext context)
+//        throws CommonException {
+//        if (context.context().contains(StorageActionsTags.USE_EXIST_TX)) {
+//            this.executeSameTx(context);
+//        } else {
+//            this.executeNewTx(context);
+//        }
+//    }
+//
+//    /**
+//     * Use same transactions.
+//     *
+//     * @param context Wrapper context.
+//     * @throws CommonException Common exception.
+//     * @checkstyle NonStaticMethodCheck (2 lines)
+//     */
+//    @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = Exception.class)
+//    public final void executeSameTx(final WrapperContext context)
+//        throws CommonException {
+//        super.execute(context);
+//    }
+//
+//    /**
+//     * Create a new transaction.
+//     *
+//     * @param context Wrapper context.
+//     * @throws CommonException Common exception.
+//     * @checkstyle NonStaticMethodCheck (2 lines)
+//     */
+//    @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = Exception.class)
+//    public final void executeNewTx(final WrapperContext context)
+//        throws CommonException {
+//        super.execute(context);
+//    }
+//
+//    @Override
+//    public final long wrapperOrder() {
+//        return 1_000_000;
+//    }
+//
+//    @Override
+//    public final Collection<Class<? extends ExecuteProfile>> forProfile() {
+//        return Collections.singleton(DefaultExecuteProfile.class);
+//    }
 }

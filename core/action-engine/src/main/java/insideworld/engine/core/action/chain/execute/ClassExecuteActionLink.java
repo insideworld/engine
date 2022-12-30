@@ -20,8 +20,12 @@
 //package insideworld.engine.core.action.chain.execute;
 //
 //import insideworld.engine.core.action.Action;
+//import insideworld.engine.core.action.chain.Link;
 //import insideworld.engine.core.action.executor.ActionExecutor;
+//import insideworld.engine.core.action.executor.ClassActionExecutor;
+//import insideworld.engine.core.common.exception.CommonException;
 //import insideworld.engine.core.common.injection.ObjectFactory;
+//import java.util.function.BiConsumer;
 //import javax.enterprise.context.Dependent;
 //import javax.inject.Inject;
 //
@@ -30,8 +34,13 @@
 // * @since 0.14.0
 // */
 //@Dependent
-//public class ClassExecuteActionLink extends AbstractExecuteActionLink<Class<? extends Action>> {
+//public class ClassExecuteActionLink<I, O> implements Link<I>
+//{
+//    // extends AbstractExecuteActionLink<Class<? extends Action>> {
 //
+//    private Class<? extends Action<I, O>> action;
+//
+//    private BiConsumer<I, O> consumer;
 //    /**
 //     * Default constructor.
 //     * @param executor Executor with Class key.
@@ -39,8 +48,24 @@
 //     */
 //    @Inject
 //    public ClassExecuteActionLink(
-//        final ActionExecutor<Class<? extends Action>> executor,
+//        final ClassActionExecutor executor,
 //        final ObjectFactory factory) {
-//        super(executor, factory);
 //    }
+//
+//    @Override
+//    public boolean process(final I input) throws CommonException {
+//        return true;
+//    }
+//
+//
+//    public ClassExecuteActionLink<I, O> action(final Class<? extends Action<I, O>> action) {
+//        this.action = action;
+//        return this;
+//    }
+//
+//    public ClassExecuteActionLink<I, O> mapper(final BiConsumer<I, O> consumer) {
+//
+//    }
+//
+//
 //}

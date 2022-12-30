@@ -19,7 +19,6 @@
 
 package insideworld.engine.core.data.core;
 
-import insideworld.engine.core.data.core.tags.StorageTags;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.exception.Diagnostic;
 import java.util.Collections;
@@ -56,7 +55,7 @@ public class StorageException extends CommonException {
         super(
             List.of(
                 new Diagnostic("entity", type.getName()),
-                new Diagnostic(StorageTags.ID.getTag(), id)
+                new Diagnostic("ID", id)
             ),
             "%s for entity %s with id %d",
             message,
