@@ -17,24 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.frameworks.quarkus.common;
-
-import io.quarkus.cache.CacheManager;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Singleton
-public class QuarkusCache {
-
-    private final CacheManager manager;
-
-    @Inject
-    public QuarkusCache(final CacheManager manager) {
-        this.manager = manager;
-    }
-
-    public void createCache() {
-
-    }
-
-}
+/**
+ * Check sequence of execute link and different skips.
+ */
+package insideworld.engine.core.action.chain.sequence;

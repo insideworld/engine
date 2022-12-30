@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.data.core.converter.dto.mapper;
 
-import insideworld.engine.core.action.keeper.Record;
+import insideworld.engine.core.common.keeper.Record;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.converter.dto.descriptors.Descriptor;

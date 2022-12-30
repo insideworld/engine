@@ -21,12 +21,25 @@ package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.keeper.Record;
+import insideworld.engine.core.common.keeper.context.Context;
 
 /**
  * Provide ability to execute action using key of action.
  * @since 2.0.0
  */
-public interface KeyActionExecutor {
+public interface KeyActionExecutor extends ActionExecutor<String> {
+
+    /**
+     * Execute action with default parameters.
+     * @param key
+     * @param input
+     * @return
+     * @param <I>
+     * @param <O>
+     * @throws CommonException
+     */
+    <I,O> O execute(String key, I input) throws CommonException;
 
     /**
      * Execute action by a key.
@@ -37,6 +50,6 @@ public interface KeyActionExecutor {
      * @param <O> Output type.
      * @throws CommonException Exception during action execution.
      */
-    <I,O> O execute(String key, I input) throws CommonException;
+    <I,O> O execute(String key, I input, ExecuteContext context) throws CommonException;
 
 }

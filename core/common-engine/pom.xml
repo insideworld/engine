@@ -41,6 +41,17 @@
       <artifactId>hamcrest</artifactId>
       <version>${hamcrest.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!--  Tests  -->
     <dependency>
       <groupId>insideworld.engine</groupId>

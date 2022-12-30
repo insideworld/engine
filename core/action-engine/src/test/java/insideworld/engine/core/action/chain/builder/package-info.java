@@ -17,35 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor;
-
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.common.exception.CommonException;
-
-public class ExecuteActionImpl<I, O> {
-
-    private final Action<I, O> action;
-
-    private I input;
-
-    private Class<? extends ExecuteProfile> profile;
-
-
-    public ExecuteActionImpl(final Action<I, O> action) {
-        this.action = action;
-    }
-
-    public final ExecuteActionImpl<I,O> input(final I input) {
-        this.input = input;
-        return this;
-    }
-
-    public O execute() throws CommonException {
-        return this.action.execute(this.input);
-    }
-
-
-
-
-}
+/**
+ * Test link builder.
+ */
+package insideworld.engine.core.action.chain.builder;

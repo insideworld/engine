@@ -17,20 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.common.threads;
+package insideworld.engine.core.common.keeper.context;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import insideworld.engine.core.common.keeper.Record;
+import insideworld.engine.core.common.keeper.tags.Tag;
 
 /**
- * Deprecated.
- * Use TaskBuilder instead.
- * @since 0.4.0
+ * Context is using to keep information in action.
+ * It's basic record with additional clone function.
+ *
+ * @since 0.0.1
  */
-@Deprecated(since = "0.14.0")
-public interface ThreadService {
+public interface Context extends Record {
 
-    <T> Future<T> newThread(Callable<T> callable, ExecutorService executor);
+    /**
+     * Clone with included tags.
+     * If includes is null - will copy all.
+     * @param includes Tags what need to clone in new context.
+     * @return New context.
+     */
+    Context cloneContext(Tag<?>... includes);
 
+    /**
+     * Clone with included tags to provided record.
+     * If includes is null - will copy all.
+     * @param record Record where need to clone.
+     * @param includes Tags what need to clone in new context.
+     */
+    void cloneToRecord(Record record, String... includes);
 }

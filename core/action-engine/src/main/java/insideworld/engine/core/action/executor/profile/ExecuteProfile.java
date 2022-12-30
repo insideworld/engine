@@ -19,11 +19,10 @@
 
 package insideworld.engine.core.action.executor.profile;
 
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.executor.ExecuteActionImpl;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
+import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.keeper.context.Context;
+import java.util.function.Supplier;
 
 /**
  * Execute profile.
@@ -32,13 +31,7 @@ import insideworld.engine.core.common.exception.CommonException;
  */
 public interface ExecuteProfile {
 
-    /**
-     * Execute wrapper login for profile implementation.
-     * @param action Executed action.
-     * @param context Context.
-     * @param output Output.
-     * @throws CommonException Action exception.
-     */
-    void execute(ExecuteActionImpl<?,?> action) throws CommonException;
+
+    void execute(ExecuteContext context) throws CommonException;
 
 }

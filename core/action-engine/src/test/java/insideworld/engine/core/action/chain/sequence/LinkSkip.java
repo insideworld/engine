@@ -17,19 +17,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.common.threads;
+package insideworld.engine.core.action.chain.sequence;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
+import insideworld.engine.core.action.chain.Link;
+import insideworld.engine.core.common.exception.CommonException;
+import javax.inject.Singleton;
 
 /**
- * Deprecated.
- * Use TaskBuilder instead.
- * @since 0.4.0
+ * Link return skipped always.
+ * @since 0.14.0
  */
-@Deprecated(since = "0.14.0")
-public interface ThreadPool {
+@Singleton
+public class LinkSkip implements Link<Input> {
 
-    <T> Future<T> execute(Callable<T> callable);
+    @Override
+    public boolean process(final Input input) throws CommonException {
+        input.integers.add(4);
+        return true;
+    }
+
+    @Override
+    public final boolean can(final Input input) {
+        return false;
+    }
+
 
 }

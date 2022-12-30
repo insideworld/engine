@@ -19,8 +19,8 @@
 
 package insideworld.engine.core.data.core.converter.dto;
 
-import insideworld.engine.core.action.keeper.Record;
-import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.common.keeper.Record;
+import insideworld.engine.core.common.keeper.context.Context;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.converter.EntityConverter;

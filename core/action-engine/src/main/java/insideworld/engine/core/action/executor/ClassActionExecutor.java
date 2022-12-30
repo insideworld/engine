@@ -21,13 +21,25 @@ package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.keeper.context.Context;
 
 /**
  * Class action executor interface.
  * Provide ability to execute action by class type.
  * @since 2.0.0
  */
-public interface ClassActionExecutor {
+public interface ClassActionExecutor extends ActionExecutor<String> {
+
+    /**
+     * Execute action using default parameters.
+     * @param type
+     * @param input
+     * @return
+     * @param <I>
+     * @param <O>
+     * @throws CommonException
+     */
+    <I,O> O execute(Class<? extends Action<I,O>> type, I input) throws CommonException;
 
     /**
      * Execute an action.
@@ -38,5 +50,6 @@ public interface ClassActionExecutor {
      * @param <O> Output type.
      * @throws CommonException Some exception during action execute.
      */
-    <I,O> O execute(Class<? extends Action<I,O>> type, I input) throws CommonException;
+    <I,O> O execute(Class<? extends Action<I,O>> type, I input, ExecuteContext context)
+        throws CommonException;
 }

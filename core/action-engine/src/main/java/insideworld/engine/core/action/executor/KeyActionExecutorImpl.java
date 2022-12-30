@@ -20,18 +20,31 @@
 package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.common.keeper.context.Context;
+import java.util.List;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * Implementation of key action executor.
+ *
  * @since 2.0.0
  */
 @Singleton
 public class KeyActionExecutorImpl
     extends AbstractActionExecutor<String> implements KeyActionExecutor {
 
+    @Inject
+    public KeyActionExecutorImpl(final ObjectFactory factory, final List<ExecuteProfile> profiles) {
+        super(factory, profiles);
+    }
+
     @Override
     protected String calculateKey(final Action<?, ?> action) {
         return action.key();
     }
+
 }

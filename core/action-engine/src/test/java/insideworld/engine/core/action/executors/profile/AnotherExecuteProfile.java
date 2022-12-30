@@ -17,33 +17,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.frameworks.quarkus.common.threads;
+package insideworld.engine.core.action.executors.profile;
 
-import insideworld.engine.core.common.threads.ThreadService;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
+import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
+import java.util.Collection;
+import java.util.List;
 import javax.inject.Inject;
-import org.eclipse.microprofile.context.ThreadContext;
+import javax.inject.Singleton;
 
 /**
- * Deprecated.
- * Use TaskBuilder instead.
- * @since 0.4.0
+ * One more execute profile for tests.
+ * @since 1.0.0
  */
-@Deprecated(since = "0.14.0")
-public class QuarkusThreadService implements ThreadService {
+@Singleton
+public class AnotherExecuteProfile extends AbstractExecuteProfile {
 
-    private final ThreadContext context;
-
+    /**
+     * Default constructor.
+     *
+     * @param executors Collection of all executors in the system.
+     */
     @Inject
-    public QuarkusThreadService(final ThreadContext context) {
-        this.context = context;
+    public AnotherExecuteProfile(final List<ExecuteWrapper> executors) {
+        super(executors);
     }
 
     @Override
-    public <T> Future<T> newThread(final Callable<T> callable, final ExecutorService executor) {
-        return executor.submit(this.context.contextualCallable(callable));
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
+        return List.of(DefaultExecuteProfile.class, this.getClass());
     }
-
 }

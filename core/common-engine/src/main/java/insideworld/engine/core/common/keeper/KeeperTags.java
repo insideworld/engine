@@ -17,33 +17,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.common.threads;
+package insideworld.engine.core.common.keeper;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import insideworld.engine.core.common.keeper.tags.SingleTag;
 
 /**
- * Deprecated.
- * Use TaskBuilder instead.
- * @since 0.4.0
+ * Keeper tags.
+ * @since 0.1.0
  */
-@Deprecated(since = "0.14.0")
-public abstract class AbstractThreadPool implements ThreadPool {
+public final class KeeperTags {
 
-    private final ThreadService service;
+    /**
+     * Alias of record int table.
+     * @see ListTable#createRecord(String)
+     */
+    public static final SingleTag<String> ALIAS = new SingleTag<>("engine.actions.keeper.alias");
 
-    private final ExecutorService executor;
-
-    public AbstractThreadPool(final ThreadService service) {
-        this.service = service;
-        this.executor = this.createPool();
+    /**
+     * Private constructor.
+     */
+    private KeeperTags() {
+        //Empty constructor.
     }
 
-    @Override
-    public <T> Future<T> execute(final Callable<T> callable) {
-        return this.service.newThread(callable, this.executor);
-    }
-
-    protected abstract ExecutorService createPool();
 }

@@ -21,17 +21,14 @@ package insideworld.engine.core.data.core.action.links;
 
 import insideworld.engine.core.action.chain.Link;
 import insideworld.engine.core.action.chain.LinkException;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.core.action.keeper.tags.MultipleTag;
-import insideworld.engine.core.action.keeper.tags.SingleTag;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-import insideworld.engine.core.data.core.tags.EntitiesTag;
-import insideworld.engine.core.data.core.tags.EntityTag;
 import java.util.Collection;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import org.apache.commons.collections4.CollectionUtils;
@@ -50,7 +47,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * @since 0.0.1
  */
 @Dependent
-public class ReadEntityLink<T extends Entity> implements Link {
+public class ReadEntityLink<T extends Entity, I> implements Link<I> {
 
     /**
      * Storage keeper.
@@ -62,15 +59,9 @@ public class ReadEntityLink<T extends Entity> implements Link {
      */
     private Storage<T> storage;
 
-    /**
-     * Pair of ID tag and entity tag.
-     */
-    private Pair<SingleTag<Long>, EntityTag<T>> single;
+    private Pair<Function<I, Long>, BiConsumer<T, I>> single;
 
-    /**
-     * Pair of ID's tag and entities tag.
-     */
-    private Pair<MultipleTag<Long>, EntitiesTag<T>> multiple;
+    private Pair<Function<I, Collection<Long>>, BiConsumer<Collection<T>, I>> multiple;
 
     /**
      * Constructor.
@@ -83,59 +74,25 @@ public class ReadEntityLink<T extends Entity> implements Link {
     }
 
     @Override
-    public final void process(final Context context, final Output output)
-        throws LinkException, StorageException {
-        if (this.single == null && this.multiple == null) {
-            throw new LinkException(this, "Link was not init");
-        }
-        if (this.single != null && context.contains(this.single.getLeft())) {
-            context.put(
-                this.single.getRight(),
-                this.processSingle(context.get(this.single.getLeft())),
-                true
-            );
+    public boolean process(final I input) throws CommonException {
+        if (this.single != null) {
+            final Long id = this.single.getLeft().apply(input);
+            if (id != null) {
+                this.single.getRight().accept(
+                    this.storage.read(id),
+                    input
+                );
+            }
         }
         if (this.multiple != null) {
-            context.put(
-                this.multiple.getRight(),
-                this.processMultiple(context.get(this.multiple.getLeft())),
-                true
-            );
+            final Collection<Long> ids = this.multiple.getLeft().apply(input);
+            if (CollectionUtils.isEmpty(ids)) {
+                this.multiple.getRight().accept(this.storage.readAll(), input);
+            } else {
+                this.multiple.getRight().accept(this.storage.read(ids), input);
+            }
         }
-    }
-
-    /**
-     * Set single tag to read.
-     *
-     * @param read ID tag with entity ID.
-     * @param put Entity tag to put in context.
-     * @return The same instance.
-     * @throws LinkException Null arguments.
-     */
-    public ReadEntityLink<T> setTag(final SingleTag<Long> read, final EntityTag<T> put)
-        throws LinkException {
-        if (read == null || put == null) {
-            throw new LinkException(this, "One or both arguments is null");
-        }
-        this.single = Pair.of(read, put);
-        return this;
-    }
-
-    /**
-     * Set multiple tag to read.
-     *
-     * @param read ID's tag with entity ID's.
-     * @param put Entities tag to put in context.
-     * @return The same instance.
-     * @throws LinkException Null arguments.
-     */
-    public ReadEntityLink<T> setTags(final MultipleTag<Long> read, final EntitiesTag<T> put)
-        throws LinkException {
-        if (read == null || put == null) {
-            throw new LinkException(this, "One or both arguments is null");
-        }
-        this.multiple = Pair.of(read, put);
-        return this;
+        return true;
     }
 
     /**
@@ -145,37 +102,29 @@ public class ReadEntityLink<T extends Entity> implements Link {
      * @return The same instance
      * @throws StorageException Can't find storage.
      */
-    public ReadEntityLink<T> setType(final Class<T> type) throws StorageException {
+    public ReadEntityLink<T, I> setType(final Class<T> type) throws StorageException {
         this.storage = this.storages.getStorage(type);
         return this;
     }
 
-    /**
-     * Read a single entity by id.
-     *
-     * @param id ID of entity.
-     * @return Entity.
-     * @throws StorageException Wrapped storage exception about read fail.
-     */
-    private T processSingle(final Long id) throws StorageException {
-        return this.storage.read(id);
+    public ReadEntityLink<T, I> setSingle(
+        final Function<I, Long> ids, final BiConsumer<T, I> result
+    ) throws LinkException {
+        if (ids == null || result == null) {
+            throw new LinkException(this, "One or both arguments is null");
+        }
+        this.single = Pair.of(ids, result);
+        return this;
     }
 
-    /**
-     * Read entities by ids.
-     * If ids is empty - read all entities.
-     *
-     * @param ids Ids of entities.
-     * @return Collection of entities.
-     * @throws StorageException Can't read an entity.
-     */
-    private Collection<T> processMultiple(final Collection<Long> ids) throws StorageException {
-        final Collection<T> collection;
-        if (CollectionUtils.isEmpty(ids)) {
-            collection = this.storage.readAll();
-        } else {
-            collection = this.storage.read(ids);
+    public ReadEntityLink<T, I> setMultiple(
+        final Function<I, Collection<Long>> ids,
+        final BiConsumer<Collection<T>, I> results
+    ) throws LinkException {
+        if (ids == null || results == null) {
+            throw new LinkException(this, "One or both arguments is null");
         }
-        return collection;
+        this.multiple = Pair.of(ids, results);
+        return this;
     }
 }

@@ -20,7 +20,12 @@
 package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.common.keeper.context.Context;
+import java.util.List;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -31,16 +36,38 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class ClassActionExecutorImpl
-    extends AbstractActionExecutor<String> implements ClassActionExecutor
- {
-     @Override
-     protected final String calculateKey(final Action<?, ?> action) {
-         return action.getClass().getName();
-     }
+    extends AbstractActionExecutor<String> implements ClassActionExecutor {
+
+    @Inject
+    public ClassActionExecutorImpl(
+        final ObjectFactory factory,
+        final List<ExecuteProfile> profiles
+    ) {
+        super(factory, profiles);
+    }
 
     @Override
-    public final <I, O> O execute(final Class<? extends Action<I, O>> type, I input)
+    protected final String calculateKey(final Action<?, ?> action) {
+        return action.getClass().getName();
+    }
+
+
+    @Override
+    public <I, O> O execute(
+        final Class<? extends Action<I, O>> type,
+        final I input
+    )
         throws CommonException {
         return this.execute(type.getName(), input);
+    }
+
+    @Override
+    public final <I, O> O execute(
+        final Class<? extends Action<I, O>> type,
+        final I input,
+        final ExecuteContext context
+    )
+        throws CommonException {
+        return this.execute(type.getName(), input, context);
     }
 }

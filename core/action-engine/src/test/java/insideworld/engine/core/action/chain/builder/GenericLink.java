@@ -17,22 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.profile;
+package insideworld.engine.core.action.chain.builder;
 
-import com.google.common.collect.Maps;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import insideworld.engine.core.action.chain.Link;
 
-public class ProfileParameters {
+/**
+ * Some generic link just for tests.
+ * @param <T> Some type.
+ * @since 0.14.0
+ */
+public interface GenericLink<T> extends Link<Input> {
 
-    private final Map<String, ?> additional;
-
-    private final Supplier<?> action;
-
-    public ProfileParameters() {
-
-    }
+    /**
+     * Set a value to link.
+     * @param value Value.
+     */
+    void setValue(T value);
 
 }

@@ -21,30 +21,69 @@ package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.common.keeper.Record;
+import insideworld.engine.core.common.keeper.context.Context;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Abstract action executor which provide a logic to execute an action.
  *
  * @param <T>
  */
-public abstract class AbstractActionExecutor<T> implements ActionChanger {
+public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, ActionChanger {
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    private final Map<T, Action<?, ?>> actions = new ConcurrentHashMap<>(16);
+    private final Map<T, Action<?, ?>> actions;
+    private final ObjectFactory factory;
 
-    public final <I, O> O execute(T key, I input) throws CommonException {
+    /**
+     * All ExecuteProfiles in the system.
+     */
+    private final Map<Class<? extends ExecuteProfile>, ExecuteProfile> profiles;
+
+    public AbstractActionExecutor(
+        final ObjectFactory factory,
+        final List<ExecuteProfile> profiles
+    ) {
+        this.factory = factory;
+        this.profiles = profiles.stream().collect(
+            Collectors.toMap(ExecuteProfile::getClass, Function.identity())
+        );
+        this.actions = new ConcurrentHashMap<>(16);
+    }
+
+    @Override
+    public <I, O> O execute(final T key, final I input) throws CommonException {
+        final ExecuteContext context = this.createContext();
+        context.put(ExecutorTags.PROFILE, DefaultExecuteProfile.class);
+        return this.execute(key, input, context);
+    }
+
+    @Override
+    public final <I, O> O execute(final T key, final I input, final ExecuteContext context)
+        throws CommonException {
         if (this.lock.isLocked()) {
             //TODO: Add normal exception. It's just a stub and will fail with NPE.
             throw new ActionException(null, "Actions under update");
         }
-        @SuppressWarnings("unchecked") final Action<I, O> action = (Action<I, O>) this.actions.get(key);
+        final Action<?, ?> action = this.actions.get(key);
+        context.put(ExecutorTags.ACTION, action);
+        context.put(ExecutorTags.INPUT, input);
         try {
-            return action.execute(input);
+            this.profiles.get(context.get(ExecutorTags.PROFILE)).execute(context);
+            @SuppressWarnings("unchecked")
+            final O output = (O) context.get(ExecutorTags.OUTPUT);
+            return output;
         } catch (final Exception exp) {
             throw CommonException.wrap(
                 exp,
@@ -54,7 +93,10 @@ public abstract class AbstractActionExecutor<T> implements ActionChanger {
         }
     }
 
-    protected abstract T calculateKey(Action<?, ?> action);
+    @Override
+    public final ExecuteContext createContext() {
+        return this.factory.createObject(ExecuteContext.class);
+    }
 
     @Override
     public final void addAction(final Action<?, ?> action) {
@@ -62,5 +104,7 @@ public abstract class AbstractActionExecutor<T> implements ActionChanger {
         this.actions.put(this.calculateKey(action), action);
         this.lock.unlock();
     }
+
+    protected abstract T calculateKey(Action<?, ?> action);
 
 }
