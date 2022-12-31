@@ -17,14 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.links;
+package insideworld.engine.plugins.generator.action.input;
 
-import insideworld.engine.core.action.keeper.context.Context;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.inject.Scope;
 
-public interface LinkInput {
-
-    void setContext(Context context);
-
-    Context getContext();
-
+@Scope
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface GenerateInput {
 }

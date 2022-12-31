@@ -42,9 +42,8 @@ class TestAction extends AbstractChainAction<Input, Integer[]> {
      * @param builder Links builder instance.
      */
     @Inject
-    TestAction(final LinksBuilder<Input> builder,
-               final ObjectFactory factory) {
-        super(builder, factory);
+    TestAction(final LinksBuilder<Input> builder) {
+        super(builder);
     }
 
     @Override

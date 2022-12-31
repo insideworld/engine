@@ -17,14 +17,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.base.reflection;
+package insideworld.engine.core.data.core.action.inputs;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
+/**
+ * Input parameter which store only ID's.
+ * @since 1.0.0
+ */
+public interface IdInput {
 
-public interface Reflection {
+    Long getId();
 
-    <T> Collection<Class<? extends T>> getSubTypesOf(final Class<T> type);
+    void setId(Long id);
 
-    Collection<Class<?>> getAnnotatedClasses(final Class<? extends Annotation> annotation);
 }

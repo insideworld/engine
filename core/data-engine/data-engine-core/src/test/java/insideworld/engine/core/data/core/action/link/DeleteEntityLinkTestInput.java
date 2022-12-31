@@ -24,11 +24,13 @@ import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.core.action.keeper.test.KeeperMatchers;
 import insideworld.engine.core.data.core.StorageException;
-import insideworld.engine.core.data.core.action.links.WriteEntityLink;
+import insideworld.engine.core.data.core.action.links.DeleteEntityLink;
+import insideworld.engine.core.data.core.mock.InitMock;
 import insideworld.engine.core.data.core.mock.MockTags;
+import insideworld.engine.core.data.core.mock.entities.exclude.MockExcludeEntity;
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntity;
-import insideworld.engine.core.data.core.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.common.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
@@ -41,11 +43,11 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
- * Write entity link test.
+ * Test delete link.
  * @since 0.14.0
  */
 @QuarkusTest
-class WriteEntityLinkTest {
+class DeleteEntityLinkTestInput {
 
     /**
      * Object factory.
@@ -58,17 +60,25 @@ class WriteEntityLinkTest {
     private final Storage<MockEntity> storage;
 
     /**
+     * Mock init.
+     */
+    private final InitMock init;
+
+    /**
      * Constructor.
      * @param factory Object factory.
      * @param storage Storage.
+     * @param init Mock init.
      */
     @Inject
-    WriteEntityLinkTest(
+    DeleteEntityLinkTestInput(
         final ObjectFactory factory,
-        final Storage<MockEntity> storage
+        final Storage<MockEntity> storage,
+        final InitMock init
     ) {
         this.factory = factory;
         this.storage = storage;
+        this.init = init;
     }
 
     /**
@@ -76,10 +86,11 @@ class WriteEntityLinkTest {
      * Check that link throw exception if tag to write not set.
      * ER:
      * Exception.
+     * @throws CommonException Shouldn't raise.
      */
     @Test
-    final void testException() {
-        final WriteEntityLink<MockEntity> link = this.factory.createObject(
+    final void testException() throws CommonException {
+        final DeleteEntityLink<MockEntity> link = this.factory.createObject(
             new TypeLiteral<>() {
             }
         );
@@ -94,28 +105,73 @@ class WriteEntityLinkTest {
                 )
             )
         );
+        link.setType(MockEntity.class);
+        MatcherAssert.assertThat(
+            "Should be exception because link init skipped.",
+            () -> link.process(null, null),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.endsWith("Link was not init")
+                )
+            )
+        );
+        final DeleteEntityLink<MockEntity> both = this.factory.createObject(
+            new TypeLiteral<>() {
+            }
+        );
+        both.setTag(MockTags.PRIMARY);
+        both.setTags(MockTags.PRIMARIES);
+        MatcherAssert.assertThat(
+            "Should be exception because storage not found for this.",
+            () -> both.process(null, null),
+            ExceptionMatchers.catchException(
+                LinkException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Link was not init")
+                )
+            )
+        );
+        final DeleteEntityLink<MockExcludeEntity> wrong = this.factory.createObject(
+            new TypeLiteral<>() {
+            }
+        );
+        MatcherAssert.assertThat(
+            "Should be exception because storage not found for this.",
+            () -> wrong.setType(MockExcludeEntity.class),
+            ExceptionMatchers.catchException(
+                StorageException.class,
+                ExceptionMatchers.messageMatcher(
+                    0,
+                    Matchers.containsString("Storage not found")
+                )
+            )
+        );
     }
 
     /**
      * TC:
-     * Write single link in different conditions.
+     * Delete single link in different conditions.
      * ER:
      * If tag not present in context - nothing to do.
-     * If tag present - write it and check count of entities in storage.
-     * If count present - check output.
+     * If tag present - delete it and check count of entities in storage.
      * @throws LinkException Shouldn't throw.
      * @throws StorageException Shouldn't throw.
      */
     @Test
     final void testSingle() throws LinkException, StorageException {
-        final WriteEntityLink<MockEntity> link = this.factory.createObject(
+        final DeleteEntityLink<MockEntity> link = this.factory.createObject(
             new TypeLiteral<>() {
             }
         );
+        final MockEntity entity = this.init.createPrimary();
         final int size = this.storage.readAll().size();
         final Context context = this.factory.createObject(Context.class);
         final Output output = this.factory.createObject(Output.class);
         link.setTag(MockTags.PRIMARY);
+        link.setType(MockEntity.class);
         link.process(context, output);
         MatcherAssert.assertThat(
             "Context should be empty doesn't have entity",
@@ -123,70 +179,47 @@ class WriteEntityLinkTest {
             Matchers.not(KeeperMatchers.contain(MockTags.PRIMARY))
         );
         MatcherAssert.assertThat(
-            "Entity was wrote to storage.",
+            "Entity was deleted from storage.",
             size,
             Matchers.is(this.storage.readAll().size())
         );
-        context.put(MockTags.PRIMARY, new MockEntityImpl());
+        context.put(MockTags.PRIMARY, entity);
         link.process(context, output);
         MatcherAssert.assertThat(
-            "Entity wasn't wrote",
-            context,
-            KeeperMatchers.match(
-                MockTags.PRIMARY,
-                Matchers.hasProperty(
-                    "id",
-                    Matchers.not(0L)
-                )
-            )
-        );
-        MatcherAssert.assertThat(
-            "Entity wasn't wrote to storage.",
-            size + 1,
+            "Entity wasn't deleted from storage.",
+            size - 1,
             Matchers.is(this.storage.readAll().size())
         );
-        link.setCount();
         link.process(context, output);
         MatcherAssert.assertThat(
-            "Count in output is not present",
-            output,
-            Matchers.allOf(
-                Matchers.iterableWithSize(1),
-                Matchers.hasItem(
-                    Matchers.allOf(
-                        KeeperMatchers.match("type", Matchers.is(MockTags.PRIMARY.getTag())),
-                        KeeperMatchers.match("count", Matchers.is(1))
-                    )
-                )
-            )
-        );
-        MatcherAssert.assertThat(
-            "Entity was write again but shouldn't",
-            size + 1,
+            "Entity another entity has deleted from storage.",
+            size - 1,
             Matchers.is(this.storage.readAll().size())
         );
     }
 
     /**
      * TC:
-     * Write multiple link in different conditions.
+     * Delete multiple link in different conditions.
      * ER:
      * If tag not present in context - nothing to do.
-     * If tag present - write it and check count of entities in storage.
-     * If count present - check output.
+     * If tag present - delete it and check count of entities in storage.
      * @throws LinkException Shouldn't throw.
      * @throws StorageException Shouldn't throw.
      */
     @Test
     final void testMulti() throws LinkException, StorageException {
-        final WriteEntityLink<MockEntity> link = this.factory.createObject(
+        final DeleteEntityLink<MockEntity> link = this.factory.createObject(
             new TypeLiteral<>() {
             }
         );
+        final Collection<MockEntity> entities =
+            List.of(this.init.createPrimary(), this.init.createPrimary());
         final int size = this.storage.readAll().size();
         final Context context = this.factory.createObject(Context.class);
         final Output output = this.factory.createObject(Output.class);
-        link.setTag(MockTags.PRIMARIES);
+        link.setTags(MockTags.PRIMARIES);
+        link.setType(MockEntity.class);
         link.process(context, output);
         MatcherAssert.assertThat(
             "Context should be empty doesn't have entity",
@@ -194,78 +227,50 @@ class WriteEntityLinkTest {
             Matchers.not(KeeperMatchers.contain(MockTags.PRIMARIES))
         );
         MatcherAssert.assertThat(
-            "Entities were wrote to storage.",
+            "Entities were deleted from storage.",
             size,
             Matchers.is(this.storage.readAll().size())
         );
-        final Collection<MockEntity> entities =
-            List.of(new MockEntityImpl(), new MockEntityImpl());
         context.put(MockTags.PRIMARIES, entities);
         link.process(context, output);
         MatcherAssert.assertThat(
-            "Entities wasn't wrote",
-            context,
-            KeeperMatchers.match(
-                MockTags.PRIMARIES,
-                Matchers.allOf(
-                    Matchers.iterableWithSize(2),
-                    Matchers.hasItem(
-                        Matchers.hasProperty(
-                            "id",
-                            Matchers.not(0L)
-                        )
-                    )
-                )
-            )
-        );
-        MatcherAssert.assertThat(
-            "Entities weren't wrote to storage.",
-            size + entities.size(),
+            "Entities weren't deleted from storage.",
+            size - entities.size(),
             Matchers.is(this.storage.readAll().size())
         );
-        link.setCount();
         link.process(context, output);
         MatcherAssert.assertThat(
-            "Count in output is not present",
-            output,
-            Matchers.allOf(
-                Matchers.iterableWithSize(1),
-                Matchers.hasItem(
-                    Matchers.allOf(
-                        KeeperMatchers.match("type", Matchers.is(MockTags.PRIMARIES.getTag())),
-                        KeeperMatchers.match("count", Matchers.is(2))
-                    )
-                )
-            )
-        );
-        MatcherAssert.assertThat(
-            "Entities ware wrote again but shouldn't",
-            size + entities.size(),
+            "Entities were deleted again but shouldn't",
+            size - entities.size(),
             Matchers.is(this.storage.readAll().size())
         );
     }
 
     /**
      * TC:
-     * Write both - single and multiple tag in link with different conditions.
+     * Delete both - single and multiple tag in link with different conditions.
      * ER:
      * If tag not present in context - nothing to do.
-     * If tag present - write it and check count of entities in storage.
+     * If tag present - delete it and check count of entities in storage.
      * If count present - check output.
      * @throws LinkException Shouldn't throw.
      * @throws StorageException Shouldn't throw.
      */
     @Test
     final void testBoth() throws LinkException, StorageException {
-        final WriteEntityLink<MockEntity> link = this.factory.createObject(
+        final DeleteEntityLink<MockEntity> link = this.factory.createObject(
             new TypeLiteral<>() {
             }
         );
+        final MockEntity entity = this.init.createPrimary();
+        final Collection<MockEntity> entities =
+            List.of(this.init.createPrimary(), this.init.createPrimary());
         final int size = this.storage.readAll().size();
         final Context context = this.factory.createObject(Context.class);
         final Output output = this.factory.createObject(Output.class);
+        link.setType(MockEntity.class);
         link.setTag(MockTags.PRIMARY);
-        link.setTag(MockTags.PRIMARIES);
+        link.setTags(MockTags.PRIMARIES);
         link.process(context, output);
         MatcherAssert.assertThat(
             "Context should be empty doesn't have entity",
@@ -273,67 +278,22 @@ class WriteEntityLinkTest {
             Matchers.not(KeeperMatchers.contain(MockTags.PRIMARIES))
         );
         MatcherAssert.assertThat(
-            "Entities were wrote to storage.",
+            "Entities were deleted to storage.",
             size,
             Matchers.is(this.storage.readAll().size())
         );
-        final Collection<MockEntity> entities =
-            List.of(new MockEntityImpl(), new MockEntityImpl());
-        context.put(MockTags.PRIMARY, new MockEntityImpl());
+        context.put(MockTags.PRIMARY, entity);
         context.put(MockTags.PRIMARIES, entities);
         link.process(context, output);
         MatcherAssert.assertThat(
-            "Entities wasn't wrote",
-            context,
-            Matchers.allOf(
-                KeeperMatchers.match(
-                    MockTags.PRIMARIES,
-                    Matchers.allOf(
-                        Matchers.iterableWithSize(2),
-                        Matchers.hasItem(
-                            Matchers.hasProperty(
-                                "id",
-                                Matchers.not(0L)
-                            )
-                        )
-                    )
-                ),
-                KeeperMatchers.match(
-                    MockTags.PRIMARY,
-                    Matchers.hasProperty(
-                        "id",
-                        Matchers.not(0L)
-                    )
-                )
-            )
-        );
-        MatcherAssert.assertThat(
-            "Entities weren't wrote to storage.",
-            size + entities.size() + 1,
+            "Entities weren't deleted from storage.",
+            size - entities.size() - 1,
             Matchers.is(this.storage.readAll().size())
         );
-        link.setCount();
         link.process(context, output);
         MatcherAssert.assertThat(
-            "Count in output is not present",
-            output,
-            Matchers.allOf(
-                Matchers.iterableWithSize(2),
-                Matchers.hasItems(
-                    Matchers.allOf(
-                        KeeperMatchers.match("type", Matchers.is(MockTags.PRIMARIES.getTag())),
-                        KeeperMatchers.match("count", Matchers.is(2))
-                    ),
-                    Matchers.allOf(
-                        KeeperMatchers.match("type", Matchers.is(MockTags.PRIMARY.getTag())),
-                        KeeperMatchers.match("count", Matchers.is(1))
-                    )
-                )
-            )
-        );
-        MatcherAssert.assertThat(
-            "Entities ware wrote again but shouldn't",
-            size + entities.size() + 1,
+            "Entities were deleted again but shouldn't",
+            size - entities.size() - 1,
             Matchers.is(this.storage.readAll().size())
         );
     }

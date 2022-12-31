@@ -17,14 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.base.reflection;
+package insideworld.engine.core.data.core.action.inputs;
 
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 
-public interface Reflection {
+public interface EntitiesInput<T> {
 
-    <T> Collection<Class<? extends T>> getSubTypesOf(final Class<T> type);
+    Collection<T> getEntities();
 
-    Collection<Class<?>> getAnnotatedClasses(final Class<? extends Annotation> annotation);
+    void setEntities(Collection<T> entities);
+
 }

@@ -108,11 +108,6 @@
       <artifactId>plugins-generator-data-actions</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>insideworld.engine</groupId>
-      <artifactId>plugins-generator-action-link</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <!--  Database scripts  -->
     <dependency>
@@ -181,21 +176,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>insideworld.engine</groupId>
-        <artifactId>plugins-generator-action-link</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <scan>insideworld.engine.example.quarkus</scan>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+
 
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

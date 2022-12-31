@@ -17,14 +17,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.base.reflection;
+package insideworld.engine.plugins.generator.action.input;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
+import insideworld.engine.plugins.generator.base.AbstractGeneratorMojo;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
+import io.quarkus.gizmo.ClassOutput;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-public interface Reflection {
-
-    <T> Collection<Class<? extends T>> getSubTypesOf(final Class<T> type);
-
-    Collection<Class<?>> getAnnotatedClasses(final Class<? extends Annotation> annotation);
+@Mojo(name = "generate",
+    defaultPhase = LifecyclePhase.PROCESS_CLASSES,
+    requiresDependencyResolution = ResolutionScope.COMPILE
+)
+public class InputGeneratorMojo extends AbstractGeneratorMojo {
+    @Override
+    protected void generate(final Reflection reflection, final ClassOutput output) {
+        new InputGenerator(reflection, output).generate();
+    }
 }

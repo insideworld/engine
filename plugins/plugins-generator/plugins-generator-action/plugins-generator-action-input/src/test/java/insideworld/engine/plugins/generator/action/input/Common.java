@@ -17,14 +17,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.base.reflection;
+package insideworld.engine.plugins.generator.action.input;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
+@GenerateInput
+public interface Common extends OnlySetter, OnlyGetter, Both {
 
-public interface Reflection {
-
-    <T> Collection<Class<? extends T>> getSubTypesOf(final Class<T> type);
-
-    Collection<Class<?>> getAnnotatedClasses(final Class<? extends Annotation> annotation);
 }

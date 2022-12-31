@@ -17,22 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.links;
+package insideworld.engine.core.data.core.action.inputs;
 
-import insideworld.engine.plugins.generator.base.AbstractGeneratorMojo;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
-import io.quarkus.gizmo.ClassOutput;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import insideworld.engine.core.data.core.Entity;
 
-@Mojo(name = "generate",
-    defaultPhase = LifecyclePhase.PROCESS_CLASSES,
-    requiresDependencyResolution = ResolutionScope.COMPILE
-)
-public class LinksGeneratorMojo extends AbstractGeneratorMojo {
-    @Override
-    protected void generate(final Reflection reflection, final ClassOutput output) {
-        new LinkInputGenerator(reflection, output).generate();
-    }
+public interface EntityInput<T extends Entity> {
+
+    T getEntity();
+
+    void setEntity(T entity);
+
 }

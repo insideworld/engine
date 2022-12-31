@@ -17,34 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.links;
+package insideworld.engine.core.data.core.action.inputs;
 
-import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.chain.Link;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.core.common.injection.ObjectFactory;
+import java.util.Collection;
 
-public abstract class AbstractTypeLink<T extends LinkInput> implements Link {
+public interface IdsInput {
 
-    private ObjectFactory factory;
+    Collection<Long> getIds();
 
-    public AbstractTypeLink(final ObjectFactory factory) {
-        this.factory = factory;
-    }
+    void setIds(Collection<Long> ids);
 
-    @Override
-    public final void process(final Context context, final Output output) throws ActionException {
-        this.process(this.wrapContext(context), output);
-    }
-
-    public abstract void process(T input, Output output);
-
-    protected abstract Class<T> inputType();
-
-    private T wrapContext(final Context context) {
-        final T object = this.factory.createObject(this.inputType());
-        object.setContext(context);
-        return object;
-    }
 }

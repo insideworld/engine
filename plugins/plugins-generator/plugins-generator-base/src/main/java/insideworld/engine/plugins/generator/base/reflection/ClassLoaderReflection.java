@@ -19,6 +19,7 @@
 
 package insideworld.engine.plugins.generator.base.reflection;
 
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -37,5 +38,10 @@ public class ClassLoaderReflection implements Reflection {
 
     public <T> Collection<Class<? extends T>> getSubTypesOf(final Class<T> type) {
         return this.reflections.getSubTypesOf(type);
+    }
+
+    @Override
+    public Collection<Class<?>> getAnnotatedClasses(Class<? extends Annotation> annotation) {
+        return this.reflections.getTypesAnnotatedWith(annotation);
     }
 }

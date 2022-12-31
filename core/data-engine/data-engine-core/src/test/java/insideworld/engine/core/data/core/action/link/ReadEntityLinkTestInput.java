@@ -47,7 +47,7 @@ import org.junit.jupiter.api.Test;
  * @since 0.14.0
  */
 @QuarkusTest
-class ReadEntityLinkTest {
+class ReadEntityLinkTestInput {
 
     /**
      * Object factory.
@@ -72,7 +72,7 @@ class ReadEntityLinkTest {
      * @param storage Storage.
      */
     @Inject
-    ReadEntityLinkTest(
+    ReadEntityLinkTestInput(
         final ObjectFactory factory,
         final InitMock init,
         final Storage<MockEntity> storage

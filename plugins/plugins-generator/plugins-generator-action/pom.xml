@@ -33,7 +33,7 @@
   <artifactId>plugins-generator-action</artifactId>
 
   <modules>
-    <module>plugins-generator-action-link</module>
+    <module>plugins-generator-action-input</module>
   </modules>
 
   <properties>

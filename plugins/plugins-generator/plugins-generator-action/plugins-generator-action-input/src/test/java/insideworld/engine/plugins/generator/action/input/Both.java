@@ -17,29 +17,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.links;
+package insideworld.engine.plugins.generator.action.input;
 
-import insideworld.engine.core.action.keeper.context.Context;
 
-public abstract class AbstractLinkInput implements LinkInput {
+public interface Both {
 
-    private Context context;
+    String getBoth();
 
-    @Override
-    public void setContext(final Context context) {
-        this.context = context;
-    }
+    void setBoth(String both);
 
-    @Override
-    public Context getContext() {
-        return this.context;
-    }
-
-    protected Object readContext(final String tag) {
-        return this.context.get(tag);
-    }
-
-    protected void writeContext(final String tag, final Object object) {
-        this.context.put(tag, object);
-    }
 }

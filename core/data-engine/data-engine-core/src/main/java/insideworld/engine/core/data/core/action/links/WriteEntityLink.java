@@ -25,16 +25,12 @@ import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 /**
@@ -93,7 +89,7 @@ public class WriteEntityLink<T extends Entity, I> implements Link<I> {
             if (entity != null) {
                 final Collection<T> write = this.storage.writeAll(entity);
                 Optional.of(this.multiple.getRight())
-                        .ifPresent(handler -> handler.accept(input, write));
+                    .ifPresent(handler -> handler.accept(input, write));
             }
         }
         return true;
@@ -102,12 +98,12 @@ public class WriteEntityLink<T extends Entity, I> implements Link<I> {
     /**
      * Set tag of entity which need to write.
      *
-     * @param tag Entity tag.
+     *
      * @return The same instance.
      */
     public WriteEntityLink<T, I> setSingle(
-            final Function<I, T> entity,
-            final BiConsumer<I, T> handler
+        final Function<I, T> entity,
+        final BiConsumer<I, T> handler
     ) {
         this.single = Pair.of(entity, handler);
         return this;
@@ -116,12 +112,12 @@ public class WriteEntityLink<T extends Entity, I> implements Link<I> {
     /**
      * Set tag of entities which need to write.
      *
-     * @param tag Entities tag.
+     *
      * @return The same instance.
      */
     public WriteEntityLink<T, I> setMultiple(
-            final Function<I, Collection<T>> entities,
-            final BiConsumer<I, Collection<T>> handler
+        final Function<I, Collection<T>> entities,
+        final BiConsumer<I, Collection<T>> handler
     ) {
         this.multiple = Pair.of(entities, handler);
         return this;

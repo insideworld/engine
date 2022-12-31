@@ -42,7 +42,6 @@ public abstract class AbstractChainAction<I, O> implements Action<I, O> {
      * Link builder.
      */
     private final LinksBuilder<I> builder;
-    private final ObjectFactory factory;
 
     /**
      * Collections of links.
@@ -54,10 +53,8 @@ public abstract class AbstractChainAction<I, O> implements Action<I, O> {
      *
      * @param builder Links builder instance.
      */
-    public AbstractChainAction(final LinksBuilder<I> builder,
-                               final ObjectFactory factory) {
+    public AbstractChainAction(final LinksBuilder<I> builder) {
         this.builder = builder;
-        this.factory = factory;
     }
 
     @Override
