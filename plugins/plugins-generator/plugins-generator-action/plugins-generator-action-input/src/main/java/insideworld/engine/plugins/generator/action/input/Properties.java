@@ -45,49 +45,29 @@ public class Properties {
 
     private final Class<?> type;
 
-    private Collection<Property> properties;
-
     public Properties(final Class<?> type) {
         this.type = type;
     }
 
-    public Collection<Property> findProperties() {
+    public Collection<Property> findProperties(final StringBuilder builder) {
+        final StringBuilder invalid = new StringBuilder();
         final Map<String, List<Method>> grouped = Arrays.stream(this.type.getMethods())
             .filter(this::checkName)
             .collect(
                 Collectors.groupingBy(value -> value.getName().substring(3))
             );
-        this.checkUnique(grouped);
-        this.properties =
-    }
-
-    private Property createProperty(final String name, final List<Method> methods) {
-        final Property property;
-        if (this.checkUnique(methods)) {
-            final StringBuilder builder = new StringBuilder();
-            builder
-                .append("Class ")
-                .append(this.type.getName())
-                .append(" has more than 2 method for properties:\n\r");
-            builder.append("\tProperty ").append(name).append("\n\r");
-            for (final Method method : methods) {
-                builder.append("\t\t").append(method.toString()).append("\n\r");
-            }
-            property = new Property(name, null, false, false, builder.toString());
-        } else {
-            final Class<?> getter = this.getterType(methods);
-            final Class<?> setter = this.setterType(methods);
-            if (ObjectUtils.anyNotNull(getter, setter))
-                (ObjectUtils.allNotNull(getter, setter) || Objects.equals(getter, setter)) ) {
-
-            } else {
-
-            }
+        final List<Property> properties = grouped.entrySet().stream().map(
+            entry -> {
+                var property = new Property(entry.getKey(), entry.getValue());
+                property.init(invalid);
+                return property;
+            }).toList();
+        if (!invalid.isEmpty()) {
+            builder.append("Problems with class ").append(this.type.getName()).append("\n\r");
+            builder.append(invalid);
         }
-
-
+        return properties;
     }
-
 
     /**
      * Check that name more than 4 letters and has prefix.

@@ -19,9 +19,10 @@
 
 package insideworld.engine.core.data.core.action.inputs;
 
+import insideworld.engine.core.data.core.Entity;
 import java.util.Collection;
 
-public interface EntitiesInput<T> {
+public interface EntitiesInput<T extends Entity> {
 
     Collection<T> getEntities();
 

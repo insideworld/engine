@@ -23,14 +23,23 @@ import static java.beans.Introspector.USE_ALL_BEANINFO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
+import io.quarkus.gizmo.AnnotationCreator;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
+import io.quarkus.gizmo.FieldCreator;
+import io.quarkus.gizmo.MethodCreator;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.enterprise.context.Dependent;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class InputGenerator {
@@ -44,63 +53,53 @@ public class InputGenerator {
     }
 
     public void generate() {
-        this.find().forEach(this::generate);
-    }
-
-    private void generate(final Class<?> type) {
-        Map<String, Some> methods = this.getMethods(type);
-        System.out.println("qwe");
-    }
-
-
-    public Map<String, Some> getMethods(final Class<?> type) {
-        Map<String, Some> methods = Maps.newHashMap();
-        for (final Method method : type.getMethods()) {
-            final String name = method.getName();
-            if (name.startsWith("get")) {
-                final String substring = name.substring(3);
-                if (methods.containsKey(substring)) {
-                    final Some some = methods.get(substring);
-                    some.get = true;
-                    //TODO: Add type validation.
-                } else {
-                    Some some = new Some();
-                    some.name = substring;
-                    some.get = true;
-                    some.type = method.getReturnType();
-                    methods.put(substring, some);
-                }
-            } else if (name.startsWith("set")) {
-                final String substring = name.substring(3);
-                if (methods.containsKey(substring)) {
-                    final Some some = methods.get(substring);
-                    some.set = true;
-                    //TODO: Add type validation.
-                } else {
-                    Some some = new Some();
-                    some.name = substring;
-                    some.set = true;
-                    some.type = method.getParameterTypes()[0];
-                    methods.put(substring, some);
-                }
-            }
+        final StringBuilder errors = new StringBuilder();
+        final var properties = this.find().stream().collect(Collectors.toMap(
+            Function.identity(),
+            type -> new Properties(type).findProperties(errors)
+        ));
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(errors.toString());
         }
-        return methods;
+        properties.forEach(this::generate);
+    }
+
+    private void generate(final Class<?> type, final Collection<Property> properties) {
+        final ClassCreator creator = ClassCreator.builder()
+            .classOutput(this.output)
+            .className(String.format("%sImpl",type.getName()))
+            .interfaces(type)
+            .build();
+        creator.addAnnotation(Dependent.class);
+        for (final Property property : properties) {
+            final FieldCreator field = creator.getFieldCreator(
+                StringUtils.uncapitalize(property.getName()), property.getType()
+            );
+            property.getGetter().ifPresent((clazz) -> {
+                final MethodCreator get = creator.getMethodCreator(
+                    String.format("get%s", property.getName()),
+                    property.getType()
+                );
+                get.returnValue(get.readInstanceField(field.getFieldDescriptor(), get.getThis()));
+                get.close();
+            });
+            property.getSetter().ifPresent((clazz) -> {
+                final MethodCreator set = creator.getMethodCreator(
+                    String.format("set%s", property.getName()),
+                    void.class,
+                    property.getType()
+                );
+                set.writeInstanceField(
+                    field.getFieldDescriptor(), set.getThis(), set.getMethodParam(0)
+                );
+                set.returnValue(null);
+                set.close();
+            });
+        }
+        creator.close();
     }
 
     private Collection<Class<?>> find() {
         return this.reflection.getAnnotatedClasses(GenerateInput.class);
     }
-
- public class Some {
-
-        String name;
-
-        boolean get;
-
-        boolean set;
-
-        Class<?> type;
-
- }
 }

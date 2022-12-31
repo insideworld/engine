@@ -64,22 +64,22 @@
         <version>${maven-plugin-plugin.version}</version>
       </plugin>
 
-      <plugin>
-        <groupId>insideworld.engine</groupId>
-        <artifactId>plugins-generator-action-input</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <scan>insideworld</scan>
-            </configuration>
-            <phase>process-test-classes</phase>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>insideworld.engine</groupId>-->
+<!--        <artifactId>plugins-generator-action-input</artifactId>-->
+<!--        <version>${project.version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>generate</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <scan>insideworld</scan>-->
+<!--            </configuration>-->
+<!--            <phase>process-test-classes</phase>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 

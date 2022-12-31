@@ -28,7 +28,9 @@ import insideworld.engine.core.data.core.action.inputs.EntitiesInput;
 import insideworld.engine.core.data.core.action.inputs.EntityInput;
 import insideworld.engine.core.data.core.action.inputs.IdInput;
 import insideworld.engine.core.data.core.action.inputs.IdsInput;
+import insideworld.engine.core.data.core.action.links.DeleteEntityLink;
 import insideworld.engine.core.data.core.action.links.ReadEntityLink;
+import insideworld.engine.plugins.generator.action.input.GenerateInput;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
 
@@ -43,51 +45,36 @@ import javax.enterprise.util.TypeLiteral;
  * @since 0.0.1
  */
 public abstract class AbstractDeleteAction<T extends Entity>
-    extends AbstractChainAction<IdInput, Long[]> {
+    extends AbstractChainAction<AbstractDeleteAction.Input<T>, Long[]> {
 
     /**
      * Default constructor.
      * @param builder Link builder.
      */
-    public AbstractDeleteAction(final LinksBuilder<IdInput> builder) {
+    public AbstractDeleteAction(final LinksBuilder<AbstractDeleteAction.Input<T>> builder) {
         super(builder);
     }
 
     @Override
-    protected final Collection<Link<? super IdInput>> attachLinks(final LinksBuilder<IdInput> builder)
+    protected final Collection<Link<? super AbstractDeleteAction.Input<T>>> attachLinks(
+        final LinksBuilder<AbstractDeleteAction.Input<T>> builder
+    )
         throws LinkException {
         return builder
             .addLink(
-                new TypeLiteral<ReadEntityLink<T, IdInput>>() { },
+                new TypeLiteral<ReadEntityLink<T, AbstractDeleteAction.Input<T>>>() { },
                 link -> link.setType(this.getType())
-                    .setSingle(
-                        (id, result) ->
-                    )
-                    .setTags(StorageTags.IDS, this.getTags()))
-
-//            .addLink(
-//                new TypeLiteral<DeleteEntityLink<T>>() {
-//                },
-//                link -> link
-//                    .setType(this.getType())
-//                    .setTag(this.getTag())
-//                    .setTags(this.getTags()))
-//            .build();
+                    .setSingle(IdInput::getId, (entity, input) -> input.setEntity(entity))
+                    .setMultiple(IdsInput::getIds, (entities, input) -> input.setEntities(entities))
+            )
+            .addLink(
+                new TypeLiteral<DeleteEntityLink<T, AbstractDeleteAction.Input<T>>>() {},
+                link -> link.setType(this.getType())
+                    .setSingle(EntityInput::getEntity)
+                    .setMultiple(EntitiesInput::getEntities)
+            )
+            .build();
     }
-
-    /**
-     * Tag of entity which will using to keep it in context.
-     * Return null here if you want to disable delete by id.
-     * @return Entity tag.
-     */
-    protected abstract EntityTag<T> getTag();
-
-    /**
-     * Tag of entities which will using to keep it in context.
-     * Return null here if you want to disable delete by ids.
-     * @return Entities tag.
-     */
-    protected abstract EntitiesTag<T> getTags();
 
     /**
      * Type of entity.
@@ -95,6 +82,7 @@ public abstract class AbstractDeleteAction<T extends Entity>
      */
     protected abstract Class<T> getType();
 
+    @GenerateInput
     public interface Input<T extends Entity>
         extends IdInput, IdsInput, EntityInput<T>, EntitiesInput<T> { }
 

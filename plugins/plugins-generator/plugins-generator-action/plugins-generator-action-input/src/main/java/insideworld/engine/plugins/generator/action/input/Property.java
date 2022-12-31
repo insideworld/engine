@@ -21,11 +21,12 @@ package insideworld.engine.plugins.generator.action.input;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class Property {
 
-
-    private final Class<?> parent;
     private final String name;
     private final List<Method> methods;
 
@@ -33,18 +34,32 @@ public class Property {
 
     private Class<?> setter;
 
-    public Property(final Class<?> parent, final String name, final List<Method> methods) {
-        this.parent = parent;
+    public Property(final String name, final List<Method> methods) {
         this.name = name;
         this.methods = methods;
     }
 
-    public final void init() {
-        this
+    public final void init(final StringBuilder builder) {
+        this.getter = this.getterType();
+        this.setter = this.setterType();
+        this.checkUnique(builder);
+        this.checkType(builder);
     }
 
-    public final String validate() {
+    public String getName() {
+        return this.name;
+    }
 
+    public Class<?> getType() {
+        return ObjectUtils.defaultIfNull(this.setter, this.getter);
+    }
+
+    public Optional<Class<?>> getGetter() {
+        return Optional.ofNullable(this.getter);
+    }
+
+    public Optional<Class<?>> getSetter() {
+        return Optional.ofNullable(this.setter);
     }
 
     private Class<?> getterType() {
@@ -63,15 +78,27 @@ public class Property {
             .orElse(null);
     }
 
+    private void checkType(final StringBuilder builder) {
+        if (ObjectUtils.allNotNull(this.getter, this.setter)
+            && ObjectUtils.notEqual(this.getter, this.setter)
+        ) {
+            builder.append("Property ").append(this.name)
+                .append(" has different types of getter and setter for property:\n\r");
+            builder.append(this.getter.getName()).append(" and ").append(this.setter.getName());
+        }
+    }
+
     /**
      * Check that grouped methods has no more than 2 method (getter and setter).
      * Raise a runtime exception.
      *
-     * @param grouped Grouped methods.
      */
-    private boolean checkUnique(final List<Method> methods) {
-        return methods.size() > 2;
+    private void checkUnique(final StringBuilder builder) {
+        if (this.methods.size() > 2 ) {
+            builder.append("Property ").append(this.name).append(" has more than 2 method:\n\r");
+            for (final Method method : this.methods) {
+                builder.append("* ").append(method.toString()).append("\n\r");
+            }
+        }
     }
-
-
 }
