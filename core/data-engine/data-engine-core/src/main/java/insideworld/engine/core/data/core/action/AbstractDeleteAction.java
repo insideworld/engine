@@ -82,6 +82,11 @@ public abstract class AbstractDeleteAction<T extends Entity>
      */
     protected abstract Class<T> getType();
 
+    @Override
+    protected Long[] output(final AbstractDeleteAction.Input<T> input) {
+        return
+    }
+
     @GenerateInput
     public interface Input<T extends Entity>
         extends IdInput, IdsInput, EntityInput<T>, EntitiesInput<T> { }
