@@ -21,7 +21,7 @@ package insideworld.engine.plugins.generator.data.action.read.id;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.action.AbstractReadAction;
+import insideworld.engine.core.data.core.action.ReadAction;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.read.id.search.SearchReadAction;
@@ -45,7 +45,7 @@ public class ReadActionGenerator extends AbstractActionGenerator {
 
     @Override
     protected Class<?> extended() {
-        return AbstractReadAction.class;
+        return ReadAction.class;
     }
 
     @Override

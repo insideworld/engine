@@ -27,7 +27,7 @@ import insideworld.engine.core.common.exception.CommonException;
  * @param <T> Link type.
  * @since 0.14.0
  */
-public interface LinkConsumer<I, T extends Link<I>> {
+public interface LinkConsumer<I, T extends Link<? super I>> {
 
     /**
      * Init link.

@@ -42,7 +42,6 @@ class TestAction extends AbstractChainAction<Input, Input> {
      * Default constructor.
      *
      * @param builder Links builder instance.
-     * @param factory
      */
     public TestAction(final LinksBuilder<Input> builder) {
         super(builder);

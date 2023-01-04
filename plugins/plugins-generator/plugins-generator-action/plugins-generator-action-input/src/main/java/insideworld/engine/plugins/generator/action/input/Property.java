@@ -91,7 +91,6 @@ public class Property {
     /**
      * Check that grouped methods has no more than 2 method (getter and setter).
      * Raise a runtime exception.
-     *
      */
     private void checkUnique(final StringBuilder builder) {
         if (this.methods.size() > 2 ) {

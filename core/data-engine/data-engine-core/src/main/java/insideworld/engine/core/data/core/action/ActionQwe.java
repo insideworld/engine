@@ -17,57 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action;
+package insideworld.engine.core.data.core.action;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
 
-/**
- * Action interface.
- * To execute implemented action see implementation of ActionExecutor.
- * To register action see ActionChanger.
- * @see ActionExecutor
- * @see ActionChanger
- * @param <I> Input type.
- * @param <O> Output type.
- * @since 0.0.1
- */
-public interface Action<I, O> {
+public class ActionQwe implements Action<ActionQwe.Collection, Object> {
 
-    /**
-     * Execute an action.
-     * @param input Input data to action.
-     * @param output Output data.
-     * @throws CommonException Exception during action execution.
-     * @see Context
-     * @see Output
-     */
-    O execute(I input) throws CommonException;
-
-    /**
-     * Make some inits before call action.
-     * @throws CommonException Some exception at init.
-     */
-    default void init() throws CommonException {
-        //By default - nothing to do.
+    @Override
+    public Object execute(final Collection input) throws CommonException {
+        return null;
     }
 
-    /**
-     * Key of action in string representation.
-     * @return Key.
-     */
-    @JsonGetter
-    String key();
+    @Override
+    public String key() {
+        return "insideworld.engine.core.data.core.action.ActionQwe";
+    }
 
-    /**
-     * Type of input data.
-     * @return Input data type.
-     */
-    Class<? extends I> inputType();
+    @Override
+    public Class<? extends Collection> inputType() {
+        return Collection.class;
+    }
 
-    /**
-     * Type of output data.
-     * @return Output data.
-     */
-    Class<? extends O> outputType();
+    @Override
+    public Class<?> outputType() {
+        return Object.class;
+    }
+
+    public interface Collection extends java.util.Collection<Long> {}
 }

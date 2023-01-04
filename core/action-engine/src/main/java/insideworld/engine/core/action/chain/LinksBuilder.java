@@ -49,8 +49,9 @@ public interface LinksBuilder<I> {
      * @return The same instance.
      * @throws LinkException Can't init link.
      */
-    <T extends Link<I>> LinksBuilder<I> addLink(Class<T> type, LinkConsumer<I, T> init)
-        throws LinkException;
+    <T extends Link<? super I>> LinksBuilder<I> addLink(
+        Class<T> type, LinkConsumer<I, T> init
+    ) throws LinkException;
 
     /**
      * Add specific link with generic parameters.
@@ -58,7 +59,7 @@ public interface LinksBuilder<I> {
      * @param type Type literal.
      * @return The same instance.
      */
-    LinksBuilder<I> addLink(TypeLiteral<? extends Link<I>> type);
+    <T extends Link<? super I>> LinksBuilder<I> addLink(TypeLiteral<T> type);
 
     /**
      * Add specific link with generic parameters and configure it.
@@ -69,7 +70,9 @@ public interface LinksBuilder<I> {
      * @return The same instance.
      * @throws LinkException Can't init link.
      */
-    <T extends Link<I>> LinksBuilder<I> addLink(TypeLiteral<T> type, LinkConsumer<I, T> init)
+    <T extends Link<? super I>> LinksBuilder<I> addLink(
+        TypeLiteral<T> type, LinkConsumer<I, T> init
+    )
         throws LinkException;
 
     /**

@@ -19,7 +19,6 @@
 
 package insideworld.engine.core.data.core.mock;
 
-import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntity;
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntityImpl;
@@ -124,19 +123,19 @@ public class InitMock {
         return this.primary.write(entity);
     }
 
-    /**
-     * Fill context by DTO entity.
-     * @param context Context to fill.
-     * @checkstyle NonStaticMethodCheck (10 lines)
-     */
-    public final void fillContext(final Context context) {
-        context.put(MockTags.STRPRIM, "Value");
-        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
-        context.put(MockTags.ONE_ID, 2L);
-        context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
-        context.put(MockTags.DATE, new Date(1_500_000));
-        context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
-    }
+//    /**
+//     * Fill context by DTO entity.
+//     * @param context Context to fill.
+//     * @checkstyle NonStaticMethodCheck (10 lines)
+//     */
+//    public final void fillContext(final Context context) {
+//        context.put(MockTags.STRPRIM, "Value");
+//        context.put(MockTags.WRAPPRIMS, List.of(5L, 6L));
+//        context.put(MockTags.ONE_ID, 2L);
+//        context.put(MockTags.TWOS_IDS, List.of(7L, 8L, 9L));
+//        context.put(MockTags.DATE, new Date(1_500_000));
+//        context.put(MockTags.DATES, List.of(new Date(1_500_000), new Date(2_500_000)));
+//    }
 
     /**
      * Create one entity.

@@ -57,16 +57,13 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
     }
 
     @Override
-    public final LinksBuilder<I> addLink(
-        final Class<? extends Link<? super I>> type
-    ) {
-        final Link<? super I> link = this.factory.createObject(type);
-        this.links.add(link);
+    public final LinksBuilder<I> addLink(final Class<? extends Link<? super I>> type) {
+        this.links.add(this.factory.createObject(type));
         return this;
     }
 
     @Override
-    public final <T extends Link<I>> LinksBuilder<I> addLink(
+    public final <T extends Link<? super I>> LinksBuilder<I> addLink(
         final Class<T> type, final LinkConsumer<I, T> init
     ) throws LinkException {
         final T link = this.factory.createObject(type);
@@ -76,14 +73,13 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
     }
 
     @Override
-    public final LinksBuilder<I> addLink(final TypeLiteral<? extends Link<I>> type) {
-        final Link<I> link = this.factory.createObject(type);
-        this.links.add(link);
+    public final <T extends Link<? super I>> LinksBuilder<I> addLink(final TypeLiteral<T> type) {
+        this.links.add(this.factory.createObject(type));
         return this;
     }
 
     @Override
-    public final <T extends Link<I>> LinksBuilder<I> addLink(
+    public final <T extends Link<? super I>> LinksBuilder<I> addLink(
         final TypeLiteral<T> type, final LinkConsumer<I, T> init
     ) throws LinkException {
         final T link = this.factory.createObject(type);
@@ -101,7 +97,9 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
      * @throws LinkException Exception at init.
      */
     @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
-    private <T extends Link<I>> void initLink(final T link, final LinkConsumer<I, T> init)
+    private <T extends Link<? super I>> void initLink(
+        final T link, final LinkConsumer<? super I, T> init
+    )
         throws LinkException {
         //@checkstyle IllegalCatchCheck (10 lines)
         try {

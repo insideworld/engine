@@ -28,7 +28,6 @@ import insideworld.engine.core.data.core.converter.dto.descriptors.ReadDescripto
 import insideworld.engine.core.data.core.converter.dto.descriptors.WriteDescriptors;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-import insideworld.engine.core.data.core.tags.StorageTags;
 import insideworld.engine.core.common.injection.ObjectFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -116,21 +115,22 @@ public class DtoConverter implements EntityConverter {
      */
     private <T extends Entity> T readEntity(final Record context, final Class<T> type)
         throws StorageException {
-        final Long id = context.get(StorageTags.ID);
-        final T entity;
-        if (id == null || id.equals(0L)) {
-            entity = this.factory.createObject(type);
-        } else {
-            final Storage<T> storage = this.storages.getStorage(type);
-            entity = storage.read(id);
-        }
-        if (entity == null) {
-            throw new StorageException(
-                "Can't read because storage return null",
-                type,
-                id
-            );
-        }
-        return entity;
+//        final Long id = context.get(StorageTags.ID);
+//        final T entity;
+//        if (id == null || id.equals(0L)) {
+//            entity = this.factory.createObject(type);
+//        } else {
+//            final Storage<T> storage = this.storages.getStorage(type);
+//            entity = storage.read(id);
+//        }
+//        if (entity == null) {
+//            throw new StorageException(
+//                "Can't read because storage return null",
+//                type,
+//                id
+//            );
+//        }
+//        return entity;
+        return null;
     }
 }

@@ -21,7 +21,7 @@ package insideworld.engine.plugins.generator.data.action.write;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.action.AbstractWriteAction;
+import insideworld.engine.core.data.core.action.WriteAction;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.write.search.SearchWriteAction;
@@ -44,7 +44,7 @@ public class WriteActionGenerator extends AbstractActionGenerator {
 
     @Override
     protected Class<?> extended() {
-        return AbstractWriteAction.class;
+        return WriteAction.class;
     }
 
     @Override

@@ -19,11 +19,9 @@
 
 package insideworld.engine.core.data.core.action;
 
-import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.mock.MockTags;
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntity;
-import insideworld.engine.core.data.core.tags.EntitiesTag;
-import insideworld.engine.core.data.core.tags.EntityTag;
+import insideworld.engine.core.data.core.storages.Storage;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
@@ -31,34 +29,10 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class DeleteMockAction extends AbstractDeleteAction<MockEntity> {
+class DeleteMockAction extends DeleteAction<MockEntity> {
 
-    /**
-     * Default constructor.
-     *
-     * @param builder Link builder.
-     */
-    DeleteMockAction(final LinksBuilder builder) {
-        super(builder);
-    }
-
-    @Override
-    public final String key() {
-        return "insideworld.engine.core.data.core.actions.DeleteMockAction";
-    }
-
-    @Override
-    protected final EntityTag<MockEntity> getTag() {
-        return MockTags.PRIMARY;
-    }
-
-    @Override
-    protected final EntitiesTag<MockEntity> getTags() {
-        return MockTags.PRIMARIES;
-    }
-
-    @Override
-    protected final Class<MockEntity> getType() {
-        return MockEntity.class;
+    @Inject
+    public DeleteMockAction(final Storage<MockEntity> storage) {
+        super("insideworld.engine.core.data.core.action.DeleteMockAction", storage);
     }
 }

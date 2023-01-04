@@ -20,7 +20,7 @@
 package insideworld.engine.plugins.generator.data.action.delete;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.core.data.core.action.AbstractDeleteAction;
+import insideworld.engine.core.data.core.action.DeleteAction;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteAction;
@@ -42,7 +42,7 @@ public class DeleteActionGenerator extends AbstractActionGenerator {
 
     @Override
     protected Class<?> extended() {
-        return AbstractDeleteAction.class;
+        return DeleteAction.class;
     }
 
     @Override
