@@ -36,7 +36,7 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class TestAction extends AbstractChainAction<Input, Input> {
+class TestAction extends AbstractChainAction<Input, Input, Input> {
 
     /**
      * Default constructor.
@@ -48,22 +48,22 @@ class TestAction extends AbstractChainAction<Input, Input> {
     }
 
     @Override
-    public String key() {
+    public final Class<Input> inputType() {
+        return Input.class;
+    }
+
+    @Override
+    public final Class<Input> outputType() {
+        return Input.class;
+    }
+
+    @Override
+    public final String key() {
         return "insideworld.engine.core.action.chain.builder.TestAction";
     }
 
     @Override
-    public Class<Input> inputType() {
-        return Input.class;
-    }
-
-    @Override
-    public Class<Input> outputType() {
-        return Input.class;
-    }
-
-    @Override
-    protected Collection<Link<? super Input>> attachLinks(final LinksBuilder<Input> builder)
+    protected final Collection<Link<? super Input>> attachLinks(final LinksBuilder<Input> builder)
         throws LinkException {
         return builder
             .addLink(IntegerLink.class)
@@ -76,7 +76,12 @@ class TestAction extends AbstractChainAction<Input, Input> {
     }
 
     @Override
-    protected Input output(final Input input) {
+    protected final Input aux(final Input input) {
+        return input;
+    }
+
+    @Override
+    protected final Input output(final Input input) {
         return input;
     }
 

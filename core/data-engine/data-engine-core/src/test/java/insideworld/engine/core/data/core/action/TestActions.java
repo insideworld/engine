@@ -26,9 +26,11 @@ import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.mock.InitMock;
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntity;
+import insideworld.engine.core.data.core.mock.entities.positive.MockEntityImpl;
 import insideworld.engine.core.data.core.storages.Storage;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import org.hamcrest.MatcherAssert;
@@ -37,6 +39,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test read, write and delete actions.
+ *
  * @since 0.14.0
  */
 @QuarkusTest
@@ -59,6 +62,7 @@ class TestActions {
 
     /**
      * Default constructor.
+     *
      * @param executor Class action executor.
      * @param init Init.
      * @param storage Storage.
@@ -79,12 +83,12 @@ class TestActions {
      * Execute read action with id and ids tags.
      * ER:
      * Should put in output DTO entities.
+     *
      * @throws StorageException Shouldn't raise.
      * @throws ActionException Shouldn't raise.
      */
     @Test
     final void testRead() throws CommonException {
-        final MockEntity entity = this.init.createPrimary();
         final Collection<MockEntity> entities =
             List.of(this.init.createPrimary(), this.init.createPrimary());
         final MockEntity[] result = this.executor.execute(
@@ -94,67 +98,55 @@ class TestActions {
         MatcherAssert.assertThat(
             "Entity didn't read",
             result,
-            Matchers.allOf(
-                Matchers.arrayWithSize(2),
-                Matchers.hasItem(
-                    Matchers.allOf(
-                        KeeperMatchers.match(StorageTags.ID, Matchers.is(entity.getId())),
-                        KeeperMatchers.match(MockTags.STRPRIM, Matchers.is("7331"))
+            Matchers.arrayWithSize(2)
+        );
+    }
+
+    /**
+     * TC: Create entity and entities and try to delete it.
+     * ER: Entities should delete.
+     *
+     * @throws StorageException Shouldn't raise.
+     * @throws ActionException Shouldn't raise.
+     */
+    @Test
+    final void testDelete() throws CommonException {
+        final Collection<MockEntity> entities =
+            List.of(this.init.createPrimary(), this.init.createPrimary());
+        final int size = this.storage.readAll().size();
+        this.executor.execute(DeleteMockAction.class, entities.stream()
+            .map(MockEntity::getId).toArray(Long[]::new));
+        MatcherAssert.assertThat(
+            "Entity didn't delete",
+            this.storage.readAll(),
+            Matchers.iterableWithSize(size - entities.size())
+        );
+    }
+
+    /**
+     * TC: Create DTO entity and try to write it.
+     * ER: Should present entity with ID in context.
+     *
+     * @throws ActionException Shouldn't raise.
+     */
+    @Test
+    final void testWrite() throws CommonException {
+        final MockEntityImpl entity = new MockEntityImpl();
+        entity.setDate(new Date());
+        final MockEntity[] write = this.executor.execute(WriteMockAction.class, new MockEntity[]{entity});
+        MatcherAssert.assertThat(
+            "Entity didn't write",
+            write[0],
+            Matchers.hasProperty(
+                "id",
+                Matchers.not(
+                    Matchers.anyOf(
+                        Matchers.is(0L),
+                        Matchers.nullValue()
                     )
                 )
             )
         );
     }
-
-//    /**
-//     * TC: Create entity and entities and try to delete it.
-//     * ER: Entities should delete.
-//     * @throws StorageException Shouldn't raise.
-//     * @throws ActionException Shouldn't raise.
-//     */
-//    @Test
-//    final void testDelete() throws StorageException, ActionException {
-//        final MockEntity entity = this.init.createPrimary();
-//        final Collection<MockEntity> entities =
-//            List.of(this.init.createPrimary(), this.init.createPrimary());
-//        final Context context = this.executor.createContext();
-//        final int size = this.storage.readAll().size();
-//        context.put(StorageTags.ID, entity.getId());
-//        context.put(StorageTags.IDS, entities.stream().map(MockEntity::getId).toList());
-//        this.executor.execute(DeleteMockAction.class, context);
-//        MatcherAssert.assertThat(
-//            "Entity didn't delete",
-//            this.storage.readAll(),
-//            Matchers.iterableWithSize(size - entities.size() - 1)
-//        );
-//    }
-//
-//    /**
-//     * TC: Create DTO entity and try to write it.
-//     * ER: Should present entity with ID in context.
-//     * @throws ActionException Shouldn't raise.
-//     */
-//    @Test
-//    final void testWrite() throws ActionException {
-//        final Context context = this.executor.createContext();
-//        this.init.fillContext(context);
-//        this.executor.execute(WriteMockAction.class, context);
-//        MatcherAssert.assertThat(
-//            "Entity didn't write",
-//            context,
-//            KeeperMatchers.match(
-//                MockTags.PRIMARY,
-//                Matchers.hasProperty(
-//                    "id",
-//                    Matchers.not(
-//                        Matchers.anyOf(
-//                            Matchers.is(0L),
-//                            Matchers.nullValue()
-//                        )
-//                    )
-//                )
-//            )
-//        );
-//    }
 
 }

@@ -34,7 +34,7 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class TestAction extends AbstractChainAction<Input, Integer[]> {
+class TestAction extends AbstractChainAction<Input, Integer[], Input> {
 
     /**
      * Default constructor.
@@ -44,6 +44,21 @@ class TestAction extends AbstractChainAction<Input, Integer[]> {
     @Inject
     TestAction(final LinksBuilder<Input> builder) {
         super(builder);
+    }
+
+    @Override
+    public final String key() {
+        return "insideworld.engine.actions.chain.sequence.TestAction";
+    }
+
+    @Override
+    public Class<Input> inputType() {
+        return Input.class;
+    }
+
+    @Override
+    public Class<Integer[]> outputType() {
+        return Integer[].class;
     }
 
     @Override
@@ -60,23 +75,13 @@ class TestAction extends AbstractChainAction<Input, Integer[]> {
     }
 
     @Override
+    protected Input aux(final Input input) {
+        return input;
+    }
+
+    @Override
     protected Integer[] output(Input input) {
         return input.integers.toArray(Integer[]::new);
-    }
-
-    @Override
-    public final String key() {
-        return "insideworld.engine.actions.chain.sequence.TestAction";
-    }
-
-    @Override
-    public Class<Input> inputType() {
-        return Input.class;
-    }
-
-    @Override
-    public Class<Integer[]> outputType() {
-        return Integer[].class;
     }
 
 

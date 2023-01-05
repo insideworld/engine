@@ -36,35 +36,36 @@ import java.util.Collection;
  * @param <A> Aux type using to move data between links.
  * @since 0.1.0
  */
-public abstract class AbstractChainAction<I, O> implements Action<I, O> {
+public abstract class AbstractChainAction<I, O, A> implements Action<I, O> {
 
     /**
      * Link builder.
      */
-    private final LinksBuilder<I> builder;
+    private final LinksBuilder<A> builder;
 
     /**
      * Collections of links.
      */
-    private Collection<Link<? super I>> links;
+    private Collection<Link<? super A>> links;
 
     /**
      * Default constructor.
      *
      * @param builder Links builder instance.
      */
-    public AbstractChainAction(final LinksBuilder<I> builder) {
+    public AbstractChainAction(final LinksBuilder<A> builder) {
         this.builder = builder;
     }
 
     @Override
     @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
-    public O execute(I input) throws CommonException {
+    public O execute(final I input) throws CommonException {
+        final A aux = this.aux(input);
         for (final var link : this.links) {
-            if (link.can(input)) {
+            if (link.can(aux)) {
                 //@checkstyle IllegalCatchCheck (10 lines)
                 try {
-                   if (!link.process(input)) {
+                   if (!link.process(aux)) {
                        break;
                    }
                 } catch (final Exception exp) {
@@ -76,7 +77,7 @@ public abstract class AbstractChainAction<I, O> implements Action<I, O> {
                 }
             }
         }
-        return this.output (input);
+        return this.output(aux);
     }
 
     @Override
@@ -99,8 +100,10 @@ public abstract class AbstractChainAction<I, O> implements Action<I, O> {
      * @see LinksBuilder
      * @checkstyle HiddenFieldCheck (2 lines)
      */
-    protected abstract Collection<Link<? super I>> attachLinks(LinksBuilder<I> builder)
+    protected abstract Collection<Link<? super A>> attachLinks(LinksBuilder<A> builder)
         throws LinkException;
 
-    protected abstract O output(I input);
+    protected abstract A aux(I input);
+
+    protected abstract O output(A aux);
 }

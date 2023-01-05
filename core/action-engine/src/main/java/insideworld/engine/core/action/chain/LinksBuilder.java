@@ -30,7 +30,7 @@ import javax.enterprise.util.TypeLiteral;
  * @see AbstractChainAction
  * @since 0.1.0
  */
-public interface LinksBuilder<I> {
+public interface LinksBuilder<A> {
 
     /**
      * Add specific link implementation based on class type.
@@ -38,7 +38,7 @@ public interface LinksBuilder<I> {
      * @param type Class type of link.
      * @return The same instance.
      */
-    LinksBuilder<I> addLink(Class<? extends Link<? super I>> type);
+    LinksBuilder<A> addLink(Class<? extends Link<? super A>> type);
 
     /**
      * Add specific link implementation based on class type and configure it.
@@ -49,8 +49,8 @@ public interface LinksBuilder<I> {
      * @return The same instance.
      * @throws LinkException Can't init link.
      */
-    <T extends Link<? super I>> LinksBuilder<I> addLink(
-        Class<T> type, LinkConsumer<I, T> init
+    <T extends Link<? super A>> LinksBuilder<A> addLink(
+        Class<T> type, LinkConsumer<A, T> init
     ) throws LinkException;
 
     /**
@@ -59,7 +59,7 @@ public interface LinksBuilder<I> {
      * @param type Type literal.
      * @return The same instance.
      */
-    <T extends Link<? super I>> LinksBuilder<I> addLink(TypeLiteral<T> type);
+    <T extends Link<? super A>> LinksBuilder<A> addLink(TypeLiteral<T> type);
 
     /**
      * Add specific link with generic parameters and configure it.
@@ -70,8 +70,8 @@ public interface LinksBuilder<I> {
      * @return The same instance.
      * @throws LinkException Can't init link.
      */
-    <T extends Link<? super I>> LinksBuilder<I> addLink(
-        TypeLiteral<T> type, LinkConsumer<I, T> init
+    <T extends Link<? super A>> LinksBuilder<A> addLink(
+        TypeLiteral<T> type, LinkConsumer<A, T> init
     )
         throws LinkException;
 
@@ -80,6 +80,6 @@ public interface LinksBuilder<I> {
      * Need to use when all links were added.
      * @return Collection of links.
      */
-    Collection<Link<? super I>> build();
+    Collection<Link<? super A>> build();
 
 }

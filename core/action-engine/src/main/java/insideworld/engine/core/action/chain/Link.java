@@ -28,7 +28,7 @@ import insideworld.engine.core.common.exception.CommonException;
  * @param <I> Input data.
  * @since 0.0.1
  */
-public interface Link<I> {
+public interface Link<A> {
 
     /**
      * Execute logic of link.
@@ -37,14 +37,14 @@ public interface Link<I> {
      * @throws CommonException Common exception during process action.
      * @return If true - chain will continue. If false - chain will break.
      */
-    boolean process(I input) throws CommonException;
+    boolean process(A aux) throws CommonException;
 
     /**
      * Can execute this link.
      * @param context Context.
      * @return If return true - link will executed, if false - skip this link.
      */
-    default boolean can(I input) {
+    default boolean can(A aux) {
         return true;
     }
 

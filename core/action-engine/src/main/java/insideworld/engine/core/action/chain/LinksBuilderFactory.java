@@ -33,7 +33,7 @@ import javax.inject.Inject;
  * @since 0.0.6
  */
 @Dependent
-public class LinksBuilderFactory<I> implements LinksBuilder<I> {
+public class LinksBuilderFactory<A> implements LinksBuilder<A> {
 
     /**
      * Object factor.
@@ -43,7 +43,7 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
     /**
      * List builder with links.
      */
-    private final ImmutableList.Builder<Link<? super I>> links;
+    private final ImmutableList.Builder<Link<? super A>> links;
 
     /**
      * Default constructor.
@@ -57,14 +57,14 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
     }
 
     @Override
-    public final LinksBuilder<I> addLink(final Class<? extends Link<? super I>> type) {
+    public final LinksBuilder<A> addLink(final Class<? extends Link<? super A>> type) {
         this.links.add(this.factory.createObject(type));
         return this;
     }
 
     @Override
-    public final <T extends Link<? super I>> LinksBuilder<I> addLink(
-        final Class<T> type, final LinkConsumer<I, T> init
+    public final <T extends Link<? super A>> LinksBuilder<A> addLink(
+        final Class<T> type, final LinkConsumer<A, T> init
     ) throws LinkException {
         final T link = this.factory.createObject(type);
         this.initLink(link, init);
@@ -73,14 +73,14 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
     }
 
     @Override
-    public final <T extends Link<? super I>> LinksBuilder<I> addLink(final TypeLiteral<T> type) {
+    public final <T extends Link<? super A>> LinksBuilder<A> addLink(final TypeLiteral<T> type) {
         this.links.add(this.factory.createObject(type));
         return this;
     }
 
     @Override
-    public final <T extends Link<? super I>> LinksBuilder<I> addLink(
-        final TypeLiteral<T> type, final LinkConsumer<I, T> init
+    public final <T extends Link<? super A>> LinksBuilder<A> addLink(
+        final TypeLiteral<T> type, final LinkConsumer<A, T> init
     ) throws LinkException {
         final T link = this.factory.createObject(type);
         this.initLink(link, init);
@@ -97,8 +97,8 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
      * @throws LinkException Exception at init.
      */
     @SuppressWarnings({"PMD.AvoidCatchingGenericException"})
-    private <T extends Link<? super I>> void initLink(
-        final T link, final LinkConsumer<? super I, T> init
+    private <T extends Link<? super A>> void initLink(
+        final T link, final LinkConsumer<? super A, T> init
     )
         throws LinkException {
         //@checkstyle IllegalCatchCheck (10 lines)
@@ -114,7 +114,7 @@ public class LinksBuilderFactory<I> implements LinksBuilder<I> {
     }
 
     @Override
-    public Collection<Link<? super I>> build() {
+    public Collection<Link<? super A>> build() {
         return this.links.build();
     }
 }
