@@ -55,6 +55,12 @@
       <version>${javax.ws.rs-api.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>data-engine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!--  Tests  -->
     <dependency>
       <groupId>insideworld.engine</groupId>

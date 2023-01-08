@@ -17,39 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor;
+package insideworld.engine.core.action.executor.key;
 
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.keeper.context.Context;
+import java.util.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/**
- * Class action executor interface.
- * Provide ability to execute action by class type.
- * @since 2.0.0
- */
-public interface ClassActionExecutor extends ActionExecutor<String> {
+public class StringKey<I, O> implements Key<I, O> {
 
-    /**
-     * Execute action using default parameters.
-     * @param type
-     * @param input
-     * @return
-     * @param <I>
-     * @param <O>
-     * @throws CommonException
-     */
-    <I,O> O execute(Class<? extends Action<I,O>> type, I input) throws CommonException;
+    private final String key;
 
-    /**
-     * Execute an action.
-     * @param type Action type.
-     * @param input Input.
-     * @return Output.
-     * @param <I> Input type.
-     * @param <O> Output type.
-     * @throws CommonException Some exception during action execute.
-     */
-    <I,O> O execute(Class<? extends Action<I,O>> type, I input, ExecuteContext context)
-        throws CommonException;
+    public StringKey(final String key) {
+        this.key = key;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.key.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj ||
+               (
+                   obj != null &&
+                   (
+                       this.getClass() == obj.getClass() ||
+                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
+                   )
+               );
+    }
+
 }

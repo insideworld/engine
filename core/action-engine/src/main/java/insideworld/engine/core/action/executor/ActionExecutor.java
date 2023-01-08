@@ -19,32 +19,14 @@
 
 package insideworld.engine.core.action.executor;
 
+import insideworld.engine.core.action.executor.key.Key;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.keeper.context.Context;
+import java.util.function.Consumer;
 
-public interface ActionExecutor<T> {
+public interface ActionExecutor {
 
-    /**
-     * Execute action with default parameters
-     * @param key
-     * @param input
-     * @return
-     * @param <I>
-     * @param <O>
-     * @throws CommonException
-     */
-    <I, O> O execute(T key, I input) throws CommonException;
+    <I, O> O execute(Key<I, O> key, I input) throws CommonException;
 
-    /**
-     * Execute action with provided key definer and
-     * @param key
-     * @param input
-     * @param context
-     * @return
-     * @param <I>
-     * @param <O>
-     */
-    <I, O> O execute(T key, I input, ExecuteContext context) throws CommonException;
+    <I, O> O execute(Key<I, O> key, I input, Consumer<ExecuteContext> predicate) throws CommonException;
 
-    ExecuteContext createContext();
 }

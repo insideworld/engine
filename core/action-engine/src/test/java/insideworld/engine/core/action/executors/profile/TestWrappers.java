@@ -19,9 +19,8 @@
 
 package insideworld.engine.core.action.executors.profile;
 
-import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.ActionExecutor;
-import insideworld.engine.core.action.executor.ClassActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
@@ -40,7 +39,7 @@ class TestWrappers {
     /**
      * Class action executor.
      */
-    private final ClassActionExecutor executor;
+    private final ActionExecutor executor;
     private final TestObject test;
 
     /**
@@ -49,7 +48,7 @@ class TestWrappers {
      * @param executor Class action executor.
      */
     @Inject
-    TestWrappers(final ClassActionExecutor executor,
+    TestWrappers(final ActionExecutor executor,
                  final TestObject test) {
         this.executor = executor;
         this.test = test;
@@ -68,7 +67,7 @@ class TestWrappers {
     @Test
     final void test() throws CommonException {
         this.test.integers.clear();
-        this.executor.execute(DummyAction.class, null);
+        this.executor.execute(new ClassKey<>(DummyAction.class), null);
         MatcherAssert.assertThat(
             "Collection has wrong sequence",
             this.test.integers,

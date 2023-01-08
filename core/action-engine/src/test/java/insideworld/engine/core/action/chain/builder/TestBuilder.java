@@ -19,7 +19,8 @@
 
 package insideworld.engine.core.action.chain.builder;
 
-import insideworld.engine.core.action.executor.ClassActionExecutor;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
@@ -37,14 +38,14 @@ class TestBuilder {
     /**
      * Class action executor.
      */
-    private final ClassActionExecutor executor;
+    private final ActionExecutor executor;
 
     /**
      * Default constructor.
      * @param executor Class action executor.
      */
     @Inject
-    TestBuilder(final ClassActionExecutor executor) {
+    TestBuilder(final ActionExecutor executor) {
         this.executor = executor;
     }
 
@@ -58,7 +59,10 @@ class TestBuilder {
      */
     @Test
     final void test() throws CommonException {
-        final Input execute = this.executor.execute(TestAction.class, new Input());
+        final Input execute = this.executor.execute(
+            new ClassKey<>(TestAction.class),
+            new Input()
+        );
         MatcherAssert.assertThat(
             "STRING is absent",
             execute.getString(),

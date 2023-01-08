@@ -17,14 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action;
+package insideworld.engine.core.action.executor.key;
 
+import insideworld.engine.core.action.Action;
+import java.util.Objects;
 
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+public class ClassKey<I, O> implements Key<I, O> {
 
-/**
- * Interface marker to indicate that this profile is using in endpoint engine.
- * @since 1.0.0
- */
-public interface EndpointProfile extends ExecuteProfile {
+    private final Class<? extends Action<I, O>> key;
+
+    public ClassKey(final Class<? extends Action<I, O>> key) {
+        this.key = key;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.key.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj ||
+               (
+                   obj != null &&
+                   (
+                       this.getClass() == obj.getClass() ||
+                       Objects.equals(this.key, ((ClassKey<?, ?>) obj).key)
+                   )
+               );
+    }
 }

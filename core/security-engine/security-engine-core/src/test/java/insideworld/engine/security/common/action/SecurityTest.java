@@ -21,7 +21,7 @@ package insideworld.engine.security.common.action;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.old.ActionExecutor;
 import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.matchers.exception.ExceptionMatchers;

@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.endpoint.amqp.actions;
 
-import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.old.ActionExecutor;
 import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.core.endpoint.amqp.actions.tags.AmqpTags;

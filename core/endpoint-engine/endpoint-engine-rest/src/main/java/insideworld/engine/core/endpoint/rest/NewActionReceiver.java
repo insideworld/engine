@@ -17,66 +17,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.startup;
+package insideworld.engine.core.endpoint.rest;
 
-import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.ExecutorTag;
+import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.key.StringKey;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.startup.OnStartUp;
-import java.util.Collection;
-import java.util.List;
-import javax.inject.Inject;
+import insideworld.engine.core.endpoint.rest.tags.RestTags;
+import java.io.InputStream;
 import javax.inject.Singleton;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 
-/**
- * Execute some actions after startup.
- * Necessary action should contain annotation OnStartupAction.
- *
- * @see OnStartupAction
- * @since 0.14.0
- */
+
+@Path("/actions")
 @Singleton
-public class StartUpActions implements OnStartUp {
+public class NewActionReceiver {
 
-    /**
-     * Key action executor.
-     */
     private final ActionExecutor executor;
 
-    /**
-     * Collection of all actions.
-     */
-    private final Collection<Action<?, ?>> actions;
-
-    /**
-     * Default constructor.
-     *
-     * @param executor Class action executor.
-     * @param actions Actions.
-     */
-    @Inject
-    public StartUpActions(
-        final ActionExecutor executor,
-        final List<Action<?,?>> actions) {
+    public NewActionReceiver(final ActionExecutor executor) {
         this.executor = executor;
-        this.actions = actions;
     }
 
-    @Override
-    public final void startUp() throws CommonException {
-        for (final Action<?,?> action : this.actions) {
-            if (action.getClass().isAnnotationPresent(OnStartupAction.class)) {
-                this.executor.execute(
-                    new StringKey<>(action.key()),
-                    null
-                );
+    @POST
+    @Path("/{action}")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Object executeAction(
+        @PathParam("action") final String action,
+        @javax.ws.rs.core.Context final HttpHeaders headers,
+        final InputStream rawbody
+    ) throws CommonException {
+        return this.executor.execute(
+            new StringKey<>(action),
+            rawbody,
+            context -> {
+                context.put(RestTags.HTTP_HEADERS, headers);
+                context.put(ExecutorTags.PROFILE, RestProfile.class);
             }
-        }
-    }
-
-    @Override
-    public final long startOrder() {
-        return 200_000;
+        );
     }
 }

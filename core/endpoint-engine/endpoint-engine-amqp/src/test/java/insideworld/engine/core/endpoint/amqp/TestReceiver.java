@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.endpoint.amqp;
 
-import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.old.ActionExecutor;
 import insideworld.engine.core.endpoint.amqp.actions.AmqpActionReceiver;
 import insideworld.engine.core.endpoint.base.action.OutputTaskBuilder;
 import javax.inject.Singleton;

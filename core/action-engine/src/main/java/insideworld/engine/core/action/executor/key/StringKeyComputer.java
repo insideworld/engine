@@ -17,14 +17,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action;
+package insideworld.engine.core.action.executor.key;
 
+import insideworld.engine.core.action.Action;
+import javax.inject.Singleton;
 
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+@Singleton
+public class StringKeyComputer implements KeyComputer {
 
-/**
- * Interface marker to indicate that this profile is using in endpoint engine.
- * @since 1.0.0
- */
-public interface EndpointProfile extends ExecuteProfile {
+    @Override
+    public final Key<?, ?> compute(final Action<?, ?> action) {
+        return new StringKey<>(action.key());
+    }
+
 }

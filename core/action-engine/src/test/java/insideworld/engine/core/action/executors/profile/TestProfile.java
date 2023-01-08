@@ -19,11 +19,10 @@
 
 package insideworld.engine.core.action.executors.profile;
 
-import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.ActionExecutor;
-import insideworld.engine.core.action.executor.ClassActionExecutor;
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.ExecutorTags;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
@@ -42,7 +41,7 @@ class TestProfile {
     /**
      * Class action executor.
      */
-    private final ClassActionExecutor executor;
+    private final ActionExecutor executor;
     private final TestObject test;
 
     /**
@@ -51,7 +50,7 @@ class TestProfile {
      * @param executor Class action executor.
      */
     @Inject
-    TestProfile(final ClassActionExecutor executor,
+    TestProfile(final ActionExecutor executor,
                 final TestObject test) {
         this.executor = executor;
         this.test = test;
@@ -71,15 +70,17 @@ class TestProfile {
     @Test
     final void testPreExecutor() throws CommonException {
         this.test.counter.set(0);
-        this.executor.execute(DummyAction.class, null);
+        this.executor.execute(new ClassKey<>(DummyAction.class), null);
         MatcherAssert.assertThat(
             "Counter was incremented",
             this.test.counter.get(),
             Matchers.is(0L)
         );
-        final ExecuteContext context = this.executor.createContext();
-        context.put(ExecutorTags.PROFILE, AnotherExecuteProfile.class);
-        this.executor.execute(DummyAction.class, null, context);
+        this.executor.execute(
+            new ClassKey<>(DummyAction.class),
+            null,
+            context -> context.put(ExecutorTags.PROFILE, AnotherExecuteProfile.class)
+        );
         MatcherAssert.assertThat(
             "Counter wasn't incremented",
             this.test.counter.get(),

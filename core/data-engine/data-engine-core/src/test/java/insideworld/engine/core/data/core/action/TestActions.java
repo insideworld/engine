@@ -20,7 +20,8 @@
 package insideworld.engine.core.data.core.action;
 
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.executor.ClassActionExecutor;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
@@ -48,7 +49,7 @@ class TestActions {
     /**
      * Class action executor.
      */
-    private final ClassActionExecutor executor;
+    private final ActionExecutor executor;
 
     /**
      * Init.
@@ -69,7 +70,7 @@ class TestActions {
      */
     @Inject
     TestActions(
-        final ClassActionExecutor executor,
+        final ActionExecutor executor,
         final InitMock init,
         final Storage<MockEntity> storage
     ) {
@@ -92,7 +93,7 @@ class TestActions {
         final Collection<MockEntity> entities =
             List.of(this.init.createPrimary(), this.init.createPrimary());
         final MockEntity[] result = this.executor.execute(
-            ReadMockAction.class,
+            new ClassKey<>(ReadMockAction.class),
             entities.stream().map(Entity::getId).toArray(Long[]::new)
         );
         MatcherAssert.assertThat(
@@ -114,8 +115,10 @@ class TestActions {
         final Collection<MockEntity> entities =
             List.of(this.init.createPrimary(), this.init.createPrimary());
         final int size = this.storage.readAll().size();
-        this.executor.execute(DeleteMockAction.class, entities.stream()
-            .map(MockEntity::getId).toArray(Long[]::new));
+        this.executor.execute(
+            new ClassKey<>(DeleteMockAction.class),
+            entities.stream().map(MockEntity::getId).toArray(Long[]::new)
+        );
         MatcherAssert.assertThat(
             "Entity didn't delete",
             this.storage.readAll(),
@@ -133,7 +136,10 @@ class TestActions {
     final void testWrite() throws CommonException {
         final MockEntityImpl entity = new MockEntityImpl();
         entity.setDate(new Date());
-        final MockEntity[] write = this.executor.execute(WriteMockAction.class, new MockEntity[]{entity});
+        final MockEntity[] write = this.executor.execute(
+            new ClassKey<>(WriteMockAction.class),
+            new MockEntity[]{entity}
+        );
         MatcherAssert.assertThat(
             "Entity didn't write",
             write[0],

@@ -20,7 +20,8 @@
 package insideworld.engine.core.action.startup;
 
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.executor.ClassActionExecutor;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.matchers.exception.ExceptionMatchers;
 import io.quarkus.test.junit.QuarkusTest;
@@ -41,7 +42,7 @@ class TestStartup {
     /**
      * Class action executor.
      */
-    private final ClassActionExecutor executor;
+    private final ActionExecutor executor;
     private final TestStartupAction action;
 
     /**
@@ -50,7 +51,7 @@ class TestStartup {
      * @param executor Class action executor.
      */
     @Inject
-    TestStartup(final ClassActionExecutor executor,
+    TestStartup(final ActionExecutor executor,
                 final TestStartupAction action
     ) {
         this.executor = executor;
@@ -67,7 +68,7 @@ class TestStartup {
      */
     @Test
     final void test() throws CommonException {
-        this.executor.execute(TestStartupAction.class, null);
+        this.executor.execute(new ClassKey<>(TestStartupAction.class), null);
         MatcherAssert.assertThat(
             this.action.init,
             Matchers.is(true)

@@ -21,62 +21,74 @@ package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.action.executor.key.Key;
+import insideworld.engine.core.action.executor.key.KeyComputer;
 import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.core.common.keeper.Record;
-import insideworld.engine.core.common.keeper.context.Context;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-/**
- * Abstract action executor which provide a logic to execute an action.
- *
- * @param <T>
- */
-public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, ActionChanger {
+@Singleton
+public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    private final Map<T, Action<?, ?>> actions;
+    private final Map<Key<?, ?>, Action<?, ?>> actions;
+
     private final ObjectFactory factory;
 
     /**
      * All ExecuteProfiles in the system.
      */
     private final Map<Class<? extends ExecuteProfile>, ExecuteProfile> profiles;
+    private final List<KeyComputer> computers;
 
-    public AbstractActionExecutor(
+    @Inject
+    public ActionExecutorImpl(
         final ObjectFactory factory,
-        final List<ExecuteProfile> profiles
+        final List<ExecuteProfile> profiles,
+        final List<KeyComputer> computers
     ) {
         this.factory = factory;
         this.profiles = profiles.stream().collect(
             Collectors.toMap(ExecuteProfile::getClass, Function.identity())
         );
+        this.computers = computers;
         this.actions = new ConcurrentHashMap<>(16);
     }
 
+
     @Override
-    public <I, O> O execute(final T key, final I input) throws CommonException {
-        final ExecuteContext context = this.createContext();
-        context.put(ExecutorTags.PROFILE, DefaultExecuteProfile.class);
-        return this.execute(key, input, context);
+    public <I, O> O execute(final Key<I, O> key, final I input) throws CommonException {
+        return this.execute(
+            key,
+            input,
+            context -> context.put(ExecutorTags.PROFILE, DefaultExecuteProfile.class)
+        );
     }
 
     @Override
-    public final <I, O> O execute(final T key, final I input, final ExecuteContext context)
-        throws CommonException {
+    public <I, O> O execute(
+        final Key<I, O> key,
+        final I input,
+        final Consumer<ExecuteContext> predicate
+    ) throws CommonException {
         if (this.lock.isLocked()) {
             //TODO: Add normal exception. It's just a stub and will fail with NPE.
             throw new ActionException(null, "Actions under update");
         }
+        final ExecuteContext context = this.factory.createObject(ExecuteContext.class);
         final Action<?, ?> action = this.actions.get(key);
+        predicate.accept(context);
         context.put(ExecutorTags.ACTION, action);
         context.put(ExecutorTags.INPUT, input);
         try {
@@ -94,17 +106,11 @@ public abstract class AbstractActionExecutor<T> implements ActionExecutor<T>, Ac
     }
 
     @Override
-    public final ExecuteContext createContext() {
-        return this.factory.createObject(ExecuteContext.class);
-    }
-
-    @Override
-    public final void addAction(final Action<?, ?> action) {
+    public void addAction(final Action<?, ?> action) {
         this.lock.lock();
-        this.actions.put(this.calculateKey(action), action);
+        for (final KeyComputer computer : this.computers) {
+            this.actions.put(computer.compute(action), action);
+        }
         this.lock.unlock();
     }
-
-    protected abstract T calculateKey(Action<?, ?> action);
-
 }

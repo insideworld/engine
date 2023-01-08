@@ -19,7 +19,8 @@
 
 package insideworld.engine.core.action.chain.sequence;
 
-import insideworld.engine.core.action.executor.ClassActionExecutor;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.exception.CommonException;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ class TestSequence {
     /**
      * Class action executor.
      */
-    private final ClassActionExecutor executor;
+    private final ActionExecutor executor;
 
     /**
      * Default constructor.
@@ -46,7 +47,7 @@ class TestSequence {
      * @param executor Class action executor.
      */
     @Inject
-    TestSequence(final ClassActionExecutor executor) {
+    TestSequence(final ActionExecutor executor) {
         this.executor = executor;
     }
 
@@ -62,7 +63,10 @@ class TestSequence {
      */
     @Test
     final void test() throws CommonException {
-        final Integer[] execute = this.executor.execute(TestAction.class, new Input());
+        final Integer[] execute = this.executor.execute(
+            new ClassKey<>(TestAction.class),
+            new Input()
+        );
         MatcherAssert.assertThat(
             "Collection has wrong sequence",
             execute,
