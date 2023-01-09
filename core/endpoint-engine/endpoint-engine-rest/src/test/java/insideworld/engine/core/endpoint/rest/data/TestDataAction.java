@@ -17,36 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.rest;
+package insideworld.engine.core.endpoint.rest.data;
 
-import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
-import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
-import java.util.Collection;
-import java.util.List;
-import javax.inject.Inject;
+import insideworld.engine.core.action.Action;
+import insideworld.engine.core.common.exception.CommonException;
 import javax.inject.Singleton;
 
 @Singleton
-public class RestProfile extends AbstractExecuteProfile implements EndpointProfile {
-
-    /**
-     * Default constructor.
-     *
-     * @param executors Collection of all executors in the system.
-     */
-    @Inject
-    public RestProfile(final List<ExecuteWrapper> executors) {
-        super(executors);
+public class TestDataAction implements Action<TestEntity, Object> {
+    @Override
+    public Object execute(final TestEntity input) throws CommonException {
+        return null;
     }
 
     @Override
-    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
-        return List.of(
-            DefaultExecuteProfile.class,
-            this.getClass()
-        );
+    public String key() {
+        return "data";
+    }
+
+    @Override
+    public Class<? extends TestEntity> inputType() {
+        return TestEntity.class;
+    }
+
+    @Override
+    public Class<?> outputType() {
+        return Object.class;
     }
 }

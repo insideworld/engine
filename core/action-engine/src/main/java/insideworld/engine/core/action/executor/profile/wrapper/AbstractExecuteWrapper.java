@@ -44,8 +44,7 @@ public abstract class AbstractExecuteWrapper implements ExecuteWrapper {
      * @param context Wrapper context.
      * @throws CommonException Action exception.
      */
-    public void execute(final ExecuteContext context)
-        throws CommonException {
+    public void execute(final ExecuteContext context) throws CommonException {
         if (this.next != null) {
             this.next.execute(context);
         }

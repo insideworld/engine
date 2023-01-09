@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.endpoint.rest.tags;
 
-import insideworld.engine.core.action.keeper.tags.SingleTag;
+import insideworld.engine.core.common.keeper.tags.SingleTag;
 import javax.ws.rs.core.HttpHeaders;
 
 /**

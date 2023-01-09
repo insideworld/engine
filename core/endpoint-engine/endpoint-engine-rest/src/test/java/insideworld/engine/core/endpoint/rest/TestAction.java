@@ -20,25 +20,29 @@
 package insideworld.engine.core.endpoint.rest;
 
 import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.core.common.exception.CommonException;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Singleton;
 
 @Singleton
-public class TestAction implements Action {
-
-    private final AtomicInteger integer = new AtomicInteger();
+public class TestAction implements Action<String, String> {
 
     @Override
-    public void execute(final Context context, final Output output) throws CommonException {
-        output.createRecord().put("int", this.integer.incrementAndGet());
-        output.createRecord().put("onemore", this.integer.incrementAndGet());
+    public String execute(final String input) throws CommonException {
+        return input;
     }
 
     @Override
     public String key() {
         return "test";
+    }
+
+    @Override
+    public Class<? extends String> inputType() {
+        return String.class;
+    }
+
+    @Override
+    public Class<? extends String> outputType() {
+        return String.class;
     }
 }

@@ -38,7 +38,7 @@ public class TestWeb {
     @Test
     final void test() {
         RestAssured.given()
-            .body("{}")
+            .body("\"qwe\"")
             .contentType(ContentType.JSON)
             .when()
             .post("/actions/test")
@@ -57,10 +57,12 @@ public class TestWeb {
                 }
             });
         RestAssured.given()
-            .body("{}")
+            .body("{" +
+                  "\"some\": \"onetwo\"" +
+                  "}")
             .contentType(ContentType.JSON)
             .when()
-            .post("/actions/exception")
+            .post("/actions/data")
             .then()
             .statusCode(200)
             .body(new BaseMatcher<Object>() {
@@ -75,6 +77,25 @@ public class TestWeb {
 
                 }
             });
+//        RestAssured.given()
+//            .body("{}")
+//            .contentType(ContentType.JSON)
+//            .when()
+//            .post("/actions/exception")
+//            .then()
+//            .statusCode(200)
+//            .body(new BaseMatcher<Object>() {
+//                @Override
+//                public boolean matches(Object o) {
+//                    System.out.println("Matching");
+//                    return true;
+//                }
+//
+//                @Override
+//                public void describeTo(Description description) {
+//
+//                }
+//            });
         System.out.println("End");
     }
 

@@ -19,5 +19,66 @@
 
 package insideworld.engine.core.endpoint.rest;
 
-public class RestWrapper {
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.google.common.collect.Maps;
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.ExecutorTags;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
+import insideworld.engine.core.common.exception.CommonException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import javax.inject.Singleton;
+
+@Singleton
+public class RestWrapper extends AbstractExecuteWrapper {
+
+    private final Map<Class<?>, ObjectReader> readers = Maps.newConcurrentMap();
+
+    @Override
+    public final void execute(final ExecuteContext context) throws CommonException {
+        final ObjectReader reader = this.getReader(context.get(ExecutorTags.ACTION).inputType());
+        try {
+            final Object result = reader.readValue((InputStream) context.get(ExecutorTags.INPUT));
+            context.put(ExecutorTags.INPUT, result, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        super.execute(context);
+    }
+
+
+    private ObjectReader getReader(final Class<?> clazz) {
+        final ObjectReader result;
+        if (this.readers.containsKey(clazz)) {
+            result = this.readers.get(clazz);
+        } else {
+            synchronized (this) {
+                if (this.readers.containsKey(clazz)) {
+                    result = this.readers.get(clazz);
+                } else {
+                    result = new ObjectMapper()
+                        .readerFor(clazz)
+                        .with(DeserializationFeature.USE_LONG_FOR_INTS);
+                    this.readers.put(clazz, result);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public long wrapperOrder() {
+        return 900_000;
+    }
+
+    @Override
+    public Collection<Class<? extends ExecuteProfile>> forProfile() {
+        return Collections.singleton(RestProfile.class);
+    }
 }

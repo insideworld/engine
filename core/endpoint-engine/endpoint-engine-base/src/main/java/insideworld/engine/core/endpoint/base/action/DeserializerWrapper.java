@@ -17,36 +17,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.rest;
+package insideworld.engine.core.endpoint.base.action;
 
-import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
-import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
+import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
+import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
+import insideworld.engine.core.common.exception.CommonException;
 import java.util.Collection;
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.enterprise.context.Dependent;
 
-@Singleton
-public class RestProfile extends AbstractExecuteProfile implements EndpointProfile {
 
-    /**
-     * Default constructor.
-     *
-     * @param executors Collection of all executors in the system.
-     */
-    @Inject
-    public RestProfile(final List<ExecuteWrapper> executors) {
-        super(executors);
+public abstract class DeserializerWrapper extends AbstractExecuteWrapper {
+
+    public void execute(final ExecuteContext context) throws CommonException {
+        super.execute(context);
     }
 
     @Override
-    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
-        return List.of(
-            DefaultExecuteProfile.class,
-            this.getClass()
-        );
+    public long wrapperOrder() {
+        return 900_000;
     }
+
+
 }
