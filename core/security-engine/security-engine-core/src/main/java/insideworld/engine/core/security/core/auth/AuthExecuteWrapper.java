@@ -20,13 +20,10 @@
 package insideworld.engine.core.security.core.auth;
 
 
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
-import insideworld.engine.core.action.executor.profiles.wrapper.AbstractExecuteWrapper;
-import insideworld.engine.core.action.executor.profiles.ExecuteProfile;
-import insideworld.engine.core.action.executor.profiles.wrapper.WrapperContext;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.tags.ActionsTags;
 import insideworld.engine.core.endpoint.base.action.EndpointProfile;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.security.core.SecurityException;
@@ -62,11 +59,11 @@ public class AuthExecuteWrapper extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final void execute(final WrapperContext context)
+    public final void execute(final ExecuteContext context)
         throws CommonException {
-        final RoleAction casted = this.castAction(context.context());
+        final RoleAction<?, ?> casted = this.castAction(context);
         final User user = this.executeAuth(context);
-        if (user.getAvailableRoles().stream().noneMatch(casted.role(context.context())::contains)) {
+        if (user.getAvailableRoles().stream().noneMatch(casted.role()::contains)) {
             throw new SecurityException("Sorry dude, but you can't execute this action...");
         }
         super.execute(context);
@@ -88,9 +85,9 @@ public class AuthExecuteWrapper extends AbstractExecuteWrapper {
      * @return Cast action.
      * @throws SecurityException Can't cast.
      */
-    private RoleAction castAction(final Context context) throws SecurityException {
+    private RoleAction<?, ?> castAction(final ExecuteContext context) throws SecurityException {
         try {
-            return (RoleAction) context.get(ActionsTags.ACTION);
+            return (RoleAction<?, ?>) context.get(ExecutorTags.ACTION);
         } catch (final ClassCastException exp) {
             throw new SecurityException(
                 "Role engine include to your app. Simple actions is prohibit. Please use RoleAction class"
@@ -98,10 +95,10 @@ public class AuthExecuteWrapper extends AbstractExecuteWrapper {
         }
     }
 
-    private User executeAuth(final WrapperContext context) throws SecurityException {
+    private User executeAuth(final ExecuteContext context) throws SecurityException {
         User user = null;
-        for (final Auth auth : this.auths.get(context.profile().getClass())) {
-            user = auth.auth(context.context());
+        for (final Auth auth : this.auths.get(context.get(ExecutorTags.PROFILE))) {
+            user = auth.auth(context);
             if (user != null) {
                 break;
             }
@@ -109,7 +106,7 @@ public class AuthExecuteWrapper extends AbstractExecuteWrapper {
         if (user == null) {
             throw new SecurityException(
                 "Can't find auth type for profile %s",
-                context.profile().getClass().getName()
+                context.get(ExecutorTags.PROFILE).getName()
             );
         }
         return user;

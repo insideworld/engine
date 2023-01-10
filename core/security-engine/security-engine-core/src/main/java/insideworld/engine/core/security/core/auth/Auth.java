@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.security.core.auth;
 
-import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.endpoint.base.action.EndpointProfile;
 import insideworld.engine.core.security.core.data.User;
 import insideworld.engine.core.security.core.SecurityException;
@@ -36,7 +36,7 @@ public interface Auth {
      * @return User or null of not available.
      * @throws SecurityException Exception if user found but creditions is wrong.
      */
-    User auth(Context context) throws SecurityException;
+    User auth(ExecuteContext context) throws SecurityException;
 
     Class<? extends EndpointProfile> forProfile();
 

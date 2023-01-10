@@ -1,48 +1,48 @@
-/*
- * Copyright (c) 2022 Anton Eliseev
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-package insideworld.engine.core.security.core.action;
-
-import insideworld.engine.core.action.chain.AbstractChainAction;
-import insideworld.engine.core.action.chain.Link;
-import insideworld.engine.core.action.chain.LinkException;
-import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.converter.ExportEntityLink;
-import insideworld.engine.core.security.core.UserTags;
-import java.util.Collection;
-
-public abstract class AbstractLoginAction extends AbstractChainAction implements RoleAction {
-
-    public AbstractLoginAction(final LinksBuilder builder) {
-        super(builder);
-    }
-
-    @Override
-    protected Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
-        return builder
-            .addLink(ExportEntityLink.class, link -> link.setTag(UserTags.USER))
-            .build();
-    }
-
-    @Override
-    public String key() {
-        return "login";
-    }
-
-}
+///*
+// * Copyright (c) 2022 Anton Eliseev
+// *
+// * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+// * associated documentation files (the "Software"), to deal in the Software without restriction,
+// * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+// * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+// * is furnished to do so, subject to the following conditions:
+// *
+// * The above copyright notice and this permission notice shall be included in all copies or
+// * substantial portions of the Software.
+// *
+// * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+// * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// */
+//
+//package insideworld.engine.core.security.core.action;
+//
+//import insideworld.engine.core.action.chain.AbstractChainAction;
+//import insideworld.engine.core.action.chain.Link;
+//import insideworld.engine.core.action.chain.LinkException;
+//import insideworld.engine.core.action.chain.LinksBuilder;
+//import insideworld.engine.core.data.core.converter.ExportEntityLink;
+//import insideworld.engine.core.security.core.UserTags;
+//import java.util.Collection;
+//
+//public abstract class AbstractLoginAction extends AbstractChainAction implements RoleAction {
+//
+//    public AbstractLoginAction(final LinksBuilder builder) {
+//        super(builder);
+//    }
+//
+//    @Override
+//    protected Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
+//        return builder
+//            .addLink(ExportEntityLink.class, link -> link.setTag(UserTags.USER))
+//            .build();
+//    }
+//
+//    @Override
+//    public String key() {
+//        return "login";
+//    }
+//
+//}

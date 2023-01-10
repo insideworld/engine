@@ -21,11 +21,10 @@ package insideworld.engine.core.security.core.action;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.security.core.data.Role;
 import java.util.Collection;
 
-public interface RoleAction extends Action {
+public interface RoleAction<I, O> extends Action<I, O> {
 
     /**
      * Role for current action.
@@ -33,6 +32,6 @@ public interface RoleAction extends Action {
      * @return
      * @throws ActionException
      */
-    Collection<Role> role(Context context) throws ActionException;
+    Collection<Role> role() throws ActionException;
 
 }
