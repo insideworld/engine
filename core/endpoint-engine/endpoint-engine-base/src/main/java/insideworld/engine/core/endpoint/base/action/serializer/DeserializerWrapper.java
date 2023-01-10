@@ -35,11 +35,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 
-@Singleton
+@Dependent
 public class DeserializerWrapper extends AbstractExecuteWrapper implements OnStartUp {
 
     private final List<Serializer> serializers;

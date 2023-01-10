@@ -19,6 +19,7 @@
 
 package insideworld.engine.security.common.stubs.auth;
 
+import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.endpoint.base.action.EndpointProfile;
 import insideworld.engine.core.security.core.SecurityException;
@@ -32,6 +33,11 @@ public class TestAuth implements Auth {
     @Override
     public User auth(final Context context) throws SecurityException {
         return context.get(UserTags.USER);
+    }
+
+    @Override
+    public User auth(final ExecuteContext context) throws SecurityException {
+        return null;
     }
 
     @Override

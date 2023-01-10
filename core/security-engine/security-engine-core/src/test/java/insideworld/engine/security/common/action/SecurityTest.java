@@ -21,6 +21,7 @@ package insideworld.engine.security.common.action;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.action.executor.ActionExecutor;
 import insideworld.engine.core.action.executor.old.ActionExecutor;
 import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.common.exception.CommonException;
@@ -37,12 +38,12 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class SecurityTest {
 
-    private final ActionExecutor<Class<? extends Action>> executor;
+    private final ActionExecutor executor;
     private final UserStorage users;
 
     @Inject
     SecurityTest(
-        final ActionExecutor<Class<? extends Action>> executor,
+        final ActionExecutor executor,
         final UserStorage users
     ) {
         this.executor = executor;
@@ -58,7 +59,6 @@ class SecurityTest {
      */
     @Test
     final void testOne() throws CommonException {
-        final Context context = this.executor.createContext();
         context.put(UserTags.USER, this.users.getByName("one").get());
         MatcherAssert.assertThat(
             "Exception was raised",

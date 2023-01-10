@@ -19,29 +19,40 @@
 
 package insideworld.engine.security.common.action;
 
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.security.common.stubs.Roles;
+import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.security.core.action.RoleAction;
 import insideworld.engine.core.security.core.data.Role;
+import insideworld.engine.security.common.stubs.Roles;
 import java.util.Collection;
 import java.util.Collections;
 import javax.inject.Singleton;
 
 @Singleton
-public class TwoAction implements RoleAction {
-    @Override
-    public void execute(Context context, Output output) {
-        //Nothing to do.
-    }
+public class TwoAction implements RoleAction<Object, Object> {
 
     @Override
-    public String key() {
+    public Object execute(final Object input) throws CommonException {
         return null;
     }
 
     @Override
-    public Collection<Role> role(final Context context) {
+    public String key() {
+        return "insideworld.engine.security.common.action.TwoAction";
+    }
+
+    @Override
+    public Class<?> inputType() {
+        return Object.class;
+    }
+
+    @Override
+    public Class<?> outputType() {
+        return Object.class;
+    }
+
+    @Override
+    public Collection<Role> role() throws ActionException {
         return Collections.singleton(Roles.TWO);
     }
 }

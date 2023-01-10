@@ -19,8 +19,8 @@
 
 package insideworld.engine.security.common.action;
 
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
+import insideworld.engine.core.action.ActionException;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.security.common.stubs.Roles;
 import insideworld.engine.core.security.core.action.RoleAction;
 import insideworld.engine.core.security.core.data.Role;
@@ -29,10 +29,11 @@ import java.util.Collections;
 import javax.inject.Singleton;
 
 @Singleton
-public class SystemAction implements RoleAction {
+public class SystemAction implements RoleAction<Object, Object> {
+
     @Override
-    public void execute(final Context context, final Output output) {
-        //Nothing to do.
+    public Object execute(final Object input) throws CommonException {
+        return null;
     }
 
     @Override
@@ -41,7 +42,18 @@ public class SystemAction implements RoleAction {
     }
 
     @Override
-    public Collection<Role> role(final Context context) {
+    public Class<?> inputType() {
+        return Object.class;
+    }
+
+    @Override
+    public Class<?> outputType() {
+        return Object.class;
+    }
+
+
+    @Override
+    public Collection<Role> role() throws ActionException {
         return Collections.singleton(Roles.SYSTEM);
     }
 }
