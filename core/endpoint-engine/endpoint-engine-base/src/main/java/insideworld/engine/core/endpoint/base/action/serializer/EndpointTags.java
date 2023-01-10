@@ -17,37 +17,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.rest;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
-import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
-import java.util.Collection;
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.core.action.executor.ExecutorTag;
+import java.io.OutputStream;
 
-@Singleton
-public class RestProfile extends AbstractExecuteProfile {
+public class EndpointTags {
 
-    /**
-     * Default constructor.
-     *
-     * @param executors Collection of all executors in the system.
-     */
-    @Inject
-    public RestProfile(final List<ExecuteWrapper> executors) {
-        super(executors);
-    }
+    public static final ExecutorTag<OutputStream> OUTPUT = new ExecutorTag<>(
+        "insideworld.engine.core.endpoint.base.action.serializer.EndpointTags.OUTPUT"
+    );
 
-    @Override
-    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
-        return List.of(
-            DefaultExecuteProfile.class,
-            EndpointProfile.class,
-            this.getClass()
-        );
-    }
 }

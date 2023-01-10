@@ -88,6 +88,16 @@ public class HashStorageKeeper implements StorageKeeper, OnStartUp {
     }
 
     @Override
+    public List<Storage<?>> getAllStorage() {
+        return this.all;
+    }
+
+    @Override
+    public <T extends Entity> Class<? extends T> implementation(final Class<T> type) {
+        return this.factory.implementation(type);
+    }
+
+    @Override
     public final void startUp() throws StorageException {
         for (final Storage<?> storage : this.all) {
             this.storages.put(this.findImplementation(storage), storage);

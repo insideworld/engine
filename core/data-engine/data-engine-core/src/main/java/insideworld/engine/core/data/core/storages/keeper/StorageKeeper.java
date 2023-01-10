@@ -22,6 +22,7 @@ package insideworld.engine.core.data.core.storages.keeper;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
+import java.util.List;
 
 /**
  * Storage keeper.
@@ -38,5 +39,9 @@ public interface StorageKeeper {
      * @throws StorageException Can't find storage for this entity.
      */
     <T extends Entity> Storage<T> getStorage(Class<? extends T> type) throws StorageException;
+
+    List<Storage<?>> getAllStorage();
+
+    <T extends Entity> Class<? extends T> implementation(Class<T> type);
 
 }

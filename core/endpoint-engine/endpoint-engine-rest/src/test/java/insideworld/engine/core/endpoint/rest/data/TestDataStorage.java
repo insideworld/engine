@@ -17,37 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.rest;
+package insideworld.engine.core.endpoint.rest.data;
 
-import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
-import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
+import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.data.core.storages.Storage;
 import java.util.Collection;
-import java.util.List;
-import javax.inject.Inject;
+import java.util.Map;
 import javax.inject.Singleton;
 
 @Singleton
-public class RestProfile extends AbstractExecuteProfile {
-
-    /**
-     * Default constructor.
-     *
-     * @param executors Collection of all executors in the system.
-     */
-    @Inject
-    public RestProfile(final List<ExecuteWrapper> executors) {
-        super(executors);
-    }
+public class TestDataStorage extends AbstractMockStorage<TestEntity> {
 
     @Override
-    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
-        return List.of(
-            DefaultExecuteProfile.class,
-            EndpointProfile.class,
-            this.getClass()
-        );
+    public Class<? extends TestEntity> forEntity() {
+        return TestEntity.class;
     }
 }

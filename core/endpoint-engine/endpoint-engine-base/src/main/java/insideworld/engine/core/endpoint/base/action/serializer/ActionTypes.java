@@ -17,26 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import insideworld.engine.core.action.executor.ExecuteContext;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
-import insideworld.engine.core.common.exception.CommonException;
-import java.util.Collection;
-import javax.enterprise.context.Dependent;
+import com.google.common.collect.Sets;
+import insideworld.engine.core.action.Action;
+import java.util.List;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
+public class ActionTypes implements Types {
 
-public abstract class DeserializerWrapper extends AbstractExecuteWrapper {
+    private final Set<Class<?>> inputs;
 
-    public void execute(final ExecuteContext context) throws CommonException {
-        super.execute(context);
+    private final Set<Class<?>> outputs;
+
+    @Inject
+    public ActionTypes(final List<Action<?,?>> actions) {
+        this.inputs = Sets.newHashSetWithExpectedSize(actions.size());
+        this.outputs = Sets.newHashSetWithExpectedSize(actions.size());
+        for (final Action<?, ?> action : actions) {
+            this.inputs.add(action.inputType());
+            this.outputs.add(action.outputType());
+        }
     }
 
     @Override
-    public long wrapperOrder() {
-        return 900_000;
+    public Set<Class<?>> getInputs() {
+        return this.inputs;
     }
 
-
+    @Override
+    public Set<Class<?>> getOutputs() {
+        return this.outputs;
+    }
 }

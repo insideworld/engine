@@ -17,16 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import insideworld.engine.core.action.Action;
-import java.io.InputStream;
+import java.util.Set;
 
-public interface Serializer {
+public interface Types {
 
-    <T> InputStream serialize(T value);
+    Set<Class<?>> getInputs();
 
-    <T> T deserialize(InputStream stream);
+    Set<Class<?>> getOutputs();
 
-    boolean applicable(Action<?,?> applicable);
 }

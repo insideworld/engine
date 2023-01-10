@@ -17,27 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import insideworld.engine.core.action.executor.ExecuteContext;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
-import insideworld.engine.core.common.exception.CommonException;
-import java.util.Collection;
-import javax.enterprise.context.Dependent;
+import insideworld.engine.core.action.Action;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
+public interface Serializer {
 
-public abstract class SerializerWrapper extends AbstractExecuteWrapper {
+    <T> void serialize(T value, Class<?> type, OutputStream stream);
 
+    <T> T deserialize(InputStream stream, Class<?> type);
 
+    boolean applicable(Class<?> type);
 
-    public void execute(final ExecuteContext context) throws CommonException {
-        super.execute(context);
-    }
-
-    @Override
-    public long wrapperOrder() {
-        return -900_000;
-    }
-
+    long order();
 }

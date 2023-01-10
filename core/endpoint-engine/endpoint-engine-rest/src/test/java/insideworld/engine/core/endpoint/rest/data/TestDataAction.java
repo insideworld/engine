@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 public class TestDataAction implements Action<TestEntity, Object> {
     @Override
     public Object execute(final TestEntity input) throws CommonException {
-        return null;
+        return new Object();
     }
 
     @Override
