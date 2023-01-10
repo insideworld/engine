@@ -27,13 +27,14 @@ import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWr
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.startup.OnStartUp;
 import insideworld.engine.core.endpoint.base.action.EndpointProfile;
+import insideworld.engine.core.endpoint.base.serializer.EndpointTags;
+import insideworld.engine.core.endpoint.base.serializer.Serializer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

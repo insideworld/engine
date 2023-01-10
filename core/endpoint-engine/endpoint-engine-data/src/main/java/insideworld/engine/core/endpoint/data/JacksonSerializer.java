@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action.serializer.jackson;
+package insideworld.engine.core.endpoint.data;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -28,13 +28,13 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import insideworld.engine.core.data.core.Entity;
 import java.io.IOException;
 
-public class EntitySerializer<T extends Entity>
+public class JacksonSerializer<T extends Entity>
     extends StdSerializer<T>
     implements ResolvableSerializer {
 
     private final JsonSerializer<T> def;
 
-    public EntitySerializer(final JsonSerializer<?> def, final Class<T> clazz) {
+    public JacksonSerializer(final JsonSerializer<?> def, final Class<T> clazz) {
         super(clazz);
         this.def = (JsonSerializer<T>) def;
     }

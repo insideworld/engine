@@ -20,24 +20,18 @@
 package insideworld.engine.core.endpoint.rest;
 
 import insideworld.engine.core.action.executor.ActionExecutor;
-import insideworld.engine.core.action.executor.ExecutorTag;
 import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.key.StringKey;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.endpoint.base.action.serializer.EndpointTags;
+import insideworld.engine.core.endpoint.base.serializer.EndpointTags;
 import insideworld.engine.core.endpoint.rest.tags.RestTags;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.StreamingOutput;
 

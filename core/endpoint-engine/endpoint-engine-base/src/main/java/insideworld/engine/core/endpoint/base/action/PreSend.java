@@ -17,15 +17,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action.serializer;
+package insideworld.engine.core.endpoint.base.action;
 
-import insideworld.engine.core.action.executor.ExecutorTag;
-import java.io.OutputStream;
+/**
+ * This interface using to call some code before message will send.
+ * @param <T> Parameter type.
+ */
+public interface PreSend<T> {
 
-public class EndpointTags {
-
-    public static final ExecutorTag<OutputStream> OUTPUT = new ExecutorTag<>(
-        "insideworld.engine.core.endpoint.base.action.serializer.EndpointTags.OUTPUT"
-    );
+    /**
+     * Execute some code before send.
+     * @param parameter Parameter.
+     */
+    void execute(T parameter);
 
 }

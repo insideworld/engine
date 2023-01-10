@@ -22,27 +22,38 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>core</artifactId>
+    <artifactId>endpoint-engine</artifactId>
     <groupId>insideworld.engine</groupId>
     <version>2.0.0-dev</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>endpoint-engine</artifactId>
-
-  <packaging>pom</packaging>
-
-  <modules>
-    <module>endpoint-engine-amqp</module>
-    <module>endpoint-engine-base</module>
-    <module>endpoint-engine-rest</module>
-    <module>endpoint-engine-data</module>
-  </modules>
+  <artifactId>endpoint-engine-data</artifactId>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>data-engine-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>endpoint-engine-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+  </dependencies>
 
 </project>

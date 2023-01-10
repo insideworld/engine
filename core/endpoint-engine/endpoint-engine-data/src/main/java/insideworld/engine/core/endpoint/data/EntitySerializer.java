@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action.serializer.jackson;
+package insideworld.engine.core.endpoint.data;
 
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
@@ -37,9 +37,8 @@ import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-import insideworld.engine.core.endpoint.base.action.serializer.Types;
-import insideworld.engine.core.endpoint.base.action.serializer.Serializer;
-import java.io.ByteArrayOutputStream;
+import insideworld.engine.core.endpoint.base.serializer.Types;
+import insideworld.engine.core.endpoint.base.serializer.Serializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,7 +47,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EntityJacksonSerializer implements Serializer, OnStartUp {
+public class EntitySerializer implements Serializer, OnStartUp {
 
     private final StorageKeeper keeper;
 
@@ -60,7 +59,7 @@ public class EntityJacksonSerializer implements Serializer, OnStartUp {
     private final Types types;
 
     @Inject
-    public EntityJacksonSerializer(
+    public EntitySerializer(
         final StorageKeeper keeper,
         final Types types
     ) {
@@ -134,7 +133,7 @@ public class EntityJacksonSerializer implements Serializer, OnStartUp {
                     final Class<? extends Entity> type =
                         (Class<? extends Entity>) description.getBeanClass();
                     try {
-                        result = new EntityDeserializer<>(
+                        result = new JacksonDeserializer<>(
                             deserializer,
                             type,
                             keeper.getStorage(type)
@@ -160,7 +159,7 @@ public class EntityJacksonSerializer implements Serializer, OnStartUp {
             ) {
                 final JsonSerializer<?> result;
                 if (applicable(description.getBeanClass())) {
-                    result = new EntitySerializer<>(
+                    result = new JacksonSerializer<>(
                         serializer,
                         (Class<? extends Entity>) description.getBeanClass()
                     );

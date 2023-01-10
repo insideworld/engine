@@ -17,21 +17,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action.serializer;
+package insideworld.engine.core.endpoint.base.action;
 
-import insideworld.engine.core.action.Action;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import insideworld.engine.core.common.threads.Task;
 
-public interface Serializer {
+/**
+ * Action receiver interface.
+ * Using to integrate different endpoints to action engine.
+ * @param <T> Type of incoming message.
+ */
+public interface ActionReceiver<T> {
 
-    <T> void serialize(T value, Class<?> type, OutputStream stream);
-
-    <T> T deserialize(InputStream stream, Class<?> type);
-
-    boolean applicable(Class<?> type);
-
-    long order();
+    /**
+     * Execute action.
+     * @param action Action key.
+     * @param parameter Incoming message.
+     * @return Async result with output.
+     */
+    Task<?> execute(final String action, final T message);
 }

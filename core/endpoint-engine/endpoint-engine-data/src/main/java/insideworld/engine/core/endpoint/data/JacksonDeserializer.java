@@ -17,10 +17,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action.serializer.jackson;
+package insideworld.engine.core.endpoint.data;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -32,16 +31,17 @@ import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import java.io.IOException;
 
-public class EntityDeserializer<T extends Entity>
+public class JacksonDeserializer<T extends Entity>
     extends StdDeserializer<T>
     implements ResolvableDeserializer {
 
     private final JsonDeserializer<?> def;
     private final Storage<T> storage;
 
-    public EntityDeserializer(final JsonDeserializer<?> def,
-                              final Class<?> clazz,
-                              final Storage<T> storage
+    public JacksonDeserializer(
+        final JsonDeserializer<?> def,
+        final Class<?> clazz,
+        final Storage<T> storage
     ) {
         super(clazz);
         this.def = def;
