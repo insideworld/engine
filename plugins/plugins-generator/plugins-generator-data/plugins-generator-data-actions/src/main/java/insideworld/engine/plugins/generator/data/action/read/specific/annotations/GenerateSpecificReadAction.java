@@ -19,7 +19,6 @@
 
 package insideworld.engine.plugins.generator.data.action.read.specific.annotations;
 
-import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.storages.Storage;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

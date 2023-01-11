@@ -21,10 +21,10 @@ package insideworld.engine.plugins.generator.data.action.write.search;
 
 import insideworld.engine.plugins.generator.base.AbstractSearchMixin;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfoImpl;
 import insideworld.engine.plugins.generator.data.action.write.annotations.GenerateWriteAction;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
 
 public class SearchWriteMixin
     extends AbstractSearchMixin<ActionInfo, GenerateWriteAction>

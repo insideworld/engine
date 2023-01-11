@@ -22,11 +22,11 @@ package insideworld.engine.plugins.generator.data.action.write;
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.chain.LinksBuilder;
 import insideworld.engine.core.data.core.action.WriteAction;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.write.search.SearchWriteAction;
 import insideworld.engine.plugins.generator.data.action.write.search.SearchWriteMixin;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
@@ -55,23 +55,6 @@ public class WriteActionGenerator extends AbstractActionGenerator {
         return searchers.stream().map(SearchWriteAction::search)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
-    }
-
-    @Override
-    protected final Collection<BiConsumer<ClassCreator, ActionInfo>> methodPredicates() {
-        return ImmutableList.<BiConsumer<ClassCreator, ActionInfo>>builder()
-            .addAll(super.methodPredicates())
-            .add(this::createAfterMethods)
-            .build();
-    }
-
-    private void createAfterMethods(final ClassCreator creator, final ActionInfo info) {
-        creator
-            .getMethodCreator("afterImport", void.class, LinksBuilder.class)
-            .returnValue(null);
-        creator
-            .getMethodCreator("afterExport", void.class, LinksBuilder.class)
-            .returnValue(null);
     }
 
 }

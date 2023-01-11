@@ -19,12 +19,13 @@
 
 package insideworld.engine.core.security.token.rest;
 
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
-import insideworld.engine.core.security.token.base.AbstractTokenAuth;
-import insideworld.engine.core.security.token.base.TokenStorage;
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.endpoint.rest.RestProfile;
 import insideworld.engine.core.endpoint.rest.tags.RestTags;
+import insideworld.engine.core.security.core.SecurityException;
+import insideworld.engine.core.security.token.base.AbstractTokenAuth;
+import insideworld.engine.core.security.token.base.TokenStorage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.HttpHeaders;
@@ -38,7 +39,7 @@ public class RestReceiveAuth extends AbstractTokenAuth {
     }
 
     @Override
-    protected String getToken(final Context parameter) {
+    protected String getToken(final ExecuteContext parameter) throws SecurityException {
         final HttpHeaders headers = parameter.get(RestTags.HTTP_HEADERS);
         if (headers == null) {
             throw new SecurityException("HTTP header is absent in context");
@@ -48,7 +49,7 @@ public class RestReceiveAuth extends AbstractTokenAuth {
     }
 
     @Override
-    public Class<? extends EndpointProfile> forProfile() {
+    public Class<? extends ExecuteProfile> forProfile() {
         return RestProfile.class;
     }
 }

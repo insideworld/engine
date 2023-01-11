@@ -21,7 +21,6 @@ package insideworld.engine.plugins.generator.data.action.read.specific.info;
 
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.storages.Storage;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 
 public interface SpecificReadInfo {
 

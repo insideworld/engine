@@ -21,14 +21,13 @@ package insideworld.engine.example.quarkus.common.roles;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.keeper.context.Context;
 import insideworld.engine.core.security.core.action.RoleAction;
 import insideworld.engine.core.security.core.data.Role;
 import java.util.Collection;
 
-public interface MemberRole extends RoleAction {
+public interface MemberRole<I, O> extends RoleAction<I, O> {
 
-    default Collection<Role> role(final Context context) throws ActionException {
+    default Collection<Role> role() throws ActionException {
         return ImmutableList.of(Roles.SYSTEM);
     };
 

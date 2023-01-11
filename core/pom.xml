@@ -33,7 +33,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>action-engine-old</module>
+<!--    <module>action-engine-old</module>-->
     <module>common-engine</module>
     <module>data-engine</module>
     <module>endpoint-engine</module>

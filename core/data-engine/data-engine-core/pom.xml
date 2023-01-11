@@ -51,6 +51,7 @@
       <artifactId>jackson-annotations</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+
     <!--  Tests  -->
     <dependency>
       <groupId>insideworld.engine</groupId>
@@ -59,6 +60,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>

@@ -21,15 +21,12 @@ package insideworld.engine.plugins.generator.data.action.abstracts;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.tags.EntitiesTag;
-import insideworld.engine.core.data.core.tags.EntityTag;
+import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
-import insideworld.engine.plugins.generator.data.action.abstracts.info.Consts;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
-import io.quarkus.gizmo.ResultHandle;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 import javax.inject.Inject;
@@ -58,18 +55,8 @@ public abstract class AbstractActionGenerator {
         }
         final ClassCreator creator = builder.build();
         creator.addAnnotation(Singleton.class);
-        this.methodPredicates().forEach(method -> method.accept(creator, info));
+        this.createConstructor(creator, info);
         creator.close();
-    }
-
-    protected Collection<BiConsumer<ClassCreator, ActionInfo>> methodPredicates() {
-        return ImmutableList.of(
-            this::createConstructor,
-            this::createTag,
-            this::createTags,
-            this::createKey,
-            this::createType
-        );
     }
 
     protected abstract Class<?> extended();
@@ -77,47 +64,31 @@ public abstract class AbstractActionGenerator {
     protected abstract Collection<ActionInfo> infos();
 
     private void createConstructor(final ClassCreator creator, final ActionInfo info) {
-        final MethodCreator constructor =
-            creator.getMethodCreator("<init>", void.class, LinksBuilder.class);
+        final MethodCreator constructor = creator.getMethodCreator(
+            "<init>",
+            void.class,
+            Storage.class
+        );
         constructor.addAnnotation(Inject.class);
         constructor.invokeSpecialMethod(
-            MethodDescriptor.ofMethod(this.extended(),
+            MethodDescriptor.ofMethod(
+                this.extended(),
                 "<init>",
                 void.class,
-                LinksBuilder.class
+                String.class,
+                Storage.class
             ),
             constructor.getThis(),
+            constructor.load(info.key()),
             constructor.getMethodParam(0)
         );
+        constructor.setSignature(
+            String.format(
+                "(Linsideworld/engine/core/data/core/storages/Storage<L%s;>;)V",
+                info.entity().getName().replace(".", "/")
+            )
+        );
         constructor.returnValue(null);
-    }
-
-    private void createTag(final ClassCreator creator, final ActionInfo info) {
-        final MethodCreator method = creator.getMethodCreator("getTag", EntityTag.class);
-        final ResultHandle result = method.newInstance(
-            MethodDescriptor.ofConstructor(EntityTag.class, String.class),
-            method.load(Consts.TAG)
-        );
-        method.returnValue(result);
-    }
-
-    private void createTags(final ClassCreator creator, final ActionInfo info) {
-        final MethodCreator method = creator.getMethodCreator("getTags", EntitiesTag.class);
-        final ResultHandle result = method.newInstance(
-            MethodDescriptor.ofConstructor(EntitiesTag.class, String.class),
-            method.load(Consts.TAGS)
-        );
-        method.returnValue(result);
-    }
-
-    private void createKey(final ClassCreator creator, final ActionInfo info) {
-        final MethodCreator method = creator.getMethodCreator("key", String.class);
-        method.returnValue(method.load(info.key()));
-    }
-
-    private void createType(final ClassCreator creator, final ActionInfo info) {
-        final MethodCreator method = creator.getMethodCreator("getType", Class.class);
-        method.returnValue(method.loadClass(info.entity()));
     }
 
     private String prepareSignature(final String entity) {
@@ -126,5 +97,4 @@ public abstract class AbstractActionGenerator {
             entity.replace(".", "/")
         );
     }
-
 }

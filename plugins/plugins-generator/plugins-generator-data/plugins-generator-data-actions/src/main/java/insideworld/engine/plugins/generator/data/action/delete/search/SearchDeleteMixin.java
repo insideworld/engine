@@ -21,10 +21,10 @@ package insideworld.engine.plugins.generator.data.action.delete.search;
 
 import insideworld.engine.plugins.generator.base.AbstractSearchMixin;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfoImpl;
 import insideworld.engine.plugins.generator.data.action.delete.annotations.GenerateDeleteAction;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
 
 public class SearchDeleteMixin
     extends AbstractSearchMixin<ActionInfo, GenerateDeleteAction>

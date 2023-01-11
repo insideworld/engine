@@ -1,5 +1,5 @@
 #!/bin/sh
-POST_TAG=dev
+POST_TAG=2.0.0
 
 docker buildx build \
 -t insideworld.asuscomm.com/engine/backend/$POST_TAG:build \

@@ -19,20 +19,21 @@
 
 package insideworld.engine.core.data.jpa.transaction;
 
-import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.executor.old.ActionExecutor;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.data.jpa.entities.SomeEntity;
-import insideworld.engine.core.data.jpa.entities.TestTags;
-import insideworld.engine.core.data.core.StorageException;
-import insideworld.engine.core.data.core.action.StorageActionsTags;
-import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.key.ClassKey;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.common.matchers.exception.ExceptionMatchers;
+import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.data.core.action.TransactionTags;
+import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.data.jpa.entities.SomeEntity;
 import insideworld.engine.frameworks.quarkus.test.database.DatabaseResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
+import java.util.function.Consumer;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import org.hamcrest.MatcherAssert;
@@ -50,7 +51,7 @@ class TestTx {
     /**
      * Class action executor.
      */
-    private final ActionExecutor<Class<? extends Action>> executor;
+    private final ActionExecutor executor;
 
     /**
      * Storage for test entities.
@@ -71,7 +72,7 @@ class TestTx {
      */
     @Inject
     TestTx(
-        final ActionExecutor<Class<? extends Action>> executor,
+        final ActionExecutor executor,
         final Storage<SomeEntity> storage,
         final ObjectFactory factory
     ) {
@@ -91,9 +92,9 @@ class TestTx {
      */
     @Test
     final void testExistTx() throws StorageException {
-        final Context context = this.executor.createContext();
-        context.put(StorageActionsTags.USE_EXIST_TX, true);
-        final SomeEntity entity = this.execute(context);
+        final SomeEntity entity = this.execute(
+            context -> context.put(TransactionTags.USE_SAME_TX, true)
+        );
         assert entity.getValue().equals(String.valueOf(entity.getId()));
     }
 
@@ -108,8 +109,7 @@ class TestTx {
      */
     @Test
     final void testNewTx() throws StorageException {
-        final Context context = this.executor.createContext();
-        final SomeEntity entity = this.execute(context);
+        final SomeEntity entity = this.execute(null);
         assert !entity.getValue().equals(String.valueOf(entity.getId()));
     }
 
@@ -120,8 +120,11 @@ class TestTx {
      * @throws ActionException Shouldn't raise.
      */
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    final void executeNewTx(final Context context) throws ActionException {
-        this.executor.execute(TestActionTX.class, context);
+    final void executeNewTx(
+        final SomeEntity entity,
+        final Consumer<ExecuteContext> context
+    ) throws CommonException {
+        this.executor.execute(new ClassKey<>(TestActionTX.class), entity, context);
         throw new CustomException();
     }
 
@@ -146,12 +149,11 @@ class TestTx {
      * @return Repeated read entity.
      * @throws StorageException Some storage exception.
      */
-    private SomeEntity execute(final Context context) throws StorageException {
+    private SomeEntity execute(final Consumer<ExecuteContext> context) throws StorageException {
         final SomeEntity entity = this.createEntity();
-        context.put(TestTags.SOME_ENTITY, entity);
         MatcherAssert.assertThat(
-            "Exception excpected.",
-            () -> this.executeNewTx(context),
+            "Exception expected.",
+            () -> this.executeNewTx(entity, context),
             ExceptionMatchers.catchException(CustomException.class)
         );
         return this.storage.read(entity.getId());

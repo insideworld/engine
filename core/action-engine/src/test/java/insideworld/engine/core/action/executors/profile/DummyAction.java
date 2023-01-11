@@ -21,7 +21,6 @@ package insideworld.engine.core.action.executors.profile;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
-import java.util.Collection;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

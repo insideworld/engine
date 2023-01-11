@@ -19,33 +19,35 @@
 
 package insideworld.engine.core.data.jpa.transaction.chain.execute;
 
-import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.chain.AbstractChainAction;
 import insideworld.engine.core.action.chain.Link;
 import insideworld.engine.core.action.chain.LinkException;
 import insideworld.engine.core.action.chain.LinksBuilder;
 import insideworld.engine.core.action.chain.execute.ExecuteActionLink;
-import insideworld.engine.core.data.jpa.entities.SomeEntity;
-import insideworld.engine.core.data.jpa.entities.TestTags;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.data.core.action.links.ReadEntityLink;
-import insideworld.engine.core.data.core.tags.StorageTags;
+import insideworld.engine.core.data.jpa.entities.SomeEntity;
 import java.util.Collection;
 import javax.enterprise.util.TypeLiteral;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * Execute child action in new TX.
+ *
  * @since 0.14.0
  */
 @Singleton
-class ParentNewTxAction extends AbstractChainAction {
+class ParentNewTxAction extends AbstractChainAction<Long, SomeEntity, AuxImpl> {
+
 
     /**
      * Default constructor.
      *
      * @param builder Links builder instance.
      */
-    ParentNewTxAction(final LinksBuilder builder) {
+    @Inject
+    public ParentNewTxAction(final LinksBuilder<AuxImpl> builder) {
         super(builder);
     }
 
@@ -55,17 +57,43 @@ class ParentNewTxAction extends AbstractChainAction {
     }
 
     @Override
-    protected final Collection<Link> attachLinks(final LinksBuilder builder) throws LinkException {
+    public Class<? extends Long> inputType() {
+        return Long.class;
+    }
+
+    @Override
+    public Class<? extends SomeEntity> outputType() {
+        return SomeEntity.class;
+    }
+
+    @Override
+    protected Collection<Link<? super AuxImpl>> attachLinks(final LinksBuilder<AuxImpl> builder)
+        throws LinkException {
         return builder
             .addLink(
-                new TypeLiteral<ReadEntityLink<SomeEntity>>() { },
-                link -> link.setTag(StorageTags.ID, TestTags.SOME_ENTITY).setType(SomeEntity.class)
-            )
-            .addLink(
-                new TypeLiteral<ExecuteActionLink<Class<? extends Action>>>() { },
-                link -> link.setKey(ChildAction.class)
+                new TypeLiteral<ReadEntityLink<SomeEntity, AuxImpl>>() { },
+                link -> link.setType(SomeEntity.class).setSingle(
+                    AuxImpl::getId,
+                    (entity, aux) -> aux.setEntity(entity)
+                )
+            ).addLink(
+                new TypeLiteral<ExecuteActionLink<SomeEntity, SomeEntity, AuxImpl>>() { },
+                link -> link
+                    .setAction(new ClassKey<>(ChildAction.class))
+                    .setInput((aux, factory) -> aux.getEntity())
+                    .setOutput(AuxImpl::setEntity)
             )
             .addLink(ExceptionLink.class)
             .build();
+    }
+
+    @Override
+    protected AuxImpl aux(final Long input) {
+        return new AuxImpl(input);
+    }
+
+    @Override
+    protected SomeEntity output(final AuxImpl aux) {
+        return aux.getEntity();
     }
 }

@@ -21,11 +21,11 @@ package insideworld.engine.plugins.generator.data.action.delete;
 
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.data.core.action.DeleteAction;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteAction;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteMixin;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
 import java.util.stream.Collectors;

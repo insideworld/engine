@@ -19,15 +19,14 @@
 
 package insideworld.engine.core.data.jpa.transaction.chain.execute;
 
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.ActionException;
-import insideworld.engine.core.action.executor.old.ActionExecutor;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.data.jpa.entities.SomeEntity;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
+import insideworld.engine.core.action.executor.key.Key;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
-import insideworld.engine.core.data.core.tags.StorageTags;
-import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.data.jpa.entities.SomeEntity;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -44,7 +43,7 @@ class TestTx {
     /**
      * Class action executor.
      */
-    private final ActionExecutor<Class<? extends Action>> executor;
+    private final ActionExecutor executor;
 
     /**
      * Storage for test entities.
@@ -65,7 +64,7 @@ class TestTx {
      */
     @Inject
     TestTx(
-        final ActionExecutor<Class<? extends Action>> executor,
+        final ActionExecutor executor,
         final Storage<SomeEntity> storage,
         final ObjectFactory factory
     ) {
@@ -88,7 +87,7 @@ class TestTx {
     @Transactional
     final void testSameTransaction() throws StorageException {
         final SomeEntity entity = this.createEntity();
-        assert this.execute(ParentSameTxAction.class, entity);
+        assert this.execute(new ClassKey<>(ParentSameTxAction.class), entity);
         final SomeEntity read = this.storage.read(entity.getId());
         assert read.getValue().equals(String.valueOf(entity.getId()));
     }
@@ -107,7 +106,7 @@ class TestTx {
     @Transactional
     final void testNewTransaction() throws StorageException {
         final SomeEntity entity = this.createEntity();
-        assert this.execute(ParentNewTxAction.class, entity);
+        assert this.execute(new ClassKey<>(ParentNewTxAction.class), entity);
         final SomeEntity read = this.storage.read(entity.getId());
         assert !read.getValue().equals(String.valueOf(entity.getId()));
     }
@@ -133,13 +132,11 @@ class TestTx {
      * @param entity Test entity.
      * @return Was exception or not.
      */
-    private boolean execute(final Class<? extends Action> action, final SomeEntity entity) {
-        final Context context = this.executor.createContext();
-        context.put(StorageTags.ID, entity.getId());
+    private boolean execute(final Key<Long, SomeEntity> action, final SomeEntity entity) {
         boolean exception = false;
         try {
-            this.executor.execute(action, context);
-        } catch (final ActionException exp) {
+            this.executor.execute(action, entity.getId());
+        } catch (final CommonException exp) {
             exception = true;
         }
         return exception;

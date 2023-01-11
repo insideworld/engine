@@ -23,7 +23,7 @@ import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
+import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.startup.OnStartUp;
 import insideworld.engine.core.endpoint.base.action.EndpointProfile;
@@ -35,13 +35,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 
-@Dependent
-public class DeserializerWrapper extends AbstractExecuteWrapper implements OnStartUp {
+@Singleton
+public class DeserializerWrapper implements ExecuteWrapper, OnStartUp {
 
     private final List<Serializer> serializers;
 
@@ -58,7 +59,9 @@ public class DeserializerWrapper extends AbstractExecuteWrapper implements OnSta
         this.actions = actions;
     }
 
-    public void execute(final ExecuteContext context) throws CommonException {
+    @Override
+    public void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
+        throws CommonException {
         final Action<?, ?> action = context.get(ExecutorTags.ACTION);
         final Serializer serializer = this.map.get(action.getClass());
         context.put(
@@ -69,7 +72,7 @@ public class DeserializerWrapper extends AbstractExecuteWrapper implements OnSta
             ),
             true
         );
-        super.execute(context);
+        this.next(context, wrappers);
     }
 
     @Override

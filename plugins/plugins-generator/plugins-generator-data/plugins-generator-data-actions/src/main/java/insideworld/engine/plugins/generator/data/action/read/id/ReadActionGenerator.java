@@ -22,11 +22,11 @@ package insideworld.engine.plugins.generator.data.action.read.id;
 import com.google.common.collect.ImmutableList;
 import insideworld.engine.core.action.chain.LinksBuilder;
 import insideworld.engine.core.data.core.action.ReadAction;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.read.id.search.SearchReadAction;
 import insideworld.engine.plugins.generator.data.action.read.id.search.SearchReadActionMixin;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import java.util.Collection;
@@ -56,20 +56,6 @@ public class ReadActionGenerator extends AbstractActionGenerator {
         return searchers.stream().map(SearchReadAction::search)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
-    }
-
-    @Override
-    protected final Collection<BiConsumer<ClassCreator, ActionInfo>> methodPredicates() {
-        return ImmutableList.<BiConsumer<ClassCreator, ActionInfo>>builder()
-            .addAll(super.methodPredicates())
-            .add(this::createAfterExport)
-            .build();
-    }
-
-    private void createAfterExport(final ClassCreator creator, final ActionInfo info) {
-        creator
-            .getMethodCreator("afterExport", void.class, LinksBuilder.class)
-            .returnValue(null);
     }
 
 }

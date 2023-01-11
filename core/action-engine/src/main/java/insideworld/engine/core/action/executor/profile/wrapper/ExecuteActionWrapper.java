@@ -27,6 +27,8 @@ import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.keeper.context.Context;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.Stack;
 import javax.enterprise.context.Dependent;
 
 /**
@@ -35,16 +37,16 @@ import javax.enterprise.context.Dependent;
  * @since 0.14.0
  */
 @Dependent
-public class ExecuteActionWrapper extends AbstractExecuteWrapper {
+public class ExecuteActionWrapper implements ExecuteWrapper {
 
     @Override
-    public final void execute(final ExecuteContext context)
+    public final void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
         throws CommonException {
         final Object output = context
             .get(ExecutorTags.ACTION)
             .execute(context.get(ExecutorTags.INPUT.getTag()));
         context.put(ExecutorTags.OUTPUT, output);
-        super.execute(context);
+        this.next(context, wrappers);
     }
 
     @Override

@@ -23,8 +23,7 @@ package insideworld.engine.core.security.core.auth;
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
+import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.security.core.SecurityException;
 import insideworld.engine.core.security.core.action.RoleAction;
@@ -32,22 +31,23 @@ import insideworld.engine.core.security.core.data.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.stream.Collectors;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Role execution wrapper.
  * Check that in context exists user, and it's role is available.
  * @since 0.7.0
  */
-@Dependent
-public class AuthExecuteWrapper extends AbstractExecuteWrapper {
+@Singleton
+public class AuthExecuteWrapper implements ExecuteWrapper {
 
     /**
      * Map with auths grouped by profiles.
      */
-    private final Map<Class<? extends EndpointProfile>, List<Auth>> auths;
+    private final Map<Class<? extends ExecuteProfile>, List<Auth>> auths;
 
     /**
      * Constructor.
@@ -59,14 +59,14 @@ public class AuthExecuteWrapper extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final void execute(final ExecuteContext context)
+    public final void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
         throws CommonException {
         final RoleAction<?, ?> casted = this.castAction(context);
         final User user = this.executeAuth(context);
         if (user.getAvailableRoles().stream().noneMatch(casted.role()::contains)) {
             throw new SecurityException("Sorry dude, but you can't execute this action...");
         }
-        super.execute(context);
+        this.next(context, wrappers);
     }
 
     @Override

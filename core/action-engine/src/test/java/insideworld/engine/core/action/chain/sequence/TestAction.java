@@ -23,7 +23,6 @@ import insideworld.engine.core.action.chain.AbstractChainAction;
 import insideworld.engine.core.action.chain.Link;
 import insideworld.engine.core.action.chain.LinkException;
 import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.common.injection.ObjectFactory;
 import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;

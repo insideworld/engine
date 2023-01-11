@@ -74,6 +74,11 @@
       <artifactId>endpoint-engine-rest</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>endpoint-engine-data</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!--  Security engine  -->
     <dependency>
@@ -118,15 +123,15 @@
 
     <!--  Quarkus  -->
     <!--  For imperative rest  -->
-<!--    <dependency>-->
-<!--      <groupId>io.quarkus</groupId>-->
-<!--      <artifactId>quarkus-resteasy-jackson</artifactId>-->
-<!--    </dependency>-->
-    <!--  For reactive -->
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
     </dependency>
+    <!--  For reactive -->
+<!--    <dependency>-->
+<!--      <groupId>io.quarkus</groupId>-->
+<!--      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>-->
+<!--    </dependency>-->
 
     <!--  Other dependencies  -->
     <dependency>

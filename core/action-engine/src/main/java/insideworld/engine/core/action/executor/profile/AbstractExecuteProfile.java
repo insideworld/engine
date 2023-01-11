@@ -19,6 +19,7 @@
 
 package insideworld.engine.core.action.executor.profile;
 
+import com.google.common.collect.Queues;
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
@@ -30,6 +31,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -42,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * Using to collect several profiles in one and activate it on startup.
  * @since 0.14.0
  */
-public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartUp {
+public abstract class AbstractExecuteProfile implements ExecuteProfile {
 
     /**
      * Logger.
@@ -54,10 +57,6 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
      */
     private final List<ExecuteWrapper> wrappers;
 
-    /**
-     * First wrapper in the chain.
-     */
-    private ExecuteWrapper first;
 
     /**
      * Default constructor.
@@ -69,29 +68,13 @@ public abstract class AbstractExecuteProfile implements ExecuteProfile, OnStartU
             .filter(executor -> !Collections.disjoint(executor.forProfile(), this.profiles()))
             .sorted(Comparator.comparingLong(ExecuteWrapper::wrapperOrder).reversed())
             .toList();
+        this.logOrder();
     }
 
     @Override
     public final void execute(final ExecuteContext context) throws CommonException {
-        this.first.execute(context);
-    }
-
-    @Override
-    public final void startUp() {
-        this.logOrder();
-        final Iterator<ExecuteWrapper> iterator = this.wrappers.iterator();
-        ExecuteWrapper last = iterator.next();
-        this.first = last;
-        while (iterator.hasNext()) {
-            final ExecuteWrapper next = iterator.next();
-            last.setNext(next);
-            last = next;
-        }
-    }
-
-    @Override
-    public final long startOrder() {
-        return 600_000;
+        final Queue<ExecuteWrapper> stack = Queues.newArrayDeque(this.wrappers);
+        stack.poll().execute(context, stack);
     }
 
     /**

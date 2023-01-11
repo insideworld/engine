@@ -22,12 +22,15 @@ package insideworld.engine.core.action.executors.profile;
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
+import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
 import insideworld.engine.core.common.exception.CommonException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.Stack;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +39,8 @@ import org.slf4j.LoggerFactory;
  * Just add 3 to the Sequence list.
  * @since 0.14.0
  */
-@Dependent
-class WrapperThree extends AbstractExecuteWrapper {
+@Singleton
+class WrapperThree implements ExecuteWrapper {
 
     /**
      * Logger.
@@ -51,11 +54,11 @@ class WrapperThree extends AbstractExecuteWrapper {
     }
 
     @Override
-    public final void execute(final ExecuteContext context)
+    public final void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
         throws CommonException {
         WrapperThree.LOGGER.debug("Wrapper 3");
         this.test.integers.add(3);
-        super.execute(context);
+        this.next(context, wrappers);
     }
 
     @Override

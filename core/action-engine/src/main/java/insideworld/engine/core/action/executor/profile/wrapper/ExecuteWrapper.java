@@ -24,6 +24,8 @@ import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.keeper.context.Context;
 import java.util.Collection;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.function.Supplier;
 
 /**
@@ -43,7 +45,7 @@ public interface ExecuteWrapper {
      * @param action Supplier with action.
      * @throws CommonException Some exception.
      */
-    void execute(ExecuteContext context) throws CommonException;
+    void execute(ExecuteContext context, Queue<ExecuteWrapper> wrappers) throws CommonException;
 
     /**
      * Order of execute profile.
@@ -60,9 +62,11 @@ public interface ExecuteWrapper {
      */
     Collection<Class<? extends ExecuteProfile>> forProfile();
 
-    /**
-     * Set next wrapper.
-     * @param wrapper Next wrapper.
-     */
-    void setNext(ExecuteWrapper wrapper);
+    default void next(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
+        throws CommonException {
+        if (!wrappers.isEmpty()) {
+            wrappers.poll().execute(context, wrappers);
+        }
+    }
+
 }

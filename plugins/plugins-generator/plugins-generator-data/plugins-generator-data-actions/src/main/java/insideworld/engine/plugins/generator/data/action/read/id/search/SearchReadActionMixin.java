@@ -21,10 +21,10 @@ package insideworld.engine.plugins.generator.data.action.read.id.search;
 
 import insideworld.engine.plugins.generator.base.AbstractSearchMixin;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
+import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfoImpl;
 import insideworld.engine.plugins.generator.data.action.read.id.annotations.GenerateReadAction;
-import insideworld.engine.plugins.generator.base.reflection.Reflection;
 
 public class SearchReadActionMixin extends AbstractSearchMixin<ActionInfo, GenerateReadAction>
     implements SearchReadAction {

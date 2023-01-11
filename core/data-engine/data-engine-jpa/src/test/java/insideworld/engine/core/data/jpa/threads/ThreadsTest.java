@@ -19,18 +19,15 @@
 
 package insideworld.engine.core.data.jpa.threads;
 
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.executor.old.ActionExecutor;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.core.data.jpa.entities.TestTags;
-import insideworld.engine.core.data.jpa.entities.SomeEntity;
-import insideworld.engine.core.data.core.StorageException;
-import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.frameworks.quarkus.test.database.DatabaseResource;
 import insideworld.engine.core.common.threads.Task;
 import insideworld.engine.core.common.threads.TaskBuilder;
+import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.data.jpa.entities.SomeEntity;
+import insideworld.engine.frameworks.quarkus.test.database.DatabaseResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import javax.enterprise.util.TypeLiteral;
@@ -44,13 +41,13 @@ import org.junit.jupiter.api.Test;
 @QuarkusTestResource(DatabaseResource.class)
 class ThreadsTest {
 
-    private final ActionExecutor<Class<? extends Action>> executor;
+    private final ActionExecutor executor;
     private final ObjectFactory factory;
     private final Storage<SomeEntity> storage;
 
     @Inject
     ThreadsTest(
-        final ActionExecutor<Class<? extends Action>> executor,
+        final ActionExecutor executor,
         final ObjectFactory factory,
         final Storage<SomeEntity> storage
     ) {
@@ -62,25 +59,24 @@ class ThreadsTest {
     @Test
     @Transactional
     final void test() throws StorageException {
-        final TaskBuilder<Output, Output> builder =
-            this.factory.createObject(new TypeLiteral<>() {
-            });
-        final Context onectx = this.executor.createContext();
-        final SomeEntity oneent = this.createEntity();
-        onectx.put(TestTags.SOME_ENTITY, oneent);
-        onectx.put(ThreadsTag.ANOTHER_EXCEPTION, new Object());
-        final Context twoctx = this.executor.createContext();
-        final SomeEntity twoent = this.createEntity();
-        twoctx.put(TestTags.SOME_ENTITY, twoent);
-        final Context expctx = this.executor.createContext();
-        final SomeEntity expent = this.createEntity();
-        expctx.put(TestTags.SOME_ENTITY, expent);
-        expctx.put(ThreadsTag.EXCEPTION, new Object());
-        final Task<Output> task = builder
-            .add(() -> this.executor.execute(WriteEntityAction.class, onectx))
-            .add(() -> this.executor.execute(WriteEntityAction.class, twoctx))
-            .add(() -> this.executor.execute(WriteEntityAction.class, expctx))
-            .combine(outputs -> null, Output.class)
+        final TaskBuilder<Void, Void> builder = this.factory.createObject(new TypeLiteral<>() { });
+        final Task<Void> task = builder
+            .add(() -> this.executor.execute(
+                    new ClassKey<>(WriteEntityAction.class),
+                    this.createInput(this.createEntity(), null)
+                )
+            )
+            .add(() -> this.executor.execute(
+                    new ClassKey<>(WriteEntityAction.class),
+                    this.createInput(this.createEntity(), 1)
+                )
+            )
+            .add(() -> this.executor.execute(
+                    new ClassKey<>(WriteEntityAction.class),
+                    this.createInput(this.createEntity(), 2)
+                )
+            )
+            .combine(outputs -> null, Void.class)
             .exception(exp -> null)
             .build();
         task.result();
@@ -103,6 +99,20 @@ class ThreadsTest {
         final SomeEntity write = this.storage.write(entity);
         write.setValue(String.valueOf(write.getId()));
         return this.storage.write(write);
+    }
+
+    private WriteEntityAction.Input createInput(final SomeEntity entity, final Integer exp) {
+        return new WriteEntityAction.Input() {
+            @Override
+            public SomeEntity getEntity() {
+                return entity;
+            }
+
+            @Override
+            public Integer getException() {
+                return exp;
+            }
+        };
     }
 
 }

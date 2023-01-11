@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.security.token.base;
 
-import insideworld.engine.core.action.keeper.context.Context;
+import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.security.core.SecurityException;
 import insideworld.engine.core.security.core.auth.Auth;
 import insideworld.engine.core.security.core.data.User;
@@ -36,7 +36,7 @@ public abstract class AbstractTokenAuth implements Auth {
     }
 
     @Override
-    public User auth(final Context context) throws SecurityException {
+    public User auth(final ExecuteContext context) throws SecurityException {
         final String authorization = this.getToken(context);
         final User user;
         if (StringUtils.isEmpty(authorization) || !authorization.startsWith("Bearer")) {
@@ -49,5 +49,5 @@ public abstract class AbstractTokenAuth implements Auth {
         return user;
     }
 
-    protected abstract String getToken(Context parameter) throws SecurityException;
+    protected abstract String getToken(ExecuteContext context) throws SecurityException;
 }

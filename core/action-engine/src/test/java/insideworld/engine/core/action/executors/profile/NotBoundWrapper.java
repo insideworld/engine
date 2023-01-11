@@ -21,21 +21,23 @@ package insideworld.engine.core.action.executors.profile;
 
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.action.executor.profile.wrapper.AbstractExecuteWrapper;
+import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
 import insideworld.engine.core.common.exception.CommonException;
 import java.util.Collection;
 import java.util.Collections;
-import javax.enterprise.context.Dependent;
+import java.util.Queue;
+import java.util.Stack;
+import javax.inject.Singleton;
 
 /**
  * Dummy wrapper to test that it's not bound to any profile.
  * @since 0.14.0
  */
-@Dependent
-public class NotBoundWrapper extends AbstractExecuteWrapper {
+@Singleton
+public class NotBoundWrapper implements ExecuteWrapper {
 
     @Override
-    public final void execute(final ExecuteContext context)
+    public final void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
         throws CommonException {
         throw new IllegalArgumentException("This is shouldn't execute");
     }

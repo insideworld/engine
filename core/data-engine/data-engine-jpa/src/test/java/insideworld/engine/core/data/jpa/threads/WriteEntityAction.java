@@ -20,17 +20,14 @@
 package insideworld.engine.core.data.jpa.threads;
 
 import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.core.data.jpa.entities.SomeEntity;
-import insideworld.engine.core.data.jpa.entities.TestTags;
-import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.data.jpa.entities.SomeEntity;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class WriteEntityAction implements Action {
+public class WriteEntityAction implements Action<WriteEntityAction.Input, Void> {
 
     private final Storage<SomeEntity> storage;
 
@@ -40,20 +37,39 @@ public class WriteEntityAction implements Action {
     }
 
     @Override
-    public void execute(final Context context, final Output output) throws CommonException {
-        final SomeEntity entity = context.get(TestTags.SOME_ENTITY);
+    public Void execute(final Input input) throws CommonException {
+        final SomeEntity entity = input.getEntity();
         entity.setValue("NewValueForTestThreads");
         this.storage.write(entity);
-        if (context.contains(ThreadsTag.EXCEPTION)) {
+        if (Integer.valueOf(1).equals(input.getException())) {
             throw new IllegalArgumentException("Exception for test threads");
         }
-        if (context.contains(ThreadsTag.ANOTHER_EXCEPTION)) {
+        if (Integer.valueOf(2).equals(input.getException())) {
             throw new TestException("Another");
         }
+        return null;
     }
 
     @Override
     public String key() {
         return "insideworld.engine.data.jpa.threads.WriteEntityAction";
+    }
+
+    @Override
+    public Class<? extends Input> inputType() {
+        return Input.class;
+    }
+
+    @Override
+    public Class<? extends Void> outputType() {
+        return Void.TYPE;
+    }
+
+    public interface Input {
+
+        SomeEntity getEntity();
+
+        Integer getException();
+
     }
 }

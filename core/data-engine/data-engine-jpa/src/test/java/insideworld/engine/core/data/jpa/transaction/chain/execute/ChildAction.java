@@ -20,12 +20,9 @@
 package insideworld.engine.core.data.jpa.transaction.chain.execute;
 
 import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
-import insideworld.engine.core.data.jpa.entities.SomeEntity;
-import insideworld.engine.core.data.jpa.entities.TestTags;
-import insideworld.engine.core.data.core.StorageException;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.core.data.jpa.entities.SomeEntity;
 import javax.inject.Singleton;
 
 /**
@@ -33,7 +30,7 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class ChildAction implements Action {
+class ChildAction implements Action<SomeEntity, SomeEntity> {
 
     /**
      * Test entity storage.
@@ -49,14 +46,23 @@ class ChildAction implements Action {
     }
 
     @Override
-    public final void execute(final Context context, final Output output) throws StorageException {
-        final SomeEntity entity = context.get(TestTags.SOME_ENTITY);
-        entity.setValue("AnotherValue");
-        this.storage.write(entity);
+    public SomeEntity execute(final SomeEntity input) throws CommonException {
+        input.setValue("AnotherValue");
+        return this.storage.write(input);
     }
 
     @Override
     public final String key() {
         return "insideworld.engine.tests.unit.actions.chain.execute.tx.ChildAction";
+    }
+
+    @Override
+    public Class<? extends SomeEntity> inputType() {
+        return SomeEntity.class;
+    }
+
+    @Override
+    public Class<? extends SomeEntity> outputType() {
+        return SomeEntity.class;
     }
 }

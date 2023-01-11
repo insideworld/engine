@@ -20,8 +20,7 @@
 package insideworld.engine.core.data.jpa.transaction.chain.execute;
 
 import insideworld.engine.core.action.chain.Link;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.jpa.transaction.CustomException;
 import javax.inject.Singleton;
 
@@ -31,9 +30,10 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class ExceptionLink implements Link {
+class ExceptionLink implements Link<Object> {
+
     @Override
-    public void process(final Context context, final Output output) {
+    public boolean process(final Object aux) throws CommonException {
         throw new CustomException();
     }
 }

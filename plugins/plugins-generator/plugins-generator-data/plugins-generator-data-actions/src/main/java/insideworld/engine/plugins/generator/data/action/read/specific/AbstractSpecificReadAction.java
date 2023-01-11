@@ -20,8 +20,6 @@
 package insideworld.engine.plugins.generator.data.action.read.specific;
 
 import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.keeper.context.Context;
-import insideworld.engine.core.action.keeper.output.Output;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.converter.EntityConverter;
@@ -42,12 +40,12 @@ public abstract class AbstractSpecificReadAction<S extends Storage<? extends Ent
         this.storage = storage;
     }
 
-    @Override
-    public void execute(final Context context, final Output output) throws CommonException {
-        for (final Entity t : this.read(context)) {
-            output.add(this.converter.convert(t));
-        }
-    }
-    protected abstract Collection<? extends Entity> read(Context context);
+//    @Override
+//    public void execute(final Context context, final Output output) throws CommonException {
+//        for (final Entity t : this.read(context)) {
+//            output.add(this.converter.convert(t));
+//        }
+//    }
+//    protected abstract Collection<? extends Entity> read(Context context);
 
 }

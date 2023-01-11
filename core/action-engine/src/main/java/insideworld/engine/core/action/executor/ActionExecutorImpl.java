@@ -72,7 +72,7 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
         return this.execute(
             key,
             input,
-            context -> context.put(ExecutorTags.PROFILE, DefaultExecuteProfile.class)
+            null
         );
     }
 
@@ -88,9 +88,14 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
         }
         final ExecuteContext context = this.factory.createObject(ExecuteContext.class);
         final Action<?, ?> action = this.actions.get(key);
-        predicate.accept(context);
+        if (predicate != null) {
+            predicate.accept(context);
+        }
         context.put(ExecutorTags.ACTION, action);
         context.put(ExecutorTags.INPUT, input);
+        if (!context.contains(ExecutorTags.PROFILE)) {
+            context.put(ExecutorTags.PROFILE, DefaultExecuteProfile.class);
+        }
         try {
             this.profiles.get(context.get(ExecutorTags.PROFILE)).execute(context);
             @SuppressWarnings("unchecked")
