@@ -67,7 +67,7 @@ class TestWrappers {
     @Test
     final void test() throws CommonException {
         this.test.integers.clear();
-        this.executor.execute(new ClassKey<>(DummyAction.class), null);
+        this.executor.execute(new ClassKey<>(DummyAction.class));
         MatcherAssert.assertThat(
             "Collection has wrong sequence",
             this.test.integers,

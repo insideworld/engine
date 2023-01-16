@@ -21,11 +21,15 @@ package insideworld.engine.core.action.executor;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+import java.util.function.Supplier;
 
 public final class ExecutorTags {
 
     public static final ExecutorTag<Class<? extends ExecuteProfile>> PROFILE =
         new ExecutorTag<>("insideworld.engine.core.action.executor.ExecutorTags.PROFILE");
+
+    public static final ExecutorTag<Input<?>> INPUT_PREDICATE =
+        new ExecutorTag<>("insideworld.engine.core.action.executor.ExecutorTags.INPUT_PREDICATE");
 
     public static final ExecutorTag<Object> INPUT =
         new ExecutorTag<>("insideworld.engine.core.action.executor.ExecutorTags.INPUT");

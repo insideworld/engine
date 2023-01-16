@@ -17,15 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.serializer;
+package insideworld.engine.core.action.executor;
 
-import insideworld.engine.core.action.executor.ExecutorTag;
-import java.io.OutputStream;
+import insideworld.engine.core.common.exception.CommonException;
 
-public class EndpointTags {
+public interface Input<T> {
 
-    public static final ExecutorTag<OutputStream> OUTPUT = new ExecutorTag<>(
-        "insideworld.engine.core.endpoint.base.action.serializer.EndpointTags.OUTPUT"
-    );
+    T getInput() throws CommonException;
 
 }

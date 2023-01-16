@@ -20,11 +20,13 @@
 package insideworld.engine.frameworks.quarkus.common.threads;
 
 import com.google.common.collect.Lists;
+import insideworld.engine.core.common.predicates.Consumer;
+import insideworld.engine.core.common.threads.MultiTask;
 import insideworld.engine.core.common.threads.Task;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.unchecked.Unchecked;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.function.Consumer;
 import javax.enterprise.context.Dependent;
 
 @Dependent
@@ -32,9 +34,13 @@ public class QuarkusTask<T> implements Task<T> {
 
     private Uni<T> uni;
 
-    private final Collection<Throwable> throwable = Collections.synchronizedList(
-        Lists.newLinkedList()
-    );
+    private Throwable throwable;
+
+
+    @Override
+    public Throwable exception() {
+        return this.throwable;
+    }
 
     @Override
     public T result() {
@@ -43,16 +49,11 @@ public class QuarkusTask<T> implements Task<T> {
 
     @Override
     public void subscribe(final Consumer<T> callback) {
-        this.uni.subscribe().with(callback);
+        this.uni.subscribe().with(Unchecked.consumer(callback::accept));
     }
 
-    @Override
-    public final Collection<Throwable> exceptions() {
-        return this.throwable;
-    }
-
-    public void addThrowable(final Throwable throwable) {
-        this.throwable.add(throwable);
+    public void setThrowable(final Throwable throwable) {
+        this.throwable = throwable;
     }
 
     public void setUni(final Uni<T> puni) {

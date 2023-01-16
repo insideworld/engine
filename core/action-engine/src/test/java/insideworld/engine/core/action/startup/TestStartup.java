@@ -68,7 +68,7 @@ class TestStartup {
      */
     @Test
     final void test() throws CommonException {
-        this.executor.execute(new ClassKey<>(TestStartupAction.class), null);
+        this.executor.execute(new ClassKey<>(TestStartupAction.class));
         MatcherAssert.assertThat(
             this.action.init,
             Matchers.is(true)

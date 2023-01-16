@@ -17,39 +17,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.common.predicates;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import insideworld.engine.core.common.exception.CommonException;
 
-public class StringKey<I, O> implements Key<I, O> {
+public interface Consumer<T> {
 
-    private final String key;
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param t the input argument
+     */
+    void accept(T t) throws CommonException;
 
-    public StringKey(final String key) {
-        this.key = key;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.key.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
-    }
 }

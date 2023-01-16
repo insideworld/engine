@@ -37,8 +37,9 @@ import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-import insideworld.engine.core.endpoint.base.serializer.Types;
-import insideworld.engine.core.endpoint.base.serializer.Serializer;
+import insideworld.engine.core.action.serializer.SerializerException;
+import insideworld.engine.core.action.serializer.Types;
+import insideworld.engine.core.action.serializer.Serializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -71,26 +72,28 @@ public class EntitySerializer implements Serializer, OnStartUp {
     }
 
     @Override
-    public <T> void serialize(final T value, final Class<?> type, final OutputStream stream) {
+    public <T> void serialize(final T value, final OutputStream stream) throws SerializerException {
         try {
+            final Class<?> type = value.getClass();
             this.writers.get(type).writeValue(stream, value);
         } catch (final IOException exp) {
-            throw new RuntimeException(exp);
+            throw new SerializerException(exp);
         }
     }
 
     @Override
-    public <T> T deserialize(final InputStream stream, final Class<?> type) {
+    public <T> T deserialize(final InputStream stream, final Class<?> type)
+        throws SerializerException {
         try {
             return this.readers.get(type).readValue(stream);
         } catch (final IOException exp) {
-            throw new RuntimeException(exp);
+            throw new SerializerException(exp);
         }
     }
 
     @Override
     public boolean applicable(final Class<?> type) {
-        return Entity.class.isAssignableFrom(type);
+        return Entity.class.isAssignableFrom(this.unwrap(type));
     }
 
     @Override
@@ -110,12 +113,18 @@ public class EntitySerializer implements Serializer, OnStartUp {
         this.mapper.registerModule(module);
         for (final Class<?> type : this.types.getInputs()) {
             if (this.applicable(type)) {
-                this.readers.put((Class<? extends Entity>) type, this.mapper.readerFor(type));
+                this.readers.put(
+                    (Class<? extends Entity>) type,
+                    this.mapper.readerFor(type)
+                );
             }
         }
         for (final Class<?> type : this.types.getOutputs()) {
             if (this.applicable(type)) {
-                this.writers.put((Class<? extends Entity>) type, this.mapper.writerFor(type));
+                this.writers.put(
+                    (Class<? extends Entity>) type,
+                    this.mapper.writerFor(type)
+                );
             }
         }
     }
@@ -138,8 +147,8 @@ public class EntitySerializer implements Serializer, OnStartUp {
                             type,
                             keeper.getStorage(type)
                         );
-                    } catch (StorageException e) {
-                        throw new RuntimeException(e);
+                    } catch (final StorageException exp) {
+                        throw new RuntimeException(exp);
                     }
                 } else {
                     result = deserializer;
@@ -169,6 +178,16 @@ public class EntitySerializer implements Serializer, OnStartUp {
                 return result;
             }
         };
+    }
+
+    private Class<?> unwrap(final Class<?> type) {
+        final Class<?> unwrapped;
+        if (type.isArray()) {
+            unwrapped = type.getComponentType();
+        } else {
+            unwrapped = type;
+        }
+        return unwrapped;
     }
 
     @Override

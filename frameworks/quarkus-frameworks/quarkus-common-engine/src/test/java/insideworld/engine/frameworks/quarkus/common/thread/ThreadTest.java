@@ -22,7 +22,7 @@ package insideworld.engine.frameworks.quarkus.common.thread;
 import com.google.common.collect.Lists;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.frameworks.quarkus.common.threads.QuarkusTaskBuilder;
+import insideworld.engine.frameworks.quarkus.common.threads.QuarkusMultiTaskBuilder;
 import io.quarkus.test.junit.QuarkusTest;
 import java.util.List;
 import java.util.UUID;
@@ -58,7 +58,7 @@ public class ThreadTest {
 
     @Test
     final void testTaskBuilder() throws CommonException {
-        final QuarkusTaskBuilder<UUID, List<UUID>> builder =
+        final QuarkusMultiTaskBuilder<UUID, List<UUID>> builder =
             this.factory.createObject(new TypeLiteral<>() {
             });
         for (int i = 0; i < 1000; i++) {
@@ -74,6 +74,19 @@ public class ThreadTest {
         System.out.println(build);
     }
 
+    @Test
+    final void testException() {
+        final QuarkusMultiTaskBuilder<?, ?> builder = this.factory.createObject(new TypeLiteral<>() {
+        });
+        builder
+            .add(() -> {
+                throw new RuntimeException("Some");
+            })
+//            .exception(throwable -> null)
+//            .combine(objects -> null, null)
+            .build().subscribe(o -> System.out.println("dddddd"));
+
+    }
 
     private UUID getRandomUUID() {
         System.out.println(Thread.currentThread() + " " + "random");

@@ -76,7 +76,6 @@ public class WriteEntityLink<T extends Entity, I> implements Link<I> {
         if (this.single == null && this.multiple == null) {
             throw new LinkException(this, "Link was not init");
         }
-        //TODO: Complexity!
         if (this.single != null) {
             final T entity = this.single.getLeft().apply(input);
             if (entity != null) {

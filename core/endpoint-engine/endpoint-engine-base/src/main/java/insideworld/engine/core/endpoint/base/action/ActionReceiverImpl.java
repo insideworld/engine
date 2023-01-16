@@ -17,61 +17,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.jobs.core;
+package insideworld.engine.core.endpoint.base.action;
 
 import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.Input;
-import insideworld.engine.core.action.executor.key.StringKey;
+import insideworld.engine.core.action.executor.key.Key;
 import insideworld.engine.core.action.serializer.ActionSerializer;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.jobs.core.entity.JobEntity;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.common.threads.Task;
+import insideworld.engine.core.common.threads.TaskBuilder;
+import insideworld.engine.core.action.serializer.ActionSerializerImpl;
 import java.io.InputStream;
-import java.sql.SQLException;
+import java.util.function.Consumer;
+import javax.enterprise.util.TypeLiteral;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
-public class ActionJobExecutor implements Job {
+public class ActionReceiverImpl implements ActionReceiver {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActionJobExecutor.class);
     private final ActionExecutor executor;
     private final ActionSerializer serializer;
+    private final ObjectFactory factory;
 
     @Inject
-    public ActionJobExecutor(
+    public ActionReceiverImpl(
         final ActionExecutor executor,
-        final ActionSerializer serializer
+        final ActionSerializer serializer,
+        final ObjectFactory factory
     ) {
         this.executor = executor;
         this.serializer = serializer;
+        this.factory = factory;
     }
 
     @Override
-    public void execute(final JobExecutionContext execution) throws JobExecutionException {
-        final JobEntity entity = (JobEntity) execution.getJobDetail().getJobDataMap().get("entity");
-        try {
-            this.execute(entity);
-        } catch (final CommonException | SQLException exp) {
-            LOGGER.trace("Finish execute job for alias {}", entity.getAlias());
-            throw new JobExecutionException(
-                String.format("Job for alias failed %s", entity.getAlias()),
-                exp
-            );
-        }
-    }
-
-    private <I, O> void execute(final JobEntity entity) throws SQLException, CommonException {
-        LOGGER.trace("Start execute job for alias {}", entity.getAlias());
-        final StringKey<I, O> key = new StringKey<>(entity.getAction());
-        final InputStream stream = entity.getInput().getAsciiStream();
-        this.executor.execute(
+    public <I, O> O execute(
+        final Key<I, O> key,
+        final InputStream stream,
+        final Consumer<ExecuteContext> context
+    ) throws CommonException {
+        return this.executor.execute(
             key,
-            (Input<I>) () -> this.serializer.deserialize(key, stream)
+            (Input<I>) () -> this.serializer.deserialize(key, stream),
+            context
         );
     }
+
+    @Override
+    public <I, O> Task<O> executeTask(
+        final Key<I, O> key,
+        final InputStream stream,
+        final Consumer<ExecuteContext> context
+    ) {
+        final TaskBuilder<O> builder = this.factory.createObject(new TypeLiteral<>() { });
+        return builder.add(
+            () -> this.execute(
+                key,
+                stream,
+                context
+            )
+        ).build();
+    }
+
 }

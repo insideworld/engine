@@ -67,6 +67,6 @@ public class JacksonDeserializer<T extends Entity>
 
     @Override
     public void resolve(DeserializationContext context) throws JsonMappingException {
-        ((ResolvableDeserializer) def).resolve(context);
+        ((ResolvableDeserializer) this.def).resolve(context);
     }
 }

@@ -17,8 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.action;
-
+package insideworld.engine.core.endpoint.amqp.actions;
 
 import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
 import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
@@ -30,24 +29,24 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Interface marker to indicate that this profile is using in endpoint engine.
- *
- * @since 1.0.0
+ * Profile which will use for AMQP received messages.
+ * @since 0.14.0
  */
 @Singleton
-public class EndpointProfile extends AbstractExecuteProfile {
+public class AmqpProfile extends AbstractExecuteProfile {
+
     /**
      * Default constructor.
      *
      * @param executors Collection of all executors in the system.
      */
     @Inject
-    public EndpointProfile(final List<ExecuteWrapper> executors) {
+    public AmqpProfile(final List<ExecuteWrapper> executors) {
         super(executors);
     }
 
     @Override
-    protected Collection<Class<? extends ExecuteProfile>> profiles() {
+    protected final Collection<Class<? extends ExecuteProfile>> profiles() {
         return List.of(
             DefaultExecuteProfile.class,
             this.getClass()

@@ -19,15 +19,17 @@
 
 package insideworld.engine.core.common.threads;
 
+import insideworld.engine.core.common.predicates.Consumer;
 import java.util.Collection;
-import java.util.function.Consumer;
+
 
 public interface Task<T> {
 
-    Collection<Throwable> exceptions();
+    Throwable exception();
 
     T result();
 
     void subscribe(Consumer<T> callback);
+
 
 }

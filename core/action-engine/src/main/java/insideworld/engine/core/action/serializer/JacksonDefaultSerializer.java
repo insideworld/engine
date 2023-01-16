@@ -17,12 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.serializer;
+package insideworld.engine.core.action.serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import insideworld.engine.core.endpoint.base.serializer.Serializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Singleton;
 
 @Singleton
-public class DefaultSerializer implements Serializer {
+public class JacksonDefaultSerializer implements Serializer {
 
     private final ObjectMapper mapper;
 
@@ -39,14 +38,15 @@ public class DefaultSerializer implements Serializer {
 
     private final Map<Class<?>, ObjectWriter> writers;
 
-    public DefaultSerializer() {
+    public JacksonDefaultSerializer() {
         this.mapper = new ObjectMapper();
         this.readers = new ConcurrentHashMap<>();
         this.writers = new ConcurrentHashMap<>();
     }
 
     @Override
-    public <T> void serialize(final T value, final Class<?> type, final OutputStream stream) {
+    public <T> void serialize(final T value, final OutputStream stream) throws SerializerException {
+        final Class<?> type = value.getClass();
         final ObjectWriter writer;
         if (this.writers.containsKey(type)) {
             writer = this.writers.get(type);
@@ -62,13 +62,14 @@ public class DefaultSerializer implements Serializer {
         }
         try {
             writer.writeValue(stream, value);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (final IOException exp) {
+            throw new SerializerException(exp);
         }
     }
 
     @Override
-    public <T> T deserialize(final InputStream stream, final Class<?> type) {
+    public <T> T deserialize(final InputStream stream, final Class<?> type)
+        throws SerializerException {
         final ObjectReader reader;
         if (this.readers.containsKey(type)) {
             reader = this.readers.get(type);
@@ -84,8 +85,8 @@ public class DefaultSerializer implements Serializer {
         }
         try {
             return reader.readValue(stream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (final IOException exp) {
+            throw new SerializerException(exp);
         }
     }
 

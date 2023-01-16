@@ -20,6 +20,8 @@
 package insideworld.engine.core.endpoint.amqp.vertex;
 
 import com.google.common.collect.Lists;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.predicates.Consumer;
 import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
 import insideworld.engine.core.endpoint.amqp.connection.Message;
 import io.vertx.core.json.JsonArray;
@@ -37,11 +39,9 @@ public class VertexAmqpSender implements AmqpSender {
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
         final AmqpMessageBuilder builder = AmqpMessage.create();
-        builder.withJsonArrayAsBody(new JsonArray(Lists.newArrayList(message.getArray())));
-        builder.subject(message.getSubject());
-        builder.applicationProperties(new JsonObject(message.getProperties()));
+        message.accept(builder);
         this.amqpSender.send(builder.build());
     }
 }

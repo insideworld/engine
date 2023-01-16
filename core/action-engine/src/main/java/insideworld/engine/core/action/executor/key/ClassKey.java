@@ -46,4 +46,9 @@ public class ClassKey<I, O> implements Key<I, O> {
                    )
                );
     }
+
+    @Override
+    public String getKey() {
+        throw new IllegalArgumentException("Not supported");
+    }
 }

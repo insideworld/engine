@@ -17,39 +17,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.frameworks.quarkus.common.threads;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.google.common.collect.Lists;
+import insideworld.engine.core.common.threads.MultiTask;
+import io.smallrye.mutiny.Uni;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Consumer;
+import javax.enterprise.context.Dependent;
 
-public class StringKey<I, O> implements Key<I, O> {
+@Dependent
+public class QuarkusMultiTask<T> implements MultiTask<T> {
 
-    private final String key;
+    private Uni<T> uni;
 
-    public StringKey(final String key) {
-        this.key = key;
+    private final Collection<Throwable> throwable = Collections.synchronizedList(
+        Lists.newLinkedList()
+    );
+
+    @Override
+    public T result() {
+        return this.uni.await().indefinitely();
     }
 
     @Override
-    public int hashCode() {
-        return this.key.hashCode();
+    public void subscribe(final Consumer<T> callback) {
+        this.uni.subscribe().with(callback);
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
+    public final Collection<Throwable> exceptions() {
+        return this.throwable;
     }
 
-    @Override
-    public String getKey() {
-        return this.key;
+    public void addThrowable(final Throwable throwable) {
+        this.throwable.add(throwable);
+    }
+
+    public void setUni(final Uni<T> puni) {
+        this.uni = puni;
     }
 }

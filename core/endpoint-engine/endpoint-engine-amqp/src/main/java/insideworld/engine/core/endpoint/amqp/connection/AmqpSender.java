@@ -19,6 +19,10 @@
 
 package insideworld.engine.core.endpoint.amqp.connection;
 
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.predicates.Consumer;
+import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+
 /**
  * Send message to AMQP.
  * @since 1.0.0
@@ -29,6 +33,6 @@ public interface AmqpSender {
      * Send.
      * @param message Message.
      */
-    void send(Message message);
+    void send(Consumer<AmqpMessageBuilder> message) throws CommonException;
 
 }

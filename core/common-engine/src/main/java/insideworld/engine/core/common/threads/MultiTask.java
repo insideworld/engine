@@ -17,39 +17,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.common.threads;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.util.Collection;
+import java.util.function.Consumer;
 
-public class StringKey<I, O> implements Key<I, O> {
+public interface MultiTask<T> {
 
-    private final String key;
+    Collection<Throwable> exceptions();
 
-    public StringKey(final String key) {
-        this.key = key;
-    }
+    T result();
 
-    @Override
-    public int hashCode() {
-        return this.key.hashCode();
-    }
+    void subscribe(Consumer<T> callback);
 
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
-    }
 }

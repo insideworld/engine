@@ -17,39 +17,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.action.serializer;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.exception.Diagnostic;
+import java.util.Collection;
+import java.util.Collections;
 
-public class StringKey<I, O> implements Key<I, O> {
+public class SerializerException extends CommonException {
 
-    private final String key;
-
-    public StringKey(final String key) {
-        this.key = key;
+    public SerializerException(final Throwable exception) {
+        super(Collections.emptyList(), exception);
     }
 
-    @Override
-    public int hashCode() {
-        return this.key.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
-    }
 }

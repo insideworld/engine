@@ -108,7 +108,7 @@ class TestKeyAction {
     final void testException() {
         MatcherAssert.assertThat(
             "Exception message wrong",
-            () -> this.executor.execute(new ClassKey<>(ParentExceptionAction.class), null),
+            () -> this.executor.execute(new ClassKey<>(ParentExceptionAction.class)),
             ExceptionMatchers.catchException(
                 ActionException.class,
                 Matchers.allOf(

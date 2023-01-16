@@ -22,7 +22,7 @@ package insideworld.engine.core.security.token.rest;
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.endpoint.rest.RestProfile;
-import insideworld.engine.core.endpoint.rest.tags.RestTags;
+import insideworld.engine.core.endpoint.rest.RestTags;
 import insideworld.engine.core.security.core.SecurityException;
 import insideworld.engine.core.security.token.base.AbstractTokenAuth;
 import insideworld.engine.core.security.token.base.TokenStorage;

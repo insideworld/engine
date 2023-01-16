@@ -27,18 +27,21 @@ import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.apache.commons.lang3.tuple.Pair;
 
 @Singleton
-public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
+public class ActionExecutorImpl implements ActionExecutor, ActionChanger, ActionsInfo {
 
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -68,11 +71,38 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
 
 
     @Override
+    public <I, O> O execute(final Key<I, O> key) throws CommonException {
+        return this.execute(
+            key,
+            (Input<I>) () -> null
+        );
+    }
+
+    @Override
+    public <I, O> O execute(final Key<I, O> key, final Consumer<ExecuteContext> predicate)
+        throws CommonException {
+        return this.execute(
+            key,
+            (Input<I>) () -> null,
+            predicate
+        );
+    }
+
+    @Override
     public <I, O> O execute(final Key<I, O> key, final I input) throws CommonException {
         return this.execute(
             key,
             input,
-            null
+            context -> {}
+        );
+    }
+
+    @Override
+    public <I, O> O execute(final Key<I, O> key, final Input<I> input) throws CommonException {
+        return this.execute(
+            key,
+            input,
+            context -> {}
         );
     }
 
@@ -82,24 +112,34 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
         final I input,
         final Consumer<ExecuteContext> predicate
     ) throws CommonException {
+        return this.execute(
+            key,
+            (Input<I>) () -> input,
+            predicate
+        );
+    }
+
+    @Override
+    public <I, O> O execute(
+        final Key<I, O> key,
+        final Input<I> input,
+        final Consumer<ExecuteContext> predicate
+    ) throws CommonException {
         if (this.lock.isLocked()) {
-            //TODO: Add normal exception. It's just a stub and will fail with NPE.
+            //FIXME: Add normal exception. It's just a stub and will fail with NPE.
             throw new ActionException(null, "Actions under update");
         }
         final ExecuteContext context = this.factory.createObject(ExecuteContext.class);
         final Action<?, ?> action = this.actions.get(key);
-        if (predicate != null) {
-            predicate.accept(context);
-        }
+        predicate.accept(context);
         context.put(ExecutorTags.ACTION, action);
-        context.put(ExecutorTags.INPUT, input);
+        context.put(ExecutorTags.INPUT_PREDICATE, input);
         if (!context.contains(ExecutorTags.PROFILE)) {
             context.put(ExecutorTags.PROFILE, DefaultExecuteProfile.class);
         }
         try {
             this.profiles.get(context.get(ExecutorTags.PROFILE)).execute(context);
-            @SuppressWarnings("unchecked")
-            final O output = (O) context.get(ExecutorTags.OUTPUT);
+            @SuppressWarnings("unchecked") final O output = (O) context.get(ExecutorTags.OUTPUT);
             return output;
         } catch (final Exception exp) {
             throw CommonException.wrap(
@@ -108,6 +148,17 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
                 ActionException.class
             );
         }
+    }
+
+    @Override
+    public <I, O> Pair<Class<? extends I>, Class<? extends O>> resolveTypes(final Key<I, O> key) {
+        final Action<I, O> action = (Action<I, O>) this.actions.get(key);
+        return Pair.of(action.inputType(), action.outputType());
+    }
+
+    @Override
+    public Collection<Key<?, ?>> getKeys() {
+        return this.actions.keySet();
     }
 
     @Override

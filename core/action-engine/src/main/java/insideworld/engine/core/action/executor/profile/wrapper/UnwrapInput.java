@@ -17,21 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.serializer;
+package insideworld.engine.core.action.executor.profile.wrapper;
 
-import insideworld.engine.core.action.Action;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.ExecutorTags;
+import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
+import insideworld.engine.core.action.executor.profile.ExecuteProfile;
+import insideworld.engine.core.common.exception.CommonException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Queue;
+import javax.inject.Singleton;
 
-public interface Serializer {
+@Singleton
+public class UnwrapInput implements ExecuteWrapper {
 
-    <T> void serialize(T value, Class<?> type, OutputStream stream);
+    @Override
+    public void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
+        throws CommonException {
+        context.put(ExecutorTags.INPUT, context.get(ExecutorTags.INPUT_PREDICATE).getInput());
+        this.next(context, wrappers);
+    }
 
-    <T> T deserialize(InputStream stream, Class<?> type);
+    @Override
+    public long wrapperOrder() {
+        return 1_000_000;
+    }
 
-    boolean applicable(Class<?> type);
-
-    long order();
+    @Override
+    public Collection<Class<? extends ExecuteProfile>> forProfile() {
+        return Collections.singleton(DefaultExecuteProfile.class);
+    }
 }

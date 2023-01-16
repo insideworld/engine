@@ -39,7 +39,7 @@ public class ActionException extends CommonException {
      * @param message Message.
      * @param args String format arguments.
      */
-    public ActionException(final Action action, final String message, final Object... args) {
+    public ActionException(final Action<?,?> action, final String message, final Object... args) {
         super(
             Collections.singleton(new Diagnostic("action", action.key())),
             message,
@@ -53,7 +53,7 @@ public class ActionException extends CommonException {
      * @param action Action instance.
      * @param exception Exception.
      */
-    public ActionException(final Action action, final Throwable exception) {
+    public ActionException(final Action<?,?> action, final Throwable exception) {
         super(
             Collections.singleton(new Diagnostic("action", action.key())),
             exception

@@ -17,39 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.endpoint.amqp;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.util.UUID;
 
-public class StringKey<I, O> implements Key<I, O> {
+public class TestData {
 
-    private final String key;
+    private UUID value;
 
-    public StringKey(final String key) {
-        this.key = key;
+    public UUID getValue() {
+        return this.value;
     }
 
-    @Override
-    public int hashCode() {
-        return this.key.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
+    public void setValue(final UUID value) {
+        this.value = value;
     }
 }

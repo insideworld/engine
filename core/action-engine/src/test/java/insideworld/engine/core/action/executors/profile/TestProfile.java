@@ -69,7 +69,7 @@ class TestProfile {
     @Test
     final void testPreExecutor() throws CommonException {
         this.test.counter.set(0);
-        this.executor.execute(new ClassKey<>(DummyAction.class), null);
+        this.executor.execute(new ClassKey<>(DummyAction.class));
         MatcherAssert.assertThat(
             "Counter was incremented",
             this.test.counter.get(),
@@ -77,7 +77,7 @@ class TestProfile {
         );
         this.executor.execute(
             new ClassKey<>(DummyAction.class),
-            null,
+            (Void) null,
             context -> context.put(ExecutorTags.PROFILE, AnotherExecuteProfile.class)
         );
         MatcherAssert.assertThat(

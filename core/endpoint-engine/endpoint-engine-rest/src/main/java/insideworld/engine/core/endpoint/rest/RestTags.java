@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.rest.tags;
+package insideworld.engine.core.endpoint.rest;
 
 import insideworld.engine.core.common.keeper.tags.SingleTag;
 import javax.ws.rs.core.HttpHeaders;
@@ -29,7 +29,7 @@ import javax.ws.rs.core.HttpHeaders;
 public final class RestTags {
 
     public static final SingleTag<HttpHeaders> HTTP_HEADERS = new SingleTag<>(
-        "insideworld.engine.core.endpoint.rest.tags.RestTags.HTTP_HEADERS"
+        "insideworld.engine.core.endpoint.rest.RestTags.HTTP_HEADERS"
     );
 
     /**

@@ -21,4 +21,6 @@ package insideworld.engine.core.action.executor.key;
 
 public interface Key<I, O> {
 
+    String getKey();
+
 }

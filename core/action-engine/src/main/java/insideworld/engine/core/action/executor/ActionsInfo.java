@@ -17,39 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.action.executor;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import insideworld.engine.core.action.executor.key.Key;
+import java.util.Collection;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class StringKey<I, O> implements Key<I, O> {
+/**
+ * TODO: Need to add on update event because infos about action may be updated in runtime on the future.
+ */
+public interface ActionsInfo {
 
-    private final String key;
+    <I, O> Pair<Class<? extends I>, Class<? extends O>> resolveTypes(Key<I, O> key);
 
-    public StringKey(final String key) {
-        this.key = key;
-    }
+    Collection<Key<?,?>> getKeys();
 
-    @Override
-    public int hashCode() {
-        return this.key.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
-    }
 }

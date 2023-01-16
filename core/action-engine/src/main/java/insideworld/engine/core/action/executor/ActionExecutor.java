@@ -25,8 +25,23 @@ import java.util.function.Consumer;
 
 public interface ActionExecutor {
 
-    <I, O> O execute(Key<I, O> key, I input) throws CommonException;
+    <I, O> O execute(Key<I, O> key)
+        throws CommonException;
 
-    <I, O> O execute(Key<I, O> key, I input, Consumer<ExecuteContext> predicate) throws CommonException;
+    <I, O> O execute(Key<I, O> key, Consumer<ExecuteContext> predicate)
+        throws CommonException;
+
+    <I, O> O execute(Key<I, O> key, I input)
+        throws CommonException;
+
+    <I, O> O execute(Key<I, O> key, Input<I> input)
+        throws CommonException;
+
+    <I, O> O execute(Key<I, O> key, I input, Consumer<ExecuteContext> predicate)
+        throws CommonException;
+
+    <I, O> O execute(Key<I, O> key, Input<I> input, Consumer<ExecuteContext> predicate)
+        throws CommonException;
+
 
 }

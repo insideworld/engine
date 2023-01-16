@@ -41,13 +41,13 @@ public class JacksonSerializer<T extends Entity>
 
     @Override
     public void resolve(final SerializerProvider provider) throws JsonMappingException {
-        ((ResolvableSerializer) provider).resolve(provider);
+        ((ResolvableSerializer) this.def).resolve(provider);
     }
 
     @Override
     public void serialize(final T value, final JsonGenerator gen, final SerializerProvider provider)
         throws IOException {
-        if (gen.getCurrentValue() == null) {
+        if (gen.getCurrentValue() == null || gen.getCurrentValue().getClass().isArray()) {
             this.def.serialize(value, gen, provider);
         } else {
             gen.writeNumber(value.getId());

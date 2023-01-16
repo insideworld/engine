@@ -17,39 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.action.serializer;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import com.google.common.collect.Sets;
+import insideworld.engine.core.action.Action;
+import java.util.List;
+import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class StringKey<I, O> implements Key<I, O> {
+@Singleton
+public class ActionTypes implements Types {
 
-    private final String key;
+    private final Set<Class<?>> inputs;
 
-    public StringKey(final String key) {
-        this.key = key;
+    private final Set<Class<?>> outputs;
+
+    @Inject
+    public ActionTypes(final List<Action<?,?>> actions) {
+        this.inputs = Sets.newHashSetWithExpectedSize(actions.size());
+        this.outputs = Sets.newHashSetWithExpectedSize(actions.size());
+        for (final Action<?, ?> action : actions) {
+            this.inputs.add(action.inputType());
+            this.outputs.add(action.outputType());
+        }
     }
 
     @Override
-    public int hashCode() {
-        return this.key.hashCode();
+    public Set<Class<?>> getInputs() {
+        return this.inputs;
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
+    public Set<Class<?>> getOutputs() {
+        return this.outputs;
     }
 }

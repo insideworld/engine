@@ -22,8 +22,8 @@ package insideworld.engine.core.data.jpa.threads;
 import insideworld.engine.core.action.executor.ActionExecutor;
 import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.core.common.threads.Task;
-import insideworld.engine.core.common.threads.TaskBuilder;
+import insideworld.engine.core.common.threads.MultiTask;
+import insideworld.engine.core.common.threads.MultiTaskBuilder;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.jpa.entities.SomeEntity;
@@ -59,8 +59,8 @@ class ThreadsTest {
     @Test
     @Transactional
     final void test() throws StorageException {
-        final TaskBuilder<Void, Void> builder = this.factory.createObject(new TypeLiteral<>() { });
-        final Task<Void> task = builder
+        final MultiTaskBuilder<Void, Void> builder = this.factory.createObject(new TypeLiteral<>() { });
+        final MultiTask<Void> multiTask = builder
             .add(() -> this.executor.execute(
                     new ClassKey<>(WriteEntityAction.class),
                     this.createInput(this.createEntity(), null)
@@ -79,10 +79,10 @@ class ThreadsTest {
             .combine(outputs -> null, Void.class)
             .exception(exp -> null)
             .build();
-        task.result();
+        multiTask.result();
         MatcherAssert.assertThat(
             "Should be an exception in list",
-            task.exceptions(),
+            multiTask.exceptions(),
             Matchers.iterableWithSize(2)
         );
     }

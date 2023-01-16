@@ -19,7 +19,9 @@
 
 package insideworld.engine.core.endpoint.amqp.connection;
 
-import java.util.function.Consumer;
+import insideworld.engine.core.common.predicates.Consumer;
+import io.vertx.mutiny.amqp.AmqpMessage;
+
 
 /**
  * Receiver for AMQP messages.
@@ -31,6 +33,6 @@ public interface AmqpReceiver {
      * Add consumer to call at receive message.
      * @param consumer Consumer object.
      */
-    void receive(Consumer<Message> consumer);
+    void receive(Consumer<AmqpMessage> consumer);
 
 }

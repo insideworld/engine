@@ -19,38 +19,32 @@
 
 package insideworld.engine.core.endpoint.amqp.vertex;
 
+import insideworld.engine.core.common.predicates.Consumer;
 import insideworld.engine.core.endpoint.amqp.connection.AmqpReceiver;
 import insideworld.engine.core.endpoint.amqp.connection.Message;
 import insideworld.engine.core.common.injection.ObjectFactory;
+import io.smallrye.mutiny.unchecked.Unchecked;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;
-import java.util.function.Consumer;
 
 
 public class VertexAmqpReceiver implements AmqpReceiver {
 
-    private final ObjectFactory factory;
     private final AmqpConnection connection;
     private final String channel;
 
     public VertexAmqpReceiver(
-        final ObjectFactory factory,
         final AmqpConnection connection,
         final String channel
     ) {
-        this.factory = factory;
         this.connection = connection;
         this.channel = channel;
     }
 
     @Override
-    public void receive(final Consumer<Message> consumer) {
-        connection.createReceiverAndAwait(this.channel)
-            .handler(message -> consumer.accept(this.convert(message)));
-    }
-
-    private Message convert(final AmqpMessage message) {
-        return this.factory.createObject(VertexMessage.class, message);
+    public void receive(final Consumer<AmqpMessage> consumer) {
+        this.connection.createReceiverAndAwait(this.channel)
+            .handler(Unchecked.consumer(consumer::accept));
     }
 
 }

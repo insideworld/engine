@@ -17,14 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.serializer;
+package insideworld.engine.core.common.threads;
 
-import java.util.Set;
+import java.util.List;
+import java.util.function.Function;
 
-public interface Types {
+public interface MultiTaskBuilder<T, O> {
+    MultiTaskBuilder<T, O> add(TaskPredicate<T> supplier);
 
-    Set<Class<?>> getInputs();
+    MultiTaskBuilder<T, O> combine(Function<List<T>, O> function, Class<T> type);
 
-    Set<Class<?>> getOutputs();
+    MultiTaskBuilder<T, O> exception(final Function<? super Throwable, ? extends T> exception);
+
+    MultiTaskBuilder<T, O> concurrencyLevel(int level);
+
+    MultiTask<O> build();
 
 }

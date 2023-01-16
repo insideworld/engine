@@ -17,39 +17,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.serializer;
+package insideworld.engine.core.action.serializer;
 
-import com.google.common.collect.Sets;
-import insideworld.engine.core.action.Action;
-import java.util.List;
-import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import insideworld.engine.core.action.executor.key.Key;
+import insideworld.engine.core.common.exception.CommonException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-@Singleton
-public class ActionTypes implements Types {
+public interface ActionSerializer {
+    <T> void serialize(Key<?, T> key, T value, OutputStream stream)
+        throws CommonException;
 
-    private final Set<Class<?>> inputs;
-
-    private final Set<Class<?>> outputs;
-
-    @Inject
-    public ActionTypes(final List<Action<?,?>> actions) {
-        this.inputs = Sets.newHashSetWithExpectedSize(actions.size());
-        this.outputs = Sets.newHashSetWithExpectedSize(actions.size());
-        for (final Action<?, ?> action : actions) {
-            this.inputs.add(action.inputType());
-            this.outputs.add(action.outputType());
-        }
-    }
-
-    @Override
-    public Set<Class<?>> getInputs() {
-        return this.inputs;
-    }
-
-    @Override
-    public Set<Class<?>> getOutputs() {
-        return this.outputs;
-    }
+    <T> T deserialize(Key<T, ?> key, InputStream stream)
+        throws CommonException;
 }

@@ -19,76 +19,79 @@
 
 package insideworld.engine.core.endpoint.amqp.actions;
 
-import insideworld.engine.core.action.executor.ExecutorTags;
-import insideworld.engine.core.action.executor.key.StringKey;
+import com.google.common.collect.ImmutableMap;
+import insideworld.engine.core.action.executor.key.Key;
+import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.startup.OnStartUp;
+import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
 import insideworld.engine.core.endpoint.amqp.connection.Connection;
-import insideworld.engine.core.endpoint.base.action.ActionReceiver;
 import insideworld.engine.core.endpoint.base.action.ActionSender;
+import insideworld.engine.core.action.serializer.Serializer;
 import insideworld.engine.core.action.serializer.SerializerException;
-import io.netty.buffer.ByteBufInputStream;
-import io.vertx.mutiny.amqp.AmqpMessage;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
+import io.vertx.core.json.JsonObject;
+import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import io.vertx.mutiny.core.buffer.Buffer;
 import java.io.IOException;
-import org.apache.commons.lang3.ObjectUtils;
 
-public class AmqpActionReceiver implements OnStartUp {
+public abstract class AbstractAmqpActionSender implements ActionSender, OnStartUp {
 
     private final Connection connection;
     private final String channel;
-    private final ActionSender callback;
-    private final ActionReceiver receiver;
+    private final Serializer serializer;
 
     /**
-
+     * AMQP sender.
      */
-    public AmqpActionReceiver(
+    private AmqpSender sender;
+
+    /**
+     * Default constructor.
+     *
+     */
+    public AbstractAmqpActionSender(
         final Connection connection,
         final String channel,
-        final ActionSender callback,
-        final ActionReceiver receiver
+        final Serializer serializer
     ) {
         this.connection = connection;
         this.channel = channel;
-        this.callback = callback;
-        this.receiver = receiver;
+        this.serializer = serializer;
     }
 
     @Override
-    public void startUp() {
-        this.connection.createReceiver(this.channel).receive(this::execute);
-    }
-
-    private void execute(final AmqpMessage message) {
-        final ByteBufInputStream input =
-            new ByteBufInputStream(message.bodyAsBinary().getByteBuf());
-        this.receiver.executeTask(
-            new StringKey<>(message.subject()),
-            input,
-            context -> {
-                context.put(ExecutorTags.PROFILE, AmqpProfile.class);
-                context.put(AmqpTags.AMQP_PROPERTIES, message.applicationProperties().getMap());
+    public <I, O> void send(final Key<I, O> action, final Key<O, ?> callback, final I input)
+        throws CommonException {
+        this.sender.send(builder -> {
+            builder.subject(action.getKey());
+            final ImmutableMap.Builder<String, Object> map = ImmutableMap.builder();
+            this.additional(builder);
+            if (callback != null) {
+                map.put(AmqpTags.AMQP_CALLBACK.getTag(), callback.getKey());
             }
-        ).subscribe(result -> {
+            builder.applicationProperties(new JsonObject(map.build()));
+            final ByteBufOutputStream output = new ByteBufOutputStream(Unpooled.buffer());
+            this.serializer.serialize(input, output);
+            builder.withBufferAsBody(Buffer.buffer(output.buffer()));
             try {
-                input.close();
+                output.close();
             } catch (final IOException exp) {
                 throw new SerializerException(exp);
-            }
-            final String callback = message.applicationProperties().getString(
-                AmqpTags.AMQP_CALLBACK.getTag()
-            );
-            if (ObjectUtils.allNotNull(callback, this.receiver)) {
-                this.callback.send(
-                    new StringKey<>(callback),
-                    null,
-                    result
-                );
             }
         });
     }
 
     @Override
-    public long startOrder() {
-        return 900_000;
+    public void startUp() throws CommonException {
+        this.sender = this.connection.createSender(this.channel);
     }
+
+    @Override
+    public long startOrder() {
+        return 100_000;
+    }
+
+    protected abstract void additional(AmqpMessageBuilder builder);
+
 }

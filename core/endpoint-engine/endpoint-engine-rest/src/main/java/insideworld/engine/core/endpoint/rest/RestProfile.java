@@ -23,7 +23,6 @@ import insideworld.engine.core.action.executor.profile.AbstractExecuteProfile;
 import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.action.executor.profile.wrapper.ExecuteWrapper;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
@@ -46,7 +45,6 @@ public class RestProfile extends AbstractExecuteProfile {
     protected final Collection<Class<? extends ExecuteProfile>> profiles() {
         return List.of(
             DefaultExecuteProfile.class,
-            EndpointProfile.class,
             this.getClass()
         );
     }

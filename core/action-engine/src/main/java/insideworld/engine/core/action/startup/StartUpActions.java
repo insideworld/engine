@@ -69,7 +69,7 @@ public class StartUpActions implements OnStartUp {
             if (action.getClass().isAnnotationPresent(OnStartupAction.class)) {
                 this.executor.execute(
                     new StringKey<>(action.key()),
-                    null
+                    (Object) null
                 );
             }
         }

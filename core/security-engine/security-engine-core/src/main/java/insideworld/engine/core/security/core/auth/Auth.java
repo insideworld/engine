@@ -21,7 +21,6 @@ package insideworld.engine.core.security.core.auth;
 
 import insideworld.engine.core.action.executor.ExecuteContext;
 import insideworld.engine.core.action.executor.profile.ExecuteProfile;
-import insideworld.engine.core.endpoint.base.action.EndpointProfile;
 import insideworld.engine.core.security.core.data.User;
 import insideworld.engine.core.security.core.SecurityException;
 

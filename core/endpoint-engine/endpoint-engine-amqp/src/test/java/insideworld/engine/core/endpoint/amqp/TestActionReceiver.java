@@ -17,39 +17,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.key;
+package insideworld.engine.core.endpoint.amqp;
 
-import java.util.Objects;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import insideworld.engine.core.endpoint.amqp.actions.AmqpActionReceiver;
+import insideworld.engine.core.endpoint.amqp.connection.Connection;
+import insideworld.engine.core.endpoint.base.action.ActionReceiver;
+import insideworld.engine.core.endpoint.base.action.ActionSender;
+import javax.inject.Singleton;
 
-public class StringKey<I, O> implements Key<I, O> {
+@Singleton
+public class TestActionReceiver extends AmqpActionReceiver {
 
-    private final String key;
-
-    public StringKey(final String key) {
-        this.key = key;
-    }
-
-    @Override
-    public int hashCode() {
-        return this.key.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj ||
-               (
-                   obj != null &&
-                   (
-                       this.getClass() == obj.getClass() ||
-                       Objects.equals(this.key, ((StringKey<?, ?>) obj).key)
-                   )
-               );
-    }
-
-    @Override
-    public String getKey() {
-        return this.key;
+    /**
+     * @param connection
+     * @param channel
+     * @param callback
+     * @param receiver
+     */
+    public TestActionReceiver(
+        final TestVertexConnection connection,
+        final TestActionSender callback,
+        final ActionReceiver receiver
+    ) {
+        super(connection, "test", callback, receiver);
     }
 }
