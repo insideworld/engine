@@ -96,19 +96,19 @@ public class SpecificReadActionGenerator {
      * @param info Info.
      * @return Pair with storage methods and map of position and input method reference.
      */
-    private Pair<Method, Map<Integer, Method>> findMethod(final SpecificReadInfo info) {
+    private Pair<Method, Method[]> findMethod(final SpecificReadInfo info) {
         final Method found = Arrays.stream(info.storage().getDeclaredMethods()).filter(
                 method -> method.getName().equals(info.method())
             )
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Not found necessary method"));
-        final Map<Integer, Method> map = Maps.newHashMapWithExpectedSize(found.getParameterCount());
         final Map<String, Method> fields = Arrays.stream(info.getInput().getDeclaredMethods())
             .filter(method -> method.getName().startsWith("get"))
             .collect(Collectors.toMap(
                 method -> method.getName().substring(3),
                 Function.identity()
             ));
+        final Method[] array = new Method[found.getParameterCount()];
         for (int i = 0; i < found.getParameterCount(); i++) {
             final Parameter parameter = found.getParameters()[i];
             final Method method = fields.get(parameter.getName());
@@ -122,58 +122,15 @@ public class SpecificReadActionGenerator {
                     )
                 );
             }
-            map.put(i, fields.get(parameter.getName()));
+            array[i] = method;
         }
-        return Pair.of(found, map);
-    }
-
-    private void createExecute(
-        final ClassCreator creator,
-        final Method storage,
-        final Map<Integer, Method> parameters,
-        final SpecificReadInfo info
-    ) {
-        final MethodCreator execute = creator.getMethodCreator(
-            "execute",
-            storage.getReturnType(),
-            Context.class
-        );
-        final MethodDescriptor descriptor = MethodDescriptor.ofMethod(
-            info.storage(),
-            info.method(),
-            storage.getReturnType(),
-            storage.getParameterTypes()
-        );
-        return method.getLeft().invokeInterfaceMethod(
-            descriptor,
-            storage,
-            parameters.toArray(ResultHandle[]::new)
-        );
-
-        final Pair<MethodCreator, Method> method = this.createReadMethod(creator, info);
-        final Collection<ResultHandle> parameters =
-            Lists.newArrayListWithCapacity(info.parameters().length);
-        for (final String parameter : info.parameters()) {
-            parameters.add(this.getParameter(method.getKey(), parameter));
-        }
-        final ResultHandle storage = this.getStorage(creator, method.getLeft());
-        final ResultHandle result = this.executeStorage(method, info, storage, parameters);
-        if (Collection.class.isAssignableFrom(method.getRight().getReturnType())) {
-            method.getLeft().returnValue(result);
-        } else {
-//            method.getLeft().returnValue(this.wrapToCollection(method.getLeft(), result));
-        }
+        return Pair.of(found, array);
     }
 
 
-    private ResultHandle getStorage(final ClassCreator creator, final MethodCreator method) {
-        final FieldDescriptor descriptor = FieldDescriptor.of(
-            creator.getClassName(),
-            "storage",
-            Storage.class
-        );
-        return method.readInstanceField(descriptor, method.getThis());
-    }
+
+
+
 
     private ResultHandle getParameter(final MethodCreator creator, final String key) {
         final MethodDescriptor descriptor = MethodDescriptor.ofMethod(
@@ -189,56 +146,11 @@ public class SpecificReadActionGenerator {
         );
     }
 
-    private void createConstructor(final ClassCreator creator, final SpecificReadInfo info) {
-        final MethodCreator constructor =
-            creator.getMethodCreator("<init>",
-                void.class,
-                EntityConverter.class,
-                info.storage()
-            );
-        constructor.addAnnotation(Inject.class);
-        constructor.invokeSpecialMethod(
-            MethodDescriptor.ofMethod(AbstractSpecificReadAction.class,
-                "<init>",
-                void.class,
-                Storage.class
-            ),
-            constructor.getThis(),
-            constructor.getMethodParam(0)
-        );
-        constructor.returnValue(null);
-    }
 
-    private void createKey(final ClassCreator creator, final SpecificReadInfo info) {
-        final MethodCreator method = creator.getMethodCreator("key", String.class);
-        method.returnValue(method.load(info.key()));
-    }
 
-    private void createInput(final ClassCreator creator, final SpecificReadInfo info) {
-        final MethodCreator method = creator.getMethodCreator("inputType", Class.class);
-        method.returnValue(method.loadClass(info.getInput()));
-    }
 
-    private void createOutput(
-        final ClassCreator creator,
-        final Class<?> output
-    ) {
-        final MethodCreator method = creator.getMethodCreator("outputType", Class.class);
-        method.returnValue(method.loadClass(output));
-    }
 
-    private String prepareSignature(
-        final String input,
-        final String output,
-        final String storage
-    ) {
-        return String.format("L%s<L%s;L%s;L%s;>;",
-            AbstractSpecificReadAction.class.getName().replace(".", "/"),
-            input.replace(".", "/"),
-            output.replace(".", "/"),
-            storage.replace(".", "/")
-        );
-    }
+
 
     private Collection<SpecificReadInfo> infos() {
         final Collection<SearchSpecificReadAction> searchers = ImmutableList.of(
