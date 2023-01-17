@@ -32,6 +32,7 @@ public class JpaInfo implements EntityInfo {
 
     private final String implementation;
 
+    private final String onetoone;
     private final boolean generated;
 
     public JpaInfo(
@@ -39,12 +40,14 @@ public class JpaInfo implements EntityInfo {
         final String schema,
         final String table,
         final String implementation,
+        final String onetoone,
         final boolean generated
     ) {
         this.entity = entity;
         this.schema = schema;
         this.table = table;
         this.implementation = implementation;
+        this.onetoone = onetoone;
         this.generated = generated;
     }
 
@@ -66,5 +69,9 @@ public class JpaInfo implements EntityInfo {
 
     public boolean isGenerated() {
         return this.generated;
+    }
+
+    public String getOnetoone() {
+        return this.onetoone;
     }
 }

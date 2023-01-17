@@ -11,11 +11,11 @@
 
   <packaging>pom</packaging>
 
-  <artifactId>quarkus-extension</artifactId>
+  <artifactId>quarkus-common-extension</artifactId>
 
   <modules>
-    <module>quarkus-extension-deployment</module>
-    <module>quarkus-extension-runtime</module>
+    <module>quarkus-common-extension-deployment</module>
+    <module>quarkus-common-extension-runtime</module>
   </modules>
 
   <properties>

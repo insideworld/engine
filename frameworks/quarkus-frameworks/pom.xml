@@ -15,7 +15,7 @@
 
   <modules>
     <module>quarkus-common-engine</module>
-    <module>quarkus-extension</module>
+    <module>quarkus-common-extension</module>
   </modules>
 
   <properties>

@@ -71,7 +71,7 @@ public class AuthExecuteWrapper implements ExecuteWrapper {
 
     @Override
     public final long wrapperOrder() {
-        return 200_000;
+        return 600_000;
     }
 
     @Override

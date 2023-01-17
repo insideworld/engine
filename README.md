@@ -41,5 +41,3 @@ Update version of maven - mvn versions:set -DnewVersion="0.7.0"
 
 Need to redefine AbstractLoginAction, AbstractReadRolesAction and AbstractReadUserAction
 
-
-Транзакции автоматически комитяться!

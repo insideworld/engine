@@ -20,14 +20,21 @@
 package insideworld.engine.plugins.generator.data.jpa.entity.fields;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Function;
 import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
 import insideworld.engine.core.data.core.Entity;
+import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import org.hibernate.annotations.Target;
 
 /**
  * Generate an entity implementation.
@@ -48,7 +55,16 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     @Override
     protected void addAnnotations(
         final FieldCreator field, final PropertyDescriptor descriptor, final JpaInfo info) {
-        field.addAnnotation(ManyToOne.class);
+        if (descriptor.getName().equals(info.getOnetoone())) {
+            field.addAnnotation(OneToOne.class);
+        } else {
+            field.addAnnotation(ManyToOne.class);
+        }
+        final AnnotationCreator target = field.addAnnotation(Target.class);
+        target.addValue(
+            "value",
+            this.implementations.get(this.propertyType(descriptor, info))
+        );
         final String name =
             CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, descriptor.getName()) + "_id";
         field.addAnnotation(JoinColumn.class).addValue("name", name);
@@ -84,6 +100,4 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     protected String writeSignature(PropertyDescriptor descriptor) {
         return null;
     }
-
-
 }

@@ -30,6 +30,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.Map;
 import javax.persistence.OneToMany;
+import org.hibernate.annotations.Target;
 
 public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
 
@@ -46,14 +47,19 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
             && Entity.class.isAssignableFrom(this.getGeneric(bean));
     }
 
-
     @Override
     protected void addAnnotations(
         final FieldCreator field, final PropertyDescriptor descriptor, final JpaInfo info) {
-        final AnnotationCreator annotation = field.addAnnotation(OneToMany.class);
-        final String name =
-            CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, info.getTable() + "_id");
-        annotation.addValue("mappedBy", name);
+        final AnnotationCreator onetomany = field.addAnnotation(OneToMany.class);
+        onetomany.addValue(
+            "mappedBy",
+            CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, info.getTable() + "_id")
+        );
+        final AnnotationCreator target = field.addAnnotation(Target.class);
+        target.addValue(
+            "value",
+              this.getGeneric(descriptor)
+        );
     }
 
     @Override
@@ -63,9 +69,8 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
 
     @Override
     protected String fieldSignature(final PropertyDescriptor descriptor) {
-        final Class<?> generic = this.getGeneric(descriptor);
         return String.format("Ljava/util/Collection<L%s;>;",
-            this.implementations.get(generic).getImplementation().replace(".","/")
+            this.getGeneric(descriptor).getName().replace(".","/")
         );
     }
 

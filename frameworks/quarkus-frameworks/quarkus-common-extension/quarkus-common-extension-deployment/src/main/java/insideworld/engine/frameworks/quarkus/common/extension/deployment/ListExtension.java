@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.frameworks.quarkus.extension.deployment;
+package insideworld.engine.frameworks.quarkus.common.extension.deployment;
 
 import io.quarkus.arc.deployment.AnnotationsTransformerBuildItem;
 import io.quarkus.arc.deployment.BeanArchiveIndexBuildItem;
@@ -34,6 +34,10 @@ import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.MethodParameterInfo;
 import org.jboss.jandex.Type;
 
+/**
+ * Extension to inject List instead of Instance.
+ * @since 1.0.0
+ */
 public class ListExtension {
 
     @BuildStep

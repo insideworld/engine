@@ -44,7 +44,7 @@
     </dependency>
     <dependency>
       <groupId>insideworld.engine</groupId>
-      <artifactId>quarkus-extension-runtime</artifactId>
+      <artifactId>quarkus-common-extension-runtime</artifactId>
       <version>${project.version}</version>
     </dependency>
 

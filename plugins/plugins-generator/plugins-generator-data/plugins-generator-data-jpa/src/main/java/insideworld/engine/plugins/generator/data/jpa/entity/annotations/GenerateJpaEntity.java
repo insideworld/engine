@@ -41,5 +41,11 @@ public @interface GenerateJpaEntity {
 
     String table();
 
+    /**
+     * Using to marked field if using one to one annotation.
+     * @return
+     */
+    String oneToOne() default "";
+
 
 }

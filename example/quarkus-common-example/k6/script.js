@@ -18,12 +18,22 @@
  */
 
 import http from 'k6/http';
+// export default function () {
+//     const headers = {
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': 'Bearer token'
+//         }
+//     };
+//     http.post('https://inswrlserver:22016/api/actions/somedata.read', `[]`, headers);
+// }
+
 export default function () {
     const headers = {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer token'
+            'Authorization': 'Bearer annaonelove'
         }
     };
-    http.post('https://inswrlserver:22016/api/actions/somedata.read', `[]`, headers);
+    http.post('https://localhost:20443/api/actions/device.kick', `1`, headers);
 }

@@ -34,12 +34,14 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.mutiny.amqp.AmqpMessageBuilder;
 import io.vertx.mutiny.core.buffer.Buffer;
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
 
 public abstract class AbstractAmqpActionSender implements ActionSender, OnStartUp {
 
     private final Connection connection;
     private final String channel;
-    private final Serializer serializer;
+    private final List<Serializer> serializers;
 
     /**
      * AMQP sender.
@@ -53,17 +55,20 @@ public abstract class AbstractAmqpActionSender implements ActionSender, OnStartU
     public AbstractAmqpActionSender(
         final Connection connection,
         final String channel,
-        final Serializer serializer
+        final List<Serializer> serializers
     ) {
         this.connection = connection;
         this.channel = channel;
-        this.serializer = serializer;
+        this.serializers = serializers.stream()
+            .sorted(Comparator.comparingLong(Serializer::order).reversed())
+            .toList();;
     }
 
     @Override
     public <I, O> void send(final Key<I, O> action, final Key<O, ?> callback, final I input)
         throws CommonException {
         this.sender.send(builder -> {
+            builder.address()
             builder.subject(action.getKey());
             final ImmutableMap.Builder<String, Object> map = ImmutableMap.builder();
             this.additional(builder);
@@ -72,7 +77,12 @@ public abstract class AbstractAmqpActionSender implements ActionSender, OnStartU
             }
             builder.applicationProperties(new JsonObject(map.build()));
             final ByteBufOutputStream output = new ByteBufOutputStream(Unpooled.buffer());
-            this.serializer.serialize(input, output);
+            for (final Serializer serializer : serializers) {
+                if (serializer.applicable(input.getClass())) {
+                    serializer.serialize(input, output);
+                    break;
+                }
+            }
             builder.withBufferAsBody(Buffer.buffer(output.buffer()));
             try {
                 output.close();

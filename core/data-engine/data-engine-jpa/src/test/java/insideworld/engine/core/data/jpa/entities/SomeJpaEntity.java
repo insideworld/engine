@@ -26,6 +26,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.MetaValue;
+import org.hibernate.annotations.Target;
 
 /**
  * JPA entity implementation for tests.
@@ -46,9 +49,10 @@ public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
     /**
      * Nested entity.
      */
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "some_nested_entity_id")
-    private SomeNestedJpaEntity entity;
+    @Target(SomeNestedJpaEntity.class)
+    private SomeNestedEntity entity;
 
     @Override
     public String getValue() {
@@ -67,6 +71,6 @@ public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
 
     @Override
     public void setNestedEntity(final SomeNestedEntity pentity) {
-        this.entity = (SomeNestedJpaEntity) pentity;
+        this.entity = pentity;
     }
 }

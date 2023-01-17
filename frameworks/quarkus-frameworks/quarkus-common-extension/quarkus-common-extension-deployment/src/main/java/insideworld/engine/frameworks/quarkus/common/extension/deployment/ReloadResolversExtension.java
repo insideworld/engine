@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.frameworks.quarkus.extension.deployment;
+package insideworld.engine.frameworks.quarkus.common.extension.deployment;
 
 import io.quarkus.arc.deployment.GeneratedBeanBuildItem;
 import io.quarkus.bootstrap.classloading.MemoryClassPathElement;

@@ -17,35 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor.profile.wrapper;
+package insideworld.engine.plugins.generator.data.action.read.specific;
 
-import insideworld.engine.core.action.executor.ExecuteContext;
-import insideworld.engine.core.action.executor.ExecutorTags;
-import insideworld.engine.core.action.executor.profile.DefaultExecuteProfile;
-import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Queue;
-import javax.inject.Singleton;
+import insideworld.engine.core.data.core.Entity;
+import insideworld.engine.core.data.core.storages.Storage;
 
-@Singleton
-public class UnwrapInput implements ExecuteWrapper {
-
-    @Override
-    public void execute(final ExecuteContext context, final Queue<ExecuteWrapper> wrappers)
-        throws CommonException {
-        context.put(ExecutorTags.INPUT, context.get(ExecutorTags.INPUT_PREDICATE).getInput());
-        this.next(context, wrappers);
+public class Qwe extends AbstractSpecificReadAction<Long, String, Storage<Entity>> {
+    public Qwe(final Storage<Entity> storage) {
+        super(storage);
     }
 
     @Override
-    public long wrapperOrder() {
-        return 800_000;
+    public String execute(final Long input) throws CommonException {
+        return null;
     }
 
     @Override
-    public Collection<Class<? extends ExecuteProfile>> forProfile() {
-        return Collections.singleton(DefaultExecuteProfile.class);
+    public String key() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends Long> inputType() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends String> outputType() {
+        return null;
     }
 }

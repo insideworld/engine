@@ -19,6 +19,7 @@
 
 package insideworld.engine.plugins.generator.data.action.read.specific.annotations;
 
+import insideworld.engine.core.action.executor.Input;
 import insideworld.engine.core.data.core.storages.Storage;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -28,6 +29,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.inject.Scope;
 
+/**
+ * Generate action which using specific input interface to generate.
+ * How it's work:
+ * Input type should has fields with the same name in storage.
+ * After that will execute provided method with call of input getters.
+ * @since 2.0.0
+ */
 @Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -35,14 +43,26 @@ import javax.inject.Scope;
 @Repeatable(GenerateSpecificReadActions.class)
 public @interface GenerateSpecificReadAction {
 
+    /**
+     * Storage which is using to read and entity.
+     * @return Type of storage,
+     */
     Class<? extends Storage<?>> storage();
 
-    String[] parameters();
+    /**
+     * Input type for actions.
+     * @return Input type.
+     */
+    Class<?> inputType();
 
     String key();
 
     Class<?>[] interfaces() default {};
 
+    /**
+     * Method which need to call from storage.
+     * @return Method name.
+     */
     String method();
 
 }

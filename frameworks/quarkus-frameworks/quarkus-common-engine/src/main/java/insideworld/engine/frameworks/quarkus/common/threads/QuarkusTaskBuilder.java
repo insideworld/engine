@@ -68,7 +68,7 @@ public class QuarkusTaskBuilder<T> implements TaskBuilder<T> {
         });
         final Uni<T> uni = Uni.createFrom()
             .item(Unchecked.supplier(supplier::execute))
-            .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+            .runSubscriptionOn(Infrastructure.getDefaultExecutor())
             .onFailure()
             .recoverWithItem(exp -> {
                 task.setThrowable(exp.getCause());

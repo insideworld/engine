@@ -22,6 +22,7 @@ package insideworld.engine.core.endpoint.amqp;
 import insideworld.engine.core.endpoint.amqp.actions.AbstractAmqpActionSender;
 import insideworld.engine.core.action.serializer.Serializer;
 import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import java.util.List;
 import javax.inject.Singleton;
 
 @Singleton
@@ -36,9 +37,9 @@ public class TestActionSender extends AbstractAmqpActionSender {
      */
     public TestActionSender(
         final TestVertexConnection connection,
-        final Serializer serializer
+        final List<Serializer> serializers
     ) {
-        super(connection, "test", serializer);
+        super(connection, "test", serializers);
     }
 
     @Override

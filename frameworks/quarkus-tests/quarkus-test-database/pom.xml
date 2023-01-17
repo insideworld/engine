@@ -43,6 +43,12 @@
       <artifactId>quarkus-test-common</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-jpa-extension-runtime</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
 
     <dependency>
       <groupId>io.quarkus</groupId>

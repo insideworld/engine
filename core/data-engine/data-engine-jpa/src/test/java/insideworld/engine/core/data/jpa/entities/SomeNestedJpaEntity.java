@@ -24,6 +24,7 @@ import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import org.hibernate.annotations.Target;
 
 /**
  * JPA implementation of nested entity.

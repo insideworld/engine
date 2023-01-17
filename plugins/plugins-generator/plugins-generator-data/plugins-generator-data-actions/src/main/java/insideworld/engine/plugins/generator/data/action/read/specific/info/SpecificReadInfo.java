@@ -27,7 +27,7 @@ public interface SpecificReadInfo {
 
     Class<? extends Storage<? extends Entity>> storage();
 
-    String[] parameters();
+    Class<?> getInput();
 
     String key();
 

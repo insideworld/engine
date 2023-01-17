@@ -46,6 +46,7 @@ public class SearchMixin
             annotation.schema(),
             annotation.table(),
             this.name(annotation.entity(), mixin),
+            annotation.oneToOne(),
             true
         );
     }

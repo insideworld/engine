@@ -88,7 +88,7 @@ public class QuarkusMultiTaskBuilder<T, O> implements MultiTaskBuilder<T, O> {
                         supplier -> Uni
                             .createFrom()
                             .item(Unchecked.supplier(supplier::execute))
-                            .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
+                            .runSubscriptionOn(Infrastructure.getDefaultExecutor())
                             .onFailure()
                             .recoverWithItem(exp -> {
                                 task.addThrowable(exp.getCause());

@@ -56,6 +56,7 @@ public class SearchExists implements SearchEntities {
                 table.schema(),
                 table.name(),
                 implementation.get().getName(),
+                "",
                 false
             );
         } else {

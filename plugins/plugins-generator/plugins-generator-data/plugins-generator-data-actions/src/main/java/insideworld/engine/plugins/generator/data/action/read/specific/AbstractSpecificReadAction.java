@@ -22,23 +22,50 @@ package insideworld.engine.plugins.generator.data.action.read.specific;
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
-import insideworld.engine.core.data.core.converter.EntityConverter;
 import insideworld.engine.core.data.core.storages.Storage;
-import java.util.Collection;
 
-public abstract class AbstractSpecificReadAction<S extends Storage<? extends Entity>> implements Action {
+/**
+ * This class is abstract.
+ * Add generics in signature.
+ * Generate:
+ * 1. Key method.
+ * 2. InputType method
+ * 3. OutputType method (based on returned type)
+ * 4. Generate execute with parsing fields.
+ * @param <I>
+ * @param <O>
+ * @param <S>
+ */
+public abstract class AbstractSpecificReadAction<I, O, S extends Storage<? extends Entity>> implements Action<I, O> {
 
-    private final EntityConverter converter;
 
     protected final S storage;
 
-    public AbstractSpecificReadAction(
-        final EntityConverter converter,
-        final S storage
-    ) {
-        this.converter = converter;
+    public AbstractSpecificReadAction(final S storage) {
         this.storage = storage;
     }
+
+//    @Override
+//    public O execute(final I input) throws CommonException {
+//        return this.storage.readSome(input.getOne(), input.getTwo());
+//        return null;
+//    }
+//
+//    @Override
+//    public String key() {
+//        return provided key;
+//    }
+//
+//    @Override
+//    public Class<? extends I> inputType() {
+//        return I.class;
+//    }
+//
+//    @Override
+//    public Class<? extends O> outputType() {
+//        return O.class;
+//    }
+}
 
 //    @Override
 //    public void execute(final Context context, final Output output) throws CommonException {
@@ -48,4 +75,4 @@ public abstract class AbstractSpecificReadAction<S extends Storage<? extends Ent
 //    }
 //    protected abstract Collection<? extends Entity> read(Context context);
 
-}
+//}
