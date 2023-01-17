@@ -36,23 +36,30 @@ public class GenerateAction {
     private final Reflection reflection;
     private final ClassOutput output;
 
+    private final GenerateMethods methods;
+
+    private final GenerateExecute execute;
+
     public GenerateAction(final Reflection reflection,
                           final ClassOutput output) {
         this.reflection = reflection;
         this.output = output;
+        this.methods = new GenerateMethods();
+        this.execute = new GenerateExecute();
     }
 
-    public ClassCreator createClass(
+    public void createClass(
         final SpecificReadInfo info,
-        final Method storage
+        final Method storage,
+        final Method[] parameters
     ) {
         ClassCreator.Builder builder = ClassCreator.builder()
             .classOutput(this.output)
             .className(info.implementation())
             .superClass(AbstractSpecificReadAction.class)
             .signature(this.prepareSignature(
-                    storage.getReturnType().getName(),
                     info.getInput().getName(),
+                    storage.getReturnType().getName(),
                     info.storage().getName()
                 )
             );
@@ -62,14 +69,22 @@ public class GenerateAction {
         final ClassCreator creator = builder.build();
         this.createConstructor(creator, info);
         creator.addAnnotation(Singleton.class);
-        return creator;
+        this.methods.createInput(creator, info);
+        this.methods.createOutput(creator, storage.getReturnType());
+        this.methods.createKey(creator, info);
+        this.execute.createExecute(
+            creator,
+            storage,
+            parameters,
+            info
+        );
+        creator.close();
     }
 
     private void createConstructor(final ClassCreator creator, final SpecificReadInfo info) {
         final MethodCreator constructor =
             creator.getMethodCreator("<init>",
                 void.class,
-                EntityConverter.class,
                 info.storage()
             );
         constructor.addAnnotation(Inject.class);

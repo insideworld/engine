@@ -22,23 +22,29 @@ package insideworld.engine.core.action.serializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.startup.OnStartUp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Singleton;
 
 @Singleton
-public class JacksonDefaultSerializer implements Serializer {
+public class JacksonDefaultSerializer implements Serializer, OnStartUp {
 
     private final ObjectMapper mapper;
 
     private final Map<Class<?>, ObjectReader> readers;
 
     private final Map<Class<?>, ObjectWriter> writers;
+    private List<Serializable> serializables;
 
-    public JacksonDefaultSerializer() {
+    public JacksonDefaultSerializer(final List<Serializable> serializables) {
+        this.serializables = serializables;
         this.mapper = new ObjectMapper();
         this.readers = new ConcurrentHashMap<>();
         this.writers = new ConcurrentHashMap<>();
@@ -98,5 +104,22 @@ public class JacksonDefaultSerializer implements Serializer {
     @Override
     public long order() {
         return 0;
+    }
+
+    @Override
+    public void startUp() throws CommonException {
+        final SimpleModule module = new SimpleModule();
+        for (final Serializable serializable : this.serializables) {
+            for (final Class inter : serializable.getClass().getInterfaces()) {
+                module.addAbstractTypeMapping(inter, serializable.getClass()) ;
+            }
+        }
+        this.mapper.registerModule(module);
+        this.serializables = null;
+    }
+
+    @Override
+    public long startOrder() {
+        return 100_000;
     }
 }

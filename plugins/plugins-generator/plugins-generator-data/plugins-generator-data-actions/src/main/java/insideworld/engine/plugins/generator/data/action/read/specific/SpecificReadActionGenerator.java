@@ -52,10 +52,13 @@ public class SpecificReadActionGenerator {
     private final Reflection reflection;
     private final ClassOutput output;
 
+    private final GenerateAction action;
+
     public SpecificReadActionGenerator(final Reflection reflection,
                                        final ClassOutput output) {
         this.reflection = reflection;
         this.output = output;
+        this.action = new GenerateAction(reflection, output);
     }
 
     public void generate() {
@@ -64,30 +67,8 @@ public class SpecificReadActionGenerator {
 
 
     private void generate(final SpecificReadInfo info) {
-        final Pair<Method, Map<Integer, Method>> pair = this.findMethod(info);
-        final Method method = pair.getLeft();
-        final Map<Integer, Method> parameters = pair.getRight();
-        ClassCreator.Builder builder = ClassCreator.builder()
-            .classOutput(this.output)
-            .className(info.implementation())
-            .superClass(AbstractSpecificReadAction.class)
-            .signature(this.prepareSignature(
-                    method.getReturnType().getName(),
-                    info.getInput().getName(),
-                    info.storage().getName()
-                )
-            );
-        for (final Class<?> inter : info.interfaces()) {
-            builder.interfaces(inter);
-        }
-        final ClassCreator creator = builder.build();
-        this.createConstructor(creator, info);
-        this.createExecute(creator, info);
-        this.createKey(creator, info);
-        this.createInput(creator, info);
-        this.createOutput(creator, method.getReturnType());
-        creator.addAnnotation(Singleton.class);
-        creator.close();
+        final Pair<Method, Method[]> method = this.findMethod(info);
+        this.action.createClass(info, method.getLeft(), method.getRight());
     }
 
     /**
@@ -98,25 +79,24 @@ public class SpecificReadActionGenerator {
      */
     private Pair<Method, Method[]> findMethod(final SpecificReadInfo info) {
         final Method found = Arrays.stream(info.storage().getDeclaredMethods()).filter(
-                method -> method.getName().equals(info.method())
+                method -> info.method().startsWith(method.getName())
             )
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Not found necessary method"));
         final Map<String, Method> fields = Arrays.stream(info.getInput().getDeclaredMethods())
             .filter(method -> method.getName().startsWith("get"))
             .collect(Collectors.toMap(
-                method -> method.getName().substring(3),
+                method -> method.getName().substring(3).toLowerCase(),
                 Function.identity()
             ));
         final Method[] array = new Method[found.getParameterCount()];
-        for (int i = 0; i < found.getParameterCount(); i++) {
-            final Parameter parameter = found.getParameters()[i];
-            final Method method = fields.get(parameter.getName());
+        for (int i = 0; i < info.parameters().length; i++) {
+            final Method method = fields.get(info.parameters()[i].toLowerCase());
             if (method == null) {
                 throw new IllegalArgumentException(
                     String.format(
                         "Can't find parameter %s for %s in input %s",
-                        parameter.getName(),
+                        info.parameters()[i],
                         info.storage().getName(),
                         info.getInput().getName()
                     )
@@ -126,31 +106,6 @@ public class SpecificReadActionGenerator {
         }
         return Pair.of(found, array);
     }
-
-
-
-
-
-
-    private ResultHandle getParameter(final MethodCreator creator, final String key) {
-        final MethodDescriptor descriptor = MethodDescriptor.ofMethod(
-            Context.class,
-            "get",
-            Object.class,
-            String.class
-        );
-        return creator.invokeInterfaceMethod(
-            descriptor,
-            creator.getMethodParam(0),
-            creator.load(key)
-        );
-    }
-
-
-
-
-
-
 
     private Collection<SpecificReadInfo> infos() {
         final Collection<SearchSpecificReadAction> searchers = ImmutableList.of(

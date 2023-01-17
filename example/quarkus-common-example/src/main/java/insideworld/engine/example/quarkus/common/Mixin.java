@@ -19,6 +19,7 @@
 
 package insideworld.engine.example.quarkus.common;
 
+import insideworld.engine.example.quarkus.common.data.InputData;
 import insideworld.engine.example.quarkus.common.data.SomeDataStorage;
 import insideworld.engine.plugins.generator.data.action.read.specific.annotations.GenerateSpecificReadAction;
 import insideworld.engine.plugins.generator.data.jpa.entity.annotations.GenerateJpaEntity;
@@ -39,25 +40,26 @@ import insideworld.engine.plugins.generator.data.action.write.annotations.Genera
 @GenerateReadAction(entity = SomeData.class, key = "somedata.read", interfaces = {MemberRole.class})
 @GenerateWriteAction(entity = SomeData.class, key = "somedata.write", interfaces = {MemberRole.class})
 @GenerateDeleteAction(entity = SomeData.class, key = "somedata.delete", interfaces = {MemberRole.class})
-@GenerateSpecificReadAction(
-    storage = SomeDataStorage.class,
-    method = "readByValue",
-    key = "somedata.value",
-    interfaces = {MemberRole.class},
-    parameters = {"value"}
-)
-@GenerateSpecificReadAction(
-    storage = SomeDataStorage.class,
-    method = "readByValueSingle",
-    key = "somedata.valueSingle",
-    interfaces = {MemberRole.class},
-    parameters = {"value"}
-)
+//@GenerateSpecificReadAction(
+//    storage = SomeDataStorage.class,
+//    method = "readByValue",
+//    key = "somedata.value",
+//    interfaces = {MemberRole.class},
+//    parameters = {"value"}
+//)
+//@GenerateSpecificReadAction(
+//    storage = SomeDataStorage.class,
+//    method = "readByValueSingle",
+//    key = "somedata.valueSingle",
+//    interfaces = {MemberRole.class},
+//    parameters = {"value"}
+//)
 @GenerateSpecificReadAction(
     storage = SomeDataStorage.class,
     method = "readByDateAndValue",
     key = "somedata.valueDate",
     interfaces = {MemberRole.class},
+    inputType = InputData.class,
     parameters = {"value", "date"}
 )
 public interface Mixin extends GenerateMixin {

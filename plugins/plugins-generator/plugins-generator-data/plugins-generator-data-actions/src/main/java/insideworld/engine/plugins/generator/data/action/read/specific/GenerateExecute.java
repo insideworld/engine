@@ -19,7 +19,6 @@
 
 package insideworld.engine.plugins.generator.data.action.read.specific;
 
-import com.google.common.collect.Lists;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.data.action.read.specific.info.SpecificReadInfo;
 import io.quarkus.gizmo.ClassCreator;
@@ -28,13 +27,11 @@ import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
 import io.quarkus.gizmo.ResultHandle;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class GenerateExecute {
 
 
-    private void createExecute(
+    public void createExecute(
         final ClassCreator creator,
         final Method storage,
         final Method[] parameters,
@@ -45,54 +42,28 @@ public class GenerateExecute {
             storage.getReturnType(),
             info.getInput()
         );
-        //It's execute storage descriptor
         final MethodDescriptor descriptor = MethodDescriptor.ofMethod(
             info.storage(),
             info.method(),
             storage.getReturnType(),
             storage.getParameterTypes()
         );
-
-        final ResultHandle[] input = new ResultHandle[parameters.length];
-        final ResultHandle income = execute.getMethodParam(0);
-        for (int i = 0; i < parameters.length; i++) {
-            execute.invokeInterfaceMethod(
-                descriptor,
-                this.getStorage(creator, execute),
-
-
-            );
-            execute.getMethodParam(0);
-        }
-        execute.invokeInterfaceMethod(
+        final ResultHandle output = execute.invokeInterfaceMethod(
             descriptor,
-            this.getStorage(creator, execute),
-
-//            parameters.toArray(ResultHandle[]::new)
+            this.getStorageField(creator, execute),
+            this.getParameter(info, execute, parameters)
         );
-
-        final Pair<MethodCreator, Method> method = this.createReadMethod(creator, info);
-        final Collection<ResultHandle> parameters =
-            Lists.newArrayListWithCapacity(info.parameters().length);
-        for (final String parameter : info.parameters()) {
-            parameters.add(this.getParameter(method.getKey(), parameter));
-        }
-        final ResultHandle storage = this.getStorage(creator, method.getLeft());
-        final ResultHandle result = this.executeStorage(method, info, storage, parameters);
-        if (Collection.class.isAssignableFrom(method.getRight().getReturnType())) {
-            method.getLeft().returnValue(result);
-        } else {
-//            method.getLeft().returnValue(this.wrapToCollection(method.getLeft(), result));
-        }
+        execute.returnValue(output);
     }
 
     /**
      * Get storage field.
+     *
      * @param creator Class creator.
      * @param method Method for exexute.
      * @return Handler of field.
      */
-    private ResultHandle getStorage(final ClassCreator creator, final MethodCreator method) {
+    private ResultHandle getStorageField(final ClassCreator creator, final MethodCreator method) {
         final FieldDescriptor descriptor = FieldDescriptor.of(
             creator.getClassName(),
             "storage",
@@ -101,4 +72,31 @@ public class GenerateExecute {
         return method.readInstanceField(descriptor, method.getThis());
     }
 
+    /**
+     * Get paramters result handle from input..
+     * @param info
+     * @param creator
+     * @param methods
+     * @return
+     */
+    private ResultHandle[] getParameter(
+        final SpecificReadInfo info,
+        final MethodCreator creator,
+        final Method[] methods
+    ) {
+        final ResultHandle[] parameters = new ResultHandle[methods.length];
+        final ResultHandle input = creator.getMethodParam(0);
+        for (int i = 0; i < methods.length; i++) {
+            final MethodDescriptor descriptor = MethodDescriptor.ofMethod(
+                info.getInput(),
+                methods[i].getName(),
+                methods[i].getReturnType()
+            );
+            parameters[i] = creator.invokeInterfaceMethod(
+                descriptor,
+                input
+            );
+        }
+        return parameters;
+    }
 }

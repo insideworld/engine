@@ -37,4 +37,5 @@ public interface SpecificReadInfo {
 
     String method();
 
+    String[] parameters();
 }

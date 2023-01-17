@@ -181,6 +181,21 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>insideworld.engine</groupId>
+        <artifactId>plugins-generator-action-input</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <scan>insideworld.engine.example.quarkus</scan>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
 
       <plugin>

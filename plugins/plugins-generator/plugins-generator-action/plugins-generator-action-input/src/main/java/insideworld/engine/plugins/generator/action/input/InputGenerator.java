@@ -22,6 +22,7 @@ package insideworld.engine.plugins.generator.action.input;
 import static java.beans.Introspector.USE_ALL_BEANINFO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import insideworld.engine.core.action.serializer.Serializable;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.ClassCreator;
@@ -68,7 +69,7 @@ public class InputGenerator {
         final ClassCreator creator = ClassCreator.builder()
             .classOutput(this.output)
             .className(String.format("%sImpl",type.getName()))
-            .interfaces(type)
+            .interfaces(type, Serializable.class)
             .build();
         creator.addAnnotation(Dependent.class);
         for (final Property property : properties) {

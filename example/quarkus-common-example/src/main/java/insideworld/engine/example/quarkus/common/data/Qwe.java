@@ -17,31 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.read.specific;
+package insideworld.engine.example.quarkus.common.data;
 
-import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.data.core.Entity;
-import insideworld.engine.core.data.core.storages.Storage;
+import insideworld.engine.plugins.generator.data.action.read.specific.AbstractSpecificReadAction;
+import java.util.Collection;
 
-/**
- * This class is abstract.
- * Add generics in signature.
- * Generate:
- * 1. Key method.
- * 2. InputType method
- * 3. OutputType method (based on returned type)
- * 4. Generate execute with parsing fields.
- * @param <I>
- * @param <O>
- * @param <S>
- */
-public abstract class AbstractSpecificReadAction<I, O, S extends Storage<? extends Entity>> implements Action<I, O> {
+public class Qwe extends AbstractSpecificReadAction<InputData, Collection<SomeData>, SomeDataStorage> {
 
+    public Qwe(final SomeDataStorage storage) {
+        super(storage);
+    }
 
-    protected final S storage;
+    @Override
+    public Collection<SomeData> execute(final InputData input) throws CommonException {
+        return null;
+    }
 
-    public AbstractSpecificReadAction(final S storage) {
-        this.storage = storage;
+    @Override
+    public String key() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends InputData> inputType() {
+        return null;
+    }
+
+    @Override
+    public Class<? extends Collection<SomeData>> outputType() {
+        return null;
     }
 }

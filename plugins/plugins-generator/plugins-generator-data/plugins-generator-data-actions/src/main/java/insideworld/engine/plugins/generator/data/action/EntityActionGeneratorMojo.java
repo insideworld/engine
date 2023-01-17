@@ -23,6 +23,7 @@ import insideworld.engine.plugins.generator.base.AbstractGeneratorMojo;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.delete.DeleteActionGenerator;
 import insideworld.engine.plugins.generator.data.action.read.id.ReadActionGenerator;
+import insideworld.engine.plugins.generator.data.action.read.specific.SpecificReadActionGenerator;
 import insideworld.engine.plugins.generator.data.action.write.WriteActionGenerator;
 import io.quarkus.gizmo.ClassOutput;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -40,7 +41,7 @@ public class EntityActionGeneratorMojo extends AbstractGeneratorMojo {
         new ReadActionGenerator(reflection, output).generate();
         new WriteActionGenerator(reflection, output).generate();
         new DeleteActionGenerator(reflection, output).generate();
-//        new SpecificReadActionGenerator(reflection, output).generate();
+        new SpecificReadActionGenerator(reflection, output).generate();
     }
 
 }

@@ -40,12 +40,12 @@ public class SearchSpecificReadActionMixin
     protected SpecificReadInfo createSearch(GenerateSpecificReadAction annotation, Class<? extends GenerateMixin> mixin) {
         return new SpecificReadInfoImpl(
             annotation.storage(),
+            annotation.inputType(),
+            annotation.method(),
+            annotation.parameters(),
             annotation.key(),
             annotation.interfaces(),
-            this.name(annotation.storage(), annotation.method(), mixin),
-            annotation.method(),
-null
-//            annotation.parameters()
+            this.name(annotation.storage(), annotation.method(), mixin)
         );
     }
 

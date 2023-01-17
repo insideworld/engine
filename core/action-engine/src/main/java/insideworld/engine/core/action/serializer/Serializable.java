@@ -17,31 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.plugins.generator.data.action.read.specific;
-
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.data.core.Entity;
-import insideworld.engine.core.data.core.storages.Storage;
+package insideworld.engine.core.action.serializer;
 
 /**
- * This class is abstract.
- * Add generics in signature.
- * Generate:
- * 1. Key method.
- * 2. InputType method
- * 3. OutputType method (based on returned type)
- * 4. Generate execute with parsing fields.
- * @param <I>
- * @param <O>
- * @param <S>
+ * Interface marker for implementations which need bound to interface for serialization.
+ * @since 2.0.0
  */
-public abstract class AbstractSpecificReadAction<I, O, S extends Storage<? extends Entity>> implements Action<I, O> {
-
-
-    protected final S storage;
-
-    public AbstractSpecificReadAction(final S storage) {
-        this.storage = storage;
-    }
+public interface Serializable extends java.io.Serializable {
 }

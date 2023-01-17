@@ -68,7 +68,6 @@ public abstract class AbstractAmqpActionSender implements ActionSender, OnStartU
     public <I, O> void send(final Key<I, O> action, final Key<O, ?> callback, final I input)
         throws CommonException {
         this.sender.send(builder -> {
-            builder.address()
             builder.subject(action.getKey());
             final ImmutableMap.Builder<String, Object> map = ImmutableMap.builder();
             this.additional(builder);

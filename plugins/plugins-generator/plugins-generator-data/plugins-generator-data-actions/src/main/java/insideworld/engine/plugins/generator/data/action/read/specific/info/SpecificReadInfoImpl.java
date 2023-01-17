@@ -30,16 +30,18 @@ public class SpecificReadInfoImpl implements SpecificReadInfo {
     private final String implementation;
 
     private final Class<?> input;
+    private final String[] parameters;
 
     private final String method;
 
     public SpecificReadInfoImpl(
         Class<? extends Storage<?>> storage,
+        final Class<?> input,
+        final String method,
+        final String[] parameters,
         final String key,
         final Class<?>[] interfaces,
-        final String implementation,
-        final String method,
-        final Class<?> input
+        final String implementation
     ) {
         this.storage = storage;
         this.key = key;
@@ -47,6 +49,7 @@ public class SpecificReadInfoImpl implements SpecificReadInfo {
         this.implementation = implementation;
         this.method = method;
         this.input = input;
+        this.parameters = parameters;
     }
 
     @Override
@@ -74,7 +77,13 @@ public class SpecificReadInfoImpl implements SpecificReadInfo {
         return this.method;
     }
 
+    @Override
     public Class<?> getInput() {
         return this.input;
+    }
+
+    @Override
+    public String[] parameters() {
+        return this.parameters;
     }
 }

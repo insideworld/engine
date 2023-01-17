@@ -65,4 +65,10 @@ public @interface GenerateSpecificReadAction {
      */
     String method();
 
+    /**
+     * Method parameters.
+     * @return
+     */
+    String[] parameters();
+
 }

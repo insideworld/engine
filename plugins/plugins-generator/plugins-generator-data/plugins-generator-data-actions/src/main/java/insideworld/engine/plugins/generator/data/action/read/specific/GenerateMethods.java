@@ -27,17 +27,17 @@ public class GenerateMethods {
 
 
 
-    private void createKey(final ClassCreator creator, final SpecificReadInfo info) {
+    public void createKey(final ClassCreator creator, final SpecificReadInfo info) {
         final MethodCreator method = creator.getMethodCreator("key", String.class);
         method.returnValue(method.load(info.key()));
     }
 
-    private void createInput(final ClassCreator creator, final SpecificReadInfo info) {
+    public void createInput(final ClassCreator creator, final SpecificReadInfo info) {
         final MethodCreator method = creator.getMethodCreator("inputType", Class.class);
         method.returnValue(method.loadClass(info.getInput()));
     }
 
-    private void createOutput(final ClassCreator creator, final Class<?> output) {
+    public void createOutput(final ClassCreator creator, final Class<?> output) {
         final MethodCreator method = creator.getMethodCreator("outputType", Class.class);
         method.returnValue(method.loadClass(output));
     }
