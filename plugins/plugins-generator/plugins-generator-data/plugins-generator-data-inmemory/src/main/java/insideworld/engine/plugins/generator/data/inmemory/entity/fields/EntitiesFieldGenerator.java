@@ -22,6 +22,7 @@ package insideworld.engine.plugins.generator.data.inmemory.entity.fields;
 import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.inmemory.entity.search.InMemoryInfo;
 import insideworld.engine.core.data.core.Entity;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.ParameterizedType;
@@ -68,6 +69,11 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<InMemoryInfo>
             "(Ljava/util/Collection<L%s;>;)V",
             this.getGeneric(descriptor).getName().replace(".","/")
         );
+    }
+
+    @Override
+    protected void additional(final ClassCreator creator, final FieldCreator field, final PropertyDescriptor descriptor, final InMemoryInfo info) {
+
     }
 
 

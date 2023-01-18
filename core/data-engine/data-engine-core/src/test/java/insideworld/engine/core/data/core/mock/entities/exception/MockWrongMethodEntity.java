@@ -45,6 +45,8 @@ public class MockWrongMethodEntity implements Entity {
         return MockWrongMethodEntity.ID;
     }
 
+
+
     /**
      * Getter with NPE exception.
      * @return Failed.

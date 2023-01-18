@@ -66,7 +66,7 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
 
     @Override
     public final Collection<T> writeAll(final Collection<T> entity) {
-        persist(this.castLower(entity));
+        entity.forEach(this::write);
         return entity;
     }
 

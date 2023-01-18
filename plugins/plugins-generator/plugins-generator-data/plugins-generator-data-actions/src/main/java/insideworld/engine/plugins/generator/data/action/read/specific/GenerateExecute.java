@@ -27,6 +27,12 @@ import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
 import io.quarkus.gizmo.ResultHandle;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class GenerateExecute {
 
@@ -34,13 +40,12 @@ public class GenerateExecute {
     public void createExecute(
         final ClassCreator creator,
         final Method storage,
-        final Method[] parameters,
         final SpecificReadInfo info
     ) {
         final MethodCreator execute = creator.getMethodCreator(
             "execute",
-            storage.getReturnType(),
-            info.getInput()
+            Object.class,
+            Object.class
         );
         final MethodDescriptor descriptor = MethodDescriptor.ofMethod(
             info.storage(),
@@ -48,10 +53,24 @@ public class GenerateExecute {
             storage.getReturnType(),
             storage.getParameterTypes()
         );
+        final ResultHandle[] parameters;
+        /**
+         * Fixme - move it to lambda.
+         */
+        if (info.getInput().isArray()
+            || info.getInput().isPrimitive()
+            || Collection.class.isAssignableFrom(info.getInput())
+            || String.class.equals(info.getInput())
+            || Date.class.equals(info.getInput())
+        ) {
+            parameters = new ResultHandle[]{execute.getMethodParam(0)};
+        } else {
+            parameters = this.getClassParameters(info, execute, this.findMethods(storage, info));
+        }
         final ResultHandle output = execute.invokeInterfaceMethod(
             descriptor,
             this.getStorageField(creator, execute),
-            this.getParameter(info, execute, parameters)
+            parameters
         );
         execute.returnValue(output);
     }
@@ -74,12 +93,13 @@ public class GenerateExecute {
 
     /**
      * Get paramters result handle from input..
+     *
      * @param info
      * @param creator
      * @param methods
      * @return
      */
-    private ResultHandle[] getParameter(
+    private ResultHandle[] getClassParameters(
         final SpecificReadInfo info,
         final MethodCreator creator,
         final Method[] methods
@@ -98,5 +118,30 @@ public class GenerateExecute {
             );
         }
         return parameters;
+    }
+
+    private Method[] findMethods(final Method storage, final SpecificReadInfo info) {
+        final Map<String, Method> fields = Arrays.stream(info.getInput().getDeclaredMethods())
+            .filter(method -> method.getName().startsWith("get"))
+            .collect(Collectors.toMap(
+                method -> method.getName().substring(3).toLowerCase(),
+                Function.identity()
+            ));
+        final Method[] array = new Method[storage.getParameterCount()];
+        for (int i = 0; i < info.parameters().length; i++) {
+            final Method method = fields.get(info.parameters()[i].toLowerCase());
+            if (method == null) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "Can't find parameter %s for %s in input %s",
+                        info.parameters()[i],
+                        info.storage().getName(),
+                        info.getInput().getName()
+                    )
+                );
+            }
+            array[i] = method;
+        }
+        return array;
     }
 }

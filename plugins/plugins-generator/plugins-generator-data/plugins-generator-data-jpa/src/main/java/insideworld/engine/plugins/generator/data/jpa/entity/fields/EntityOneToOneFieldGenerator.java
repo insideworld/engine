@@ -20,24 +20,20 @@
 package insideworld.engine.plugins.generator.data.jpa.entity.fields;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Function;
+import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
-import insideworld.engine.core.data.core.Entity;
 import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
+import io.quarkus.gizmo.MethodCreator;
+import io.quarkus.gizmo.MethodDescriptor;
 import java.beans.PropertyDescriptor;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import org.hibernate.annotations.Target;
-import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationValue;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.Type;
@@ -45,28 +41,28 @@ import org.jboss.jandex.Type;
 /**
  * Generate an entity implementation.
  */
-public class EntityFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
+public class EntityOneToOneFieldGenerator extends EntityFieldGenerator {
 
     private final Map<Class<? extends Entity>, JpaInfo> implementations;
 
-    public EntityFieldGenerator(final Map<Class<? extends Entity>, JpaInfo> implementations) {
+    public EntityOneToOneFieldGenerator(final Map<Class<? extends Entity>, JpaInfo> implementations) {
+        super(implementations);
         this.implementations = implementations;
     }
 
     @Override
     public boolean can(final PropertyDescriptor bean, final JpaInfo info) {
         return Entity.class.isAssignableFrom(this.propertyType(bean, info))
-               && !info.getOnetoone().equals(bean.getName());
+               && info.getOnetoone().equals(bean.getName());
     }
 
     @Override
     protected void addAnnotations(
         final FieldCreator field, final PropertyDescriptor descriptor, final JpaInfo info) {
         final String name;
-        final AnnotationCreator annotation;
-        annotation = field.addAnnotation(ManyToOne.class);
-        name = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, descriptor.getName()) + "_id";
-        field.addAnnotation(JoinColumn.class).addValue("name", name);
+        field.addAnnotation(Id.class);
+        final var annotation = field.addAnnotation(OneToOne.class);
+        field.addAnnotation(JoinColumn.class).addValue("name", "id");
         annotation.addValue(
             "targetEntity",
             AnnotationValue.createClassValue(
@@ -84,44 +80,28 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     }
 
     @Override
-    protected String defineType(final PropertyDescriptor descriptor, final JpaInfo info) {
-        final Class<?> type = this.propertyType(descriptor, info);
-        if (!this.implementations.containsKey(type)) {
-            throw new RuntimeException(
-                String.format("Implementation for %s not found. Field: %s Class: %s ",
-                    type.getName(),
-                    descriptor.getName(),
-                    info.getEntity().getName())
-            );
-        }
-        return this.implementations
-            .get(type)
-            .getImplementation();
-    }
-
-    @Override
-    protected String fieldSignature(final PropertyDescriptor descriptor) {
-        return null;
-    }
-
-    @Override
-    protected String readSignature(PropertyDescriptor descriptor) {
-        return null;
-    }
-
-    @Override
-    protected String writeSignature(PropertyDescriptor descriptor) {
-        return null;
-    }
-
-    @Override
     protected void additional(
         final ClassCreator creator,
         final FieldCreator field,
         final PropertyDescriptor descriptor,
         final JpaInfo info
     ) {
-
+        final MethodCreator getter = creator.getMethodCreator("getId", long.class);
+        final MethodDescriptor method = MethodDescriptor.ofMethod(
+            Entity.class,
+            "getId",
+            long.class
+        );
+        getter.returnValue(
+            getter.invokeInterfaceMethod(
+                method,
+                getter.readInstanceField(
+                    field.getFieldDescriptor(),
+                    getter.getThis()
+                )
+            )
+        );
+        getter.close();
     }
 
 }

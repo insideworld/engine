@@ -40,6 +40,7 @@ public class RoleConst implements Role {
         return 0;
     }
 
+
     @Override
     public final String getName() {
         return this.name;

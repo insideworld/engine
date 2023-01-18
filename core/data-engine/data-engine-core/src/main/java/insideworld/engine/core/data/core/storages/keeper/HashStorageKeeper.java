@@ -20,11 +20,11 @@
 package insideworld.engine.core.data.core.storages.keeper;
 
 import com.google.common.collect.Maps;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.common.startup.OnStartUp;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
-import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.core.common.startup.OnStartUp;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;

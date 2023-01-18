@@ -24,6 +24,7 @@ import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
 import insideworld.engine.core.data.core.Entity;
 import io.quarkus.gizmo.AnnotationCreator;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.ParameterizedType;
@@ -31,6 +32,10 @@ import java.util.Collection;
 import java.util.Map;
 import javax.persistence.OneToMany;
 import org.hibernate.annotations.Target;
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationValue;
+import org.jboss.jandex.DotName;
+import org.jboss.jandex.Type;
 
 public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
 
@@ -55,11 +60,18 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
             "mappedBy",
             CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, info.getTable() + "_id")
         );
-        final AnnotationCreator target = field.addAnnotation(Target.class);
-        target.addValue(
-            "value",
-              this.getGeneric(descriptor)
+        final AnnotationValue value = AnnotationValue.createClassValue(
+            "targetEntity",
+            Type.create(
+                DotName.createSimple(
+                    this.implementations
+                        .get(this.getGeneric(descriptor))
+                        .getImplementation()
+                ),
+                Type.Kind.CLASS
+            )
         );
+        onetomany.addValue("targetEntity", value);
     }
 
     @Override
@@ -90,6 +102,15 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
         );
     }
 
+    @Override
+    protected void additional(
+        final ClassCreator creator,
+        final FieldCreator field,
+        final PropertyDescriptor descriptor,
+        final JpaInfo info
+    ) {
+
+    }
 
     private Class<?> getGeneric(final PropertyDescriptor descriptor) {
         final Class<?> type;

@@ -17,14 +17,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.core.action.inputs;
+package insideworld.engine.example.quarkus.common.newdata;
 
-import java.util.Collection;
+import insideworld.engine.core.data.core.Entity;
 
-public interface IdsInput {
+public interface NestedsEntity extends Entity {
 
-    Collection<Long> getIds();
+    Long getPrimaryId();
 
-    void setIds(Collection<Long> ids);
+    String getDescription();
+
+    void setDescription(String description);
 
 }

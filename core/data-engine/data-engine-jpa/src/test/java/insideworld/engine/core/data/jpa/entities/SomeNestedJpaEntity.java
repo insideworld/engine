@@ -19,12 +19,11 @@
 
 package insideworld.engine.core.data.jpa.entities;
 
-import insideworld.engine.core.data.jpa.AbstractJpaEntity;
+import insideworld.engine.core.data.jpa.AbstractJpaIdEntity;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.hibernate.annotations.Target;
 
 /**
  * JPA implementation of nested entity.
@@ -33,7 +32,7 @@ import org.hibernate.annotations.Target;
 @Dependent
 @Entity
 @Table(name = "some_nested_entity", schema = "transactions")
-public class SomeNestedJpaEntity extends AbstractJpaEntity implements SomeNestedEntity {
+public class SomeNestedJpaEntity extends AbstractJpaIdEntity implements SomeNestedEntity {
 
     /**
      * One.

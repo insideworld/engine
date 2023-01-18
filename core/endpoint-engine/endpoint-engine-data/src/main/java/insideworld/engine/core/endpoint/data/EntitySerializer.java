@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.google.common.collect.Maps;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.common.startup.OnStartUp;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
@@ -58,16 +59,19 @@ public class EntitySerializer implements Serializer, OnStartUp {
 
     private final Map<Class<? extends Entity>, ObjectWriter> writers;
     private final Types types;
+    private final ObjectFactory factory;
 
     @Inject
     public EntitySerializer(
         final StorageKeeper keeper,
-        final Types types
-    ) {
+        final Types types,
+        final ObjectFactory factory
+        ) {
         this.keeper = keeper;
         this.readers = Maps.newHashMapWithExpectedSize(keeper.getAllStorage().size());
         this.writers = Maps.newHashMapWithExpectedSize(keeper.getAllStorage().size());
         this.types = types;
+        this.factory = factory;
         this.mapper = new ObjectMapper();
     }
 

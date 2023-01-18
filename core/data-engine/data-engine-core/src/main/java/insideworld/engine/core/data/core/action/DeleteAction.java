@@ -19,24 +19,12 @@
 
 package insideworld.engine.core.data.core.action;
 
-import com.google.common.collect.Lists;
 import insideworld.engine.core.action.Action;
-import insideworld.engine.core.action.chain.AbstractChainAction;
-import insideworld.engine.core.action.chain.Link;
-import insideworld.engine.core.action.chain.LinkException;
-import insideworld.engine.core.action.chain.LinksBuilder;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
-import insideworld.engine.core.data.core.action.inputs.EntitiesInput;
-import insideworld.engine.core.data.core.action.inputs.EntityInput;
-import insideworld.engine.core.data.core.action.inputs.IdInput;
-import insideworld.engine.core.data.core.action.inputs.IdsInput;
-import insideworld.engine.core.data.core.action.links.DeleteEntityLink;
-import insideworld.engine.core.data.core.action.links.ReadEntityLink;
 import insideworld.engine.core.data.core.storages.Storage;
 import java.util.Collection;
 import java.util.List;
-import javax.enterprise.util.TypeLiteral;
 
 /**
  * This class is using to delete entities by IDS.

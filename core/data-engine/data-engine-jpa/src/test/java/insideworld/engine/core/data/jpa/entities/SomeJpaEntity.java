@@ -19,15 +19,13 @@
 
 package insideworld.engine.core.data.jpa.entities;
 
-import insideworld.engine.core.data.jpa.AbstractJpaEntity;
+import insideworld.engine.core.data.jpa.AbstractJpaIdEntity;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.MetaValue;
 import org.hibernate.annotations.Target;
 
 /**
@@ -38,7 +36,7 @@ import org.hibernate.annotations.Target;
 @Dependent
 @Entity
 @Table(name = "some_entity", schema = "transactions")
-public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
+public class SomeJpaEntity extends AbstractJpaIdEntity implements SomeEntity {
 
     /**
      * Value.

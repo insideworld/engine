@@ -25,13 +25,12 @@ import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Delete entities link.

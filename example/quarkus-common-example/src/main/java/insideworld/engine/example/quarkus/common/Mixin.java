@@ -40,20 +40,25 @@ import insideworld.engine.plugins.generator.data.action.write.annotations.Genera
 @GenerateReadAction(entity = SomeData.class, key = "somedata.read", interfaces = {MemberRole.class})
 @GenerateWriteAction(entity = SomeData.class, key = "somedata.write", interfaces = {MemberRole.class})
 @GenerateDeleteAction(entity = SomeData.class, key = "somedata.delete", interfaces = {MemberRole.class})
-//@GenerateSpecificReadAction(
-//    storage = SomeDataStorage.class,
-//    method = "readByValue",
-//    key = "somedata.value",
-//    interfaces = {MemberRole.class},
-//    parameters = {"value"}
-//)
-//@GenerateSpecificReadAction(
-//    storage = SomeDataStorage.class,
-//    method = "readByValueSingle",
-//    key = "somedata.valueSingle",
-//    interfaces = {MemberRole.class},
-//    parameters = {"value"}
-//)
+
+@GenerateSpecificReadAction(
+    storage = SomeDataStorage.class,
+    method = "readByValue",
+    key = "somedata.value",
+    interfaces = {MemberRole.class},
+    inputType = String.class,
+    parameters = {}
+)
+
+@GenerateSpecificReadAction(
+    storage = SomeDataStorage.class,
+    method = "readByValueSingle",
+    key = "somedata.valueSingle",
+    interfaces = {MemberRole.class},
+    inputType = String.class,
+    parameters = {}
+)
+
 @GenerateSpecificReadAction(
     storage = SomeDataStorage.class,
     method = "readByDateAndValue",

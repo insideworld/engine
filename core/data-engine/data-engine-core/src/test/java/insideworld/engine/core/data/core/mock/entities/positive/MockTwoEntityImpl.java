@@ -38,6 +38,8 @@ public class MockTwoEntityImpl implements MockTwoEntity {
         return this.id;
     }
 
+
+
     /**
      * Set id.
      * @param pid Id.

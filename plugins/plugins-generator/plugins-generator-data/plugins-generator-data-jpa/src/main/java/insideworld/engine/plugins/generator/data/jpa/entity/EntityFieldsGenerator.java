@@ -24,6 +24,7 @@ import insideworld.engine.plugins.generator.data.base.AbstractEntityFieldsGenera
 import insideworld.engine.plugins.generator.data.base.FieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.fields.EntitiesFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.fields.EntityFieldGenerator;
+import insideworld.engine.plugins.generator.data.jpa.entity.fields.EntityOneToOneFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.fields.PrimitiveFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
 import insideworld.engine.core.data.core.Entity;
@@ -43,7 +44,8 @@ public class EntityFieldsGenerator extends AbstractEntityFieldsGenerator<JpaInfo
         return ImmutableList.of(
             new PrimitiveFieldGenerator(),
             new EntitiesFieldGenerator(this.entities),
-            new EntityFieldGenerator(this.entities)
+            new EntityFieldGenerator(this.entities),
+            new EntityOneToOneFieldGenerator(this.entities)
         );
     }
 }

@@ -17,16 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.core.action.inputs;
+package insideworld.engine.core.data.jpa;
+
+import insideworld.engine.core.data.core.Entity;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
- * Input parameter which store only ID's.
- * @since 1.0.0
+ * Abstract entity class with implemented ID tag, equals, hashcode and etc.
+ * @since 0.0.1
  */
-public interface IdInput {
+@MappedSuperclass
+public abstract class AbstractJpaIdEntity extends AbstractJpaEntity implements Entity {
 
-    Long getId();
+    /**
+     * ID of entity.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false, updatable = false)
+    private long id;
 
-    void setId(Long id);
+    @Override
+    public long getId() {
+        return this.id;
+    }
 
 }

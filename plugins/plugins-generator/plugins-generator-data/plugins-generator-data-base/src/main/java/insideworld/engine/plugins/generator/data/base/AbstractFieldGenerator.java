@@ -59,6 +59,7 @@ public abstract class AbstractFieldGenerator<T extends EntityInfo> implements Fi
             set.returnValue(null);
             set.close();
         }
+        this.additional(creator, field, descriptor, info);
     }
 
     protected Class<?> propertyType(final PropertyDescriptor descriptor, final T info) {
@@ -84,5 +85,12 @@ public abstract class AbstractFieldGenerator<T extends EntityInfo> implements Fi
     protected abstract String readSignature(PropertyDescriptor descriptor);
 
     protected abstract String writeSignature(PropertyDescriptor descriptor);
+
+    protected abstract void additional(
+        ClassCreator creator,
+        FieldCreator field,
+        PropertyDescriptor descriptor,
+        T info
+    );
 
 }

@@ -17,35 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.example.quarkus.common.data;
+package insideworld.engine.example.quarkus.common.newdata;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.plugins.generator.data.action.read.specific.AbstractSpecificReadAction;
-import java.util.Collection;
+import insideworld.engine.core.data.core.Entity;
 
-public class Qwe extends AbstractSpecificReadAction<InputData, Collection<SomeData>, SomeDataStorage> {
+public interface SingleEntity extends Entity {
 
-    public Qwe(final SomeDataStorage storage) {
-        super(storage);
-    }
+    PrimaryEntity getPrimary();
 
-    @Override
-    public Collection<SomeData> execute(final InputData input) throws CommonException {
-        return null;
-    }
+    void setPrimary(PrimaryEntity value);
 
-    @Override
-    public String key() {
-        return null;
-    }
+    String getValue();
 
-    @Override
-    public Class<? extends InputData> inputType() {
-        return null;
-    }
+    void setValue(String value);
 
-    @Override
-    public Class<? extends Collection<SomeData>> outputType() {
-        return null;
-    }
+    String getName();
+
+    void setName(String name);
 }

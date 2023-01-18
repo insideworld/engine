@@ -64,7 +64,6 @@ public class RoleJpa implements Role {
         return this.id;
     }
 
-
     @Override
     public String getName() {
         return this.name;

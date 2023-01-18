@@ -23,6 +23,7 @@ package insideworld.engine.plugins.generator.data.inmemory.entity.fields;
 import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.inmemory.entity.search.InMemoryInfo;
 import insideworld.engine.core.data.core.Entity;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
 
@@ -60,6 +61,11 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<InMemoryInfo> {
     @Override
     protected String writeSignature(PropertyDescriptor descriptor) {
         return null;
+    }
+
+    @Override
+    protected void additional(final ClassCreator creator, final FieldCreator field, final PropertyDescriptor descriptor, final InMemoryInfo info) {
+
     }
 
 

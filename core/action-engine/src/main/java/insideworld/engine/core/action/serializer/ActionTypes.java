@@ -21,6 +21,7 @@ package insideworld.engine.core.action.serializer;
 
 import com.google.common.collect.Sets;
 import insideworld.engine.core.action.Action;
+import insideworld.engine.core.common.injection.ObjectFactory;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
@@ -32,15 +33,27 @@ public class ActionTypes implements Types {
     private final Set<Class<?>> inputs;
 
     private final Set<Class<?>> outputs;
+    private final ObjectFactory factory;
 
     @Inject
-    public ActionTypes(final List<Action<?,?>> actions) {
+    public ActionTypes(final List<Action<?,?>> actions, final ObjectFactory factory) {
         this.inputs = Sets.newHashSetWithExpectedSize(actions.size());
         this.outputs = Sets.newHashSetWithExpectedSize(actions.size());
+        this.factory = factory;
         for (final Action<?, ?> action : actions) {
-            this.inputs.add(action.inputType());
-            this.outputs.add(action.outputType());
+            final Class<?> input = action.inputType();
+            this.inputs.add(input);
+            if (input.isInterface()) {
+                this.inputs.add(this.factory.implementation(input));
+            }
+            final Class<?> output = action.outputType();
+            this.outputs.add(output);
+            if (output.isInterface()) {
+                this.outputs.add(this.factory.implementation(output));
+            }
         }
+        this.outputs.remove(null);
+        this.inputs.remove(null);
     }
 
     @Override

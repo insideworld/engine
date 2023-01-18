@@ -19,7 +19,6 @@
 
 package insideworld.engine.plugins.generator.data.action.read.specific;
 
-import insideworld.engine.core.data.core.converter.EntityConverter;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.read.specific.info.SpecificReadInfo;
@@ -50,8 +49,7 @@ public class GenerateAction {
 
     public void createClass(
         final SpecificReadInfo info,
-        final Method storage,
-        final Method[] parameters
+        final Method storage
     ) {
         ClassCreator.Builder builder = ClassCreator.builder()
             .classOutput(this.output)
@@ -69,13 +67,12 @@ public class GenerateAction {
         final ClassCreator creator = builder.build();
         this.createConstructor(creator, info);
         creator.addAnnotation(Singleton.class);
-        this.methods.createInput(creator, info);
-        this.methods.createOutput(creator, storage.getReturnType());
-        this.methods.createKey(creator, info);
+        this.createInput(creator, info);
+        this.createOutput(creator, storage.getReturnType());
+        this.createKey(creator, info);
         this.execute.createExecute(
             creator,
             storage,
-            parameters,
             info
         );
         creator.close();
@@ -111,6 +108,21 @@ public class GenerateAction {
             output.replace(".", "/"),
             storage.replace(".", "/")
         );
+    }
+
+    private void createKey(final ClassCreator creator, final SpecificReadInfo info) {
+        final MethodCreator method = creator.getMethodCreator("key", String.class);
+        method.returnValue(method.load(info.key()));
+    }
+
+    private void createInput(final ClassCreator creator, final SpecificReadInfo info) {
+        final MethodCreator method = creator.getMethodCreator("inputType", Class.class);
+        method.returnValue(method.loadClass(info.getInput()));
+    }
+
+    private void createOutput(final ClassCreator creator, final Class<?> output) {
+        final MethodCreator method = creator.getMethodCreator("outputType", Class.class);
+        method.returnValue(method.loadClass(output));
     }
 
 }

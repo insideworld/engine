@@ -32,4 +32,5 @@ public class MockExceptionEntity implements Entity {
     public final long getId() {
         return 0;
     }
+
 }

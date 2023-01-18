@@ -23,6 +23,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.primitives.Primitives;
 import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
 import java.util.Date;
@@ -62,5 +63,15 @@ public class PrimitiveFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     @Override
     protected String writeSignature(PropertyDescriptor descriptor) {
         return null;
+    }
+
+    @Override
+    protected void additional(
+        final ClassCreator creator,
+        final FieldCreator field,
+        final PropertyDescriptor descriptor,
+        final JpaInfo info
+    ) {
+
     }
 }

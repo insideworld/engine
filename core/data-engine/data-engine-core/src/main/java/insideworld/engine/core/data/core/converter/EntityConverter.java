@@ -19,9 +19,9 @@
 
 package insideworld.engine.core.data.core.converter;
 
+import insideworld.engine.core.common.keeper.Record;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
-import insideworld.engine.core.common.keeper.Record;
 /**
  * Interface to convert entity to record and vice versa.
  * @see Entity

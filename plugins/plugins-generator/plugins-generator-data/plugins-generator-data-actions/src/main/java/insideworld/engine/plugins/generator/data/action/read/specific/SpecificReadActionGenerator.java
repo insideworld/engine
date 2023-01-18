@@ -50,14 +50,12 @@ import org.apache.commons.lang3.tuple.Pair;
 public class SpecificReadActionGenerator {
 
     private final Reflection reflection;
-    private final ClassOutput output;
 
     private final GenerateAction action;
 
     public SpecificReadActionGenerator(final Reflection reflection,
                                        final ClassOutput output) {
         this.reflection = reflection;
-        this.output = output;
         this.action = new GenerateAction(reflection, output);
     }
 
@@ -67,8 +65,7 @@ public class SpecificReadActionGenerator {
 
 
     private void generate(final SpecificReadInfo info) {
-        final Pair<Method, Method[]> method = this.findMethod(info);
-        this.action.createClass(info, method.getLeft(), method.getRight());
+        this.action.createClass(info, this.findMethod(info));
     }
 
     /**
@@ -77,34 +74,13 @@ public class SpecificReadActionGenerator {
      * @param info Info.
      * @return Pair with storage methods and map of position and input method reference.
      */
-    private Pair<Method, Method[]> findMethod(final SpecificReadInfo info) {
-        final Method found = Arrays.stream(info.storage().getDeclaredMethods()).filter(
+    private Method findMethod(final SpecificReadInfo info) {
+        return Arrays.stream(info.storage().getDeclaredMethods()).filter(
                 method -> info.method().startsWith(method.getName())
             )
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Not found necessary method"));
-        final Map<String, Method> fields = Arrays.stream(info.getInput().getDeclaredMethods())
-            .filter(method -> method.getName().startsWith("get"))
-            .collect(Collectors.toMap(
-                method -> method.getName().substring(3).toLowerCase(),
-                Function.identity()
-            ));
-        final Method[] array = new Method[found.getParameterCount()];
-        for (int i = 0; i < info.parameters().length; i++) {
-            final Method method = fields.get(info.parameters()[i].toLowerCase());
-            if (method == null) {
-                throw new IllegalArgumentException(
-                    String.format(
-                        "Can't find parameter %s for %s in input %s",
-                        info.parameters()[i],
-                        info.storage().getName(),
-                        info.getInput().getName()
-                    )
-                );
-            }
-            array[i] = method;
-        }
-        return Pair.of(found, array);
+
     }
 
     private Collection<SpecificReadInfo> infos() {
