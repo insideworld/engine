@@ -68,4 +68,5 @@ public class DummyStorage implements Storage<DummyEntity> {
     public final Class<? extends DummyEntity> forEntity() {
         return DummyEntity.class;
     }
+
 }

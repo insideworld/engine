@@ -20,7 +20,6 @@
 package insideworld.engine.plugins.generator.data.jpa.entity.fields;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.base.Function;
 import insideworld.engine.plugins.generator.data.base.AbstractFieldGenerator;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
 import insideworld.engine.core.data.core.Entity;
@@ -28,16 +27,11 @@ import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.FieldCreator;
 import java.beans.PropertyDescriptor;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-import org.hibernate.annotations.Target;
-import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationValue;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.Type;
@@ -55,18 +49,26 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
 
     @Override
     public boolean can(final PropertyDescriptor bean, final JpaInfo info) {
-        return Entity.class.isAssignableFrom(this.propertyType(bean, info))
-               && !info.getOnetoone().equals(bean.getName());
+        return Entity.class.isAssignableFrom(this.propertyType(bean, info));
     }
 
     @Override
     protected void addAnnotations(
         final FieldCreator field, final PropertyDescriptor descriptor, final JpaInfo info) {
-        final String name;
         final AnnotationCreator annotation;
-        annotation = field.addAnnotation(ManyToOne.class);
-        name = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, descriptor.getName()) + "_id";
-        field.addAnnotation(JoinColumn.class).addValue("name", name);
+        final String name;
+        if (descriptor.getName().equals(info.getOneToOne())) {
+            annotation = field.addAnnotation(OneToOne.class);
+            field.addAnnotation(MapsId.class);
+            name = "id";
+        } else {
+            annotation = field.addAnnotation(ManyToOne.class);
+            name = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, descriptor.getName()) + "_id";
+        }
+        field.addAnnotation(JoinColumn.class).addValue(
+            "name",
+            name
+        );
         annotation.addValue(
             "targetEntity",
             AnnotationValue.createClassValue(
@@ -112,16 +114,6 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     @Override
     protected String writeSignature(PropertyDescriptor descriptor) {
         return null;
-    }
-
-    @Override
-    protected void additional(
-        final ClassCreator creator,
-        final FieldCreator field,
-        final PropertyDescriptor descriptor,
-        final JpaInfo info
-    ) {
-
     }
 
 }

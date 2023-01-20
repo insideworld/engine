@@ -27,4 +27,18 @@ public interface FieldGenerator<T extends EntityInfo> {
     void generate(ClassCreator creator, PropertyDescriptor descriptor, T info);
 
     boolean can(PropertyDescriptor bean, T info);
+
+    default Class<?> propertyType(final PropertyDescriptor descriptor, final T info) {
+        final Class<?> type;
+        if (descriptor.getReadMethod() != null) {
+            type = descriptor.getReadMethod().getReturnType();
+        } else if (descriptor.getWriteMethod() != null) {
+            type = descriptor.getWriteMethod().getParameterTypes()[0];
+        } else {
+            throw new RuntimeException(
+                String.format("Can't define type of field %s for class %s because getter or setter is absent",
+                    descriptor.getName(), info.getEntity().getName()));
+        }
+        return type;
+    }
 }

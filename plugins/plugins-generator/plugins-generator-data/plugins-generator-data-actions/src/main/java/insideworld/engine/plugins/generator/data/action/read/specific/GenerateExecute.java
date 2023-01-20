@@ -19,6 +19,7 @@
 
 package insideworld.engine.plugins.generator.data.action.read.specific;
 
+import com.google.common.primitives.Primitives;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.data.action.read.specific.info.SpecificReadInfo;
 import io.quarkus.gizmo.ClassCreator;
@@ -59,6 +60,7 @@ public class GenerateExecute {
          */
         if (info.getInput().isArray()
             || info.getInput().isPrimitive()
+            || Primitives.isWrapperType(info.getInput())
             || Collection.class.isAssignableFrom(info.getInput())
             || String.class.equals(info.getInput())
             || Date.class.equals(info.getInput())

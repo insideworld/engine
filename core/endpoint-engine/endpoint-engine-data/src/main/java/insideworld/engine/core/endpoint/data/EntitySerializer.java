@@ -59,19 +59,16 @@ public class EntitySerializer implements Serializer, OnStartUp {
 
     private final Map<Class<? extends Entity>, ObjectWriter> writers;
     private final Types types;
-    private final ObjectFactory factory;
 
     @Inject
     public EntitySerializer(
         final StorageKeeper keeper,
-        final Types types,
-        final ObjectFactory factory
-        ) {
+        final Types types
+    ) {
         this.keeper = keeper;
         this.readers = Maps.newHashMapWithExpectedSize(keeper.getAllStorage().size());
         this.writers = Maps.newHashMapWithExpectedSize(keeper.getAllStorage().size());
         this.types = types;
-        this.factory = factory;
         this.mapper = new ObjectMapper();
     }
 
@@ -87,7 +84,7 @@ public class EntitySerializer implements Serializer, OnStartUp {
 
     @Override
     public <T> T deserialize(final InputStream stream, final Class<?> type)
-        throws SerializerException {
+        throws CommonException {
         try {
             return this.readers.get(type).readValue(stream);
         } catch (final IOException exp) {

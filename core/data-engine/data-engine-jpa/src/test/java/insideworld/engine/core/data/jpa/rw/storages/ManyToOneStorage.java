@@ -17,20 +17,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.core.mock.storages;
+package insideworld.engine.core.data.jpa.rw.storages;
 
-import insideworld.engine.core.data.core.mock.entities.positive.MockOneEntity;
+import insideworld.engine.core.data.jpa.AbstractCrudGenericStorage;
+import insideworld.engine.core.data.jpa.rw.entities.ManyToOneEntity;
+import insideworld.engine.core.data.jpa.rw.entities.ManyToOneEntityImpl;
 import javax.inject.Singleton;
 
-/**
- * Storage for one.
- * @since 0.14.0
- */
 @Singleton
-public class MockOneStorage extends AbstractMockStorage<MockOneEntity> {
-    @Override
-    public final Class<? extends MockOneEntity> forEntity() {
-        return MockOneEntity.class;
-    }
-
+public class ManyToOneStorage extends AbstractCrudGenericStorage<ManyToOneEntity, ManyToOneEntityImpl> {
 }

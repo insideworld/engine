@@ -17,20 +17,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.core.mock.storages;
+package insideworld.engine.core.data.jpa.rw.entities;
 
-import insideworld.engine.core.data.core.mock.entities.positive.MockOneEntity;
-import javax.inject.Singleton;
+import insideworld.engine.core.data.jpa.AbstractJpaEntity;
+import javax.enterprise.context.Dependent;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-/**
- * Storage for one.
- * @since 0.14.0
- */
-@Singleton
-public class MockOneStorage extends AbstractMockStorage<MockOneEntity> {
+@Dependent
+@Entity
+@Table(schema = "entities", name = "many_to_one")
+public class ManyToOneEntityImpl extends AbstractJpaEntity implements ManyToOneEntity {
+
+    @Column
+    private String value;
+
     @Override
-    public final Class<? extends MockOneEntity> forEntity() {
-        return MockOneEntity.class;
+    public String getValue() {
+        return this.value;
     }
 
+    @Override
+    public void setValue(final String value) {
+        this.value = value;
+    }
 }

@@ -17,40 +17,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.jpa.entities;
+package insideworld.engine.core.data.jpa.rw.entities;
 
 import insideworld.engine.core.data.jpa.AbstractJpaEntity;
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import org.hibernate.annotations.Target;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
-/**
- * JPA entity implementation for tests.
- *
- * @since 0.14.0
- */
 @Dependent
 @Entity
-@Table(name = "some_entity", schema = "transactions")
-public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
+@Table(schema = "entities", name = "one_to_one")
+public class OneToOneEntityImpl extends AbstractJpaEntity implements OneToOneEntity {
 
-    /**
-     * Value.
-     */
-    @Column(name = "value")
+
+    @OneToOne(targetEntity = PrimaryEntityImpl.class)
+    @MapsId()
+    @JoinColumn(name = "id")
+    private PrimaryEntity primary;
+
+    @Column
     private String value;
 
-    /**
-     * Nested entity.
-     */
-    @ManyToOne()
-    @JoinColumn(name = "some_nested_entity_id")
-    @Target(SomeNestedJpaEntity.class)
-    private SomeNestedEntity entity;
+    @Override
+    public PrimaryEntity getPrimary() {
+        return this.primary;
+    }
+
+    @Override
+    public void setPrimary(final PrimaryEntity primary) {
+        this.primary = primary;
+    }
 
     @Override
     public String getValue() {
@@ -58,17 +65,12 @@ public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
     }
 
     @Override
-    public void setValue(final String pvalue) {
-        this.value = pvalue;
+    public void setValue(final String value) {
+        this.value = value;
     }
 
     @Override
-    public SomeNestedEntity getNestedEntity() {
-        return this.entity;
-    }
-
-    @Override
-    public void setNestedEntity(final SomeNestedEntity pentity) {
-        this.entity = pentity;
+    public void setId(final Long id) {
+        this.id = id;
     }
 }

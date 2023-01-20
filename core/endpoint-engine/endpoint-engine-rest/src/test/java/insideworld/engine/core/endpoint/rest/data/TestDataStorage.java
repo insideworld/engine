@@ -32,4 +32,5 @@ public class TestDataStorage extends AbstractMockStorage<TestEntity> {
     public Class<? extends TestEntity> forEntity() {
         return TestEntity.class;
     }
+
 }

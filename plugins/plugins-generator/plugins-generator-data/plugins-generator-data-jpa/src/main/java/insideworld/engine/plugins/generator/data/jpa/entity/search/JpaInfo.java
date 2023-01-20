@@ -71,7 +71,11 @@ public class JpaInfo implements EntityInfo {
         return this.generated;
     }
 
-    public String getOnetoone() {
+    /**
+     * Property which using for one to one key (Optional).
+     * @return
+     */
+    public String getOneToOne() {
         return this.onetoone;
     }
 }

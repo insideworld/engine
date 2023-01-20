@@ -20,7 +20,7 @@
 package insideworld.engine.core.security.jpa.data;
 
 import com.google.common.collect.Sets;
-import insideworld.engine.core.data.jpa.AbstractJpaIdEntity;
+import insideworld.engine.core.data.jpa.AbstractJpaEntity;
 import insideworld.engine.core.security.core.data.Role;
 import insideworld.engine.core.security.core.data.User;
 import java.util.Collection;
@@ -39,7 +39,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(schema = "security", name = "users")
 @Dependent
 @Cacheable
-public class UserJpa extends AbstractJpaIdEntity implements User {
+public class UserJpa extends AbstractJpaEntity implements User {
 
     @ManyToOne()
     @JoinColumn(name = "role")

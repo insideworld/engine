@@ -59,21 +59,6 @@ public abstract class AbstractFieldGenerator<T extends EntityInfo> implements Fi
             set.returnValue(null);
             set.close();
         }
-        this.additional(creator, field, descriptor, info);
-    }
-
-    protected Class<?> propertyType(final PropertyDescriptor descriptor, final T info) {
-        final Class<?> type;
-        if (descriptor.getReadMethod() != null) {
-            type = descriptor.getReadMethod().getReturnType();
-        } else if (descriptor.getWriteMethod() != null) {
-            type = descriptor.getWriteMethod().getParameterTypes()[0];
-        } else {
-            throw new RuntimeException(
-                String.format("Can't define type of field %s for class %s because getter or setter is absent",
-                    descriptor.getName(), info.getEntity().getName()));
-        }
-        return type;
     }
 
     protected abstract void addAnnotations(FieldCreator field, PropertyDescriptor descriptor, T info);
@@ -85,12 +70,5 @@ public abstract class AbstractFieldGenerator<T extends EntityInfo> implements Fi
     protected abstract String readSignature(PropertyDescriptor descriptor);
 
     protected abstract String writeSignature(PropertyDescriptor descriptor);
-
-    protected abstract void additional(
-        ClassCreator creator,
-        FieldCreator field,
-        PropertyDescriptor descriptor,
-        T info
-    );
 
 }

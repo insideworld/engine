@@ -53,7 +53,12 @@ public class JacksonDeserializer<T extends Entity>
         throws IOException {
         final T result;
         if (parser.getCurrentToken().isStructStart()) {
-            result = (T) this.def.deserialize(parser, context);
+            final T deserialize = (T) this.def.deserialize(parser, context);
+            if (deserialize.getId() == 0) {
+                result = deserialize;
+            } else {
+                result = this.storage.merge(deserialize);
+            }
         } else {
             final JsonNode node = parser.getCodec().readTree(parser);
             try {

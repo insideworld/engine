@@ -64,14 +64,4 @@ public class PrimitiveFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     protected String writeSignature(PropertyDescriptor descriptor) {
         return null;
     }
-
-    @Override
-    protected void additional(
-        final ClassCreator creator,
-        final FieldCreator field,
-        final PropertyDescriptor descriptor,
-        final JpaInfo info
-    ) {
-
-    }
 }

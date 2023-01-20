@@ -17,40 +17,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.jpa.entities;
+package insideworld.engine.core.data.jpa.rw.entities;
 
 import insideworld.engine.core.data.jpa.AbstractJpaEntity;
+import java.util.Collection;
 import javax.enterprise.context.Dependent;
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.hibernate.annotations.Target;
 
-/**
- * JPA entity implementation for tests.
- *
- * @since 0.14.0
- */
 @Dependent
 @Entity
-@Table(name = "some_entity", schema = "transactions")
-public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
+@Table(schema = "entities", name = "primary")
+public class PrimaryEntityImpl extends AbstractJpaEntity implements PrimaryEntity {
 
-    /**
-     * Value.
-     */
-    @Column(name = "value")
+    @ManyToOne(targetEntity = ManyToOneEntityImpl.class)
+    @JoinColumn(name = "many_to_one_id")
+    private ManyToOneEntity manyToOne;
+
+    @OneToMany(
+        targetEntity = OneToManyEntityImpl.class,
+        mappedBy = "primary"
+    )
+    private Collection<OneToManyEntity> oneToMany;
+
     private String value;
 
-    /**
-     * Nested entity.
-     */
-    @ManyToOne()
-    @JoinColumn(name = "some_nested_entity_id")
-    @Target(SomeNestedJpaEntity.class)
-    private SomeNestedEntity entity;
+    @Override
+    public ManyToOneEntity getManyToOne() {
+        return this.manyToOne;
+    }
+
+    @Override
+    public void setManyToOne(final ManyToOneEntity entity) {
+        this.manyToOne = entity;
+    }
+
+    @Override
+    public Collection<OneToManyEntity> getOneToMany() {
+        return this.oneToMany;
+    }
+
+    @Override
+    public void setOneToMany(final Collection<OneToManyEntity> entities) {
+        this.oneToMany = entities;
+    }
 
     @Override
     public String getValue() {
@@ -58,17 +72,7 @@ public class SomeJpaEntity extends AbstractJpaEntity implements SomeEntity {
     }
 
     @Override
-    public void setValue(final String pvalue) {
-        this.value = pvalue;
-    }
-
-    @Override
-    public SomeNestedEntity getNestedEntity() {
-        return this.entity;
-    }
-
-    @Override
-    public void setNestedEntity(final SomeNestedEntity pentity) {
-        this.entity = pentity;
+    public void setValue(final String value) {
+        this.value = value;
     }
 }

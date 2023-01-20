@@ -19,7 +19,7 @@
 
 package insideworld.engine.core.data.jpa.entities;
 
-import insideworld.engine.core.data.jpa.AbstractJpaIdEntity;
+import insideworld.engine.core.data.jpa.AbstractJpaEntity;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +32,7 @@ import javax.persistence.Table;
 @Dependent
 @Entity
 @Table(name = "some_nested_entity", schema = "transactions")
-public class SomeNestedJpaEntity extends AbstractJpaIdEntity implements SomeNestedEntity {
+public class SomeNestedJpaEntity extends AbstractJpaEntity implements SomeNestedEntity {
 
     /**
      * One.

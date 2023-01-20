@@ -17,33 +17,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.jpa;
+package insideworld.engine.core.data.jpa.rw.storages;
 
-import insideworld.engine.core.data.core.Entity;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import insideworld.engine.core.data.jpa.AbstractCrudGenericStorage;
+import insideworld.engine.core.data.jpa.rw.entities.ManyToOneEntity;
+import insideworld.engine.core.data.jpa.rw.entities.ManyToOneEntityImpl;
+import insideworld.engine.core.data.jpa.rw.entities.PrimaryEntity;
+import insideworld.engine.core.data.jpa.rw.entities.PrimaryEntityImpl;
+import javax.inject.Singleton;
 
-/**
- * Abstract entity class with implemented ID tag, equals, hashcode and etc.
- * @since 0.0.1
- */
-@MappedSuperclass
-public abstract class AbstractJpaIdEntity extends AbstractJpaEntity implements Entity {
-
-    /**
-     * ID of entity.
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false, updatable = false)
-    private long id;
-
-    @Override
-    public long getId() {
-        return this.id;
-    }
-
+@Singleton
+public class PrimaryStorage extends AbstractCrudGenericStorage<PrimaryEntity, PrimaryEntityImpl> {
 }

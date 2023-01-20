@@ -63,10 +63,5 @@ public class EntityFieldGenerator extends AbstractFieldGenerator<InMemoryInfo> {
         return null;
     }
 
-    @Override
-    protected void additional(final ClassCreator creator, final FieldCreator field, final PropertyDescriptor descriptor, final InMemoryInfo info) {
-
-    }
-
 
 }

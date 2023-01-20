@@ -20,9 +20,32 @@
 package insideworld.engine.core.data.jpa;
 
 import insideworld.engine.core.data.core.Entity;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 
+/**
+ * Abstract entity class with implemented ID tag, equals, hashcode and etc.
+ * @since 0.0.1
+ */
+@MappedSuperclass
 public abstract class AbstractJpaEntity implements Entity {
+
+    /**
+     * ID of entity.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false, updatable = false)
+    protected long id;
+
+    @Override
+    public long getId() {
+        return this.id;
+    }
 
     @Override
     public final int hashCode() {
@@ -35,4 +58,5 @@ public abstract class AbstractJpaEntity implements Entity {
                && this.getClass().equals(obj.getClass())
                && this.getId() == ((Entity) obj).getId();
     }
+
 }

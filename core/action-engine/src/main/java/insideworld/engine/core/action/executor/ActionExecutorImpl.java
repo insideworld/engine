@@ -39,9 +39,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class ActionExecutorImpl implements ActionExecutor, ActionChanger, ActionsInfo {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActionExecutorImpl.class);
 
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -131,6 +135,7 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger, Action
         }
         final ExecuteContext context = this.factory.createObject(ExecuteContext.class);
         final Action<?, ?> action = this.actions.get(key);
+        ActionExecutorImpl.LOGGER.debug("Execute action {}", action.key());
         predicate.accept(context);
         context.put(ExecutorTags.ACTION, action);
         context.put(ExecutorTags.INPUT_PREDICATE, input);

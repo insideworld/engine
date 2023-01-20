@@ -54,20 +54,13 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
     @Override
     public final T write(final T entity) {
         final C crud = this.forCrud().cast(entity);
-        final C merged;
-        if (isPersistent(crud)) {
-            merged = crud;
-        } else {
-            merged = getEntityManager().merge(crud);
-        }
-        persist(merged);
-        return merged;
+        persist(crud);
+        return crud;
     }
 
     @Override
     public final Collection<T> writeAll(final Collection<T> entity) {
-        entity.forEach(this::write);
-        return entity;
+        return entity.stream().map(this::write).toList();
     }
 
     @Override
@@ -115,4 +108,9 @@ public abstract class AbstractCrudStorage<T extends Entity, C extends T>
      * @return CRUD type.
      */
     protected abstract Class<C> forCrud();
+
+    @Override
+    public T merge(final T entity) {
+        return this.getEntityManager().merge(entity);
+    }
 }

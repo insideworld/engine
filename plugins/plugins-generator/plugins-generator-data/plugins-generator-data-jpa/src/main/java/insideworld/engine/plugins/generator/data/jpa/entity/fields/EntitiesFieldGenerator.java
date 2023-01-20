@@ -102,15 +102,6 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
         );
     }
 
-    @Override
-    protected void additional(
-        final ClassCreator creator,
-        final FieldCreator field,
-        final PropertyDescriptor descriptor,
-        final JpaInfo info
-    ) {
-
-    }
 
     private Class<?> getGeneric(final PropertyDescriptor descriptor) {
         final Class<?> type;

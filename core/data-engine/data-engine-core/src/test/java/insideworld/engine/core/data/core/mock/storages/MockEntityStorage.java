@@ -33,4 +33,5 @@ public class MockEntityStorage extends AbstractMockStorage<MockEntity> {
     public final Class<? extends MockEntity> forEntity() {
         return MockEntity.class;
     }
+
 }

@@ -26,6 +26,7 @@ import java.util.Collection;
 /**
  * Storage for entity.
  * Provide basic functions to work with entity.
+ *
  * @param <T> Entity type.
  * @since 0.0.1
  */
@@ -33,6 +34,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Read all entities.
+     *
      * @return Collection of all entities.
      * @throws StorageException Can't read.
      */
@@ -40,6 +42,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Read entity by ID.
+     *
      * @param id ID.
      * @return Entity.
      * @throws StorageException Can't read.
@@ -48,6 +51,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Read collection of entities.
+     *
      * @param ids Ids for read.
      * @return Collection of entities.
      * @throws StorageException Can't read.
@@ -56,6 +60,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Write entity.
+     *
      * @param entity Entity.
      * @return Wrote entity.
      * @throws StorageException Can't write.
@@ -64,6 +69,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Write all entities.
+     *
      * @param entity Entities.
      * @return Collection of wrote entities.
      * @throws StorageException Can't write.
@@ -72,6 +78,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Delete entities.
+     *
      * @param entities Entities.
      * @throws StorageException Can't delete.
      */
@@ -79,6 +86,7 @@ public interface Storage<T extends Entity> {
 
     /**
      * Is entity exists by this ID.
+     *
      * @param id Id.
      * @return True if exists and false if not.
      */
@@ -86,8 +94,12 @@ public interface Storage<T extends Entity> {
 
     /**
      * Tyoe of entity for this storage.
+     *
      * @return Entity type.
      */
     Class<? extends T> forEntity();
 
+    default T merge(T entity) {
+        return entity;
+    }
 }

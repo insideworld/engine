@@ -21,13 +21,11 @@ package insideworld.engine.plugins.generator.data.jpa.entity;
 
 import insideworld.engine.core.data.jpa.AbstractJpaEntity;
 import insideworld.engine.plugins.generator.data.jpa.entity.search.JpaInfo;
-import insideworld.engine.core.data.jpa.AbstractJpaIdEntity;
 import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import javax.enterprise.context.Dependent;
 import javax.persistence.Table;
-import org.apache.commons.lang3.StringUtils;
 
 public class EntityClassGenerator {
 
@@ -41,7 +39,7 @@ public class EntityClassGenerator {
         final ClassCreator creator = ClassCreator.builder()
             .classOutput(this.output)
             .className(info.getImplementation())
-            .superClass(this.superClass(info))
+            .superClass(AbstractJpaEntity.class)
             .interfaces(info.getEntity())
             .build();
         creator.addAnnotation(Dependent.class);
@@ -51,15 +49,4 @@ public class EntityClassGenerator {
         annotationCreator.addValue("schema", info.getSchema());
         return creator;
     }
-
-    private Class<?> superClass(final JpaInfo info) {
-        final Class<?> result;
-        if (StringUtils.isEmpty(info.getOnetoone())) {
-            result = AbstractJpaIdEntity.class;
-        } else {
-            result = AbstractJpaEntity.class;
-        }
-        return result;
-    }
-
 }

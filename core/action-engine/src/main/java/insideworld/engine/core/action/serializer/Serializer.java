@@ -19,14 +19,15 @@
 
 package insideworld.engine.core.action.serializer;
 
+import insideworld.engine.core.common.exception.CommonException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface Serializer {
 
-    <T> void serialize(T value, OutputStream stream) throws SerializerException;
+    <T> void serialize(T value, OutputStream stream) throws CommonException;
 
-    <T> T deserialize(InputStream stream, Class<?> type) throws SerializerException;
+    <T> T deserialize(InputStream stream, Class<?> type) throws CommonException;
 
     boolean applicable(Class<?> type);
 
