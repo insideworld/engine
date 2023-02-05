@@ -24,10 +24,19 @@ import insideworld.engine.example.quarkus.common.roles.MemberRole;
 import insideworld.engine.plugins.generator.base.GenerateMixin;
 import insideworld.engine.plugins.generator.data.action.delete.annotations.GenerateDeleteAction;
 import insideworld.engine.plugins.generator.data.action.read.id.annotations.GenerateReadAction;
+import insideworld.engine.plugins.generator.data.action.read.specific.annotations.GenerateSpecificReadAction;
 import insideworld.engine.plugins.generator.data.action.write.annotations.GenerateWriteAction;
 
 
 @GenerateReadAction(entity = PrimaryEntity.class, key = "PrimaryEntity.read", interfaces = {MemberRole.class})
+@GenerateSpecificReadAction(
+    storage = PrimaryStorage.class,
+    inputType = String.class,
+    method = "getByValue",
+    parameters = {},
+    key = "PrimaryEntity.readByValue",
+    interfaces = {MemberRole.class}
+)
 @GenerateWriteAction(entity = PrimaryEntity.class, key = "PrimaryEntity.write", interfaces = {MemberRole.class})
 @GenerateDeleteAction(entity = PrimaryEntity.class, key = "PrimaryEntity.delete", interfaces = {MemberRole.class})
 

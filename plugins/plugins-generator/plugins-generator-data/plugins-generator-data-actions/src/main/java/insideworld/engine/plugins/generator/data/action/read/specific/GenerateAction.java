@@ -102,12 +102,30 @@ public class GenerateAction {
         final String output,
         final String storage
     ) {
-        return String.format("L%s<L%s;L%s;L%s;>;",
+        return String.format("L%s<%s%s%s>;",
             AbstractSpecificReadAction.class.getName().replace(".", "/"),
-            input.replace(".", "/"),
-            output.replace(".", "/"),
-            storage.replace(".", "/")
+            this.signatureType(input),
+            this.signatureType(output),
+            this.signatureType(storage)
         );
+    }
+
+    /**
+     * Prepare type for signature.
+     * In case of array don't add L in begin.
+     * Replace all dots to slash.
+     *
+     * @param type Type of class.
+     * @return Formatted type for signature.
+     */
+    private String signatureType(final String type) {
+        final String result;
+        if (type.startsWith("[L")) {
+            result = type;
+        } else {
+            result = String.format("L%s;", type);
+        }
+        return result.replace(".", "/");
     }
 
     private void createKey(final ClassCreator creator, final SpecificReadInfo info) {

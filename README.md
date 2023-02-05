@@ -14,6 +14,17 @@ This project divide on several sections:
 
 Please read according README.md file. 
 
+## Knows limitation
+
+### EntitySerializer
+Entity serializer support only single type and array types without collection and other generics types
+
+Because input and output data is not modifiable - array is the best way to resolve types.
+
+But for multithreading the better to use immutable collections....
+
+
+
 ## How to use
 
 

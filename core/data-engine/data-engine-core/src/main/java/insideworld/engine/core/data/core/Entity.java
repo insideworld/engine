@@ -20,18 +20,20 @@
 package insideworld.engine.core.data.core;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Entity interface.
+ *
  * @since 0.0.1
  */
 public interface Entity extends Serializable {
 
     /**
      * Get id of this entity.
+     *
      * @return ID.
      */
     long getId();
-
 
 }

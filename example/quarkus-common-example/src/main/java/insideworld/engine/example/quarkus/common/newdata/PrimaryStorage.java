@@ -19,34 +19,11 @@
 
 package insideworld.engine.example.quarkus.common.newdata;
 
-import insideworld.engine.plugins.generator.base.GenerateMixin;
-import insideworld.engine.plugins.generator.data.jpa.entity.annotations.GenerateJpaEntity;
-import insideworld.engine.plugins.generator.data.jpa.storage.annotations.GenerateCrud;
+import insideworld.engine.core.data.core.storages.Storage;
+import java.util.Collection;
 
-@GenerateJpaEntity(
-    entity = PrimaryEntity.class,
-    schema = "test",
-    table = "primary"
-)
-@GenerateJpaEntity(
-    entity = SingleEntity.class,
-    schema = "test",
-    table = "single",
-    oneToOne = "primary"
-)
-@GenerateJpaEntity(
-    entity = NestedEntity.class,
-    schema = "test",
-    table = "nested"
-)
-@GenerateJpaEntity(
-    entity = NestedsEntity.class,
-    schema = "test",
-    table = "nesteds"
-)
-@GenerateCrud(entity = PrimaryEntity.class, override = true)
-@GenerateCrud(entity = SingleEntity.class)
-@GenerateCrud(entity = NestedEntity.class)
-@GenerateCrud(entity = NestedsEntity.class)
-public interface MixinJpa extends GenerateMixin {
+public interface PrimaryStorage extends Storage<PrimaryEntity> {
+
+    Collection<PrimaryEntity> getByValue(String value);
+
 }

@@ -17,49 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.jpa;
+package insideworld.engine.example.quarkus.common;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import insideworld.engine.core.data.core.Entity;
-import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
+import insideworld.engine.core.action.Action;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.example.quarkus.common.newdata.PrimaryEntity;
+import java.util.Collection;
+import javax.enterprise.util.TypeLiteral;
 
-/**
- * Abstract entity class with implemented ID tag, equals, hashcode and etc.
- * @since 0.0.1
- */
-@MappedSuperclass
-public abstract class AbstractJpaEntity implements Entity {
-
-    /**
-     * ID of entity.
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false, updatable = false)
-    protected long id;
-
+public class TestGeneric implements Action<Collection<Long>, Collection<PrimaryEntity>> {
     @Override
-    public long getId() {
-        return this.id;
+    public Collection<PrimaryEntity> execute(final Collection<Long> input) throws CommonException {
+        return null;
     }
 
     @Override
-    public final int hashCode() {
-        return Long.hashCode(this.getId());
+    public String key() {
+        return null;
     }
 
     @Override
-    public final boolean equals(final Object obj) {
-        return obj != null
-               && this.getClass().equals(obj.getClass())
-               && this.getId() == ((Entity) obj).getId();
+    public Class<? extends Collection<Long>> inputType() {
+        final TypeLiteral<Collection<Long>> typeLiteral = new TypeLiteral<>() {};
+        return typeLiteral.getRawType();
     }
 
+    @Override
+    public Class<? extends Collection<PrimaryEntity>> outputType() {
+        return null;
+    }
 }

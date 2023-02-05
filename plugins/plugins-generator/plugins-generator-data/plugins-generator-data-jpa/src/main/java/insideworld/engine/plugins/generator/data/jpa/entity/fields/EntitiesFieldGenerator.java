@@ -30,6 +30,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.Map;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import org.hibernate.annotations.Target;
 import org.jboss.jandex.AnnotationInstance;
@@ -49,7 +50,7 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     public boolean can(final PropertyDescriptor bean, final JpaInfo info) {
         final Class<?> ret = this.propertyType(bean, info);
         return Collection.class.isAssignableFrom(ret)
-            && Entity.class.isAssignableFrom(this.getGeneric(bean));
+               && Entity.class.isAssignableFrom(this.getGeneric(bean));
     }
 
     @Override
@@ -60,6 +61,7 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
             "mappedBy",
             CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, info.getTable() + "_id")
         );
+        onetomany.addValue("fetch", FetchType.EAGER);
         final AnnotationValue value = AnnotationValue.createClassValue(
             "targetEntity",
             Type.create(
@@ -82,7 +84,7 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     @Override
     protected String fieldSignature(final PropertyDescriptor descriptor) {
         return String.format("Ljava/util/Collection<L%s;>;",
-            this.getGeneric(descriptor).getName().replace(".","/")
+            this.getGeneric(descriptor).getName().replace(".", "/")
         );
     }
 
@@ -90,7 +92,7 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     protected String readSignature(final PropertyDescriptor descriptor) {
         return String.format(
             "()Ljava/util/Collection<L%s;>;",
-            this.getGeneric(descriptor).getName().replace(".","/")
+            this.getGeneric(descriptor).getName().replace(".", "/")
         );
     }
 
@@ -98,7 +100,7 @@ public class EntitiesFieldGenerator extends AbstractFieldGenerator<JpaInfo> {
     protected String writeSignature(final PropertyDescriptor descriptor) {
         return String.format(
             "(Ljava/util/Collection<L%s;>;)V",
-            this.getGeneric(descriptor).getName().replace(".","/")
+            this.getGeneric(descriptor).getName().replace(".", "/")
         );
     }
 

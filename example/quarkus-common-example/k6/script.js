@@ -18,22 +18,31 @@
  */
 
 import http from 'k6/http';
-// export default function () {
-//     const headers = {
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': 'Bearer token'
-//         }
-//     };
-//     http.post('https://inswrlserver:22016/api/actions/somedata.read', `[]`, headers);
-// }
-
 export default function () {
     const headers = {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer annaonelove'
+            'Authorization': 'Bearer token'
         }
     };
-    http.post('https://localhost:20443/api/actions/device.kick', `1`, headers);
+    http.post('https://inswrlserver:22016/api/actions/somedata.read', `[]`, headers);
 }
+//
+// export default function () {
+//     const headers = {
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': 'Bearer annaonelove'
+//         }
+//     };
+//     http.post('https://localhost:20443/api/actions/device.kick', `1`, headers);
+// }
+//
+// export default function () {
+//     const headers = {
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }
+//     };
+//     http.post('http://localhost:13777/api/test/call', ``, headers);
+// }

@@ -20,6 +20,7 @@
 package insideworld.engine.plugins.generator.data.inmemory.entity.abstracts;
 
 import insideworld.engine.core.data.core.Entity;
+import java.util.UUID;
 
 public abstract class AbstractMemoryEntity implements MemoryEntity {
 
@@ -33,7 +34,6 @@ public abstract class AbstractMemoryEntity implements MemoryEntity {
     public void setId(long id) {
         this.id = id;
     }
-
     @Override
     public int hashCode() {
         return Long.hashCode(this.id);

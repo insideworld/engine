@@ -19,34 +19,26 @@
 
 package insideworld.engine.example.quarkus.common.newdata;
 
-import insideworld.engine.plugins.generator.base.GenerateMixin;
-import insideworld.engine.plugins.generator.data.jpa.entity.annotations.GenerateJpaEntity;
-import insideworld.engine.plugins.generator.data.jpa.storage.annotations.GenerateCrud;
+import insideworld.engine.core.data.jpa.AbstractCrudStorage;
+import insideworld.engine.example.quarkus.common.data.SomeData;
+import insideworld.engine.plugins.generator.data.jpa.storage.AbstractCrudDecorator;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import java.util.Collection;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@GenerateJpaEntity(
-    entity = PrimaryEntity.class,
-    schema = "test",
-    table = "primary"
-)
-@GenerateJpaEntity(
-    entity = SingleEntity.class,
-    schema = "test",
-    table = "single",
-    oneToOne = "primary"
-)
-@GenerateJpaEntity(
-    entity = NestedEntity.class,
-    schema = "test",
-    table = "nested"
-)
-@GenerateJpaEntity(
-    entity = NestedsEntity.class,
-    schema = "test",
-    table = "nesteds"
-)
-@GenerateCrud(entity = PrimaryEntity.class, override = true)
-@GenerateCrud(entity = SingleEntity.class)
-@GenerateCrud(entity = NestedEntity.class)
-@GenerateCrud(entity = NestedsEntity.class)
-public interface MixinJpa extends GenerateMixin {
+@Singleton
+public class PrimaryStorageCrud extends AbstractCrudDecorator<PrimaryEntity> implements PrimaryStorage {
+
+    @Inject
+    public PrimaryStorageCrud(final AbstractCrudStorage<PrimaryEntity, ? extends PrimaryEntity> storage) {
+        super(storage);
+    }
+
+    @Override
+    public Collection<PrimaryEntity> getByValue(final String value) {
+        return (Collection<PrimaryEntity> ) this.storage.find("from PrimaryEntity p where p.value = ?1", value)
+            .list();
+//            .toArray(PrimaryEntity[]::new);
+    }
 }

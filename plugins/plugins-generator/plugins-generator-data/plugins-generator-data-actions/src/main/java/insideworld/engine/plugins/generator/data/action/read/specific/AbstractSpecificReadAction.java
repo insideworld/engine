@@ -26,15 +26,12 @@ import insideworld.engine.core.data.core.storages.Storage;
 
 /**
  * This class is abstract.
- * Add generics in signature.
- * Generate:
- * 1. Key method.
- * 2. InputType method
- * 3. OutputType method (based on returned type)
- * 4. Generate execute with parsing fields.
- * @param <I>
- * @param <O>
- * @param <S>
+ * The problem:
+ * 1) Storage with collections... Looks like need to use specific methods.
+ * 2) Other types also arrays may use as the same.
+ * @param <I> Input type.
+ * @param <O> Output type.
+ * @param <S> Storage type.
  */
 public abstract class AbstractSpecificReadAction<I, O, S extends Storage<? extends Entity>> implements Action<I, O> {
 
