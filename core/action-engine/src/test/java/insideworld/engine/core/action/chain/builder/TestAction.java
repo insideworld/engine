@@ -46,19 +46,15 @@ class TestAction extends AbstractChainAction<Input, Input, Input> {
         super(builder);
     }
 
-    @Override
-    public final Class<Input> inputType() {
-        return Input.class;
-    }
-
-    @Override
-    public final Class<Input> outputType() {
-        return Input.class;
-    }
 
     @Override
     public final String key() {
         return "insideworld.engine.core.action.chain.builder.TestAction";
+    }
+
+    @Override
+    public final void types(final Input input, final Input output) {
+
     }
 
     @Override

@@ -17,11 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.common.serializer.types;
+
+import java.util.Set;
 
 /**
- * Interface marker for implementations which need bound to interface for serialization.
- * @since 2.0.0
+ * Types which will using in serialisation.
+ * @since 2.0.0.
  */
-public interface Serializable extends java.io.Serializable {
+public interface Types {
+
+    /**
+     * Get types for serializers.
+     * @return Set of classes which work in serialization.
+     */
+    Set<Type> getTypes();
+
 }

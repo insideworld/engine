@@ -20,13 +20,15 @@
 package insideworld.engine.plugins.generator.data.action.delete;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.core.data.core.action.DeleteAction;
+import insideworld.engine.core.data.core.action.AbstractDeleteAction;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteAction;
 import insideworld.engine.plugins.generator.data.action.delete.search.SearchDeleteMixin;
+import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
+import io.quarkus.gizmo.MethodCreator;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -42,7 +44,7 @@ public class DeleteActionGenerator extends AbstractActionGenerator {
 
     @Override
     protected Class<?> extended() {
-        return DeleteAction.class;
+        return AbstractDeleteAction.class;
     }
 
     @Override
@@ -53,6 +55,20 @@ public class DeleteActionGenerator extends AbstractActionGenerator {
         return searchers.stream().map(SearchDeleteAction::search)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    protected void createTypes(final ClassCreator creator, final ActionInfo info) {
+        // Input arguments is long.
+        // Output argument is collection of entity.
+        final MethodCreator method = creator.getMethodCreator(
+            "types", void.class, Collection.class, Collection.class
+        );
+        method.setSignature(
+            "(Ljava/util/Collection<Ljava/lang/Long;>;Ljava/util/Collection<Ljava/lang/Long;>;)V"
+        );
+        method.returnValue(null);
+        method.close();
     }
 
 }

@@ -35,8 +35,7 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class ParentClassAction extends
-    AbstractChainAction<UUID, TestAux, TestAux> {
+class ParentClassAction extends AbstractChainAction<UUID, TestAux, TestAux> {
 
     /**
      * Default constructor.
@@ -53,13 +52,8 @@ class ParentClassAction extends
     }
 
     @Override
-    public Class<? extends UUID> inputType() {
-        return UUID.class;
-    }
-
-    @Override
-    public Class<? extends TestAux> outputType() {
-        return TestAux.class;
+    public void types(final UUID input, final TestAux output) {
+        //Nothing to do.
     }
 
     @Override

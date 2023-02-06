@@ -20,8 +20,7 @@
 package insideworld.engine.plugins.generator.data.action.write;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.action.WriteAction;
+import insideworld.engine.core.data.core.action.AbstractWriteAction;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
@@ -29,8 +28,8 @@ import insideworld.engine.plugins.generator.data.action.write.search.SearchWrite
 import insideworld.engine.plugins.generator.data.action.write.search.SearchWriteMixin;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
+import io.quarkus.gizmo.MethodCreator;
 import java.util.Collection;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class WriteActionGenerator extends AbstractActionGenerator {
@@ -44,7 +43,7 @@ public class WriteActionGenerator extends AbstractActionGenerator {
 
     @Override
     protected Class<?> extended() {
-        return WriteAction.class;
+        return AbstractWriteAction.class;
     }
 
     @Override
@@ -55,6 +54,25 @@ public class WriteActionGenerator extends AbstractActionGenerator {
         return searchers.stream().map(SearchWriteAction::search)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    protected void createTypes(final ClassCreator creator, final ActionInfo info) {
+        // Input arguments is long.
+        // Output argument is collection of entity.
+        final MethodCreator method = creator.getMethodCreator(
+            "types", void.class, Collection.class, Collection.class
+        );
+        final String formatted = info.entity().getName().replace(".", "/");
+        method.setSignature(
+            String.format(
+                "(Ljava/util/Collection<L%s;>;Ljava/util/Collection<L%s;>;)V",
+                formatted,
+                formatted
+            )
+        );
+        method.returnValue(null);
+        method.close();
     }
 
 }

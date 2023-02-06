@@ -51,12 +51,7 @@ public class TestStartupAction implements Action<Void, Void> {
     }
 
     @Override
-    public Class<Void> inputType() {
-        return Void.TYPE;
-    }
-
-    @Override
-    public Class<Void> outputType() {
-        return Void.TYPE;
+    public void types(final Void input, final Void output) {
+        //Nothing to do
     }
 }

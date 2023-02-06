@@ -51,13 +51,8 @@ class TestAction extends AbstractChainAction<Input, Integer[], Input> {
     }
 
     @Override
-    public Class<Input> inputType() {
-        return Input.class;
-    }
-
-    @Override
-    public Class<Integer[]> outputType() {
-        return Integer[].class;
+    public void types(final Input input, final Integer[] output) {
+        //Nothing to do
     }
 
     @Override

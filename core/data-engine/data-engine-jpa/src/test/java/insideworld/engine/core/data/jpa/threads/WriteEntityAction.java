@@ -56,13 +56,8 @@ public class WriteEntityAction implements Action<WriteEntityAction.Input, Void> 
     }
 
     @Override
-    public Class<? extends Input> inputType() {
-        return Input.class;
-    }
-
-    @Override
-    public Class<? extends Void> outputType() {
-        return Void.TYPE;
+    public final void types(final Input input, final Void output) {
+        //Nothing to do
     }
 
     public interface Input {

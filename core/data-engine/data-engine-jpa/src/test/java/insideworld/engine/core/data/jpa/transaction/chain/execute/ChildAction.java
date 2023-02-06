@@ -57,12 +57,7 @@ class ChildAction implements Action<SomeEntity, SomeEntity> {
     }
 
     @Override
-    public Class<? extends SomeEntity> inputType() {
-        return SomeEntity.class;
-    }
-
-    @Override
-    public Class<? extends SomeEntity> outputType() {
-        return SomeEntity.class;
+    public final void types(final SomeEntity input, final SomeEntity output) {
+        //Nothing to do
     }
 }

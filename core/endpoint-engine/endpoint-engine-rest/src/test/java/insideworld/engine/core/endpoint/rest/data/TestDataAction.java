@@ -36,12 +36,8 @@ public class TestDataAction implements Action<TestEntity, Object> {
     }
 
     @Override
-    public Class<? extends TestEntity> inputType() {
-        return TestEntity.class;
+    public void types(final TestEntity input, final Object output) {
+        //Nothing to do
     }
 
-    @Override
-    public Class<?> outputType() {
-        return Object.class;
-    }
 }

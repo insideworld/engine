@@ -23,39 +23,29 @@ import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.storages.Storage;
-import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * Abstract action to write entity.
- * This class is necessary to fast creation of typical actions to write entity.
- * Entity should come to this action in raw representation.
- * First they import to context, then write and after that - exported.
- * Context arguments:
- * Raw entity.
- * Output results:
- * Raw entity.
- * @param <T> Type of entity.
- * @since 0.0.1
+ * This class is using to delete entities by IDS.
+ * @param <T> Entity type
  */
-public class WriteAction<T extends Entity> implements Action<T[], T[]> {
+public abstract class AbstractDeleteAction<T extends Entity>
+    implements Action<Collection<Long>, Collection<Long>> {
 
     private final String key;
     private final Storage<T> storage;
-    private final T[] array;
-    private final Class<T[]> type;
 
-    @SuppressWarnings("unchecked")
-    public WriteAction(final String key, final Storage<T> storage) {
+    public AbstractDeleteAction(final String key, final Storage<T> storage) {
         this.key = key;
         this.storage = storage;
-        this.array = (T[]) Array.newInstance(this.storage.forEntity(), 0);
-        this.type = (Class<T[]>) this.array.getClass();
     }
 
     @Override
-    public T[] execute(final T[] input) throws CommonException {
-        return this.storage.writeAll(List.of(input)).toArray(this.array);
+    public Collection<Long> execute(final Collection<Long> input) throws CommonException {
+        final Collection<T> entities = this.storage.read(input);
+        this.storage.delete(entities);
+        return entities.stream().map(Entity::getId).toList();
     }
 
     @Override
@@ -63,13 +53,4 @@ public class WriteAction<T extends Entity> implements Action<T[], T[]> {
         return this.key;
     }
 
-    @Override
-    public Class<? extends T[]> inputType() {
-        return this.type;
-    }
-
-    @Override
-    public Class<? extends T[]> outputType() {
-        return this.type;
-    }
 }

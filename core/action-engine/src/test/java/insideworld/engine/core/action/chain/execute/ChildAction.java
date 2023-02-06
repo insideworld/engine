@@ -53,13 +53,8 @@ class ChildAction implements Action<UUID, ChildAction.Output> {
     }
 
     @Override
-    public Class<? extends UUID> inputType() {
-        return UUID.class;
-    }
-
-    @Override
-    public Class<? extends Output> outputType() {
-        return Output.class;
+    public final void types(final UUID input, final Output output) {
+        //Nothing to do
     }
 
     public interface Output {

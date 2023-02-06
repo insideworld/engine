@@ -19,6 +19,7 @@
 
 package insideworld.engine.core.action.executor;
 
+import com.google.common.collect.ImmutableMap;
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.ActionException;
 import insideworld.engine.core.action.executor.key.Key;
@@ -28,6 +29,7 @@ import insideworld.engine.core.action.executor.profile.ExecuteProfile;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,12 +40,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-public class ActionExecutorImpl implements ActionExecutor, ActionChanger, ActionsInfo {
+public class ActionExecutorImpl implements ActionExecutor, ActionChanger {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActionExecutorImpl.class);
 
@@ -156,14 +159,8 @@ public class ActionExecutorImpl implements ActionExecutor, ActionChanger, Action
     }
 
     @Override
-    public <I, O> Pair<Class<? extends I>, Class<? extends O>> resolveTypes(final Key<I, O> key) {
-        final Action<I, O> action = (Action<I, O>) this.actions.get(key);
-        return Pair.of(action.inputType(), action.outputType());
-    }
-
-    @Override
-    public Collection<Key<?, ?>> getKeys() {
-        return this.actions.keySet();
+    public Map<Key<?, ?>, Action<?, ?>> getKeys() {
+        return Collections.unmodifiableMap(this.actions);
     }
 
     @Override

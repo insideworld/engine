@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ser.ResolvableSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import insideworld.engine.core.data.core.Entity;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Objects;
 
 public class JacksonSerializer<T extends Entity>
     extends StdSerializer<T>
@@ -47,7 +49,12 @@ public class JacksonSerializer<T extends Entity>
     @Override
     public void serialize(final T value, final JsonGenerator gen, final SerializerProvider provider)
         throws IOException {
-        if (gen.getCurrentValue() == null || gen.getCurrentValue().getClass().isArray()) {
+        Class<?> top = (Class<?>) provider.getAttribute("top");
+        if (top == null) {
+            top = value.getClass();
+            provider.setAttribute("top", top);
+        }
+        if (top.equals(value.getClass())) {
             this.def.serialize(value, gen, provider);
         } else {
             gen.writeNumber(value.getId());

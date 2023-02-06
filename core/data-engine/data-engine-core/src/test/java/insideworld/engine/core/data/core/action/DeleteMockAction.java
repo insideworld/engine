@@ -21,6 +21,7 @@ package insideworld.engine.core.data.core.action;
 
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntity;
 import insideworld.engine.core.data.core.storages.Storage;
+import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -29,10 +30,15 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class DeleteMockAction extends DeleteAction<MockEntity> {
+class DeleteMockAction extends AbstractDeleteAction<MockEntity> {
 
     @Inject
     public DeleteMockAction(final Storage<MockEntity> storage) {
         super("insideworld.engine.core.data.core.action.DeleteMockAction", storage);
+    }
+
+    @Override
+    public final void types(final Collection<Long> input, final Collection<Long> output) {
+        //Nothing to do
     }
 }

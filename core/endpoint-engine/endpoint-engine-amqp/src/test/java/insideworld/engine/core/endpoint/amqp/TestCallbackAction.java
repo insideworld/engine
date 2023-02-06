@@ -46,12 +46,7 @@ public class TestCallbackAction implements Action<TestData, Void> {
     }
 
     @Override
-    public Class<? extends TestData> inputType() {
-        return TestData.class;
-    }
-
-    @Override
-    public Class<? extends Void> outputType() {
-        return Void.TYPE;
+    public void types(final TestData input, final Void output) {
+        //Nothing to do
     }
 }

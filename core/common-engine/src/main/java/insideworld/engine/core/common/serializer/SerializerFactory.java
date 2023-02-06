@@ -17,33 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.example.quarkus.common;
+package insideworld.engine.core.common.serializer;
 
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.example.quarkus.common.newdata.PrimaryEntity;
+import insideworld.engine.core.common.serializer.types.Type;
 import java.util.Collection;
-import javax.enterprise.util.TypeLiteral;
 
-public class TestGeneric implements Action<Collection<Long>, Collection<PrimaryEntity>> {
-    @Override
-    public Collection<PrimaryEntity> execute(final Collection<Long> input) throws CommonException {
-        return null;
-    }
+/**
+ * Serialiser factory.
+ * Using to implement different version of serializers.
+ * @since 2.0.0.
+ */
+public interface SerializerFactory {
 
-    @Override
-    public String key() {
-        return null;
-    }
+    /**
+     * Register a type for create serializer.
+     * @param type Type of object.
+     * @return True if type is applicable for the factory, false if not.
+     */
+    boolean register(Type type);
 
-    @Override
-    public Class<? extends Collection<Long>> inputType() {
-        final TypeLiteral<Collection<Long>> typeLiteral = new TypeLiteral<>() {};
-        return typeLiteral.getRawType();
-    }
+    /**
+     * Create serializers for types.
+     * @return
+     */
+    Collection<Serializer> create();
 
-    @Override
-    public Class<? extends Collection<PrimaryEntity>> outputType() {
-        return null;
-    }
+    /**
+     * Order of builder.
+     * @return Order if builder.
+     */
+    long order();
+
 }

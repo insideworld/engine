@@ -19,39 +19,33 @@
 
 package insideworld.engine.core.action.serializer;
 
-import insideworld.engine.core.action.executor.ActionsInfo;
 import insideworld.engine.core.action.executor.key.Key;
 import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.serializer.Serializer;
+import insideworld.engine.core.common.serializer.SerializerFacade;
 import insideworld.engine.core.common.startup.OnStartUp;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.apache.commons.lang3.tuple.Pair;
 
 @Singleton
 public class ActionSerializerImpl implements OnStartUp, ActionSerializer {
 
-    private final List<Serializer> sorted;
-
     private final Map<Key<?, ?>, Serializer> serializers;
 
-    private final Map<Key<?, ?>, Pair<Class<?>, Serializer>> deserializers;
-
-    private final ActionsInfo info;
+    private final Map<Key<?, ?>, Serializer> deserializers;
+    private final ActionTypes types;
+    private final SerializerFacade facade;
 
     @Inject
-    public ActionSerializerImpl(final List<Serializer> sorted, final ActionsInfo info) {
-        this.sorted = sorted.stream()
-            .sorted(Comparator.comparingLong(Serializer::order).reversed())
-            .toList();
+    public ActionSerializerImpl(final ActionTypes types, final SerializerFacade facade) {
+        this.types = types;
+        this.facade = facade;
         this.serializers = new HashMap<>();
         this.deserializers = new HashMap<>();
-        this.info = info;
     }
 
     @Override
@@ -64,29 +58,19 @@ public class ActionSerializerImpl implements OnStartUp, ActionSerializer {
     @Override
     public <T> T deserialize(final Key<T, ?> key, final InputStream stream)
         throws CommonException {
-        final Pair<Class<?>, Serializer> pair = this.deserializers.get(key);
-        return pair.getRight().deserialize(
-            stream,
-            pair.getLeft()
-        );
+        final Serializer serializer = this.deserializers.get(key);
+        return (T) serializer.deserialize(stream);
     }
 
     @Override
     public void startUp() throws CommonException {
-        for (final Key<?, ?> key : this.info.getKeys()) {
-            final Pair<Class<?>, Class<?>> pair = this.info.resolveTypes((Key<Object, Object>) key);
-            for (final Serializer serializer : this.sorted) {
-                if (serializer.applicable(pair.getLeft())) {
-                    this.deserializers.put(key, Pair.of(pair.getLeft(), serializer));
-                    break;
-                }
-            }
-            for (final Serializer serializer : this.sorted) {
-                if (serializer.applicable(pair.getRight())) {
-                    this.serializers.put(key, serializer);
-                    break;
-                }
-            }
+        for (final var entry : this.types.getInputOutputs().entrySet()) {
+            this.deserializers.put(
+                entry.getKey(), this.facade.getSerializer(entry.getValue().getLeft())
+            );
+            this.serializers.put(
+                entry.getKey(), this.facade.getSerializer(entry.getValue().getRight())
+            );
         }
     }
 

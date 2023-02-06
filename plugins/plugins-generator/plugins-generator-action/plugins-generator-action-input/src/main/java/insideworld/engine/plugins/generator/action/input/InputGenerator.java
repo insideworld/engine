@@ -19,29 +19,16 @@
 
 package insideworld.engine.plugins.generator.action.input;
 
-import static java.beans.Introspector.USE_ALL_BEANINFO;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import insideworld.engine.core.action.serializer.Serializable;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
-import io.quarkus.gizmo.AnnotationCreator;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.gizmo.FieldCreator;
 import io.quarkus.gizmo.MethodCreator;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.enterprise.context.Dependent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class InputGenerator {
 
@@ -69,7 +56,6 @@ public class InputGenerator {
         final ClassCreator creator = ClassCreator.builder()
             .classOutput(this.output)
             .className(String.format("%sImpl",type.getName()))
-            .interfaces(type, Serializable.class)
             .build();
         creator.addAnnotation(Dependent.class);
         for (final Property property : properties) {

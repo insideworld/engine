@@ -25,9 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface ActionSerializer {
-    <T> void serialize(Key<?, T> key, T value, OutputStream stream)
-        throws CommonException;
+    <T> void serialize(Key<?, T> key, T value, OutputStream stream) throws CommonException;
 
-    <T> T deserialize(Key<T, ?> key, InputStream stream)
-        throws CommonException;
+    <T> T deserialize(Key<T, ?> key, InputStream stream) throws CommonException;
 }

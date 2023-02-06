@@ -17,14 +17,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.common.serializer;
 
-import java.util.Set;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.common.serializer.types.Type;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public interface Types {
+/**
+ * Serializer.
+ */
+public interface Serializer {
 
-    Set<Class<?>> getInputs();
+    void serialize(Object value, OutputStream stream) throws CommonException;
 
-    Set<Class<?>> getOutputs();
+    Object deserialize(InputStream stream) throws CommonException;
+
+    /**
+     * For which type this serializer.
+     * @return Type.
+     */
+    Type forType();
 
 }

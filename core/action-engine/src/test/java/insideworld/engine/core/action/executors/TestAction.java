@@ -42,12 +42,7 @@ class TestAction implements Action<UUID, UUID> {
     }
 
     @Override
-    public Class<UUID> inputType() {
-        return UUID.class;
-    }
-
-    @Override
-    public Class<UUID> outputType() {
-        return UUID.class;
+    public final void types(final UUID input, final UUID output) {
+        //Nothing to do
     }
 }

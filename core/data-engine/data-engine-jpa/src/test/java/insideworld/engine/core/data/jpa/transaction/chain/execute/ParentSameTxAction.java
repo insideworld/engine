@@ -58,13 +58,8 @@ class ParentSameTxAction extends AbstractChainAction<Long, SomeEntity, AuxImpl> 
     }
 
     @Override
-    public Class<? extends Long> inputType() {
-        return Long.class;
-    }
-
-    @Override
-    public Class<? extends SomeEntity> outputType() {
-        return SomeEntity.class;
+    public final void types(final Long input, final SomeEntity output) {
+        //Nothing to do
     }
 
     @Override

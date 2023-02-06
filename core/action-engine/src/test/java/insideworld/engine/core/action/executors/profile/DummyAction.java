@@ -56,13 +56,7 @@ class DummyAction implements Action<Void, Void> {
     }
 
     @Override
-    public final Class<Void> inputType() {
-        return Void.TYPE;
+    public final void types(final Void input, final Void output) {
+        //Nothing to do
     }
-
-    @Override
-    public final Class<Void> outputType() {
-        return Void.TYPE;
-    }
-
 }

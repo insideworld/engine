@@ -19,8 +19,6 @@
 
 package insideworld.engine.plugins.generator.data.action.abstracts;
 
-import com.google.common.collect.ImmutableList;
-import insideworld.engine.core.action.chain.LinksBuilder;
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import io.quarkus.gizmo.ClassCreator;
@@ -28,7 +26,6 @@ import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
 import java.util.Collection;
-import java.util.function.BiConsumer;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -56,12 +53,20 @@ public abstract class AbstractActionGenerator {
         final ClassCreator creator = builder.build();
         creator.addAnnotation(Singleton.class);
         this.createConstructor(creator, info);
+        this.createTypes(creator, info);
         creator.close();
     }
 
     protected abstract Class<?> extended();
 
     protected abstract Collection<ActionInfo> infos();
+
+    /**
+     * Create type method.
+     * @param creator
+     * @param info
+     */
+    protected abstract void createTypes(final ClassCreator creator, final ActionInfo info);
 
     private void createConstructor(final ClassCreator creator, final ActionInfo info) {
         final MethodCreator constructor = creator.getMethodCreator(
@@ -97,4 +102,5 @@ public abstract class AbstractActionGenerator {
             entity.replace(".", "/")
         );
     }
+
 }

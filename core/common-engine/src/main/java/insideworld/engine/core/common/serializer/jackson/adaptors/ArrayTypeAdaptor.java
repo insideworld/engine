@@ -17,19 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.executor;
+package insideworld.engine.core.common.serializer.jackson.adaptors;
 
-import insideworld.engine.core.action.executor.key.Key;
-import java.util.Collection;
-import org.apache.commons.lang3.tuple.Pair;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import insideworld.engine.core.common.serializer.jackson.JacksonTypeAdaptor;
+import insideworld.engine.core.common.serializer.types.Type;
+import javax.inject.Singleton;
 
-/**
- * TODO: Need to add on update event because infos about action may be updated in runtime on the future.
- */
-public interface ActionsInfo {
+@Singleton
+public class ArrayTypeAdaptor implements JacksonTypeAdaptor {
 
-    <I, O> Pair<Class<? extends I>, Class<? extends O>> resolveTypes(Key<I, O> key);
+    @Override
+    public JavaType convert(final ObjectMapper mapper, final Type type) {
+        final JavaType converted;
+        if (type.getOrigin().isArray()) {
+            converted = mapper.getTypeFactory().constructArrayType(
+                type.getOrigin().getComponentType()
+            );
+        } else {
+            converted = null;
+        }
+        return converted;
+    }
 
-    Collection<Key<?,?>> getKeys();
-
+    @Override
+    public int order() {
+        return 100;
+    }
 }

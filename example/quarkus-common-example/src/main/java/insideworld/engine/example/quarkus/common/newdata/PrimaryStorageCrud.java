@@ -37,8 +37,11 @@ public class PrimaryStorageCrud extends AbstractCrudDecorator<PrimaryEntity> imp
 
     @Override
     public Collection<PrimaryEntity> getByValue(final String value) {
-        return (Collection<PrimaryEntity> ) this.storage.find("from PrimaryEntity p where p.value = ?1", value)
+        return (Collection<PrimaryEntity>)
+            this.storage.find(
+                "from PrimaryEntity p where p.value = ?1",
+                    value
+                )
             .list();
-//            .toArray(PrimaryEntity[]::new);
     }
 }

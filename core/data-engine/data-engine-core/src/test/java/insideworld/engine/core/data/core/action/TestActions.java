@@ -92,14 +92,14 @@ class TestActions {
     final void testRead() throws CommonException {
         final Collection<MockEntity> entities =
             List.of(this.init.createPrimary(), this.init.createPrimary());
-        final MockEntity[] result = this.executor.execute(
+        final Collection<MockEntity> result = this.executor.execute(
             new ClassKey<>(ReadMockAction.class),
-            entities.stream().map(Entity::getId).toArray(Long[]::new)
+            entities.stream().map(Entity::getId).toList()
         );
         MatcherAssert.assertThat(
             "Entity didn't read",
             result,
-            Matchers.arrayWithSize(2)
+            Matchers.iterableWithSize(2)
         );
     }
 
@@ -117,7 +117,7 @@ class TestActions {
         final int size = this.storage.readAll().size();
         this.executor.execute(
             new ClassKey<>(DeleteMockAction.class),
-            entities.stream().map(MockEntity::getId).toArray(Long[]::new)
+            entities.stream().map(MockEntity::getId).toList()
         );
         MatcherAssert.assertThat(
             "Entity didn't delete",
@@ -136,13 +136,13 @@ class TestActions {
     final void testWrite() throws CommonException {
         final MockEntityImpl entity = new MockEntityImpl();
         entity.setDate(new Date());
-        final MockEntity[] write = this.executor.execute(
+        final Collection<MockEntity> write = this.executor.execute(
             new ClassKey<>(WriteMockAction.class),
-            new MockEntity[]{entity}
+            List.of(entity)
         );
         MatcherAssert.assertThat(
             "Entity didn't write",
-            write[0],
+            write.iterator().next(),
             Matchers.hasProperty(
                 "id",
                 Matchers.not(

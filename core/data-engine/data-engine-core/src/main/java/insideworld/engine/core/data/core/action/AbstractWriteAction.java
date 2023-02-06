@@ -24,61 +24,41 @@ import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.storages.Storage;
 import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * Abstract action to read entity by ID or IDS tags.
- * This class is necessary to fast creation of typical actions to read entity.
- * Input arguments:
- * insideworld.engine.core.data.core.tags.StorageTags#ID - for read only single entity.
- * or
- * insideworld.engine.core.data.core.tags.StorageTags#IDS - for read several entities.
- * All read entity or entities will add to output using ExportEntityLink.
- *
+ * Abstract action to write entity.
+ * This class is necessary to fast creation of typical actions to write entity.
+ * Entity should come to this action in raw representation.
+ * First they import to context, then write and after that - exported.
+ * Context arguments:
+ * Raw entity.
+ * Output results:
+ * Raw entity.
  * @param <T> Type of entity.
  * @since 0.0.1
  */
-public class ReadAction<T extends Entity> implements Action<Long[], T[]> {
+public abstract class AbstractWriteAction<T extends Entity>
+    implements Action<Collection<T>, Collection<T>> {
 
-    private final T[] array;
-
-    private final Class<T[]> type;
     private final String key;
     private final Storage<T> storage;
 
     @SuppressWarnings("unchecked")
-    public ReadAction(final String key, final Storage<T> storage) {
+    public AbstractWriteAction(final String key, final Storage<T> storage) {
         this.key = key;
         this.storage = storage;
-        this.array = (T[]) Array.newInstance(this.storage.forEntity(), 0);
-        this.type = (Class<T[]>) this.array.getClass();
     }
 
-
     @Override
-    public T[] execute(final Long[] input) throws CommonException {
-        final T[] result;
-        if (ArrayUtils.isEmpty(input)) {
-            result = this.storage.readAll().toArray(this.array);
-        } else {
-            result = this.storage.read(List.of(input)).toArray(this.array);
-        }
-        return result;
+    public Collection<T> execute(final Collection<T> input) throws CommonException {
+        return this.storage.writeAll(input);
     }
 
     @Override
     public String key() {
         return this.key;
-    }
-
-    @Override
-    public Class<? extends Long[]> inputType() {
-        return Long[].class;
-    }
-
-    @Override
-    public Class<? extends T[]> outputType() {
-        return this.type;
     }
 }

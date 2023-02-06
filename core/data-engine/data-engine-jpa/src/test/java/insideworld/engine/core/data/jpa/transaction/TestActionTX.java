@@ -60,12 +60,7 @@ class TestActionTX implements Action<SomeEntity, SomeEntity> {
     }
 
     @Override
-    public Class<? extends SomeEntity> inputType() {
-        return SomeEntity.class;
-    }
-
-    @Override
-    public Class<? extends SomeEntity> outputType() {
-        return SomeEntity.class;
+    public void types(final SomeEntity input, final SomeEntity output) {
+        //Nothing to do
     }
 }

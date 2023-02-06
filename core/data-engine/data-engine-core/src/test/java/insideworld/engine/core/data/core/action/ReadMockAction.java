@@ -21,6 +21,7 @@ package insideworld.engine.core.data.core.action;
 
 import insideworld.engine.core.data.core.mock.entities.positive.MockEntity;
 import insideworld.engine.core.data.core.storages.Storage;
+import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -29,10 +30,15 @@ import javax.inject.Singleton;
  * @since 0.14.0
  */
 @Singleton
-class ReadMockAction extends ReadAction<MockEntity> {
+class ReadMockAction extends AbstractReadAction<MockEntity> {
 
     @Inject
     public ReadMockAction(final Storage<MockEntity> storage) {
         super("insideworld.engine.core.data.core.action.ReadMockAction", storage);
+    }
+
+    @Override
+    public final void types(final Collection<Long> input, final Collection<MockEntity> output) {
+
     }
 }

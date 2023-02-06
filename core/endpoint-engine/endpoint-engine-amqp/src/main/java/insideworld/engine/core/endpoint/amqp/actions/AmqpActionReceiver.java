@@ -25,7 +25,7 @@ import insideworld.engine.core.common.startup.OnStartUp;
 import insideworld.engine.core.endpoint.amqp.connection.Connection;
 import insideworld.engine.core.endpoint.base.action.ActionReceiver;
 import insideworld.engine.core.endpoint.base.action.ActionSender;
-import insideworld.engine.core.action.serializer.SerializerException;
+import insideworld.engine.core.common.serializer.SerializerException;
 import io.netty.buffer.ByteBufInputStream;
 import io.vertx.mutiny.amqp.AmqpMessage;
 import java.io.IOException;

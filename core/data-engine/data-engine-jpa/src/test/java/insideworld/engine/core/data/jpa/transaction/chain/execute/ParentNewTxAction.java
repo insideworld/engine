@@ -57,14 +57,10 @@ class ParentNewTxAction extends AbstractChainAction<Long, SomeEntity, AuxImpl> {
     }
 
     @Override
-    public Class<? extends Long> inputType() {
-        return Long.class;
+    public final void types(final Long input, final SomeEntity output) {
+        //Nothing to do
     }
 
-    @Override
-    public Class<? extends SomeEntity> outputType() {
-        return SomeEntity.class;
-    }
 
     @Override
     protected Collection<Link<? super AuxImpl>> attachLinks(final LinksBuilder<AuxImpl> builder)

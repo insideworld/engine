@@ -17,48 +17,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.data.core.action;
+package insideworld.engine.core.action.serializer;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.data.core.Entity;
-import insideworld.engine.core.data.core.storages.Storage;
 import java.util.Collection;
-import java.util.List;
+import javax.inject.Singleton;
 
-/**
- * This class is using to delete entities by IDS.
- * @param <T> Entity type
- */
-public class DeleteAction<T extends Entity> implements Action<Long[], Long[]> {
-
-    private final String key;
-    private final Storage<T> storage;
-
-    public DeleteAction(final String key, final Storage<T> storage) {
-        this.key = key;
-        this.storage = storage;
-    }
+@Singleton
+public class TestCollectionAction implements Action<Collection<TestInput>, Collection<TestOutput>> {
 
     @Override
-    public Long[] execute(final Long[] input) throws CommonException {
-        final Collection<T> entities = this.storage.read(List.of(input));
-        this.storage.delete(entities);
-        return entities.stream().map(Entity::getId).toArray(Long[]::new);
+    public Collection<TestOutput> execute(final Collection<TestInput> inputs)
+        throws CommonException {
+        return inputs.stream().map(input -> {
+            final TestOutput output = new TestOutputImpl();
+            output.setUUID(input.getUUID());
+            return output;
+        }).toList();
     }
 
     @Override
     public String key() {
-        return this.key;
+        return "insideworld.engine.core.action.serializer.TestCollectionAction";
     }
 
     @Override
-    public Class<? extends Long[]> inputType() {
-        return Long[].class;
-    }
-
-    @Override
-    public Class<? extends Long[]> outputType() {
-        return Long[].class;
+    public final void types(
+        final Collection<TestInput> input,
+        final Collection<TestOutput> output
+    ) {
+        //Nothing to do.
     }
 }

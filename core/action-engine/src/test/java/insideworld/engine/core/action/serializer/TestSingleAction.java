@@ -19,15 +19,27 @@
 
 package insideworld.engine.core.action.serializer;
 
+import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.exception.Diagnostic;
-import java.util.Collection;
-import java.util.Collections;
+import javax.inject.Singleton;
 
-public class SerializerException extends CommonException {
+@Singleton
+public class TestSingleAction implements Action<TestInput, TestOutput> {
 
-    public SerializerException(final Throwable exception) {
-        super(Collections.emptyList(), exception);
+    @Override
+    public TestOutput execute(final TestInput input) throws CommonException {
+        final TestOutputImpl output = new TestOutputImpl();
+        output.setUUID(input.getUUID());
+        return output;
     }
 
+    @Override
+    public String key() {
+        return "insideworld.engine.core.action.serializer.TestSingleAction";
+    }
+
+    @Override
+    public final void types(final TestInput input, final TestOutput output) {
+        //Nothing to do.
+    }
 }

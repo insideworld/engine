@@ -37,12 +37,7 @@ public class TestAction implements Action<String, String> {
     }
 
     @Override
-    public Class<? extends String> inputType() {
-        return String.class;
-    }
-
-    @Override
-    public Class<? extends String> outputType() {
-        return String.class;
+    public void types(final String input, final String output) {
+        //Nothing to do
     }
 }

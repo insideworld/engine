@@ -20,8 +20,7 @@
 package insideworld.engine.plugins.generator.data.action.read.id;
 
 import com.google.common.collect.ImmutableList;
-import insideworld.engine.core.action.chain.LinksBuilder;
-import insideworld.engine.core.data.core.action.ReadAction;
+import insideworld.engine.core.data.core.action.AbstractReadAction;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
 import insideworld.engine.plugins.generator.data.action.abstracts.AbstractActionGenerator;
 import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
@@ -29,8 +28,8 @@ import insideworld.engine.plugins.generator.data.action.read.id.search.SearchRea
 import insideworld.engine.plugins.generator.data.action.read.id.search.SearchReadActionMixin;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
+import io.quarkus.gizmo.MethodCreator;
 import java.util.Collection;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class ReadActionGenerator extends AbstractActionGenerator {
@@ -45,7 +44,7 @@ public class ReadActionGenerator extends AbstractActionGenerator {
 
     @Override
     protected Class<?> extended() {
-        return ReadAction.class;
+        return AbstractReadAction.class;
     }
 
     @Override
@@ -58,4 +57,20 @@ public class ReadActionGenerator extends AbstractActionGenerator {
             .collect(Collectors.toList());
     }
 
+    @Override
+    protected void createTypes(final ClassCreator creator, final ActionInfo info) {
+        // Input arguments is long.
+        // Output argument is collection of entity.
+        final MethodCreator method = creator.getMethodCreator(
+            "types", void.class, Collection.class, Collection.class
+        );
+        method.setSignature(
+            String.format(
+                "(Ljava/util/Collection<Ljava/lang/Long;>;Ljava/util/Collection<L%s;>;)V",
+                info.entity().getName().replace(".", "/")
+            )
+        );
+        method.returnValue(null);
+        method.close();
+    }
 }

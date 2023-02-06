@@ -49,13 +49,7 @@ class ExceptionAction implements Action<Integer, Void> {
     }
 
     @Override
-    public Class<Integer> inputType() {
-        return Integer.TYPE;
+    public void types(final Integer input, final Void output) {
+        //Nothing to do
     }
-
-    @Override
-    public Class<Void> outputType() {
-        return Void.TYPE;
-    }
-
 }

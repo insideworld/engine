@@ -60,13 +60,8 @@ class ParentStringAction extends AbstractChainAction<UUID, TestAux, TestAux> {
     }
 
     @Override
-    public Class<? extends UUID> inputType() {
-        return UUID.class;
-    }
-
-    @Override
-    public Class<? extends TestAux> outputType() {
-        return TestAux.class;
+    public final void types(final UUID input, final TestAux output) {
+        //Nothing to do
     }
 
     @Override

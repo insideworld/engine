@@ -19,9 +19,13 @@
 
 package insideworld.engine.core.action.executor;
 
+import insideworld.engine.core.action.Action;
 import insideworld.engine.core.action.executor.key.Key;
 import insideworld.engine.core.common.exception.CommonException;
+import java.util.Collection;
+import java.util.Map;
 import java.util.function.Consumer;
+import org.apache.commons.lang3.tuple.Pair;
 
 public interface ActionExecutor {
 
@@ -42,6 +46,8 @@ public interface ActionExecutor {
 
     <I, O> O execute(Key<I, O> key, Input<I> input, Consumer<ExecuteContext> predicate)
         throws CommonException;
+
+    Map<Key<?, ?>, Action<?, ?>> getKeys();
 
 
 }

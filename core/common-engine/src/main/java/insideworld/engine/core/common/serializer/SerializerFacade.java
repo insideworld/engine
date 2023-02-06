@@ -17,19 +17,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.common.serializer;
 
-import insideworld.engine.core.common.exception.CommonException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import insideworld.engine.core.common.serializer.types.Type;
 
-public interface Serializer {
+public interface SerializerFacade {
 
-    <T> void serialize(T value, OutputStream stream) throws CommonException;
+    Serializer getSerializer(Type type);
 
-    <T> T deserialize(InputStream stream, Class<?> type) throws CommonException;
-
-    boolean applicable(Class<?> type);
-
-    long order();
 }

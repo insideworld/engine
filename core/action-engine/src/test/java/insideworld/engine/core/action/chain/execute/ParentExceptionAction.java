@@ -53,13 +53,8 @@ public class ParentExceptionAction extends AbstractChainAction<Void, Void, Void>
     }
 
     @Override
-    public Class<? extends Void> inputType() {
-        return void.class;
-    }
-
-    @Override
-    public Class<? extends Void> outputType() {
-        return void.class;
+    public final void types(final Void input, final Void output) {
+        //Nothing to do
     }
 
     @Override

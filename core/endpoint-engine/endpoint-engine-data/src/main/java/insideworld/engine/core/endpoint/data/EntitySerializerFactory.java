@@ -23,78 +23,34 @@ import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
-import com.google.common.collect.Maps;
-import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.core.common.startup.OnStartUp;
+import insideworld.engine.core.common.serializer.jackson.AbstractJacksonSerializerFactory;
+import insideworld.engine.core.common.serializer.jackson.JacksonTypeAdaptor;
+import insideworld.engine.core.common.serializer.types.Type;
 import insideworld.engine.core.data.core.Entity;
 import insideworld.engine.core.data.core.StorageException;
-import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.core.data.core.storages.keeper.StorageKeeper;
-import insideworld.engine.core.action.serializer.SerializerException;
-import insideworld.engine.core.action.serializer.Types;
-import insideworld.engine.core.action.serializer.Serializer;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Map;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class EntitySerializer implements Serializer, OnStartUp {
+public class EntitySerializerFactory extends AbstractJacksonSerializerFactory {
 
     private final StorageKeeper keeper;
 
-    private final ObjectMapper mapper;
-
-    private final Map<Class<? extends Entity>, ObjectReader> readers;
-
-    private final Map<Class<? extends Entity>, ObjectWriter> writers;
-    private final Types types;
-
     @Inject
-    public EntitySerializer(
-        final StorageKeeper keeper,
-        final Types types
-    ) {
+    public EntitySerializerFactory(
+        final ObjectFactory factory,
+        final List<JacksonTypeAdaptor> adaptors,
+        final StorageKeeper keeper
+        ) {
+        super(factory, adaptors);
         this.keeper = keeper;
-        this.readers = Maps.newHashMapWithExpectedSize(keeper.getAllStorage().size());
-        this.writers = Maps.newHashMapWithExpectedSize(keeper.getAllStorage().size());
-        this.types = types;
-        this.mapper = new ObjectMapper();
-    }
-
-    @Override
-    public <T> void serialize(final T value, final OutputStream stream) throws SerializerException {
-        try {
-            final Class<?> type = value.getClass();
-            this.writers.get(type).writeValue(stream, value);
-        } catch (final IOException exp) {
-            throw new SerializerException(exp);
-        }
-    }
-
-    @Override
-    public <T> T deserialize(final InputStream stream, final Class<?> type)
-        throws CommonException {
-        try {
-            return this.readers.get(type).readValue(stream);
-        } catch (final IOException exp) {
-            throw new SerializerException(exp);
-        }
-    }
-
-    @Override
-    public boolean applicable(final Class<?> type) {
-        return Entity.class.isAssignableFrom(this.unwrap(type));
     }
 
     @Override
@@ -102,32 +58,20 @@ public class EntitySerializer implements Serializer, OnStartUp {
         return 100;
     }
 
+
     @Override
-    public void startUp() throws CommonException {
-        final SimpleModule module = new SimpleModule();
-        for (final Storage<? extends Entity> storage : this.keeper.getAllStorage()) {
-            final Class<? extends Entity> type = storage.forEntity();
-            module.addAbstractTypeMapping((Class) type, this.keeper.implementation(type));
-        }
+    protected boolean can(final Type type) {
+        return this.can(type.getType());
+    }
+
+    protected boolean can(final Class<?> type) {
+        return Entity.class.isAssignableFrom(type);
+    }
+
+    @Override
+    protected void modifyModule(final SimpleModule module) {
         module.setDeserializerModifier(this.createDeserializerModifier());
         module.setSerializerModifier(this.createSerializerModifier());
-        this.mapper.registerModule(module);
-        for (final Class<?> type : this.types.getInputs()) {
-            if (this.applicable(type)) {
-                this.readers.put(
-                    (Class<? extends Entity>) type,
-                    this.mapper.readerFor(type)
-                );
-            }
-        }
-        for (final Class<?> type : this.types.getOutputs()) {
-            if (this.applicable(type)) {
-                this.writers.put(
-                    (Class<? extends Entity>) type,
-                    this.mapper.writerFor(type)
-                );
-            }
-        }
     }
 
     private BeanDeserializerModifier createDeserializerModifier() {
@@ -139,7 +83,7 @@ public class EntitySerializer implements Serializer, OnStartUp {
                 final JsonDeserializer<?> deserializer
             ) {
                 final JsonDeserializer<?> result;
-                if (applicable(description.getBeanClass())) {
+                if (can(description.getBeanClass())) {
                     final Class<? extends Entity> type =
                         (Class<? extends Entity>) description.getBeanClass();
                     try {
@@ -168,7 +112,7 @@ public class EntitySerializer implements Serializer, OnStartUp {
                 final JsonSerializer<?> serializer
             ) {
                 final JsonSerializer<?> result;
-                if (applicable(description.getBeanClass())) {
+                if (can(description.getBeanClass())) {
                     result = new JacksonSerializer<>(
                         serializer,
                         (Class<? extends Entity>) description.getBeanClass()
@@ -179,20 +123,5 @@ public class EntitySerializer implements Serializer, OnStartUp {
                 return result;
             }
         };
-    }
-
-    private Class<?> unwrap(final Class<?> type) {
-        final Class<?> unwrapped;
-        if (type.isArray()) {
-            unwrapped = type.getComponentType();
-        } else {
-            unwrapped = type;
-        }
-        return unwrapped;
-    }
-
-    @Override
-    public long startOrder() {
-        return 900_000;
     }
 }
