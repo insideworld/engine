@@ -55,6 +55,7 @@ public class InputGenerator {
     private void generate(final Class<?> type, final Collection<Property> properties) {
         final ClassCreator creator = ClassCreator.builder()
             .classOutput(this.output)
+            .interfaces(type)
             .className(String.format("%sImpl",type.getName()))
             .build();
         creator.addAnnotation(Dependent.class);

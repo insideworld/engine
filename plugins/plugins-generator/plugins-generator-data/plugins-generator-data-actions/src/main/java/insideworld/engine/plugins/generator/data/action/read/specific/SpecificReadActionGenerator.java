@@ -76,7 +76,7 @@ public class SpecificReadActionGenerator {
      */
     private Method findMethod(final SpecificReadInfo info) {
         return Arrays.stream(info.storage().getDeclaredMethods()).filter(
-                method -> info.method().startsWith(method.getName())
+                method -> info.method().equals(method.getName())
             )
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Not found necessary method"));

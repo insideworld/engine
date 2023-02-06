@@ -55,16 +55,7 @@ public class GenerateExecute {
             storage.getParameterTypes()
         );
         final ResultHandle[] parameters;
-        /**
-         * Fixme - move it to lambda.
-         */
-        if (info.getInput().isArray()
-            || info.getInput().isPrimitive()
-            || Primitives.isWrapperType(info.getInput())
-            || Collection.class.isAssignableFrom(info.getInput())
-            || String.class.equals(info.getInput())
-            || Date.class.equals(info.getInput())
-        ) {
+        if (info.parameters().length == 0) {
             parameters = new ResultHandle[]{execute.getMethodParam(0)};
         } else {
             parameters = this.getClassParameters(info, execute, this.findMethods(storage, info));

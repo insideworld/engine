@@ -22,7 +22,9 @@ package insideworld.engine.core.common.serializer.jackson;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import insideworld.engine.core.common.injection.ObjectFactory;
@@ -86,6 +88,7 @@ public abstract class AbstractJacksonSerializerFactory implements SerializerFact
         this.addInterfaces(module);
         this.modifyModule(module);
         mapper.registerModule(module);
+        mapper.registerModule(new BlackbirdModule());
         final Collection<Serializer> serializers = Lists.newArrayListWithCapacity(
             this.types.size()
         );

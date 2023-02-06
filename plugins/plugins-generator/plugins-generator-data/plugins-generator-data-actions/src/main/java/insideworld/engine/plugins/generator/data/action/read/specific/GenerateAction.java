@@ -21,12 +21,14 @@ package insideworld.engine.plugins.generator.data.action.read.specific;
 
 import insideworld.engine.core.data.core.storages.Storage;
 import insideworld.engine.plugins.generator.base.reflection.Reflection;
+import insideworld.engine.plugins.generator.data.action.abstracts.info.ActionInfo;
 import insideworld.engine.plugins.generator.data.action.read.specific.info.SpecificReadInfo;
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.ClassOutput;
 import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -35,15 +37,12 @@ public class GenerateAction {
     private final Reflection reflection;
     private final ClassOutput output;
 
-    private final GenerateMethods methods;
-
     private final GenerateExecute execute;
 
     public GenerateAction(final Reflection reflection,
                           final ClassOutput output) {
         this.reflection = reflection;
         this.output = output;
-        this.methods = new GenerateMethods();
         this.execute = new GenerateExecute();
     }
 
@@ -70,12 +69,45 @@ public class GenerateAction {
         this.createInput(creator, info);
         this.createOutput(creator, storage.getReturnType());
         this.createKey(creator, info);
+        this.createTypes(creator, info, storage);
         this.execute.createExecute(
             creator,
             storage,
             info
         );
         creator.close();
+    }
+
+    /**
+     * Create a types method with signature which has mask:
+     * (Input parameter)Return parameter - (Ljava/util/Collection<L%s;>;Ljava/util/Collection<L%s;>;)V
+     * So our storage method should have return parameter the same as output from entity.
+     * So we can take input parameter from info and output parameter from storage return type.
+     *
+     * @param creator
+     * @param info
+     * @param storage
+     */
+    private void createTypes(
+        final ClassCreator creator, final SpecificReadInfo info, final Method storage
+    ) {
+        final StringBuilder builder = new StringBuilder();
+        builder
+            .append("(L")
+            .append(info.getInput().getName().replace(".", "/"))
+            .append(";L")
+            .append(storage.getGenericReturnType().getTypeName()
+                .replace("<", "<L")
+                .replace(">", ";>")
+                .replace(".", "/")
+            )
+            .append(";)V");
+        final MethodCreator method = creator.getMethodCreator(
+            "types", void.class, info.getInput(), storage.getReturnType()
+        );
+        method.setSignature(builder.toString());
+        method.returnValue(null);
+        method.close();
     }
 
     private void createConstructor(final ClassCreator creator, final SpecificReadInfo info) {
