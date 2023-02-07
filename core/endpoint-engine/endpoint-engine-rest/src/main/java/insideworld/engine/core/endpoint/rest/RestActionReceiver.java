@@ -23,8 +23,9 @@ import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.key.Key;
 import insideworld.engine.core.action.executor.key.StringKey;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.endpoint.base.action.ActionReceiverImpl;
-import insideworld.engine.core.action.serializer.ActionSerializerImpl;
+import insideworld.engine.core.endpoint.base.action.EndpointExecutor;
+import insideworld.engine.core.endpoint.base.action.InputStreamEndpointExecutor;
+import insideworld.engine.core.endpoint.base.action.serializer.ActionSerializerImpl;
 import java.io.InputStream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,11 +42,11 @@ import javax.ws.rs.core.StreamingOutput;
 public class RestActionReceiver {
 
 
-    private final ActionReceiverImpl receiver;
+    private final EndpointExecutor<InputStream> receiver;
     private final ActionSerializerImpl serializer;
 
     @Inject
-    public RestActionReceiver(final ActionReceiverImpl receiver,
+    public RestActionReceiver(final EndpointExecutor<InputStream> receiver,
                               final ActionSerializerImpl serializer) {
         this.receiver = receiver;
         this.serializer = serializer;

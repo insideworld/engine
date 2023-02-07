@@ -17,27 +17,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.base.serializer.jackson;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
 
-public class VertexAmqpSender implements AmqpSender {
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.endpoint.base.serializer.jackson.adaptors.JacksonTypeAdaptor;
+import insideworld.engine.core.endpoint.base.serializer.types.Type;
+import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
+/**
+ * Serializer factory for all types which not bound to another factories based on Jackson.
+ *
+ * @since 2.0.0
+ */
+@Singleton
+public class DefaultJacksonSerializerFactory extends AbstractJacksonSerializerFactory {
 
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
+    @Inject
+    public DefaultJacksonSerializerFactory(
+        final ObjectFactory factory,
+        final List<JacksonTypeAdaptor> adaptors
+    ) {
+        super(factory, adaptors);
     }
 
     @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
+    public long order() {
+        return 0;
+    }
+
+    @Override
+    protected boolean can(final Type type) {
+        return true;
+    }
+
+    @Override
+    protected void modifyModule(final SimpleModule module) {
+        //Nothing to do.
     }
 }

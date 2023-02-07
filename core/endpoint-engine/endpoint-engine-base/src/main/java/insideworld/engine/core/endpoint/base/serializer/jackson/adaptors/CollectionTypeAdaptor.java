@@ -17,27 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.base.serializer.jackson.adaptors;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import insideworld.engine.core.endpoint.base.serializer.types.Type;
+import java.util.Collection;
+import javax.inject.Singleton;
 
-public class VertexAmqpSender implements AmqpSender {
-
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
-
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
+@Singleton
+public class CollectionTypeAdaptor implements JacksonTypeAdaptor {
+    @Override
+    public JavaType convert(final ObjectMapper mapper, final Type type) {
+        return mapper.getTypeFactory().constructCollectionType(
+            Collection.class,
+            type.getWrapped()
+        );
     }
 
     @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
+    public boolean can(final Type type) {
+        return Collection.class.isAssignableFrom(type.getOrigin()) || type.getWrapped() != null;
+    }
+
+    @Override
+    public int order() {
+        return 100_000;
     }
 }

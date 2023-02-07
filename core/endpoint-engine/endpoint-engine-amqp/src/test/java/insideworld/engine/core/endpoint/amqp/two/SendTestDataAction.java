@@ -17,27 +17,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.amqp.two;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import insideworld.engine.core.endpoint.base.action.serializer.ActionSerializer;
+import insideworld.engine.core.endpoint.amqp.TestData;
+import insideworld.engine.core.endpoint.amqp.actions.AmqpActionSender;
+import insideworld.engine.core.endpoint.amqp.connection.TestVertexConnection;
+import javax.inject.Singleton;
 
-public class VertexAmqpSender implements AmqpSender {
-
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
-
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
+@Singleton
+public class SendTestDataAction extends AmqpActionSender<TestData> {
+    /**
+     * Default constructor.
+     *
+     * @param connection
+     * @param serializer
+     */
+    public SendTestDataAction(final TestVertexConnection connection, final ActionSerializer serializer) {
+        super(connection, serializer);
     }
 
     @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
+    public String key() {
+        return "[two]SendTestDataAction";
+    }
+
+    @Override
+    public void types(final TestData input, final Void output) {
+
+    }
+
+    @Override
+    protected String remoteKey() {
+        return "[one]ReceiveTestDataAction";
+    }
+
+    @Override
+    protected String callbackKey() {
+        return null;
+    }
+
+    @Override
+    protected String channel() {
+        return "test";
     }
 }

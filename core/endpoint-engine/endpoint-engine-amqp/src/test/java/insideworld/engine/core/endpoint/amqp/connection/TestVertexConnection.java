@@ -17,27 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.amqp.connection;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import insideworld.engine.core.endpoint.amqp.vertex.VertexConnection;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import io.vertx.amqp.AmqpClientOptions;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class VertexAmqpSender implements AmqpSender {
+/**
+ * Vertx connections for tests.
+ * @since 1.0.0
+ */
+@Singleton
+public class TestVertexConnection extends VertexConnection {
 
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
-
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
-    }
-
-    @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
+    /**
+     * Connect to test AQMP server.
+     * @param factory Object factory.
+     */
+    @Inject
+    public TestVertexConnection(final ObjectFactory factory) {
+        super(new AmqpClientOptions()
+            .setHost("localhost")
+            .setPort(12345)
+            .setUsername("qqq")
+            .setPassword("qqq"),
+            factory
+        );
     }
 }

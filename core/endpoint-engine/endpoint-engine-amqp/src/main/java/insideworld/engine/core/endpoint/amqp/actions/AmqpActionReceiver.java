@@ -21,31 +21,28 @@ package insideworld.engine.core.endpoint.amqp.actions;
 
 import insideworld.engine.core.action.executor.ExecutorTags;
 import insideworld.engine.core.action.executor.key.StringKey;
+import insideworld.engine.core.endpoint.base.serializer.SerializerException;
 import insideworld.engine.core.common.startup.OnStartUp;
 import insideworld.engine.core.endpoint.amqp.connection.Connection;
-import insideworld.engine.core.endpoint.base.action.ActionReceiver;
-import insideworld.engine.core.endpoint.base.action.ActionSender;
-import insideworld.engine.core.common.serializer.SerializerException;
+import insideworld.engine.core.endpoint.base.action.EndpointExecutor;
 import io.netty.buffer.ByteBufInputStream;
 import io.vertx.mutiny.amqp.AmqpMessage;
 import java.io.IOException;
-import org.apache.commons.lang3.ObjectUtils;
+import java.io.InputStream;
+import org.apache.commons.lang3.StringUtils;
 
 public class AmqpActionReceiver implements OnStartUp {
 
     private final Connection connection;
     private final String channel;
-    private final ActionSender callback;
-    private final ActionReceiver receiver;
+    private final AmqpActionSender callback;
+    private final EndpointExecutor receiver;
 
-    /**
-
-     */
     public AmqpActionReceiver(
         final Connection connection,
         final String channel,
-        final ActionSender callback,
-        final ActionReceiver receiver
+        final AmqpActionSender callback,
+        final EndpointExecutor receiver
     ) {
         this.connection = connection;
         this.channel = channel;
@@ -55,12 +52,18 @@ public class AmqpActionReceiver implements OnStartUp {
 
     @Override
     public void startUp() {
-        this.connection.createReceiver(this.channel).receive(this::execute);
+        this.connection
+            .createReceiver(this.channel)
+            .receive(this::execute);
+    }
+
+    @Override
+    public long startOrder() {
+        return 900_000;
     }
 
     private void execute(final AmqpMessage message) {
-        final ByteBufInputStream input =
-            new ByteBufInputStream(message.bodyAsBinary().getByteBuf());
+        final InputStream input = new ByteBufInputStream(message.bodyAsBinary().getByteBuf());
         this.receiver.executeTask(
             new StringKey<>(message.subject()),
             input,
@@ -68,7 +71,7 @@ public class AmqpActionReceiver implements OnStartUp {
                 context.put(ExecutorTags.PROFILE, AmqpProfile.class);
                 context.put(AmqpTags.AMQP_PROPERTIES, message.applicationProperties().getMap());
             }
-        ).subscribe(result -> {
+        ).subscribe(output -> {
             try {
                 input.close();
             } catch (final IOException exp) {
@@ -77,18 +80,10 @@ public class AmqpActionReceiver implements OnStartUp {
             final String callback = message.applicationProperties().getString(
                 AmqpTags.AMQP_CALLBACK.getTag()
             );
-            if (ObjectUtils.allNotNull(callback, this.receiver)) {
-                this.callback.send(
-                    new StringKey<>(callback),
-                    null,
-                    result
-                );
+            if (this.callback != null && StringUtils.isNotEmpty(callback)) {
+                this.callback.execute(new StringKey<>(callback), null, output);
             }
         });
     }
 
-    @Override
-    public long startOrder() {
-        return 900_000;
-    }
 }

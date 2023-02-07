@@ -27,9 +27,12 @@ import insideworld.engine.core.common.startup.OnStartUp;
 import io.vertx.amqp.AmqpClientOptions;
 import io.vertx.mutiny.amqp.AmqpClient;
 import io.vertx.mutiny.amqp.AmqpConnection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Connection implementation based on Vertx.
+ * This class init after start up.
  * @since 0.14.0
  */
 public class VertexConnection implements Connection, OnStartUp {
@@ -49,6 +52,10 @@ public class VertexConnection implements Connection, OnStartUp {
      */
     private AmqpConnection connection;
 
+    private final Map<String, AmqpReceiver> receivers;
+
+    private final Map<String, AmqpSender> senders;
+
     /**
      * Default constructor.
      * @param options Client options.
@@ -58,16 +65,46 @@ public class VertexConnection implements Connection, OnStartUp {
                             final ObjectFactory factory) {
         this.options = options;
         this.factory = factory;
+        this.receivers = new ConcurrentHashMap<>();
+        this.senders = new ConcurrentHashMap<>();
     }
 
     @Override
     public final AmqpReceiver createReceiver(final String channel) {
-        return this.factory.createObject(VertexAmqpReceiver.class, this.connection, channel);
+        AmqpReceiver receiver = this.receivers.get(channel);
+        if (receiver == null) {
+            synchronized (this) {
+                receiver = this.receivers.get(channel);
+                if (receiver == null) {
+                    receiver = this.factory.createObject(
+                        VertexAmqpReceiver.class,
+                        this.connection,
+                        channel
+                    );
+                    this.receivers.put(channel, receiver);
+                }
+            }
+        }
+        return receiver;
     }
 
     @Override
     public final AmqpSender createSender(final String channel) {
-        return this.factory.createObject(VertexAmqpSender.class, this.connection, channel);
+        AmqpSender sender = this.senders.get(channel);
+        if (sender == null) {
+            synchronized (this) {
+                sender = this.senders.get(channel);
+                if (sender == null) {
+                    sender =  this.factory.createObject(
+                        VertexAmqpSender.class,
+                        this.connection,
+                        channel
+                    );
+                    this.senders.put(channel, sender);
+                }
+            }
+        }
+        return sender;
     }
 
     @Override

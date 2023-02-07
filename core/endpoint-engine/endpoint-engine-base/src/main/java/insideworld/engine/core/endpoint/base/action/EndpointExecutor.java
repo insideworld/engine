@@ -17,27 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.base.action;
 
+import insideworld.engine.core.action.executor.ExecuteContext;
+import insideworld.engine.core.action.executor.key.Key;
 import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import insideworld.engine.core.common.threads.Task;
+import java.util.function.Consumer;
 
-public class VertexAmqpSender implements AmqpSender {
+/**
+ * Interface to provide functionality to call actions using different input parameters.
+ * @since 2.0.0
+ */
+public interface EndpointExecutor<T> {
+    <I, O> O execute(Key<I, O> key, T stream, Consumer<ExecuteContext> context)
+        throws CommonException;
 
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
-
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
-    }
-
-    @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
-    }
+    <I, O> Task<O> executeTask(Key<I, O> key, T stream, Consumer<ExecuteContext> context);
 }

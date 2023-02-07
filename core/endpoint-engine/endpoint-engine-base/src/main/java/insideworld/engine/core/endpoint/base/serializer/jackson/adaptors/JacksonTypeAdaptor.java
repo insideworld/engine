@@ -17,27 +17,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.base.serializer.jackson.adaptors;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import insideworld.engine.core.endpoint.base.serializer.types.Type;
 
-public class VertexAmqpSender implements AmqpSender {
+public interface JacksonTypeAdaptor {
 
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
+    /**
+     * Convety type to JavaType
+     * @param mapper
+     * @param type
+     * @return
+     */
+    JavaType convert(ObjectMapper mapper, Type type);
 
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
-    }
+    /**
+     * Can use this type adaptor for provided type.
+     * @return Number of order.
+     */
+    boolean can(Type type);
 
-    @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
-    }
+    int order();
+
 }

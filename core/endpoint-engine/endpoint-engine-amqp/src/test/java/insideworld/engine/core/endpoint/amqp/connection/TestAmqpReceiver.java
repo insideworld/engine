@@ -17,27 +17,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.amqp.connection;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import insideworld.engine.core.action.executor.ActionExecutor;
+import insideworld.engine.core.endpoint.base.action.serializer.ActionSerializer;
+import insideworld.engine.core.common.injection.ObjectFactory;
+import insideworld.engine.core.endpoint.amqp.actions.AmqpActionReceiver;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class VertexAmqpSender implements AmqpSender {
+@Singleton
+public class TestAmqpReceiver extends AmqpActionReceiver {
 
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
-
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
+    @Inject
+    public TestAmqpReceiver(
+        final TestVertexConnection connection,
+        final ActionExecutor executor,
+        final ActionSerializer serializer,
+        final ObjectFactory factory
+    ) {
+        super(connection, executor, serializer, factory);
     }
 
     @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
+    protected final String channel() {
+        return "test";
     }
 }

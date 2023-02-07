@@ -17,27 +17,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.vertex;
+package insideworld.engine.core.endpoint.base.serializer;
 
-import insideworld.engine.core.common.exception.CommonException;
-import insideworld.engine.core.common.predicates.Consumer;
-import insideworld.engine.core.endpoint.amqp.connection.AmqpSender;
-import io.vertx.mutiny.amqp.AmqpConnection;
-import io.vertx.mutiny.amqp.AmqpMessage;
-import io.vertx.mutiny.amqp.AmqpMessageBuilder;
+import insideworld.engine.core.endpoint.base.serializer.types.Type;
+import java.util.Collection;
 
-public class VertexAmqpSender implements AmqpSender {
+/**
+ * Serialiser factory.
+ * Using to implement different version of serializers.
+ * @since 2.0.0.
+ */
+public interface SerializerFactory {
 
-    private final io.vertx.mutiny.amqp.AmqpSender sender;
+    /**
+     * Register a type for create serializer.
+     * @param type Type of object.
+     * @return True if type is applicable for the factory, false if not.
+     */
+    boolean register(Type type);
 
-    public VertexAmqpSender(final AmqpConnection connection, final String channel) {
-        this.sender = connection.createSenderAndAwait(channel);
-    }
+    /**
+     * Create serializers for types.
+     * @return
+     */
+    Collection<Serializer> create();
 
-    @Override
-    public void send(final Consumer<AmqpMessageBuilder> message) throws CommonException {
-        final AmqpMessageBuilder builder = AmqpMessage.create();
-        message.accept(builder);
-        this.sender.send(builder.build());
-    }
+    /**
+     * Order of builder.
+     * @return Order if builder.
+     */
+    long order();
+
 }

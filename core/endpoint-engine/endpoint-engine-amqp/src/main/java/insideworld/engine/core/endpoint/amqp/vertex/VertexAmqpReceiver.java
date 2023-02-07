@@ -27,7 +27,6 @@ import io.smallrye.mutiny.unchecked.Unchecked;
 import io.vertx.mutiny.amqp.AmqpConnection;
 import io.vertx.mutiny.amqp.AmqpMessage;
 
-
 public class VertexAmqpReceiver implements AmqpReceiver {
 
     private final AmqpConnection connection;
