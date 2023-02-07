@@ -17,36 +17,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.endpoint.amqp.connection;
 
-import insideworld.engine.core.action.Action;
-import insideworld.engine.core.common.exception.CommonException;
-import java.util.Collection;
+import insideworld.engine.core.endpoint.amqp.actions.AmqpActionSender;
+import insideworld.engine.core.endpoint.base.serializer.SerializerFacade;
 import javax.inject.Singleton;
 
 @Singleton
-public class TestCollectionAction implements Action<Collection<TestInput>, Collection<TestOutput>> {
-
-    @Override
-    public Collection<TestOutput> execute(final Collection<TestInput> inputs)
-        throws CommonException {
-        return inputs.stream().map(input -> {
-            final TestOutput output = new TestOutputImpl();
-            output.setUUID(input.getUUID());
-            return output;
-        }).toList();
-    }
-
-    @Override
-    public String key() {
-        return "insideworld.engine.core.action.serializer.TestCollectionAction";
-    }
-
-    @Override
-    public final void types(
-        final Collection<TestInput> input,
-        final Collection<TestOutput> output
-    ) {
-        //Nothing to do.
+public class TestSender extends AmqpActionSender {
+    /**
+     * Default constructor.
+     *
+     * @param connection
+     * @param serializer
+     */
+    public TestSender(final TestConnection connection,
+                      final SerializerFacade serializer) {
+        super(connection, "test", serializer);
     }
 }

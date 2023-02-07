@@ -45,11 +45,10 @@ public class EntitySerializerFactory extends AbstractJacksonSerializerFactory {
 
     @Inject
     public EntitySerializerFactory(
-        final ObjectFactory factory,
         final List<JacksonTypeAdaptor> adaptors,
         final StorageKeeper keeper
-        ) {
-        super(factory, adaptors);
+    ) {
+        super(adaptors);
         this.keeper = keeper;
     }
 
@@ -60,7 +59,7 @@ public class EntitySerializerFactory extends AbstractJacksonSerializerFactory {
 
 
     @Override
-    protected boolean can(final Type type) {
+    public boolean can(final Type type) {
         return this.can(type.getType());
     }
 

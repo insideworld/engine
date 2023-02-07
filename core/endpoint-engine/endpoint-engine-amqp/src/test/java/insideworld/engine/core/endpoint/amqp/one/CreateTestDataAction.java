@@ -19,48 +19,41 @@
 
 package insideworld.engine.core.endpoint.amqp.one;
 
-import insideworld.engine.core.endpoint.base.action.serializer.ActionSerializer;
-import insideworld.engine.core.endpoint.amqp.actions.AmqpActionSender;
-import insideworld.engine.core.endpoint.amqp.connection.TestVertexConnection;
+import insideworld.engine.core.action.Action;
+import insideworld.engine.core.action.executor.key.StringKey;
+import insideworld.engine.core.common.exception.CommonException;
+import insideworld.engine.core.endpoint.amqp.connection.TestSender;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class CreateTestDataAction extends AmqpActionSender<UUID> {
-    /**
-     * Default constructor.
-     *
-     * @param connection
-     * @param serializer
-     */
+public class CreateTestDataAction implements Action<UUID, Void> {
+
+    private final TestSender sender;
+
     @Inject
-    public CreateTestDataAction(final TestVertexConnection connection, final ActionSerializer serializer) {
-        super(connection, serializer);
+    public CreateTestDataAction(final TestSender sender) {
+        this.sender = sender;
+    }
+
+    @Override
+    public Void execute(final UUID input) throws CommonException {
+        this.sender.execute(
+            new StringKey<>("insideworld.engine.core.endpoint.amqp.two.CreateTestDataAction"),
+            new StringKey<>("insideworld.engine.core.endpoint.amqp.one.ReceiveTestDataAction"),
+            input
+        );
+        return null;
     }
 
     @Override
     public String key() {
-        return "[one]CreateTestDataAction";
+        return "insideworld.engine.core.endpoint.amqp.one.CreateTestDataAction";
     }
 
     @Override
     public void types(final UUID input, final Void output) {
-        //Nothing to do.
-    }
 
-    @Override
-    protected String remoteKey() {
-        return "[two]CreateTestDataAction";
-    }
-
-    @Override
-    protected String callbackKey() {
-        return "[two]SendTestDataAction";
-    }
-
-    @Override
-    protected String channel() {
-        return "test";
     }
 }

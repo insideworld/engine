@@ -48,86 +48,34 @@ import org.apache.commons.lang3.SerializationException;
  */
 public abstract class AbstractJacksonSerializerFactory implements SerializerFactory {
 
-    /**
-     * Set of types.
-     */
-    private final Set<Type> types = Sets.newHashSet();
-
-    /**
-     * Object factory.
-     */
-    private final ObjectFactory factory;
     private final List<JacksonTypeAdaptor> adaptors;
 
+    private final ObjectMapper mapper;
+
     @Inject
-    public AbstractJacksonSerializerFactory(
-        final ObjectFactory factory,
-        final List<JacksonTypeAdaptor> adaptors
-    ) {
-        this.factory = factory;
+    public AbstractJacksonSerializerFactory(final List<JacksonTypeAdaptor> adaptors) {
         this.adaptors = adaptors.stream()
             .sorted(Comparator.comparingLong(JacksonTypeAdaptor::order).reversed())
             .toList();
-    }
-
-    @Override
-    public final boolean register(final Type type) {
-        final boolean can;
-        if (this.can(type)) {
-            this.types.add(type);
-            can = true;
-        } else {
-            can = false;
-        }
-        return can;
-    }
-
-    @Override
-    public final Collection<Serializer> create() {
-        final var mapper = new ObjectMapper();
+        this.mapper = new ObjectMapper();
         final var module = new SimpleModule();
-        this.addInterfaces(module);
         this.modifyModule(module);
-        mapper.registerModule(module);
-        mapper.registerModule(new BlackbirdModule());
-        final Collection<Serializer> serializers = Lists.newArrayListWithCapacity(
-            this.types.size()
-        );
-        for (final Type type : this.types) {
-            final JavaType javatype = this.adaptors.stream()
-                .filter(adaptor -> adaptor.can(type))
-                .findFirst()
-                .map(adaptor -> adaptor.convert(mapper, type))
-                .orElseThrow(
-                    () -> new SerializationException("Adaptor not found. It's shouldn't be...")
-                );
-            serializers.add(new JacksonSerializer(mapper, javatype, type));
-        }
-        return serializers;
+        this.mapper.registerModule(module);
+        this.mapper.registerModule(new BlackbirdModule());
     }
 
-    protected abstract boolean can(final Type type);
+    @Override
+    public final Serializer create(final Type type) {
+        final JavaType javatype = this.adaptors.stream()
+            .filter(adaptor -> adaptor.can(type))
+            .findFirst()
+            .map(adaptor -> adaptor.convert(this.mapper, type))
+            .orElseThrow(
+                () -> new SerializationException("Adaptor not found. It's shouldn't be...")
+            );
+//        this.mapper.registerSubtypes();
+        return new JacksonSerializer(this.mapper, javatype, type);
+    }
 
     protected abstract void modifyModule(SimpleModule module);
-
-    /**
-     * Add interfaces implementation to module.
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void addInterfaces(final SimpleModule module) {
-        final Map<Class, Class> interfaces = this.types.stream()
-            .map(Type::getType)
-            .filter(Class::isInterface)
-            .distinct()
-            .filter(type -> this.factory.implementation(type) != null)
-            .collect(
-                Collectors.toMap(
-                    Function.identity(),
-                    this.factory::implementation
-                )
-            );
-        for (final var entry : interfaces.entrySet()) {
-            module.addAbstractTypeMapping(entry.getKey(), entry.getValue());
-        }
-    }
 }

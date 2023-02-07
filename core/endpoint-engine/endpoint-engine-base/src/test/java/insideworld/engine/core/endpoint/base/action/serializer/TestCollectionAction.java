@@ -17,32 +17,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
 import insideworld.engine.core.action.Action;
 import insideworld.engine.core.common.exception.CommonException;
-import java.util.Arrays;
+import java.util.Collection;
 import javax.inject.Singleton;
 
 @Singleton
-public class TestArrayAction implements Action<TestInput[], TestOutput[]> {
+public class TestCollectionAction implements Action<Collection<TestInput>, Collection<TestOutput>> {
 
     @Override
-    public TestOutput[] execute(final TestInput[] inputs) throws CommonException {
-        return Arrays.stream(inputs).map(input -> {
+    public Collection<TestOutput> execute(final Collection<TestInput> inputs)
+        throws CommonException {
+        return inputs.stream().map(input -> {
             final TestOutput output = new TestOutputImpl();
             output.setUUID(input.getUUID());
             return output;
-        }).toArray(TestOutput[]::new);
+        }).toList();
     }
 
     @Override
     public String key() {
-        return "insideworld.engine.core.action.serializer.TestArrayAction";
+        return "insideworld.engine.core.action.serializer.TestCollectionAction";
     }
 
     @Override
-    public final void types(final TestInput[] input, final TestOutput[] output) {
+    public final void types(
+        final Collection<TestInput> input,
+        final Collection<TestOutput> output
+    ) {
         //Nothing to do.
     }
 }

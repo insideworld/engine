@@ -21,86 +21,84 @@ package insideworld.engine.core.endpoint.base.serializer;
 
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.endpoint.base.serializer.types.Type;
-import insideworld.engine.core.endpoint.base.serializer.types.Types;
-import insideworld.engine.core.common.startup.OnStartUp;
+import insideworld.engine.core.endpoint.base.serializer.types.factory.TypeFactory;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.apache.commons.lang3.SerializationException;
 
 /**
  *
  */
 @Singleton
-public class SerializerFacadeImpl implements SerializerFacade, OnStartUp {
+public class SerializerFacadeImpl implements SerializerFacade {
 
-    private final List<Types> types;
+    /**
+     * Factories.
+     */
     private final List<SerializerFactory> factories;
 
     /**
-     * Serializers calculated in init from provided types.
+     * Type factory.
+     */
+    private final List<TypeFactory> types;
+
+    /**
+     * Serializers cache.
      */
     private final Map<Type, Serializer> serializers;
 
-    /**
-     * Serializers calculated in runtime.
-     */
-    private final Map<Type, Serializer> runtime;
-
     @Inject
     public SerializerFacadeImpl(
-        final List<Types> types,
-        final List<SerializerFactory> factories
+        final List<SerializerFactory> factories,
+        final List<TypeFactory> types
     ) {
-        this.types = types;
         this.factories = factories.stream()
             .sorted(Comparator.comparingLong(SerializerFactory::order).reversed())
             .toList();
-        this.serializers = new HashMap<>(types.size());
-        this.runtime = new ConcurrentHashMap<>();
+        this.types = types.stream()
+            .sorted(Comparator.comparingLong(TypeFactory::order).reversed())
+            .toList();
+        this.serializers = new ConcurrentHashMap<>();
     }
 
     @Override
     public Serializer getSerializer(final Type type) {
-        return this.serializers.get(type);
-    }
-
-    @Override
-    public Object deserialize(final InputStream stream, final Type type) throws CommonException {
-        return this.serializers.get(type).deserialize(stream);
-    }
-
-    @Override
-    public void serialize(final Object obj, final OutputStream stream) {
-
-    }
-
-    @Override
-    public void startUp() throws CommonException {
-        final Set<Type> all = this.types.stream()
-            .flatMap(type -> type.getTypes().stream())
-            .collect(Collectors.toSet());
-        for (final Type type : all) {
-            for (final SerializerFactory factory : this.factories) {
-                if (factory.register(type)) {
-                    break;
+        Serializer serializer = this.serializers.get(type);
+        if (serializer == null) {
+            synchronized (this) {
+                serializer = this.serializers.get(type);
+                if (serializer == null) {
+                    for (final SerializerFactory factory : this.factories) {
+                        if (factory.can(type)) {
+                            serializer = factory.create(type);
+                            this.serializers.put(type, serializer);
+                            break;
+                        }
+                    }
                 }
             }
         }
-        this.factories.stream()
-            .flatMap(factory -> factory.create().stream())
-            .forEach(serializer -> this.serializers.put(serializer.forType(), serializer));
+        return serializer;
     }
 
     @Override
-    public long startOrder() {
-        return 300_000;
+    public Object deserialize(final Type type, final InputStream stream) throws CommonException {
+        return this.getSerializer(type).deserialize(stream);
+    }
+
+    @Override
+    public void serialize(final Object obj, final OutputStream stream) throws CommonException {
+        final Type type = this.types.stream()
+            .filter(factory -> factory.can(obj))
+            .findFirst()
+            .map(factory -> factory.create(obj))
+            .orElseThrow(() -> new SerializationException("Can't create type"));
+        this.getSerializer(type).serialize(obj, stream);
     }
 }

@@ -17,14 +17,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
 import java.util.UUID;
+import javax.enterprise.context.Dependent;
 
-public interface TestInput {
+@Dependent
+public class TestInputImpl implements TestInput {
 
-    UUID getUUID();
+    private UUID uuid;
 
-    void setUUID(UUID value);
+    @Override
+    public UUID getUUID() {
+        return this.uuid;
+    }
 
+    @Override
+    public void setUUID(final UUID value) {
+        this.uuid = value;
+    }
 }

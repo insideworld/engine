@@ -37,7 +37,7 @@ public class CreateTestDataAction implements Action<UUID, TestData> {
 
     @Override
     public String key() {
-        return "[two]CreateTestDataAction";
+        return "insideworld.engine.core.endpoint.amqp.two.CreateTestDataAction";
     }
 
     @Override

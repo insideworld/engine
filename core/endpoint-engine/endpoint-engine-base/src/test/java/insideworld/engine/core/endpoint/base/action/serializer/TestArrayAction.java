@@ -17,20 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.base.serializer.types;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import java.util.Set;
+import insideworld.engine.core.action.Action;
+import insideworld.engine.core.common.exception.CommonException;
+import java.util.Arrays;
+import javax.inject.Singleton;
 
-/**
- * Types which will using in serialisation.
- * @since 2.0.0.
- */
-public interface Types {
+@Singleton
+public class TestArrayAction implements Action<TestInput[], TestOutput[]> {
 
-    /**
-     * Get types for serializers.
-     * @return Set of classes which work in serialization.
-     */
-    Set<Type> getTypes();
+    @Override
+    public TestOutput[] execute(final TestInput[] inputs) throws CommonException {
+        return Arrays.stream(inputs).map(input -> {
+            final TestOutput output = new TestOutputImpl();
+            output.setUUID(input.getUUID());
+            return output;
+        }).toArray(TestOutput[]::new);
+    }
 
+    @Override
+    public String key() {
+        return "insideworld.engine.core.action.serializer.TestArrayAction";
+    }
+
+    @Override
+    public final void types(final TestInput[] input, final TestOutput[] output) {
+        //Nothing to do.
+    }
 }

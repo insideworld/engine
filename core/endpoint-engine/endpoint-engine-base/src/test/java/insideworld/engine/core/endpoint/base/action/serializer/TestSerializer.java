@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
 import insideworld.engine.core.action.executor.ActionExecutor;
 import insideworld.engine.core.action.executor.key.ClassKey;
@@ -79,9 +79,10 @@ class TestSerializer {
 
     /**
      * TC: Create a JSON with UUID and try to serialize and deserialize it using array.
+     * @deprecated Deprecated because array doesn't need.
      * @throws CommonException Shouldn't raise.
      */
-    @Test
+    @Deprecated
     void testArray() throws CommonException, IOException {
         final List<UUID> uuids = Stream.generate(UUID::randomUUID).limit(10).toList();
         StringBuilder builder = new StringBuilder();

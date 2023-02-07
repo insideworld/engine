@@ -73,7 +73,7 @@ public class AmqpActionSender implements OnStartUp {
             }
             builder.applicationProperties(new JsonObject(properties.build()));
             final ByteBufOutputStream output = new ByteBufOutputStream(Unpooled.buffer());
-            this.serializer.getSerializer(type).serialize(input, output);
+            this.serializer.serialize(input, output);
             builder.withBufferAsBody(Buffer.buffer(output.buffer()));
             try {
                 output.close();

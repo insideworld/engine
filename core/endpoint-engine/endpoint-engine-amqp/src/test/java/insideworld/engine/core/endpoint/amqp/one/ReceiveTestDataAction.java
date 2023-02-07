@@ -27,15 +27,17 @@ import javax.inject.Singleton;
 @Singleton
 public class ReceiveTestDataAction implements Action<TestData, Void> {
 
+    public static volatile TestData DATA = null;
+
     @Override
     public Void execute(final TestData input) throws CommonException {
-        System.out.println(input.getValue());
+        DATA = input;
         return null;
     }
 
     @Override
     public String key() {
-        return "[one]ReceiveTestDataAction";
+        return "insideworld.engine.core.endpoint.amqp.one.ReceiveTestDataAction";
     }
 
     @Override

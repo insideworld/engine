@@ -17,33 +17,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.connection;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import insideworld.engine.core.endpoint.amqp.vertex.VertexConnection;
-import insideworld.engine.core.common.injection.ObjectFactory;
-import io.vertx.amqp.AmqpClientOptions;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import java.util.UUID;
 
-/**
- * Vertx connections for tests.
- * @since 1.0.0
- */
-@Singleton
-public class TestVertexConnection extends VertexConnection {
+public interface TestInput {
 
-    /**
-     * Connect to test AQMP server.
-     * @param factory Object factory.
-     */
-    @Inject
-    public TestVertexConnection(final ObjectFactory factory) {
-        super(new AmqpClientOptions()
-            .setHost("localhost")
-            .setPort(12345)
-            .setUsername("qqq")
-            .setPassword("qqq"),
-            factory
-        );
-    }
+    UUID getUUID();
+
+    void setUUID(UUID value);
+
 }

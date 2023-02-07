@@ -38,10 +38,9 @@ public class DefaultJacksonSerializerFactory extends AbstractJacksonSerializerFa
 
     @Inject
     public DefaultJacksonSerializerFactory(
-        final ObjectFactory factory,
         final List<JacksonTypeAdaptor> adaptors
     ) {
-        super(factory, adaptors);
+        super(adaptors);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class DefaultJacksonSerializerFactory extends AbstractJacksonSerializerFa
     }
 
     @Override
-    protected boolean can(final Type type) {
+    public boolean can(final Type type) {
         return true;
     }
 

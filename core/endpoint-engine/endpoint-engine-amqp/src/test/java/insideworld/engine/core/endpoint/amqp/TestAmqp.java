@@ -24,6 +24,7 @@ import insideworld.engine.core.action.executor.key.ClassKey;
 import insideworld.engine.core.action.executor.key.StringKey;
 import insideworld.engine.core.common.exception.CommonException;
 import insideworld.engine.core.endpoint.amqp.one.CreateTestDataAction;
+import insideworld.engine.core.endpoint.amqp.one.ReceiveTestDataAction;
 import insideworld.engine.frameworks.quarkus.test.amqp.QpidTestResource;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
@@ -60,17 +61,12 @@ public class TestAmqp {
             new ClassKey<>(CreateTestDataAction.class),
             uuid
         );
-//        this.sender.send(
-//            new StringKey<>("insideworld.engine.core.endpoint.amqp.TestAction"),
-//            new StringKey<>("insideworld.engine.core.endpoint.amqp.TestCallbackAction"),
-//            uuid
-//        );
         Thread.sleep(100);
-//        MatcherAssert.assertThat(
-//            "Callback action doesn't execute",
-//            TestCallbackAction.INCOME,
-//            Matchers.is(uuid)
-//        );
+        MatcherAssert.assertThat(
+            "Callback action doesn't execute",
+            ReceiveTestDataAction.DATA,
+            Matchers.hasProperty("value", Matchers.is(uuid))
+        );
     }
 
 }

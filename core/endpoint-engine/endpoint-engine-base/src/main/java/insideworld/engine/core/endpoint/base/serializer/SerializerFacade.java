@@ -39,17 +39,17 @@ public interface SerializerFacade {
 
     /**
      * Deserialize by type.
-     * @param stream Input stream.
      * @param type Type.
+     * @param stream Input stream.
      * @return Deserialized object.
      */
-    Object deserialize(InputStream stream, Type type) throws CommonException;
+    Object deserialize(Type type, InputStream stream) throws CommonException;
 
     /**
      * Serialize exists object to output stream,
      * @param obj Object to serialize.
      * @param stream Output stream.
      */
-    void serialize(Object obj, OutputStream stream);
+    void serialize(Object obj, OutputStream stream) throws CommonException;
 
 }

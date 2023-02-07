@@ -41,6 +41,16 @@
       <artifactId>action-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!--  Tests  -->
+    <dependency>
+      <groupId>insideworld.engine</groupId>
+      <artifactId>quarkus-test-common</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+
 
 </project>

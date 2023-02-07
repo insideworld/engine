@@ -23,24 +23,19 @@ import insideworld.engine.core.endpoint.base.serializer.types.Type;
 import java.util.Collection;
 
 /**
- * Serialiser factory.
+ * Serializer factory.
  * Using to implement different version of serializers.
  * @since 2.0.0.
  */
 public interface SerializerFactory {
 
     /**
-     * Register a type for create serializer.
-     * @param type Type of object.
-     * @return True if type is applicable for the factory, false if not.
-     */
-    boolean register(Type type);
-
-    /**
-     * Create serializers for types.
+     * Create serializers from type.
      * @return
      */
-    Collection<Serializer> create();
+    Serializer create(Type type);
+
+    boolean can(final Type type);
 
     /**
      * Order of builder.

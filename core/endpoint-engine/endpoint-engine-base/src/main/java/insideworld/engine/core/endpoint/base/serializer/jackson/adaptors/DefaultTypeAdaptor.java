@@ -21,18 +21,34 @@ package insideworld.engine.core.endpoint.base.serializer.jackson.adaptors;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.endpoint.base.serializer.types.Type;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * Default type adaptor.
+ * @since 2.0.0
  */
 @Singleton
 public class DefaultTypeAdaptor implements JacksonTypeAdaptor {
 
+    private final ObjectFactory factory;
+
+    @Inject
+    public DefaultTypeAdaptor(final ObjectFactory factory) {
+        this.factory = factory;
+    }
+
     @Override
     public JavaType convert(final ObjectMapper mapper, final Type type) {
-        return mapper.getTypeFactory().constructType(type.getOrigin());
+        final Class<?> implementation;
+        if (type.getOrigin().isInterface()) {
+            implementation = this.factory.implementation(type.getOrigin());
+        } else {
+            implementation = type.getOrigin();
+        }
+        return mapper.getTypeFactory().constructType(implementation);
     }
 
     @Override

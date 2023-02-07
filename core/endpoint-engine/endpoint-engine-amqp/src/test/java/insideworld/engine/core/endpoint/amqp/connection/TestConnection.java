@@ -19,28 +19,31 @@
 
 package insideworld.engine.core.endpoint.amqp.connection;
 
-import insideworld.engine.core.action.executor.ActionExecutor;
-import insideworld.engine.core.endpoint.base.action.serializer.ActionSerializer;
+import insideworld.engine.core.endpoint.amqp.vertex.VertexConnection;
 import insideworld.engine.core.common.injection.ObjectFactory;
-import insideworld.engine.core.endpoint.amqp.actions.AmqpActionReceiver;
+import io.vertx.amqp.AmqpClientOptions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Vertx connections for tests.
+ * @since 1.0.0
+ */
 @Singleton
-public class TestAmqpReceiver extends AmqpActionReceiver {
+public class TestConnection extends VertexConnection {
 
+    /**
+     * Connect to test AQMP server.
+     * @param factory Object factory.
+     */
     @Inject
-    public TestAmqpReceiver(
-        final TestVertexConnection connection,
-        final ActionExecutor executor,
-        final ActionSerializer serializer,
-        final ObjectFactory factory
-    ) {
-        super(connection, executor, serializer, factory);
-    }
-
-    @Override
-    protected final String channel() {
-        return "test";
+    public TestConnection(final ObjectFactory factory) {
+        super(new AmqpClientOptions()
+            .setHost("localhost")
+            .setPort(12345)
+            .setUsername("qqq")
+            .setPassword("qqq"),
+            factory
+        );
     }
 }

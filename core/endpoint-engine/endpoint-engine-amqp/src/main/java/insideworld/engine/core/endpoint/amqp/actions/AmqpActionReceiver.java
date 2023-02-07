@@ -36,13 +36,13 @@ public class AmqpActionReceiver implements OnStartUp {
     private final Connection connection;
     private final String channel;
     private final AmqpActionSender callback;
-    private final EndpointExecutor receiver;
+    private final EndpointExecutor<InputStream> receiver;
 
     public AmqpActionReceiver(
         final Connection connection,
         final String channel,
         final AmqpActionSender callback,
-        final EndpointExecutor receiver
+        final EndpointExecutor<InputStream> receiver
     ) {
         this.connection = connection;
         this.channel = channel;

@@ -17,48 +17,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.endpoint.amqp.two;
+package insideworld.engine.core.endpoint.base.action.serializer;
 
-import insideworld.engine.core.endpoint.base.action.serializer.ActionSerializer;
-import insideworld.engine.core.endpoint.amqp.TestData;
-import insideworld.engine.core.endpoint.amqp.actions.AmqpActionSender;
-import insideworld.engine.core.endpoint.amqp.connection.TestVertexConnection;
-import javax.inject.Singleton;
+import java.util.UUID;
+import javax.enterprise.context.Dependent;
 
-@Singleton
-public class SendTestDataAction extends AmqpActionSender<TestData> {
-    /**
-     * Default constructor.
-     *
-     * @param connection
-     * @param serializer
-     */
-    public SendTestDataAction(final TestVertexConnection connection, final ActionSerializer serializer) {
-        super(connection, serializer);
+@Dependent
+public class TestOutputImpl implements TestOutput {
+
+    private UUID uuid;
+
+    @Override
+    public UUID getUUID() {
+        return this.uuid;
     }
 
     @Override
-    public String key() {
-        return "[two]SendTestDataAction";
-    }
-
-    @Override
-    public void types(final TestData input, final Void output) {
-
-    }
-
-    @Override
-    protected String remoteKey() {
-        return "[one]ReceiveTestDataAction";
-    }
-
-    @Override
-    protected String callbackKey() {
-        return null;
-    }
-
-    @Override
-    protected String channel() {
-        return "test";
+    public void setUUID(final UUID value) {
+        this.uuid = value;
     }
 }

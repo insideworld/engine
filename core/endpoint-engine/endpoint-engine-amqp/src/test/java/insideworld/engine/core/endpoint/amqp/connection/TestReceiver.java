@@ -17,23 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package insideworld.engine.core.action.serializer;
+package insideworld.engine.core.endpoint.amqp.connection;
 
-import java.util.UUID;
-import javax.enterprise.context.Dependent;
+import insideworld.engine.core.endpoint.amqp.actions.AmqpActionReceiver;
+import insideworld.engine.core.endpoint.base.action.EndpointExecutor;
+import java.io.InputStream;
+import javax.inject.Singleton;
 
-@Dependent
-public class TestOutputImpl implements TestOutput {
+@Singleton
+public class TestReceiver extends AmqpActionReceiver {
 
-    private UUID uuid;
-
-    @Override
-    public UUID getUUID() {
-        return this.uuid;
-    }
-
-    @Override
-    public void setUUID(final UUID value) {
-        this.uuid = value;
+    public TestReceiver(
+        final TestConnection connection,
+        final TestSender callback,
+        final EndpointExecutor<InputStream> receiver
+    ) {
+        super(connection, "test", callback, receiver);
     }
 }

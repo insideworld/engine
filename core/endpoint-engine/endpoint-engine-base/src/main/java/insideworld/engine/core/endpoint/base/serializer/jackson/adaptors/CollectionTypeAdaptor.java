@@ -21,17 +21,37 @@ package insideworld.engine.core.endpoint.base.serializer.jackson.adaptors;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.endpoint.base.serializer.types.Type;
 import java.util.Collection;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Type adapter for collection like type.
+ * @since 2.0.0
+ */
 @Singleton
 public class CollectionTypeAdaptor implements JacksonTypeAdaptor {
+
+    private final ObjectFactory factory;
+
+    @Inject
+    public CollectionTypeAdaptor(final ObjectFactory factory) {
+        this.factory = factory;
+    }
+
     @Override
     public JavaType convert(final ObjectMapper mapper, final Type type) {
+        final Class<?> implementation;
+        if (type.getWrapped().isInterface()) {
+            implementation = this.factory.implementation(type.getWrapped());
+        } else {
+            implementation = type.getWrapped();
+        }
         return mapper.getTypeFactory().constructCollectionType(
-            Collection.class,
-            type.getWrapped()
+            (Class<? extends Collection>) type.getOrigin(),
+            implementation
         );
     }
 
