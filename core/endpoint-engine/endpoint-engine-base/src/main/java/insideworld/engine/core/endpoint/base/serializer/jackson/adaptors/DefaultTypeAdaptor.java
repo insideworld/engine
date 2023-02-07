@@ -33,22 +33,9 @@ import javax.inject.Singleton;
 @Singleton
 public class DefaultTypeAdaptor implements JacksonTypeAdaptor {
 
-    private final ObjectFactory factory;
-
-    @Inject
-    public DefaultTypeAdaptor(final ObjectFactory factory) {
-        this.factory = factory;
-    }
-
     @Override
     public JavaType convert(final ObjectMapper mapper, final Type type) {
-        final Class<?> implementation;
-        if (type.getOrigin().isInterface()) {
-            implementation = this.factory.implementation(type.getOrigin());
-        } else {
-            implementation = type.getOrigin();
-        }
-        return mapper.getTypeFactory().constructType(implementation);
+        return mapper.getTypeFactory().constructType(type.getOrigin());
     }
 
     @Override

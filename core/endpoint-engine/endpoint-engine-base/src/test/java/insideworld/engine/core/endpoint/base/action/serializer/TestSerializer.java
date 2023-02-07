@@ -82,7 +82,7 @@ class TestSerializer {
      * @deprecated Deprecated because array doesn't need.
      * @throws CommonException Shouldn't raise.
      */
-    @Deprecated
+    @Test
     void testArray() throws CommonException, IOException {
         final List<UUID> uuids = Stream.generate(UUID::randomUUID).limit(10).toList();
         StringBuilder builder = new StringBuilder();

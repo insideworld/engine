@@ -24,20 +24,13 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import insideworld.engine.core.common.injection.ObjectFactory;
 import insideworld.engine.core.endpoint.base.serializer.Serializer;
 import insideworld.engine.core.endpoint.base.serializer.SerializerFactory;
 import insideworld.engine.core.endpoint.base.serializer.jackson.adaptors.JacksonTypeAdaptor;
 import insideworld.engine.core.endpoint.base.serializer.types.Type;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.commons.lang3.SerializationException;
 
@@ -49,17 +42,23 @@ import org.apache.commons.lang3.SerializationException;
 public abstract class AbstractJacksonSerializerFactory implements SerializerFactory {
 
     private final List<JacksonTypeAdaptor> adaptors;
+    private final ObjectFactory factory;
 
     private final ObjectMapper mapper;
 
     @Inject
-    public AbstractJacksonSerializerFactory(final List<JacksonTypeAdaptor> adaptors) {
+    public AbstractJacksonSerializerFactory(
+        final List<JacksonTypeAdaptor> adaptors,
+        final ObjectFactory factory
+        ) {
         this.adaptors = adaptors.stream()
             .sorted(Comparator.comparingLong(JacksonTypeAdaptor::order).reversed())
             .toList();
+        this.factory = factory;
         this.mapper = new ObjectMapper();
         final var module = new SimpleModule();
         this.modifyModule(module);
+        module.setAbstractTypes(new ObjectFactoryTypeResolver(this.factory));
         this.mapper.registerModule(module);
         this.mapper.registerModule(new BlackbirdModule());
     }
@@ -73,9 +72,25 @@ public abstract class AbstractJacksonSerializerFactory implements SerializerFact
             .orElseThrow(
                 () -> new SerializationException("Adaptor not found. It's shouldn't be...")
             );
-//        this.mapper.registerSubtypes();
+
+//        final Class<?> qwe = this.extractBaseType(javatype);
+//        if (qwe.isInterface()) {
+//            this.mapper.registerSubtypes(
+//                this.factory.implementation(
+//                    qwe
+//                )
+//            );
+//        }
         return new JacksonSerializer(this.mapper, javatype, type);
     }
 
     protected abstract void modifyModule(SimpleModule module);
+
+    private Class<?> extractBaseType(final JavaType type) {
+        if (type.getContentType() == null) {
+            return type.getRawClass();
+        } else {
+            return type.getContentType().getRawClass();
+        }
+    }
 }

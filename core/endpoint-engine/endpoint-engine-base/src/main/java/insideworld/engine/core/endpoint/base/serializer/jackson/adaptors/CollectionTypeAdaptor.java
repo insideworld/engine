@@ -29,29 +29,17 @@ import javax.inject.Singleton;
 
 /**
  * Type adapter for collection like type.
+ *
  * @since 2.0.0
  */
 @Singleton
 public class CollectionTypeAdaptor implements JacksonTypeAdaptor {
 
-    private final ObjectFactory factory;
-
-    @Inject
-    public CollectionTypeAdaptor(final ObjectFactory factory) {
-        this.factory = factory;
-    }
-
     @Override
     public JavaType convert(final ObjectMapper mapper, final Type type) {
-        final Class<?> implementation;
-        if (type.getWrapped().isInterface()) {
-            implementation = this.factory.implementation(type.getWrapped());
-        } else {
-            implementation = type.getWrapped();
-        }
         return mapper.getTypeFactory().constructCollectionType(
             (Class<? extends Collection>) type.getOrigin(),
-            implementation
+            type.getWrapped()
         );
     }
 

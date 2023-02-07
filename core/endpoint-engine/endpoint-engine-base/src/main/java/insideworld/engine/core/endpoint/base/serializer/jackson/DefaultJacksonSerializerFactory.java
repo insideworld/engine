@@ -38,9 +38,10 @@ public class DefaultJacksonSerializerFactory extends AbstractJacksonSerializerFa
 
     @Inject
     public DefaultJacksonSerializerFactory(
-        final List<JacksonTypeAdaptor> adaptors
+        final List<JacksonTypeAdaptor> adaptors,
+        final ObjectFactory factory
     ) {
-        super(adaptors);
+        super(adaptors, factory);
     }
 
     @Override

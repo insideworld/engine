@@ -27,34 +27,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Deprecated because for array needs type mappings and we won't use arrays in the system.
- *
- * What is problem:
- * I don't know how to add abstract type mapping in runtime and array type is specific.
- * Maybe need to think about generator for linking interfaces to implementation throw Mixin....
- * But now I don't see neccessary to use array for ser/deser operation and I can use a collection.
- *
- * @deprecated
  */
-@Deprecated
+@Singleton
 public class ArrayTypeAdaptor implements JacksonTypeAdaptor {
-
-    private final ObjectFactory factory;
-
-    @Inject
-    public ArrayTypeAdaptor(final ObjectFactory factory) {
-        this.factory = factory;
-    }
 
     @Override
     public JavaType convert(final ObjectMapper mapper, final Type type) {
-        final Class<?> implementation;
-        if (type.getOrigin().getComponentType().isInterface()) {
-            implementation = this.factory.implementation(type.getOrigin().getComponentType());
-        } else {
-            implementation = type.getOrigin().getComponentType();
-        }
-        return mapper.getTypeFactory().constructArrayType(implementation);
+        return mapper.getTypeFactory().constructArrayType(type.getOrigin().getComponentType());
     }
 
     @Override

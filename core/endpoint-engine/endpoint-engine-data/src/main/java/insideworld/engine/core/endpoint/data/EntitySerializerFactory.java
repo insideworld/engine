@@ -46,9 +46,10 @@ public class EntitySerializerFactory extends AbstractJacksonSerializerFactory {
     @Inject
     public EntitySerializerFactory(
         final List<JacksonTypeAdaptor> adaptors,
+        final ObjectFactory factory,
         final StorageKeeper keeper
     ) {
-        super(adaptors);
+        super(adaptors, factory);
         this.keeper = keeper;
     }
 
